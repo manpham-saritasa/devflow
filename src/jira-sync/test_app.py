@@ -27,11 +27,9 @@ class ConfigTests(unittest.TestCase):
                 json.dumps(
                     {
                         "download_path": "../outside",
-                        "sync_state_path": ".local/jira-sync/sync-state.json",
-                        "not_found_state_path": ".local/jira-sync/not-found.json",
-                        "template_paths": [
-                            ".local/jira-sync/templates/raw-template.md"
-                        ],
+                        "sync_state_path": "result/sync-state.json",
+                        "not_found_state_path": "result/not-found.json",
+                        "template_paths": ["templates/raw-template.md"],
                         "custom_fields": {},
                     }
                 ),
@@ -50,25 +48,25 @@ class ConfigTests(unittest.TestCase):
                 json.dumps(
                     {
                         "download_path": "dev/tasks",
-                        "sync_state_path": ".local/jira-sync/sync-state.json",
-                        "not_found_state_path": ".local/jira-sync/not-found.json",
-                        "template_paths": [
-                            ".local/jira-sync/templates/raw-template.md"
-                        ],
+                        "sync_state_path": "result/sync-state.json",
+                        "not_found_state_path": "result/not-found.json",
+                        "template_paths": ["templates/raw-template.md"],
                         "custom_fields": {"epic_link": "customfield_1"},
                     }
                 ),
                 encoding="utf-8",
             )
 
-            app_config = load_app_config(config_path)
+            config_dir = config_path.parent
+            with patch("config.REPO_ROOT", config_dir):
+                app_config = load_app_config(config_path)
 
             self.assertEqual(
-                app_config.download_path, (REPO_ROOT / "dev/tasks").resolve()
+                app_config.download_path, (config_dir / "dev/tasks").resolve()
             )
             self.assertEqual(
                 app_config.sync_state_path,
-                (REPO_ROOT / ".local/jira-sync/sync-state.json").resolve(),
+                (config_dir / "result/sync-state.json").resolve(),
             )
 
 
@@ -223,18 +221,16 @@ class MainTests(unittest.TestCase):
             repo_root = Path(temp_dir)
             config_path = repo_root / "config.json"
             download_path = repo_root / "dev" / "tasks"
-            sync_state_path = repo_root / ".local" / "jira-sync" / "sync-state.json"
-            not_found_state_path = repo_root / ".local" / "jira-sync" / "not-found.json"
+            sync_state_path = repo_root / "result" / "sync-state.json"
+            not_found_state_path = repo_root / "result" / "not-found.json"
 
             config_path.write_text(
                 json.dumps(
                     {
                         "download_path": "dev/tasks",
-                        "sync_state_path": ".local/jira-sync/sync-state.json",
-                        "not_found_state_path": ".local/jira-sync/not-found.json",
-                        "template_paths": [
-                            ".local/jira-sync/templates/raw-template.md"
-                        ],
+                        "sync_state_path": "result/sync-state.json",
+                        "not_found_state_path": "result/not-found.json",
+                        "template_paths": ["templates/raw-template.md"],
                         "custom_fields": {},
                     }
                 ),
@@ -252,6 +248,8 @@ class MainTests(unittest.TestCase):
                 patch("main.get_max_issue_id", return_value=3),
                 patch("sync_runner.fetch_issue") as fetch_issue_mock,
                 patch("main.load_not_found_ids", return_value={"APP-3"}),
+                patch("config.REPO_ROOT", repo_root),
+                patch("main.REPO_ROOT", repo_root),
                 redirect_stdout(stdout),
             ):
                 main()

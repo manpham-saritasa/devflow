@@ -7,8 +7,8 @@ from config import JIRA_PROJECT_KEY, PENDING_TASKS_PATH, REPO_ROOT
 
 RESOLVED_STATUSES = {"done", "completed", "resolved", "closed", "accepted", "canceled"}
 
-NOT_SYNC_PATH = REPO_ROOT / ".local" / "jira-sync" / "result" / "tasks-not-sync.txt"
-FORCE_SYNC_PATH = REPO_ROOT / ".local" / "jira-sync" / "result" / "tasks-force-sync.txt"
+NOT_SYNC_PATH = REPO_ROOT / "result" / "tasks-not-sync.txt"
+FORCE_SYNC_PATH = REPO_ROOT / "result" / "tasks-force-sync.txt"
 
 
 class TaskListManager:

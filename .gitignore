@@ -1,5 +1,5 @@
 # Test project pulls
-dev/*
+dev/
 
 # Environment variables
 .env

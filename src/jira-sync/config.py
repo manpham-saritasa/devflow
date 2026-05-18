@@ -7,9 +7,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent
-REPO_ROOT = (
-    BASE_DIR.parent.parent if BASE_DIR.parent.name == ".local" else BASE_DIR.parent
-)
+REPO_ROOT = BASE_DIR.parent.parent
 CONFIG_PATH = BASE_DIR / "config.json"
 
 load_dotenv(BASE_DIR / ".env")
@@ -35,10 +33,10 @@ def _load_json(path: Path) -> dict[str, Any]:
     return data
 
 
-def _resolve_repo_path(value: str, key: str) -> Path:
+def _resolve_repo_path(value: str, key: str, base: Path = REPO_ROOT) -> Path:
     if not value.strip():
         raise ValueError(f"Config value '{key}' must be a non-empty string")
-    resolved = (REPO_ROOT / value).resolve()
+    resolved = (base / value).resolve()
     try:
         resolved.relative_to(REPO_ROOT)
     except ValueError as exc:
@@ -50,29 +48,32 @@ def _resolve_repo_path(value: str, key: str) -> Path:
 
 def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
     raw = _load_json(config_path)
+    config_dir = config_path.parent
 
     custom_fields = raw.get("custom_fields")
     if not isinstance(custom_fields, dict):
         raise ValueError("Config value 'custom_fields' must be an object")
 
     template_paths_raw = raw.get("template_paths")
-    if not isinstance(template_paths_raw, list):
-        raise ValueError("Config value 'template_paths' must be a list")
+    if isinstance(template_paths_raw, str):
+        template_paths_raw = [template_paths_raw]
+    elif not isinstance(template_paths_raw, list):
+        raise ValueError("Config value 'template_paths' must be a string or a list")
 
     github_repo_from_config = str(raw.get("github_repo", "")).strip()
 
     return AppConfig(
         download_path=_resolve_repo_path(
-            str(raw.get("download_path", "")), "download_path"
+            str(raw.get("download_path", "")), "download_path", config_dir
         ),
         sync_state_path=_resolve_repo_path(
-            str(raw.get("sync_state_path", "")), "sync_state_path"
+            str(raw.get("sync_state_path", "")), "sync_state_path", config_dir
         ),
         not_found_state_path=_resolve_repo_path(
-            str(raw.get("not_found_state_path", "")), "not_found_state_path"
+            str(raw.get("not_found_state_path", "")), "not_found_state_path", config_dir
         ),
         template_paths=[
-            _resolve_repo_path(str(item), "template_paths")
+            _resolve_repo_path(str(item), "template_paths", config_dir)
             for item in template_paths_raw
             if str(item).strip()
         ],
@@ -82,14 +83,14 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
             if str(key).strip() and str(value).strip()
         },
         pending_tasks_path=_resolve_repo_path(
-            str(
-                raw.get("pending_tasks_path", "")
-                or ".local/jira-sync/result/tasks-pending.txt"
-            ),
+            str(raw.get("pending_tasks_path", "") or "result/tasks-pending.txt"),
             "pending_tasks_path",
+            config_dir,
         ),
         pr_template_path=_resolve_repo_path(
-            str(raw.get("pr_template_path", "")), "pr_template_path"
+            str(raw.get("pr_template_path", "") or "templates/pr-template.md"),
+            "pr_template_path",
+            config_dir,
         ),
         github_repo=github_repo_from_config,
     )
