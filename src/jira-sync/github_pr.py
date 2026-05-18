@@ -1,6 +1,6 @@
 """GitHub PR orchestration for Jira tasks.
 
-Searches PRs via github_client, matches by task key,
+Fetches linked PRs from Jira dev-status API,
 renders markdown, and writes pr.md alongside raw.md.
 """
 
@@ -8,17 +8,13 @@ import os
 import re
 from typing import Any
 
+from fetcher import fetch_issue_dev_status
 from github_client import (
     fetch_pr_details,
     fetch_pr_files,
     fetch_pr_review_comments,
-    search_prs,
 )
 from github_pr_formatter import PRFormatter
-
-
-def _extract_key_from_ref(head_ref: str, task_key: str) -> bool:
-    return task_key.lower() in head_ref.lower()
 
 
 def render_pr_md(
@@ -48,51 +44,46 @@ def _existing_pr_numbers(filepath: str) -> set[str]:
 
 
 def fetch_and_write_pr(
-    task_key: str,
+    issue_data: dict[str, Any],
     download_path: str,
-    github_repo: str,
     force: bool = False,
 ) -> str:
+    task_key = str(issue_data.get("key", ""))
     folder = os.path.join(download_path, task_key)
     pr_md_path = os.path.join(folder, "pr.md")
 
-    raw_results = search_prs(task_key, github_repo)
-    if not raw_results:
-        if not os.path.exists(pr_md_path):
-            print(f"    pr.md: no PR found")
-        else:
-            print(f"    pr.md: no new PR found (existing file kept)")
-        return "no_pr"
+    # numeric id from Jira API response
+    issue_id_str = str(issue_data.get("id", ""))
+    if not issue_id_str.isdigit():
+        print(f"    pr.md: no valid issue ID in response")
+        return "error"
 
-    matched = []
-    for pr in raw_results:
-        head_ref = pr.get("headRefName") or ""
-        title = pr.get("title") or ""
-        if _extract_key_from_ref(head_ref, task_key) or _extract_key_from_ref(
-            title, task_key
-        ):
-            matched.append(pr)
+    linked_prs = fetch_issue_dev_status(int(issue_id_str))
+    if not linked_prs:
+        if not os.path.exists(pr_md_path):
+            print(f"    pr.md: no linked PRs found")
+        else:
+            print(f"    pr.md: no new linked PRs (existing file kept)")
+        return "no_pr"
 
     existing_numbers = set() if force else _existing_pr_numbers(pr_md_path)
 
     new_entries: list[tuple[str, str]] = []
-    for pr_summary in matched:
-        pr_number = pr_summary.get("number")
-        if not pr_number:
-            continue
-        pr_number_str = str(pr_number)
+    for pr_info in linked_prs:
+        pr_number = pr_info["number"]
+        repo = pr_info["repo"]
 
-        if pr_number_str in existing_numbers and not force:
+        if pr_number in existing_numbers and not force:
             print(f"    pr.md: PR #{pr_number} already in file - skipped")
             continue
 
-        details = fetch_pr_details(pr_number, github_repo)
+        details = fetch_pr_details(int(pr_number), repo)
         if not details:
             continue
-        files = fetch_pr_files(pr_number, github_repo)
-        review_comments = fetch_pr_review_comments(pr_number, github_repo)
-        entry = render_pr_md(details, files, review_comments, task_key, github_repo)
-        new_entries.append((pr_number_str, entry))
+        files = fetch_pr_files(int(pr_number), repo)
+        review_comments = fetch_pr_review_comments(int(pr_number), repo)
+        entry = render_pr_md(details, files, review_comments, task_key, repo)
+        new_entries.append((pr_number, entry))
 
     new_entries.sort(key=lambda x: int(x[0]))
 
@@ -111,7 +102,7 @@ def fetch_and_write_pr(
         with open(tmp_path, "w", encoding="utf-8") as fh:
             fh.write(content)
         os.replace(tmp_path, pr_md_path)
-        pns = ", ".join(f"#{pn}" for pn, _ in new_entries)
+        pns = ", ".join(f"#{n}" for n, _ in new_entries)
         print(f"    pr.md: created ({len(new_entries)} PR(s): {pns})")
         return "created"
     else:
@@ -129,6 +120,6 @@ def fetch_and_write_pr(
         with open(tmp_path, "w", encoding="utf-8") as fh:
             fh.write(content)
         os.replace(tmp_path, pr_md_path)
-        pns = ", ".join(f"#{pn}" for pn, _ in new_entries)
+        pns = ", ".join(f"#{n}" for n, _ in new_entries)
         print(f"    pr.md: appended ({len(new_entries)} new PR(s): {pns})")
         return "appended"

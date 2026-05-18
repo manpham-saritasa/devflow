@@ -1,6 +1,7 @@
 # Agent Memory
 
-## Communication
+## 1. Communication
+- Before each big section, put `---` first.
 - Always end completed work messages with `✅ Done.`
 - Prefix every question to me with `❓`
 - If unsure, say so.
@@ -22,18 +23,17 @@
   - natural professional tone
   - complete sentences
 
-## Creating stuff
+## 2. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
 - Every big `##` need number in markdown file.
+- Do not include any secret values, my personal info, company info, or real project info into any files.
+- Do not include the absolute local path of my computer into any files.
 
 - When creating AI's prompts, skills, plugins, or agents:
   - keep them generic, configurable, reusable, and easy to share
-  - do not include secret values, my personal info, company info, or real project info into any files
   - move reusable vars, paths, URLs, and common constants to the top
   - move detection conditions/logic to the top
   - keep wording minimal and caveman-style
 
 - When creating documents:
-  - do not include secret values, my personal info, company info, or real project info into any files
-  - do not include the path of task's files when listing the source, list the task IDs and their summary instead
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable

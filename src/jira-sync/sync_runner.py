@@ -4,7 +4,6 @@ from pathlib import Path
 
 from fetcher import fetch_children, fetch_issue, should_fetch_children
 from github_pr import fetch_and_write_pr
-from config import GITHUB_REPO
 from persistence import write_raw_md, write_task_json
 from sync_state import add_not_found_id, save_state
 
@@ -60,8 +59,8 @@ def sync_one_issue(
             epic_children=children,
         )
 
-        if with_prs and GITHUB_REPO:
-            fetch_and_write_pr(key, download_path, GITHUB_REPO, force=force)
+        if with_prs:
+            fetch_and_write_pr(issue, download_path, force=force)
 
         clen = len(children) if children else 0
         _print_result(key, result, clen)

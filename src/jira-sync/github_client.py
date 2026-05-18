@@ -56,24 +56,6 @@ def _gh_lines(args: list[str], label: str = "") -> list[dict[str, Any]]:
         return []
 
 
-def search_prs(task_key: str, github_repo: str) -> list[dict[str, Any]]:
-    args = [
-        "pr",
-        "list",
-        "--repo",
-        github_repo,
-        "--state",
-        "all",
-        "--search",
-        f'"{task_key}" in:title,body',
-        "--json",
-        "number,title,headRefName,state,mergedAt,createdAt,author,url",
-        "--limit",
-        "20",
-    ]
-    return _gh_json(args, f"search PRs for {task_key}") or []
-
-
 def fetch_pr_details(pr_number: int, github_repo: str) -> dict[str, Any] | None:
     args = [
         "pr",
