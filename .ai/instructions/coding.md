@@ -1,6 +1,6 @@
 # AI Coding Workflow
 
-Use this prompt when asked to implement a feature, fix a bug, or complete a multi-step coding task.
+Use this workflow when asked to implement a feature, fix a bug, or complete a multi-step coding task.
 
 Follow this workflow unless the user explicitly asks for a different one.
 

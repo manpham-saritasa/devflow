@@ -27,27 +27,12 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 
 ---
 
-## Paths
-
-| Name | Path |
-|---|---|
-| Rules file | `AGENTS.md` |
-| Memory file | `.ai/memory.md` |
-| Agents folder | `.ai/agents/` |
-| Skills folder | `.ai/skills/` |
-| Sync script (macOS/Ubuntu) | `sync.sh` |
-| Sync script (Windows) | `sync.ps1` |
-
-Reuse these paths. Do not guess new ones.
-
----
-
 ## Start of every session
 
 | Step | Action |
 |---|---|
-| 1 | Read `.ai/memory.md` if it exists |
-| 2 | Read `AGENTS.md` for rules |
+| 1 | Read `instructions/communication.md` if it exists and follow the instructions there |
+| 2 | Read `instructions/coding.md` if it exists and follow the instructions there |
 | 3 | Keep all in mind for the whole session |
 
 If session is long, task changes, or context is fuzzy, re-read them.
@@ -58,7 +43,7 @@ If session is long, task changes, or context is fuzzy, re-read them.
 
 | Step | Action |
 |---|---|
-| 1 | Go to `.ai/agents/` |
+| 1 | Go to `agents/` |
 | 2 | Find best agent for the task |
 | 3 | Read that agent file |
 | 4 | Do task using that agent's job and limits |
@@ -72,7 +57,7 @@ If no agent fits, say no good agent found, then continue with memory and rules o
 
 | Step | Action |
 |---|---|
-| 1 | Go to `.ai/skills/` |
+| 1 | Go to `skills/` |
 | 2 | Find best skill for the task |
 | 3 | Read that skill file |
 | 4 | Use that skill alongside memory and rules |
@@ -87,24 +72,12 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | Priority | Source |
 |---|---|
 | 1 | User instruction |
-| 2 | Chosen agent from `.ai/agents/` |
-| 3 | Chosen skill from `.ai/skills/` |
+| 2 | Chosen agent from `agents/` |
+| 3 | Chosen skill from `skills/` |
 | 4 | `AGENTS.md` rules |
-| 5 | `.ai/memory.md` |
-| 6 | Default AI behavior |
-
----
-
-## Check before work
-
-| Check | Required |
-|---|---|
-| `.ai/memory.md` was read (if exists) | yes |
-| `AGENTS.md` was read | yes |
-| `.ai/agents/` checked (if user asked for agent) | yes |
-| `.ai/skills/` checked (if task needs a skill) | yes |
-
-If not done yet, do it first.
+| 5 | `coding.md` |
+| 6 | `communication.md` |
+| 7 | Default AI behavior |
 
 ---
 

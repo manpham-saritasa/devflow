@@ -1,4 +1,6 @@
-# Agent Memory
+# AI Agent Behaviors
+
+Use these rules when communicating with user or creating/editing files for user.
 
 ## 1. Communication
 - Before each big section, put `---` first.
