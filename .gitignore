@@ -1,6 +1,3 @@
-# Test project pulls
-dev/
-
 # Environment variables
 .env
 .env.*
@@ -9,6 +6,7 @@ dev/
 # Local config
 *.local
 .local
+.local/*
 
 # AI
 .claude/
