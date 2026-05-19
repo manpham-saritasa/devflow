@@ -40,3 +40,10 @@
 ### Files Touched
 - [path]
 - [path]
+
+### Bug Analysis
+**[Bug or regression title]**
+- Symptom: [What users or the system experienced]
+- Root Cause: [Confirmed cause, or "Best-supported hypothesis:" with uncertainty stated clearly]
+- Fix Strategy: [What was changed to address it]
+- Regression Risk / Prevention: [Test added, guardrail, monitoring, follow-up, or `None`]

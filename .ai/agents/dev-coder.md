@@ -45,6 +45,10 @@ Role: Full-stack implementation engineer. Read `plan.md`, implement the planned 
 - Prefer the smallest verification that proves the requested behavior.
 - If full verification is too expensive or unavailable, state what was run, what was not run, and why.
 - For bug fixes, add or update a test when practical; if not practical, explain how the fix was verified.
+- For bug fixes, identify and document the actual root cause when it can be supported by repository evidence, runtime behavior, logs, tests, or task context.
+- In `changelog.md`, for every bug fix or regression fix, include: `Symptom`, `Root Cause`, `Fix Strategy`, and `Regression Risk / Prevention`.
+- If the exact root cause cannot be proven, do not guess. State the best-supported explanation and label it clearly as inferred rather than confirmed.
+- If a bug was fixed without a reliable reproduction, state that explicitly and explain what evidence was used instead.
 - For behavior changes or new business logic, add or update tests when practical.
 - Never mark something as verified without stating what was actually checked.
 - Never pretend verification happened.
