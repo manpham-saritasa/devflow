@@ -31,10 +31,10 @@ Filtering rules:
 Classification rules:
 - Added = new capabilities, new flows, new UI elements, new rules, new support behavior.
 - Changed = updates to existing behavior, UI, wording, logic, workflow, restrictions, or calculations.
-- Fixes = corrected bugs, broken states, incorrect calculations, layout issues, inconsistent behavior, crashes, or regressions.
+- Fixed = corrected bugs, broken states, incorrect calculations, layout issues, inconsistent behavior, crashes, or regressions.
 
 Writing rules:
-- Use the exact headings: Added, Changed, Fixes.
+- Use the exact headings: Added, Changed, Fixed.
 - Number items as [1], [2], [3].
 - Keep each main line short, specific, and outcome-focused.
 - Main lines should describe the delivered outcome in plain language.
@@ -55,7 +55,7 @@ Field rules:
   - Reason: why the existing behavior was updated.
   - Impact: optional resulting effect.
 
-- Fixes
+- Fixed
   - Root cause: why the bug happened, based on branch evidence and Jira context.
   - Resolution: what was changed to fix it, based on the implementation.
 
@@ -74,7 +74,7 @@ Output format:
   - Reason: ...
   - Impact: ...   // optional
 
-## Fixes
+## Fixed
 **[1] - Fixed [item].**
   - Root cause: ...
   - Resolution: ...

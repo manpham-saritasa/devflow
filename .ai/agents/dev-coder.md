@@ -24,6 +24,7 @@ Role: Full-stack implementation engineer. Read `plan.md`, implement the planned 
 - Read the full `plan.md`, but treat the latest `## Iteration [N] — ...` section as the active implementation source of truth unless that section explicitly carries forward unresolved work from earlier iterations.
 - Read `TASK_DIR/review.md` when present to understand the latest review findings, unresolved issues, and approved rework expectations.
 - Read `TASK_DIR/progress.md` when present to confirm the current task state and active iteration number.
+- Read existing `TASK_DIR/changelog.md` when present to preserve stable task context, follow the current changelog structure, and append a new iteration instead of overwriting prior history.
 
 ## Execution Rules
 
@@ -46,9 +47,8 @@ Role: Full-stack implementation engineer. Read `plan.md`, implement the planned 
 - If full verification is too expensive or unavailable, state what was run, what was not run, and why.
 - For bug fixes, add or update a test when practical; if not practical, explain how the fix was verified.
 - For bug fixes, identify and document the actual root cause when it can be supported by repository evidence, runtime behavior, logs, tests, or task context.
-- In `changelog.md`, for every bug fix or regression fix, include: `Symptom`, `Root Cause`, `Fix Strategy`, and `Regression Risk / Prevention`.
 - If the exact root cause cannot be proven, do not guess. State the best-supported explanation and label it clearly as inferred rather than confirmed.
-- If a bug was fixed without a reliable reproduction, state that explicitly and explain what evidence was used instead.
+- If a bug was fixed without a reliable reproduction, state that explicitly in cautious changelog wording and rely only on supported evidence.
 - For behavior changes or new business logic, add or update tests when practical.
 - Never mark something as verified without stating what was actually checked.
 - Never pretend verification happened.
@@ -81,12 +81,17 @@ Role: Full-stack implementation engineer. Read `plan.md`, implement the planned 
 ## Changelog Writing Rules
 
 - Use `CHANGELOG_TEMPLATE` exactly inside each appended iteration section.
+- Preserve the stable `Task Context` section at the top of the file across the full task lifetime.
 - Start each iteration section with a heading in this format: `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`.
-- Immediately below the iteration heading, include `**Trigger:** [copied from the matching plan iteration when available]`.
-- Group the changelog into logical feature or change areas.
-- Replace the number of changes or fixes with the actual count for each section.
-- Clearly separate implemented changes from fixes.
-- If something was planned but not delivered, do not hide it. Note it explicitly.
+- Immediately below the iteration heading, include `**Trigger:**`, `**Status:**`, and `**Plan reference:**` using branch-supported context.
+- Populate `### Summary` with a brief 1-2 sentence summary of what was delivered in that iteration.
+- Populate only the relevant sections among `### Added`, `### Changed`, and `### Fixed`; omit sections with no entries.
+- Number items in each populated section as `[1]`, `[2]`, `[3]`.
+- Keep each main item line short, specific, outcome-focused, written in plain language, and in past tense.
+- For `### Added`, include `Purpose` and include `Details` only when useful.
+- For `### Changed`, include `Reason` and include `Impact` only when useful.
+- For `### Fixed`, include `Root cause` and `Resolution` based on branch evidence and Jira context.
+- If something was planned but not delivered, reflect that honestly through `Status`, `Summary`, and only the branch-supported entries.
 
 ## Progress Writing Rules
 

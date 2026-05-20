@@ -21,29 +21,17 @@
 ### Summary
 [1-2 sentence summary of what was delivered in this iteration.]
 
-### Changes
-- [implemented change]
-- [implemented change]
+### Added
+**[1] - Added [item].**
+  - Purpose: ...
+  - Details: ...   // optional
 
-### Fixes
-- [bug fix / regression fix / correction]
-- [or `None`]
+### Changed
+**[1] - Changed [item].**
+  - Reason: ...
+  - Impact: ...   // optional
 
-### Verification
-- Automated: [tests / build / lint / checks run, or `None`]
-- Manual: [manual verification performed, or `None`]
-- Not verified: [anything skipped and why, or `None`]
-
-### Deferred / Not Done
-- [planned but not completed item, or `None`]
-
-### Files Touched
-- [path]
-- [path]
-
-### Bug Analysis
-**[Bug or regression title]**
-- Symptom: [What users or the system experienced]
-- Root Cause: [Confirmed cause, or "Best-supported hypothesis:" with uncertainty stated clearly]
-- Fix Strategy: [What was changed to address it]
-- Regression Risk / Prevention: [Test added, guardrail, monitoring, follow-up, or `None`]
+### Fixed
+**[1] - Fixed [item].**
+  - Root cause: ...
+  - Resolution: ...
