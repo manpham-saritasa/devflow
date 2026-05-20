@@ -32,11 +32,16 @@ Use this skill when:
 
 ## How to run it
 
-Type this in Claude Code:
+Type one of these in Claude Code:
 
-```
-/dev-ship-pr-jira
-```
+| Command | What it does |
+|---------|-------------|
+| `/dev-ship` | Create PR + comment Jira (default) |
+| `/dev-ship --pr-only` | Create PR only, skip Jira |
+| `/dev-ship --jira-only` | Comment Jira only, skip PR |
+| `/dev-ship --text-only` | Preview both changelogs only, no action |
+| `/dev-ship --technical-only` | Save technical changelog to `.local` only |
+| `/dev-ship [KEY]` | Use a specific task key |
 
 The skill will show you what it will do, then ask you to say "YES" before making changes.
 
