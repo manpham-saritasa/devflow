@@ -31,25 +31,23 @@ triggers:
 | `--jira-only` | Skip Step 6 (PR creation) and Step 7 (progress update) |
 | `--text-only` | Skip Step 6-9 (no PR, progress, or Jira). Show preview only. |
 
-## Output Style
-
-Use `REPORT_TEMPLATE`: `Added / Changed / Fixes` headings, numbered items [1][2][3], sub-bullets (Purpose/Details/Reason/Impact/Root cause/Resolution).
-- Past tense, outcome-focused, minimal English
-- **Never: variable names, function names, class names, file paths, method calls, code-level details. Behavior + user impact only. No exceptions.**
-- Omit empty sections, bullet lists, short + scannable
-
 ## Paths
 
 - DEV_ROOT: `.local`
-- TASK_DIR: `.local/tasks/[KEY]`
-- CHANGELOG_TEMPLATE: `.ai/agents/templates/changelog-template.md`
-- PROGRESS_TEMPLATE: `.ai/agents/templates/progress-template.md`
-- REPORT_TEMPLATE: `./report-template.md`
+- TASK_DIR: `[DEV_ROOT]/tasks/[KEY]` — replace [KEY] with Jira ticket key
+- REPORT_TEMPLATE: `report-template.md`
 
 ## Variables
 
 - JIRA_DOMAIN: env var `$JIRA_DOMAIN`
 - JIRA_PROJECT: env var `$JIRA_PROJECT`
+
+## Output Style
+
+Use `REPORT_TEMPLATE`: `Added / Changed / Fixed` headings, numbered items [1][2][3], sub-bullets (Purpose/Details/Reason/Impact/Root cause/Resolution).
+- Past tense, outcome-focused, minimal English
+- **Never: variable names, function names, class names, file paths, method calls, code-level details. Behavior + user impact only. No exceptions.**
+- Omit empty sections, bullet lists, short + scannable
 
 ## Workflow
 
@@ -69,14 +67,14 @@ If fail: ask user for KEY or Jira link. Stop if no valid KEY.
 Generate report from branch evidence (commits, diff, changed files, Jira context).
 
 Source priority:
-1. If `TASK_DIR/changelog.md` exists: reclassify latest iteration into `Added / Changed / Fixes`, minimal English
+1. If `TASK_DIR/changelog.md` exists: reclassify latest iteration into `Added / Changed / Fixed`, minimal English
 2. Else: `git diff develop..HEAD`, auto-extract + populate
 
 Rules:
 - Jira = business intent; diff/commits/files = actual implementation
 - If diff narrower than Jira, describe narrower shipped version
 - Exclude refactors/renames/formatting/tests unless behavior changed
-- Classification: Added = new capabilities | Changed = updated behavior | Fixes = bugs
+- Classification: Added = new capabilities | Changed = updated behavior | Fixed = bugs
 - **Non-technical**: No variable/function/class/path/method/code-detail mentions. Behavior + user impact only. No exceptions.
 - Short + specific main lines; past tense. Non-redundant sub-bullets only.
 - Omit empty sections
@@ -96,9 +94,9 @@ Commit: {MSG}
 ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
 ### Summary
 ...
-### Changes
+### Changed
 ...
-### Fixes
+### Fixed
 ...
 
 ## Non-Technical Report (Jira/GitHub)
@@ -107,7 +105,7 @@ Commit: {MSG}
 [1] - ...
 ## Changed
 [1] - ...
-## Fixes
+## Fixed
 [1] - ...
 ```
 
