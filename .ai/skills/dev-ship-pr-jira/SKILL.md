@@ -42,9 +42,9 @@ Use `REPORT_TEMPLATE`: `Added / Changed / Fixes` headings, numbered items [1][2]
 
 - DEV_ROOT: `.local`
 - TASK_DIR: `.local/tasks/[KEY]`
-- CHANGELOG_TEMPLATE: `.ai/templates/changelog-template.md`
-- REPORT_TEMPLATE: `.ai/templates/report-template.md`
-- PROGRESS_TEMPLATE: `.ai/templates/progress-template.md`
+- CHANGELOG_TEMPLATE: `.ai/agents/templates/changelog-template.md`
+- PROGRESS_TEMPLATE: `.ai/agents/templates/progress-template.md`
+- REPORT_TEMPLATE: `./report-template.md`
 
 ## Variables
 
@@ -125,7 +125,7 @@ Capture PR URL.
 ### Step 7: Update Progress
 
 Skip if `--jira-only` or `--text-only`:
-- If `TASK_DIR/progress.md` exists: prepend status "Shipped", PR URL, timestamp (newest first)
+- If `TASK_DIR/progress.md` exists: prepend status "Shipped", PR URL, timestamp
 - Else: create new file
 
 ### Step 8: Comment Jira

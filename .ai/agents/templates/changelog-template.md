@@ -8,7 +8,7 @@
 
 ## Notes for Future Iterations
 - Keep the sections above stable across the task lifetime.
-- Prepend new iterations above (newest first). Do not delete prior iterations.
+- Append new iterations below. Do not delete prior iterations.
 - Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.
 
 ---
