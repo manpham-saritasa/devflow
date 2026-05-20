@@ -35,7 +35,7 @@ Use this skill when:
 Type this in Claude Code:
 
 ```
-/create-pr-and-documentaion
+/dev-ship-pr-jira
 ```
 
 The skill will show you what it will do, then ask you to say "YES" before making changes.

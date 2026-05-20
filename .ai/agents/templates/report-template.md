@@ -1,30 +1,30 @@
 # Report Template
 
-Lightweight reporting format for GitHub PR body and Jira task comments.
-Reuses the core sections from `changelog-template.md` — drop the operational
-detail (Verification, Deferred, Files Touched) and keep what reviewers and
-stakeholders actually need to read. 
+Changelog format for GitHub PR body and Jira task comments.
+Generated from branch evidence: commits, diff, changed files, Jira context.
+
+**Non-technical rule**: Write for testers, PMs, and clients.
+Never mention: variable names, function names, class names, file paths,
+method calls, or any code-level implementation details.
+Describe behavior and user impact, not how the code works.
 
 ---
 
-## [KEY] — [Title]
+## [KEY] — [Task summary]
 
-**Important**: Write everything in plain, human-readable language for testers, PMs, and clients. Avoid technical jargon, implementation details, code-specific terms, and developer-focused explanations.
+## Added
+[1] - Added [item].
+  - Purpose: ...
+  - Details: ...
 
-### Summary
-[1-2 sentence description of what was delivered or fixed in this task.]
+## Changed
+[1] - Changed [item].
+  - Reason: ...
+  - Impact: ...
 
-### Changes
-- [implemented change]
-- [implemented change]
+## Fixes
+[1] - Fixed [item].
+  - Root cause: ...
+  - Resolution: ...
 
-### Fixes
-- [bug fix or regression fix]
-- [or `None`]
-
-### Bug Analysis
-**[Bug title — omit section entirely if no bugs were fixed]**
-- Symptom: [What users or the system experienced]
-- Root Cause: [Confirmed cause, or "Best-supported hypothesis:" with uncertainty stated]
-- Fix Strategy: [What was changed to address it]
-- Regression Risk / Prevention: [Test added, guardrail, follow-up, or `None`]
+Omit empty sections.
