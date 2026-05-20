@@ -8,10 +8,12 @@ triggers:
   - "dev-ship-pr-jira --pr-only"
   - "dev-ship-pr-jira --jira-only"
   - "dev-ship-pr-jira --text-only"
+  - "dev-ship-pr-jira --technical-only"
   - "dev-ship"
   - "dev-ship --pr-only"
   - "dev-ship --jira-only"
   - "dev-ship --text-only"
+  - "dev-ship --technical-only"
 ---
 
 ## When to Use
@@ -19,7 +21,8 @@ triggers:
 - `/dev-ship-pr-jira`, `/dev-ship` — create PR + comment Jira (default)
 - `/dev-ship-pr-jira --pr-only`, `/dev-ship --pr-only` — create PR only, skip Jira
 - `/dev-ship-pr-jira --jira-only`, `/dev-ship --jira-only` — comment Jira only, skip PR
-- `/dev-ship-pr-jira --text-only`, `/dev-ship --text-only` — preview changelogs only, skip PR + Jira
+- `/dev-ship-pr-jira --text-only`, `/dev-ship --text-only` — preview both changelogs, skip PR + Jira
+- `/dev-ship-pr-jira --technical-only`, `/dev-ship --technical-only` — generate/preview technical changelog to `.local` only, skip PR + Jira
 - `/dev-ship-pr-jira [KEY]`, `/dev-ship [KEY]` — explicit task key (auto-detected from branch if not given)
 
 ## Flags
@@ -29,7 +32,8 @@ triggers:
 | (none) | Run all steps: PR + progress + Jira |
 | `--pr-only` | Skip Step 8 (Jira comment) |
 | `--jira-only` | Skip Step 6 (PR creation) and Step 7 (progress update) |
-| `--text-only` | Skip Step 6-9 (no PR, progress, or Jira). Show preview only. |
+| `--text-only` | Skip Step 6-9 (preview both changelogs). Show preview only. |
+| `--technical-only` | Skip Step 6-9. Generate technical changelog to `.local` only. |
 
 ## Paths
 
@@ -86,6 +90,7 @@ Format: `{action} {description} [KEY]` (e.g., `Fix PDF landscape scaling [KEY]`)
 ### Step 5: Show Preview
 
 If `--text-only`: show both changelogs, skip to Step 9.
+If `--technical-only`: write/update `TASK_DIR/changelog.md` with technical iteration, show preview, skip to Step 9.
 
 ```
 Commit: {MSG}
@@ -109,7 +114,7 @@ Commit: {MSG}
 [1] - ...
 ```
 
-If NOT `--text-only`: show report only, ask "Ready? Say YES."
+If NOT `--text-only` or `--technical-only`: show report only, ask "Ready? Say YES."
 
 ### Step 6: Create PR
 
