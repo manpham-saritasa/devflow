@@ -33,6 +33,9 @@ node_modules
 dist
 dist-ssr
 
+# CLI bundled content (generated at build time)
+cli/content/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
