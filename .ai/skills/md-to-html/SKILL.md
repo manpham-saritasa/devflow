@@ -119,7 +119,7 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
   --warning: #9a3412;
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius: 14px;
-  --table-even-row: #f7f8f9;
+  --table-even-row: #f8fafc;
   --table-border: #e5e7eb;
 }
 * { box-sizing: border-box; }
@@ -143,6 +143,7 @@ body {
   box-shadow: var(--shadow);
   padding: 28px;
   margin-bottom: 24px;
+  overflow: hidden;
 }
 .eyebrow {
   display: inline-block;
@@ -190,6 +191,7 @@ h1 {
   box-shadow: var(--shadow);
   padding: 24px;
   margin-bottom: 20px;
+  overflow: hidden;
 }
 h2 {
   margin: 0 0 16px;
@@ -211,23 +213,33 @@ ul.clean {
 ul.clean li { margin: 6px 0; }
 table {
   width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
   border: 1px solid var(--table-border);
+  border-radius: 12px;
+  overflow: hidden;
   background: #fff;
 }
 th, td {
-  border: 1px solid var(--table-border);
+  border-bottom: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border);
   vertical-align: top;
   text-align: left;
   padding: 16px 16px;
   font-size: 15px;
 }
 th {
-  background: #f8fafc;
+  background: #e6f4f8;
   font-size: 15px;
   color: #334155;
+}
+tr:last-child td,
+tr:last-child th {
+  border-bottom: none;
+}
+td:last-child,
+th:last-child {
+  border-right: none;
 }
 tbody tr:nth-child(even) td { background: var(--table-even-row); }
 td ul {
@@ -262,6 +274,7 @@ p code, li code, td code {
   background: #fbfcfd;
   border-radius: 12px;
   padding: 14px 16px;
+  overflow: hidden;
 }
 .block-grid {
   display: grid;
