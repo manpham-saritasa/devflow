@@ -3,13 +3,18 @@
 - Condense the text into simple, short, and direct English while keeping all core concepts.
 - Do not write like a marketing document with long paragraphs.
 - In table, use list format in the cell if needed.
-- Record decisions, constraints, pending items, open questions, and impacts clearly.
+- Record decisions, constraints, pending items, open questions, impacts, cost considerations, and long-term considerations clearly.
 - Separate what is decided now from what is still pending or out of scope.
-- Use `Pending Items` for unresolved validations, dependencies, and deferred decisions.
+- If cost is important, distinguish between confirmed cost facts and estimated cost assumptions.
+- If long-term direction is important, distinguish between current decision, expected future direction, and deferred future decisions.
+- Use `Decision Reasons` for why the chosen option is better, including architecture fit, team fit, cost reasoning, and long-term direction when relevant.
+- Use `Options Considered` to compare benefits and tradeoffs across options, including short-term cost, long-term cost, maintenance effort, rewrite effort, and long-term sustainability when relevant.
+- Use `Expected Outcomes` for what will likely happen after the decision is applied, including benefits, tradeoffs, follow-up work, risks, and long-term effects.
+- Use `Pending Items` for unresolved validations, dependencies, deferred decisions, and any cost or long-term assumptions that are not validated yet.
 - Use `Open Questions` only for questions that still need an answer from the client, team, owner, or reviewer.
 - Do not use `Open Questions` for technical facts already known but not yet verified; keep those in `Pending Items`.
-- Use `Review Guidance` only for future change rules and revisit triggers.
-- Do not repeat `Pending Items`, `Impact`, or `Consequences` inside `Review Guidance`.
+- Use `Review Guidance` only for future change rules and revisit triggers, including cost thresholds, strategy changes, or new findings that may invalidate the decision later.
+- Do not repeat `Pending Items`, `Change Impact`, or `Expected Outcomes` inside `Review Guidance`.
 - Format open questions as `Q1`, `A1`, `Q2`, `A2`, and so on.
 
 # ADR: [Short Decision Title]
@@ -20,7 +25,7 @@
 
 ***
 
-## 1. Context
+## 1. Current Context
 
 | Area                         | Details                                  |
 | ---------------------------- | ---------------------------------------- |
@@ -31,62 +36,62 @@
 
 ***
 
-## 2. Decision
+## 2. Chosen Direction
 
 - [State the main decision in 1-3 short bullets.]
 - [Describe the chosen approach or boundary.]
 - [State any hard rule that future work must follow.]
 
-
 ***
 
 ## 3. Decision Scope
 
-| Scope Type   | Details                                      |
-| ------------ | -------------------------------------------- |
-| In scope     | [What this ADR decides now.]                 |
-| Out of scope | [What this ADR does not decide.]             |
-| Assumptions  | [Facts assumed true at the time of writing.] |
+| Scope Type   | Details                                      | Client-friendly explanation    |
+| ------------ | -------------------------------------------- | ------------------------------ |
+| In scope     | [What this ADR decides now.]                 | [Client-friendly explanation]  |
+| Out of scope | [What this ADR does not decide.]             | [Client-friendly explanation]  |
+| Assumptions  | [Facts assumed true at the time of writing.] | [Client-friendly explanation]  |
 
 ***
 
-## 4. Rationale
+## 4. Decision Reasons
 
 #### Main decision
 
 - [Why this option was chosen.]
+- [If relevant, summarize why it is the better cost or long-term direction.]
 
 <br>
 
 #### Why it fits the current architecture or team direction?
 
-| Category                   | Reason                                       |
-| -------------------------- | -------------------------------------------- |
-| [Category in 2-4 words]    | [Reason]                                     |
-| [Category in 2-4 words]    | [Reason]                                     |
+| Category                   | Reason              | Client-friendly explanation    |
+| -------------------------- | ------------------- | ------------------------------ |
+| [Category in 2-4 words]    | [Reason]            | [Client-friendly explanation]  |
+| [Category in 2-4 words]    | [Reason]            | [Client-friendly explanation]  |
 
 <br>
 
 #### Why it is better than the likely alternatives for this case?
 
-| Summary                    | Reason                                       |
-| -------------------------- | -------------------------------------------- |
-| [Summary in a few words]   | [Reason]                                     |
-| [Summary in a few words]   | [Reason]                                     |
+| Summary                    | Reason              | Client-friendly explanation    |
+| -------------------------- | ------------------- | ------------------------------ |
+| [Summary in a few words]   | [Reason]            | [Client-friendly explanation]  |
+| [Summary in a few words]   | [Reason]            | [Client-friendly explanation]  |
 
 ***
 
 ## 5. Options Considered
 
-| Option                                     | Benefits             | Tradeoffs         |
-| ------------------------------------------ | ---------------------| ----------------- |
-| **Option 1 — [Chosen option]**             | [Benefits]           | [Tradeoffs]       |
-| Option 2 — [Alternative]                   | [Benefits]           | [Tradeoffs]       |
-| Option 3 — [Alternative or `Not needed`]   | [Benefits]           | [Tradeoffs]       |
+| Option                                     | Benefits             | Tradeoffs         | Client-friendly explanation    |
+| ------------------------------------------ | -------------------- | ----------------- | ------------------------------ |
+| **Option 1 — [Chosen option]**             | [Benefits, including cost or long-term benefits if relevant.] | [Tradeoffs, including cost or long-term tradeoffs if relevant.] | [Client-friendly explanation]  |
+| Option 2 — [Alternative]                   | [Benefits]           | [Tradeoffs]       | [Client-friendly explanation]  |
+| Option 3 — [Alternative or `Not needed`]   | [Benefits]           | [Tradeoffs]       | [Client-friendly explanation]  |
 
 ***
 
-## 6. Impact
+## 6. Change Impact
 
 | Area                 | Impact                                                    |
 | -------------------- | --------------------------------------------------------- |
@@ -99,14 +104,14 @@
 
 ***
 
-## 7. Consequences
+## 7. Expected Outcomes
 
-| Area           | Details                                                |
-| -------------- | ------------------------------------------------------ |
-| Benefits       | [What becomes better or simpler.]                      |
-| Tradeoffs      | [What becomes harder, more coupled, or less flexible.] |
-| Follow-up work | [Next steps, cleanup, migration, or `None`.]           |
-| Risks          | [Known risks, blockers, or `None`.]                    |
+| Area           | Details                                                | Client-friendly explanation    |
+| -------------- | ------------------------------------------------------ | ------------------------------ |
+| Benefits       | [What becomes better or simpler, including long-term benefits if relevant.] | [Client-friendly explanation]  |
+| Tradeoffs      | [What becomes harder, more coupled, or less flexible.] | [Client-friendly explanation]  |
+| Follow-up work | [Next steps, cleanup, migration, or `None`.]           | [Client-friendly explanation]  |
+| Risks          | [Known risks, blockers, or `None`.]                    | [Client-friendly explanation]  |
 
 ***
 
@@ -114,26 +119,26 @@
 
 | Type                 | Details                                                                       |
 | -------------------- | ----------------------------------------------------------------------------- |
-| Pending validations  | [Open checks still needed.]                                                   |
+| Pending validations  | [Open checks still needed, including cost validation or long-term assumptions if relevant.] |
 | Pending dependencies | [Access, approval, client input, infra setup, or external work needed first.] |
-| Deferred decisions   | [Related decisions that will be handled later.]                               |
+| Deferred decisions   | [Related decisions that will be handled later, including future long-term direction if relevant.] |
 
 ***
 
 ## 9. Open Questions
 
-- **Q1:** [Question that still needs an answer.]  
-  **A1:**
+- **Q1:** [Question that still needs an answer.]
+  **A1:** [Try to prefill a suggestion or options to choose.]
 
-- **Q2:** [Question about ownership, scope, timing, or approval.]  
-  **A2:**
+- **Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
+  **A2:** [Try to prefill a suggestion or options to choose.]
 
 - **Q3:** [Question that may change the final plan.]  
-  **A3:**
+  **A3:** [Try to prefill a suggestion or options to choose.]
 
 ***
 
-## 10. Evidence
+## 10. Supporting Evidence
 
 - **Task evidence:** [Task details, Jira comments, or user request that support this ADR.]
 - **Plan evidence:** [Plan details that support this ADR, or `None`.]
@@ -142,7 +147,7 @@
 
 ***
 
-## 11. Review Guidance
+## 11. Future Review Guidance
 
 - Future changes in this area should [follow rule / keep invariant / re-check condition].
-- Revisit this ADR if [specific trigger, threshold, or new finding].
+- Revisit this ADR if [specific trigger, threshold, cost finding, strategy change, or new technical finding].
