@@ -1,5 +1,5 @@
 {
-  "download_path": "../../dev/tasks",
+  "download_path": "../../.local/tasks",
   "sync_state_path": "result/sync-state.json",
   "not_found_state_path": "result/tasks-not-found.txt",
   "template_paths": "templates/raw-template.md",

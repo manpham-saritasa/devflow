@@ -9,14 +9,15 @@ from typing import cast
 
 from config import (
     CONFIG_PATH,
+    DOWNLOAD_PATH_REL,
     JIRA_PROJECT_KEY,
     REPO_ROOT,
     load_app_config,
     validate_project_key,
 )
 from fetcher import discover_fields, fetch_issue, get_max_issue_id
-from persistence import write_raw_md, write_task_json
 from github_pr import fetch_and_write_pr
+from persistence import write_raw_md, write_task_json
 from sync_runner import _fetch_children_if_epic, range_sync_issue, sync_one_issue
 from sync_state import add_not_found_id, load_not_found_ids, load_state
 from task_lists import RESOLVED_STATUSES, TaskListManager
@@ -84,7 +85,7 @@ def parse_args() -> argparse.Namespace:
     _ = parser.add_argument(
         "--get-pending",
         action="store_true",
-        help="Scan dev/tasks for unresolved tasks and write to tasks-pending.txt.",
+        help=f"Scan {DOWNLOAD_PATH_REL} for unresolved tasks and write to tasks-pending.txt.",
     )
     _ = parser.add_argument(
         "--pending",
