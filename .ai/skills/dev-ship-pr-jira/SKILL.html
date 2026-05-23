@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-ship-pr-jira</div>
+    <div class="meta-item"><span class="meta-label">description</span>|</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-ship-pr-jira, dev-ship-pr-jira --pr-only, dev-ship-pr-jira --jira-only, dev-ship-pr-jira --text-only, dev-ship-pr-jira --technical-only, dev-ship, dev-ship --pr-only, dev-ship --jira-only, dev-ship --text-only, dev-ship --technical-only</div>
+  </div>
+</section>
+<section class="section"><h2>When to Use</h2>
+<ul>
+<li><code>/dev-ship-pr-jira</code>, <code>/dev-ship</code> — create PR + comment Jira (default)</li>
+<li><code>/dev-ship-pr-jira --pr-only</code>, <code>/dev-ship --pr-only</code> — create PR only, skip Jira</li>
+<li><code>/dev-ship-pr-jira --jira-only</code>, <code>/dev-ship --jira-only</code> — comment Jira only, skip PR</li>
+<li><code>/dev-ship-pr-jira --text-only</code>, <code>/dev-ship --text-only</code> — preview both changelogs, skip PR + Jira</li>
+<li><code>/dev-ship-pr-jira --technical-only</code>, <code>/dev-ship --technical-only</code> — generate/preview technical changelog to <code>.local</code> only, skip PR + Jira</li>
+<li><code>/dev-ship-pr-jira [KEY]</code>, <code>/dev-ship [KEY]</code> — explicit task key (auto-detected from branch if not given)</li>
+</ul></section>
+<section class="section"><h2>Flags</h2>
+<table><thead>
+<tr><th>Flag</th><th>Behavior</th></tr>
+</thead><tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Run all steps: PR + progress + Jira</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--pr-only</code></td>
+<td data-label="Behavior">Skip Step 8 (Jira comment)</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--jira-only</code></td>
+<td data-label="Behavior">Skip Step 6 (PR creation) and Step 7 (progress update)</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--text-only</code></td>
+<td data-label="Behavior">Skip Step 6-9 (preview both changelogs). Show preview only.</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--technical-only</code></td>
+<td data-label="Behavior">Skip Step 6-9. Generate technical changelog to <code>.local</code> only.</td>
+</tr>
+</tbody></table></section>
+<section class="section"><h2>Paths</h2>
+<ul>
+<li>DEV_ROOT: <code>.local</code></li>
+<li>TASK_DIR: <code>[DEV_ROOT]/tasks/[KEY]</code> — replace [KEY] with Jira ticket key</li>
+<li>JIRA_TEMPLATE: <code>jira-summary-template.md</code> — non-technical, for testers/PMs/clients</li>
+<li>PR_TEMPLATE: <code>pr-summary-template.md</code> — technical, for future engineers</li>
+</ul></section>
+<section class="section"><h2>Variables</h2>
+<ul>
+<li>JIRA_DOMAIN: env var <code>$JIRA_DOMAIN</code></li>
+<li>JIRA_PROJECT: env var <code>$JIRA_PROJECT</code></li>
+</ul></section>
+<section class="section"><h2>Output Style</h2>
+<p><strong>Jira comment</strong> — use <code>JIRA_TEMPLATE</code>. Non-technical: behavior + user impact only. Audience: testers, PMs, clients. Never mention code-level details.</p>
+<p><strong>PR body</strong> — use <code>PR_TEMPLATE</code>. Technical: architecture, decisions, risks, reuse patterns. Audience: future engineers. Include file paths, method names, code patterns when relevant.</p></section>
+<section class="section"><h2>Workflow</h2>
+<h3>Step 1: Check Uncommitted Changes</h3>
+<p><code>git status --short</code>. If uncommitted: list, ask "Commit or skip?"</p>
+<ul>
+<li>Commit: stop, wait for user, restart</li>
+<li>Skip: proceed</li>
+</ul>
+<h3>Step 2: Extract Task ID</h3>
+<p><code>git branch --show-current</code>, extract KEY regex <code>([A-Z0-9]+-\d+)</code>.</p>
+<p>If fail: ask user for KEY or Jira link. Stop if no valid KEY.</p>
+<h3>Step 3: Generate Reports</h3>
+<p>Generate TWO reports from branch evidence (commits, diff, changed files, Jira context):</p>
+<p><strong>Jira report</strong> — use <code>JIRA_TEMPLATE</code>. Non-technical, business language. Audience: testers/PMs/clients.</p>
+<p><strong>PR report</strong> — use <code>PR_TEMPLATE</code>. Technical, engineering language. Audience: future developers.</p>
+<p>Source priority:</p>
+<ol>
+<li>If <code>TASK_DIR/changelog.md</code> exists: reclassify latest iteration</li>
+<li>Else: <code>git diff develop..HEAD</code>, auto-extract + populate</li>
+</ol>
+<p>Rules for Jira report:</p>
+<ul>
+<li>Behavior + user impact only. No variable/function/class/path/method names.</li>
+<li>Past tense, outcome-focused. Short + scannable.</li>
+<li>Classification: Added = new capabilities | Changed = updated behavior | Fixed = bugs</li>
+<li>Omit empty sections.</li>
+</ul>
+<p>Rules for PR report:</p>
+<ul>
+<li>Include file paths, method names, architectural decisions, code patterns.</li>
+<li>Group meaningful changes. Omit trivial refactors unless they support a key decision.</li>
+<li>Separate verified from not-verified in testing section.</li>
+<li>Mark reuse patterns with Safe to copy: YES/NO.</li>
+</ul>
+<h3>Step 4: Build Commit Message</h3>
+<p>Format: <code>{action} {description} [KEY]</code> (e.g., <code>Fix PDF landscape scaling [KEY]</code>)</p>
+<h3>Step 5: Show Preview</h3>
+<p>If <code>--text-only</code>: show both reports, skip to Step 9.</p>
+<p>If <code>--technical-only</code>: write/update <code>TASK_DIR/changelog.md</code> with technical iteration, show preview, skip to Step 9.</p>
+<pre><code>Commit: {MSG}
+
+## Technical Changelog (.local)
+## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
+...
+
+## PR Report (GitHub)
+## [KEY] — Title
+## Goal
+...
+
+## Jira Report
+## [KEY] — Task summary
+## Added
+...</code></pre>
+<p>If NOT <code>--text-only</code> or <code>--technical-only</code>: show both reports, ask "Ready? Say YES."</p>
+<h3>Step 6: Create PR</h3>
+<p>Skip if <code>--jira-only</code> or <code>--text-only</code>:</p>
+<pre><code>git push origin $(git branch --show-current)
+gh pr create --base develop --head $(git branch --show-current) --title &quot;{MSG}&quot; --body &quot;{BODY}&quot;</code></pre>
+<p>Capture PR URL. <code>{PR_BODY}</code> is the output from <code>PR_TEMPLATE</code>.</p>
+<h3>Step 7: Update Progress</h3>
+<p>Skip if <code>--jira-only</code> or <code>--text-only</code>:</p>
+<ul>
+<li>If <code>TASK_DIR/progress.md</code> exists: prepend status "Shipped", PR URL, timestamp</li>
+<li>Else: create new file</li>
+</ul>
+<h3>Step 8: Comment Jira</h3>
+<p>Skip if <code>--pr-only</code> or <code>--text-only</code>:</p>
+<pre><code>cloudId: [JIRA_DOMAIN]
+issueIdOrKey: [KEY]
+commentBody: {JIRA_BODY}\n\n[View PR]({PR_URL})
+contentFormat: markdown</code></pre>
+<p><strong>Required</strong>: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: <code><a href="{PR_URL}">View PR</a></code>). Never omit or move to top.</p>
+<p><code>{JIRA_BODY}</code> is the output from <code>JIRA_TEMPLATE</code>.</p>
+<h3>Step 9: Success</h3>
+<pre><code>✅ PR: {PR_URL}
+✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Jira: [KEY] commented</code></pre>
+<p>(Omit skipped steps per flags.)</p></section>
+  </main>
+</body>
+</html>

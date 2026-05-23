@@ -14,12 +14,14 @@ Before using this skill, make sure you have:
 
 ## What does this skill do?
 
-1. Creates a pull request on GitHub
-2. Writes a comment on your Jira task with the PR link
+1. Creates a pull request on GitHub with a technical report for future developers
+2. Writes a comment on your Jira task with a non-technical summary for testers and PMs
 3. Saves progress information for later
 4. Shows you a preview before doing anything
 
-It takes information from your current git branch and your code changes, then creates everything you need to share your work.
+It uses two different templates:
+- **PR body** — technical (architecture, decisions, risks, reuse patterns)
+- **Jira comment** — non-technical (behavior, user impact, testing notes)
 
 ## When should I use it?
 
@@ -57,12 +59,14 @@ The skill will show you what it will do, then ask you to say "YES" before making
 
 1. **Check your code** — looks at what you changed
 2. **Get the task ID** — reads it from your branch name
-3. **Find your changes** — reads your changelog or git history
-4. **Show you a preview** — displays what the PR will look like
+3. **Generate reports** — creates two reports:
+   - Technical PR report (for future developers)
+   - Non-technical Jira report (for testers and PMs)
+4. **Show you a preview** — displays both reports
 5. **Ask for permission** — waits for you to say YES
-6. **Create the PR** — sends code to GitHub
+6. **Create the PR** — sends code to GitHub with the technical report
 7. **Save progress** — writes what happened to a progress file
-8. **Comment on Jira** — posts a message with the PR link
+8. **Comment on Jira** — posts the non-technical report with the PR link
 
 ## Examples
 
