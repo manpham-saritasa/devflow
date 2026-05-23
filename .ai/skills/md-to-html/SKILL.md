@@ -3,6 +3,10 @@
 ---
 name: md-to-html
 description: Convert Markdown files into polished standalone HTML files using a clean card-based layout, embedded CSS, responsive tables, and readable document styling.
+triggers:
+  - "md-to-html"
+  - "to-html"
+  - "md-html"
 ---
 
 ## Purpose
@@ -108,7 +112,7 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
 
 ```css
 :root {
-  --bg: #f6f7f9;
+  --bg: #E2E8F0;
   --surface: #ffffff;
   --surface-2: #f1f4f8;
   --text: #1f2937;
@@ -120,6 +124,8 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius: 14px;
   --title: #1e3a5f;
+  --th-bg: #e6f4f8;
+  --th-title: #1e3a5f;
   --table-even-row: #f8fafc;
   --table-border: #e5e7eb;
 }
@@ -234,9 +240,9 @@ th, td {
   font-size: 15px;
 }
 th {
-  background: #e6f4f8;
+  background: var(--th-bg);
   font-size: 15px;
-  color: var(--title);
+  color: var(--th-title);
 }
 tr:last-child td,
 tr:last-child th {

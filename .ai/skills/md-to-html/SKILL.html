@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill: md-to-html</title>
+  <style>
+:root {
+  --bg: #E2E8F0;
+  --surface: #ffffff;
+  --surface-2: #f1f4f8;
+  --text: #1f2937;
+  --muted: #5b6574;
+  --border: #d9e0e7;
+  --accent: #0f766e;
+  --accent-soft: #e6f4f1;
+  --warning: #9a3412;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --radius: 9px;
+  --title: #1e3a5f;
+  --th-bg: #e6f4f8;
+  --th-title: #1e3a5f;
+  --table-even-row: #f8fafc;
+  --table-border: #e5e7eb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 17px;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+}
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+.header {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  padding: 28px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.eyebrow {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  line-height: 1.15;
+  color: var(--title);
+}
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.meta-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 14px;
+}
+.meta-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  color: var(--title);
+}
+h3 {
+  margin: 24px 0 10px;
+  font-size: 20px;
+  color: var(--title);
+}
+h4 {
+  color: var(--title);
+}
+p.note {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+ul.clean {
+  margin: 0;
+  padding-left: 20px;
+}
+ul.clean li { margin: 6px 0; }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--table-border);
+  border-radius: 9px;
+  overflow: hidden;
+  background: #fff;
+}
+th, td {
+  border-bottom: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border);
+  vertical-align: top;
+  text-align: left;
+  padding: 16px 16px;
+  font-size: 15px;
+}
+th {
+  background: var(--th-bg);
+  font-size: 15px;
+  color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+  border-bottom: none;
+}
+td:last-child,
+th:last-child {
+  border-right: none;
+}
+tbody tr:nth-child(even) td { background: var(--table-even-row); }
+td ul {
+  margin: 0;
+  padding-left: 18px;
+}
+td li { margin: 4px 0; }
+pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #0f172a;
+  color: #e5eefc;
+}
+code {
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+pre code {
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+p code, li code, td code {
+  background: #eef3f7;
+  padding: 2px 6px;
+  border-radius: 9px;
+}
+.block-card {
+  border: 1px solid var(--border);
+  background: #fbfcfd;
+  border-radius: 9px;
+  padding: 14px 16px;
+  overflow: hidden;
+}
+.block-grid {
+  display: grid;
+  gap: 14px;
+}
+.q { font-weight: 700; margin: 0 0 8px; color: var(--text); }
+.a { color: var(--muted); margin: 0; }
+strong, h2, h3, h4 { color: var(--title); }
+a, h1 { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .page { padding: 18px 12px 36px; }
+  .header, .section { padding: 16px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 24px; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr {
+    border: 1px solid var(--table-border);
+    padding: 10px 0;
+  }
+  td {
+    border: none;
+    padding: 8px 0;
+  }
+  td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <div class="eyebrow">Skill</div>
+  <h1>md-to-html</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>md-to-html</div>
+    <div class="meta-item"><span class="meta-label">description</span>Convert Markdown files into polished standalone HTML files using a clean card-based layout, embedded CSS, responsive tables, and readable document styling.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>md-to-html, to-html, md-html</div>
+  </div>
+</section>
+<section class="section"><h2>Purpose</h2>
+<p>Use this skill when the user wants to:</p>
+<ul>
+<li>Convert a Markdown file into an HTML file.</li>
+<li>Turn notes, reports, specs, proposals, plans, or documentation into a shareable HTML page.</li>
+<li>Reuse the same visual style across multiple Markdown-based documents.</li>
+<li>Produce a readable HTML document instead of plain Markdown.</li>
+</ul>
+<p>This skill is specifically for:</p>
+<ul>
+<li>Documentation pages.</li>
+<li>Reports.</li>
+<li>Technical notes.</li>
+<li>Project plans.</li>
+<li>Internal writeups.</li>
+<li>Client-facing or team-facing documents.</li>
+</ul></section>
+<section class="section"><h2>Output rules</h2>
+<ul>
+<li>The final deliverable must be a standalone <code>.html</code> file.</li>
+<li>Keep the HTML self-contained, with embedded CSS in one file unless the user explicitly asks for separate assets.</li>
+<li>Use semantic HTML: <code>main</code>, <code>section</code>, <code>table</code>, <code>thead</code>, <code>tbody</code>, <code>ul</code>, <code>li</code>, headings in order.</li>
+<li>Use normal newlines in text content. Do not use <code></code> as a spacing tool.</li>
+<li>For lists inside table cells, use HTML list tags: <code><ul><li>...</li></ul></code>.</li>
+<li>Keep the wording simple, short, direct, and readable.</li>
+<li>Prefer neutral professional language unless the source content clearly calls for another tone.</li>
+<li>Do not include inline citations in the generated HTML file unless the user explicitly asks for them.</li>
+</ul></section>
+<section class="section"><h2>Conversion behavior</h2>
+<ul>
+<li>Preserve the source document structure as much as possible.</li>
+<li>Convert Markdown headings into proper HTML heading tags.</li>
+<li>Convert Markdown paragraphs into HTML paragraphs.</li>
+<li>Convert Markdown bullet and numbered lists into HTML lists.</li>
+<li>Convert Markdown tables into HTML tables.</li>
+<li>Convert code blocks into HTML <code>pre</code> and <code>code</code> blocks.</li>
+<li>Convert links into clickable HTML anchors.</li>
+<li>Keep section order from the source Markdown unless the user asks to restructure it.</li>
+<li>If the source Markdown has repeated separators or formatting noise, clean it up during conversion.</li>
+<li>If the source Markdown uses weak formatting that would render poorly in HTML, normalize it into cleaner HTML structure.</li>
+</ul></section>
+<section class="section"><h2>Writing rules</h2>
+<ul>
+<li>Keep the original meaning of the Markdown file.</li>
+<li>Clean up formatting without changing the substance.</li>
+<li>Remove obvious Markdown-only artifacts when they are no longer useful in HTML.</li>
+<li>Keep paragraphs short when possible.</li>
+<li>Prefer readable spacing, tables, and lists over dense text blocks.</li>
+<li>Avoid unnecessary decorative elements.</li>
+</ul></section>
+<section class="section"><h2>Visual format</h2>
+<p>Generate a polished HTML document with this visual approach:</p>
+<h3>Layout</h3>
+<ul>
+<li>Centered page container with a max width around 1100-1200px.</li>
+<li>Soft page background.</li>
+<li>Card-style main sections with rounded corners, thin borders, and light shadow.</li>
+<li>No <code><hr></code> separators between sections — the card layout provides visual separation.</li>
+<li>A top header card with the document title and optional metadata when available.</li>
+<li>Clear spacing between sections.</li>
+</ul>
+<h3>Typography</h3>
+<ul>
+<li>Clean sans-serif stack such as Inter, Segoe UI, Roboto, Arial, sans-serif.</li>
+<li>Strong but calm heading hierarchy.</li>
+<li>Slightly larger default font sizing for easier reading.</li>
+<li>Readable table text that is not too small by default.</li>
+<li>Table header font should match body font size for readability.</li>
+<li>Muted supporting text for secondary details.</li>
+<li>Comfortable line height for document reading.</li>
+</ul>
+<h3>Tables</h3>
+<ul>
+<li>Full-width tables.</li>
+<li>Light header background with readable font size.</li>
+<li>Very light 1px border on cells.</li>
+<li>Lighter even-row background (lighter than header, subtle alternation).</li>
+<li>On mobile, convert table rows into stacked blocks using CSS.</li>
+<li>Each <code>td</code> should support <code>data-label</code> for responsive display.</li>
+</ul>
+<h3>Cards and blocks</h3>
+<ul>
+<li>Section wrappers should look like clean document cards.</li>
+<li>Optional callout or question blocks can use a bordered light surface.</li>
+<li>Lists inside tables should render with real HTML lists.</li>
+</ul>
+<h3>Colors</h3>
+<p>Use this approved palette by default:</p>
+<ul>
+<li>Page background: <code>#f6f7f9</code></li>
+<li>Primary surface: <code>#ffffff</code></li>
+<li>Secondary surface: <code>#f1f4f8</code></li>
+<li>Main text: <code>#1f2937</code></li>
+<li>Muted text: <code>#5b6574</code></li>
+<li>Border: <code>#d9e0e7</code></li>
+<li>Accent: <code>#0f766e</code></li>
+<li>Accent soft: <code>#e6f4f1</code></li>
+<li>Warning: <code>#9a3412</code></li>
+<li>Shadow: <code>0 10px 30px rgba(15, 23, 42, 0.08)</code></li>
+<li>Base radius: <code>14px</code></li>
+</ul></section>
+<section class="section"><h2>Approved CSS theme</h2>
+<p>Unless the user explicitly asks for a different style, reuse this CSS baseline directly and adjust only minor values if needed:</p>
+<pre><code>:root {
+  --bg: #E2E8F0;
+  --surface: #ffffff;
+  --surface-2: #f1f4f8;
+  --text: #1f2937;
+  --muted: #5b6574;
+  --border: #d9e0e7;
+  --accent: #0f766e;
+  --accent-soft: #e6f4f1;
+  --warning: #9a3412;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --radius: 14px;
+  --title: #1e3a5f;
+  --th-bg: #e6f4f8;
+  --th-title: #1e3a5f;
+  --table-even-row: #f8fafc;
+  --table-border: #e5e7eb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
+  font-size: 17px;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+}
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+.header {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  padding: 28px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.eyebrow {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  line-height: 1.15;
+  color: var(--title);
+}
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.meta-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 14px;
+}
+.meta-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  color: var(--title);
+}
+h3 {
+  margin: 24px 0 10px;
+  font-size: 20px;
+  color: var(--title);
+}
+h4 {
+  color: var(--title);
+}
+p.note {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+ul.clean {
+  margin: 0;
+  padding-left: 20px;
+}
+ul.clean li { margin: 6px 0; }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--table-border);
+  border-radius: 9px;
+  overflow: hidden;
+  background: #fff;
+}
+th, td {
+  border-bottom: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border);
+  vertical-align: top;
+  text-align: left;
+  padding: 16px 16px;
+  font-size: 15px;
+}
+th {
+  background: var(--th-bg);
+  font-size: 15px;
+  color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+  border-bottom: none;
+}
+td:last-child,
+th:last-child {
+  border-right: none;
+}
+tbody tr:nth-child(even) td { background: var(--table-even-row); }
+td ul {
+  margin: 0;
+  padding-left: 18px;
+}
+td li { margin: 4px 0; }
+pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #0f172a;
+  color: #e5eefc;
+}
+code {
+  font-family: &quot;Cascadia Code&quot;, &quot;SFMono-Regular&quot;, Consolas, &quot;Liberation Mono&quot;, Menlo, monospace;
+}
+pre code {
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+p code, li code, td code {
+  background: #eef3f7;
+  padding: 2px 6px;
+  border-radius: 9px;
+}
+.block-card {
+  border: 1px solid var(--border);
+  background: #fbfcfd;
+  border-radius: 9px;
+  padding: 14px 16px;
+  overflow: hidden;
+}
+.block-grid {
+  display: grid;
+  gap: 14px;
+}
+.q { font-weight: 700; margin: 0 0 8px; color: var(--text); }
+.a { color: var(--muted); margin: 0; }
+strong, h2, h3, h4 { color: var(--title); }
+a, h1 { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .page { padding: 18px 12px 36px; }
+  .header, .section { padding: 16px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 24px; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr {
+    border: 1px solid var(--table-border);
+    padding: 10px 0;
+  }
+  td {
+    border: none;
+    padding: 8px 0;
+  }
+  td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+}</code></pre></section>
+<section class="section"><h2>HTML skeleton</h2>
+<p>Use this general shape:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;[Document Title]&lt;/title&gt;
+  &lt;style&gt;
+    /* use the approved CSS theme */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;main class=&quot;page&quot;&gt;
+    &lt;section class=&quot;header&quot;&gt;...&lt;/section&gt;
+    &lt;section class=&quot;section&quot;&gt;...&lt;/section&gt;
+    &lt;section class=&quot;section&quot;&gt;...&lt;/section&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></section>
+<section class="section"><h2>Usage</h2>
+<p>Run the bundled converter script:</p>
+<pre><code>python .ai/skills/md-to-html/convert.py &lt;input.md&gt; [output.html]</code></pre>
+<p>If <code>output.html</code> is omitted, it writes to <code><input_stem>.html</code> alongside the source file.</p>
+<p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code></code>/<code><hr></code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&A <code>block-card</code> grids.</p></section>
+<section class="section"><h2>File naming</h2>
+<p>Use descriptive lowercase hyphenated filenames, for example:</p>
+<ul>
+<li><code>project-plan.html</code></li>
+<li><code>technical-notes.html</code></li>
+<li><code>migration-report.html</code></li>
+<li><code>converted-document.html</code></li>
+</ul></section>
+  </main>
+</body>
+</html>
