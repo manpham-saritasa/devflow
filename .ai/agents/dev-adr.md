@@ -92,3 +92,4 @@ Use this format:
 - Did it avoid creating an ADR when no architectural decision exists?
 - Did it avoid inventing unsupported rationale or consequences?
 - Did the ADR filename use `[KEY]-[short-decision-summary].md` in kebab-case?
+- Were all `[Summary or explanation about...]` placeholders in the template replaced with real 1-2 sentence summaries? None should remain as-is or be silently removed.

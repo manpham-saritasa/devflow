@@ -52,34 +52,14 @@ def _process_line(lines, i, state, emit):
         state.code_buf.append(line + "\n")
         return i + 1
 
-    if line.strip() == "":
-        if state.in_list:
-            emit(f"</{state.list_tag}>")
-            state.in_list = False
+    if _handle_blank_line(line, state, emit):
         return i + 1
-
-    if re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", line.strip()):
-        _close_table(state, emit)
+    if _handle_hr(line, state, emit):
         return i + 1
-
-    m = re.match(r"^(#{1,6})\s+(.+)$", line)
-    if m:
-        _close_table(state, emit)
-        if state.in_list:
-            emit(f"</{state.list_tag}>")
-            state.in_list = False
-        level = min(len(m.group(1)), 3)
-        emit(f"<h{level}>{parse_inline(m.group(2))}</h{level}>")
+    if _emit_heading(line, state, emit):
         return i + 1
-
-    if re.match(r"^\|[\s\-:|]+\|$", line.strip()):
-        if state.in_table:
-            state.table_header_done = True
+    if _handle_table_line(line, state, emit):
         return i + 1
-    if line.strip().startswith("|") and line.strip().endswith("|"):
-        _emit_table_row(line, state, emit)
-        return i + 1
-    _close_table(state, emit)
 
     m_ul = re.match(r"^(\s*)[-*]\s+(.+)$", line)
     if m_ul:
@@ -92,6 +72,55 @@ def _process_line(lines, i, state, emit):
     if content:
         emit(f"<p>{content}</p>")
     return i + 1
+
+
+# ── Block-element handlers ──────────────────────────────────────────────────
+
+
+def _handle_blank_line(line, state, emit):
+    """Close list on blank line. Returns True if consumed."""
+    if line.strip() != "":
+        return False
+    if state.in_list:
+        emit(f"</{state.list_tag}>")
+        state.in_list = False
+    return True
+
+
+def _handle_hr(line, state, emit):
+    """Close table on HR. Returns True if consumed."""
+    if not re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", line.strip()):
+        return False
+    _close_table(state, emit)
+    return True
+
+
+def _emit_heading(line, state, emit):
+    """Close blocks and emit heading tag. Returns True if consumed."""
+    m = re.match(r"^(#{1,6})\s+(.+)$", line)
+    if not m:
+        return False
+    _close_table(state, emit)
+    if state.in_list:
+        emit(f"</{state.list_tag}>")
+        state.in_list = False
+    level = min(len(m.group(1)), 3)
+    emit(f"<h{level}>{parse_inline(m.group(2))}</h{level}>")
+    return True
+
+
+def _handle_table_line(line, state, emit):
+    """Handle table separator, row, or close fallback. Returns True if consumed."""
+    if re.match(r"^\|[\s\-:|]+\|$", line.strip()):
+        if state.in_table:
+            state.table_header_done = True
+        return True
+    if line.strip().startswith("|") and line.strip().endswith("|"):
+        _emit_table_row(line, state, emit)
+        return True
+    _close_table(state, emit)
+    return False
+
 
 # ── Line handlers ───────────────────────────────────────────────────────────
 

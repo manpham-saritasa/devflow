@@ -16,6 +16,7 @@
 - Use `Review Guidance` only for future change rules and revisit triggers, including cost thresholds, strategy changes, or new findings that may invalidate the decision later.
 - Do not repeat `Pending Items`, `Change Impact`, or `Expected Outcomes` inside `Review Guidance`.
 - Format open questions as `Q1`, `A1`, `Q2`, `A2`, and so on.
+- Every `[Summary or explanation about...]` placeholder must be replaced with a real 1-2 sentence summary. Never remove them silently — fill them with task-specific context.
 
 # ADR: [Short Decision Title]
 
@@ -26,6 +27,8 @@
 ***
 
 ## 1. Current Context
+
+[Summary or explanation about the Current Context.]
 
 | Area                         | Details                                  |
 | ---------------------------- | ---------------------------------------- |
@@ -45,6 +48,8 @@
 ***
 
 ## 3. Decision Scope
+
+[Summary or explanation about the Decision Scope.]
 
 | Scope Type   | Details                                      | Client-friendly explanation    |
 | ------------ | -------------------------------------------- | ------------------------------ |
@@ -83,6 +88,8 @@
 
 ## 5. Options Considered
 
+[Summary or explanation about the Options Considered.]
+
 | Option                                     | Benefits             | Tradeoffs         | Client-friendly explanation    |
 | ------------------------------------------ | -------------------- | ----------------- | ------------------------------ |
 | **Option 1 — [Chosen option]**             | [Benefits, including cost or long-term benefits if relevant.] | [Tradeoffs, including cost or long-term tradeoffs if relevant.] | [Client-friendly explanation]  |
@@ -92,6 +99,8 @@
 ***
 
 ## 6. Change Impact
+
+[Summary or explanation about the Change Impact.]
 
 | Area                 | Impact                                                    |
 | -------------------- | --------------------------------------------------------- |
@@ -106,6 +115,8 @@
 
 ## 7. Expected Outcomes
 
+[Summary or explanation about the Expected Outcomes.]
+
 | Area           | Details                                                | Client-friendly explanation    |
 | -------------- | ------------------------------------------------------ | ------------------------------ |
 | Benefits       | [What becomes better or simpler, including long-term benefits if relevant.] | [Client-friendly explanation]  |
@@ -117,6 +128,8 @@
 
 ## 8. Pending Items
 
+[Summary or explanation about the Pending Items.]
+
 | Type                 | Details                                                                       |
 | -------------------- | ----------------------------------------------------------------------------- |
 | Pending validations  | [Open checks still needed, including cost validation or long-term assumptions if relevant.] |
@@ -126,6 +139,7 @@
 ***
 
 ## 9. Open Questions
+[Summary or explanation about the Open Questions.]
 
 - **Q1:** [Question that still needs an answer.]
   **A1:** [Try to prefill a suggestion or options to choose.]

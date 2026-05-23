@@ -126,6 +126,7 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
   --title: #1e3a5f;
   --th-bg: #e6f4f8;
   --th-title: #1e3a5f;
+  --h2-border-line: rgb(13, 148, 136);
   --table-even-row: #f8fafc;
   --table-border: #e5e7eb;
 }
@@ -204,6 +205,7 @@ h2 {
   margin: 0 0 16px;
   font-size: 28px;
   color: var(--title);
+  border-bottom: 2px solid var(--h2-border-line);
 }
 h3 {
   margin: 24px 0 10px;

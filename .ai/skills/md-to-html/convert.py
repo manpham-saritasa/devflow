@@ -138,8 +138,15 @@ def _wrap_qa_cards(html_body: str) -> str:
 
         heading_match = re.search(r"(<h2>[^<]*Questions?[^<]*</h2>)", section)
         heading = heading_match.group(1) if heading_match else ""
+        after_heading = section[heading_match.end():] if heading_match else section
+        prefix = ""
+        ul_idx = after_heading.find("<ul>")
+        if ul_idx > 0:
+            prefix = after_heading[:ul_idx].strip()
+
         grid = '<div class="block-grid">\n' + "\n".join(cards) + "\n</div>"
-        return f'<section class="section">\n{heading}\n{grid}\n</section>'
+        prefix_block = f"{prefix}\n" if prefix else ""
+        return f'<section class="section">\n{heading}\n{prefix_block}{grid}\n</section>'
 
     return re.sub(
         r'<section class="section">\s*<h2>[^<]*Questions?[^<]*</h2>.*?</section>',
