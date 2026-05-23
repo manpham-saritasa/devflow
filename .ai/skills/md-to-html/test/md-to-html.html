@@ -15,7 +15,7 @@
     --accent: #0f766e;
     --accent-soft: #e6f4f1;
     --warning: #9a3412;
-    --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
     --radius: 9px;
     --title: #1e3a5f;
     --th-bg: #e6f4f8;
@@ -182,6 +182,9 @@ pre code {
     background: transparent;
     padding: 0;
 }
+pre.mermaid {
+    background: #f8fafc;
+}
 p code,
 li code,
 td code {
@@ -268,6 +271,7 @@ a:hover {
 }
 
   </style>
+
 </head>
 <body>
   <main class="page">
@@ -302,8 +306,8 @@ a:hover {
 <li>The final deliverable must be a standalone <code>.html</code> file.</li>
 <li>Keep the HTML self-contained, with embedded CSS in one file unless the user explicitly asks for separate assets.</li>
 <li>Use semantic HTML: <code>main</code>, <code>section</code>, <code>table</code>, <code>thead</code>, <code>tbody</code>, <code>ul</code>, <code>li</code>, headings in order.</li>
-<li>Use normal newlines in text content. Do not use <code></code> as a spacing tool.</li>
-<li>For lists inside table cells, use HTML list tags: <code><ul><li>...</li></ul></code>.</li>
+<li>Use normal newlines in text content. Do not use <code>&lt;br&gt;</code> as a spacing tool.</li>
+<li>For lists inside table cells, use HTML list tags: <code>&lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;</code>.</li>
 <li>Keep the wording simple, short, direct, and readable.</li>
 <li>Prefer neutral professional language unless the source content clearly calls for another tone.</li>
 <li>Do not include inline citations in the generated HTML file unless the user explicitly asks for them.</li>
@@ -337,7 +341,7 @@ a:hover {
 <li>Centered page container with a max width around 1100-1200px.</li>
 <li>Soft page background.</li>
 <li>Card-style main sections with rounded corners, thin borders, and light shadow.</li>
-<li>No <code><hr></code> separators between sections — the card layout provides visual separation.</li>
+<li>No <code>&lt;hr&gt;</code> separators between sections — the card layout provides visual separation.</li>
 <li>A top header card with the document title and optional metadata when available.</li>
 <li>Clear spacing between sections.</li>
 </ul>
@@ -618,8 +622,8 @@ a:hover { text-decoration: underline; }
 <section class="section"><h2>Usage</h2>
 <p>Run the bundled converter script:</p>
 <pre><code>python .ai/skills/md-to-html/convert.py &lt;input.md&gt; [output.html]</code></pre>
-<p>If <code>output.html</code> is omitted, it writes to <code><input_stem>.html</code> alongside the source file.</p>
-<p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code></code>/<code><hr></code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&A <code>block-card</code> grids.</p></section>
+<p>If <code>output.html</code> is omitted, it writes to <code>&lt;input_stem&gt;.html</code> alongside the source file.</p>
+<p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code>&lt;br&gt;</code>/<code>&lt;hr&gt;</code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&A <code>block-card</code> grids.</p></section>
 <section class="section"><h2>File naming</h2>
 <p>Use descriptive lowercase hyphenated filenames, for example:</p>
 <ul>

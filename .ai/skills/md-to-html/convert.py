@@ -256,6 +256,14 @@ def convert(md_path: Path, out_path: Path) -> Path:
     body_html = md_body_to_html(body_text)
     final_body = post_process(body_html, title, meta)
 
+    mermaid_script = ""
+    if 'class="mermaid"' in final_body:
+        mermaid_script = (
+            '<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js">'
+            '</script>\n'
+            '<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>'
+        )
+
     html = f"""\
 <!DOCTYPE html>
 <html lang="en">
@@ -266,6 +274,7 @@ def convert(md_path: Path, out_path: Path) -> Path:
   <style>
 {CSS}
   </style>
+{mermaid_script}
 </head>
 <body>
   <main class="page">

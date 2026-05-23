@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Workflow README</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Agent Workflow README</h1>
+</section>
+<section class="section"><h2>Goals</h2>
+<ul>
+<li>Keep tracked agent definitions and templates in <code>.ai/agents</code>.</li>
+<li>Keep one local working folder per task in <code>.local/tasks/[KEY]</code>.</li>
+<li>Add <code>.local/tasks</code> to <code>.gitignore</code> so local task artifacts are not committed.</li>
+<li>Keep task history in the same files by appending iterations instead of replacing old content.</li>
+<li>Support iteration 1 from Jira, then later iterations from PR comments, review findings, bug reports, or manual user instructions.</li>
+<li>Keep planning context rich enough for implementation, but compact enough for repeated LLM reading.</li>
+<li>Separate ADR recommendation from ADR creation; the reviewer can suggest an ADR, but a different skill or a human creates it manually.</li>
+</ul></section>
+<section class="section"><h2>Directory layout</h2>
+<pre><code>.ai/
+└── agents/
+  ├── dev-planner.md
+  ├── dev-coder.md
+  ├── dev-reviewer.md
+  └── templates/
+     ├── plan-template.md
+     ├── changelog-template.md
+     ├── review-template.md
+     └── progress-template.md
+
+.local/
+└── tasks/
+  └── [KEY]/
+     ├── task.md
+     ├── raw.md
+     ├── plan.md
+     ├── changelog.md
+     ├── review.md
+     └── progress.md</code></pre>
+<pre><code>.local/tasks/</code></pre>
+<ul>
+<li><code>task.md</code> stores normalized task requirements when available.</li>
+<li><code>raw.md</code> stores Jira description, comments, and raw context when available.</li>
+<li><code>plan.md</code>, <code>changelog.md</code>, and <code>review.md</code> are append-only files that accumulate iterations and review passes over time.</li>
+<li><code>progress.md</code> is the compact timeline used to quickly understand current state and next action.</li>
+</ul></section>
+<section class="section"><h2>Core idea</h2>
+<p>The workflow keeps tracked agent logic and templates under <code>.ai/agents</code>, while stable task-level context and append-only working artifacts live under <code>.local/tasks/[KEY]</code>. Each artifact keeps stable context at the top and appends iteration-specific sections below it, which reduces repetition while preserving enough structure for agents to read the latest work, understand earlier decisions, and continue from the correct state.</p></section>
+<section class="section"><h2>Roles</h2>
+<h3>Planner</h3>
+<ul>
+<li>Reads task context from the best available source: local task files first when present, otherwise Jira via MCP, otherwise the user message.</li>
+<li>Investigates the repository, related tasks, and relevant ADRs before planning.</li>
+<li>Shows an investigation summary to the user before writing a new plan iteration.</li>
+<li>Appends a new iteration to <code>plan.md</code> and a matching timeline entry to <code>progress.md</code> after approval.</li>
+<li>Keeps <code>Confidence</code> in each proposed change and moves related-task impact scoring into the planner's user-facing summary instead of <code>plan.md</code> itself.</li>
+</ul>
+<h3>Coder</h3>
+<ul>
+<li>Reads the full <code>plan.md</code> but treats the latest iteration as the active implementation source of truth.</li>
+<li>Implements the planned changes in order, verifies work incrementally, and reports progress to the user after major items.</li>
+<li>Appends the iteration result to <code>changelog.md</code> and updates the same iteration in <code>progress.md</code>.</li>
+<li>Stops and asks for clarification or re-planning when assumptions fail or scope changes materially.</li>
+</ul>
+<h3>Reviewer</h3>
+<ul>
+<li>Reviews the actual code against task context, the active plan iteration, repository standards, and the matching changelog iteration.</li>
+<li>Appends a new review pass to <code>review.md</code> and updates the task state in <code>progress.md</code>.</li>
+<li>Records verdicts as <code>Pass</code>, <code>Pass with Changes</code>, or <code>Fail</code> in the review artifact, and maps these to practical next actions for the team.</li>
+<li>Suggests whether an ADR would be appropriate, but does not create ADR files.</li>
+</ul></section>
+<section class="section"><h2>File responsibilities</h2>
+<table><thead>
+<tr><th>File</th><th>Purpose</th><th>Updated by</th></tr>
+</thead><tbody>
+<tr>
+<td data-label="File"><code>task.md</code></td>
+<td data-label="Purpose">Stable task requirements and normalized context when available.</td>
+<td data-label="Updated by">Human or upstream sync.</td>
+</tr>
+<tr>
+<td data-label="File"><code>raw.md</code></td>
+<td data-label="Purpose">Raw Jira/task comments and captured source material.</td>
+<td data-label="Updated by">Human or upstream sync.</td>
+</tr>
+<tr>
+<td data-label="File"><code>plan.md</code></td>
+<td data-label="Purpose">Append-only implementation plans by iteration.</td>
+<td data-label="Updated by">Planner.</td>
+</tr>
+<tr>
+<td data-label="File"><code>changelog.md</code></td>
+<td data-label="Purpose">Append-only record of what was actually implemented per iteration.</td>
+<td data-label="Updated by">Coder.</td>
+</tr>
+<tr>
+<td data-label="File"><code>review.md</code></td>
+<td data-label="Purpose">Append-only review passes and findings.</td>
+<td data-label="Updated by">Reviewer.</td>
+</tr>
+<tr>
+<td data-label="File"><code>progress.md</code></td>
+<td data-label="Purpose">Compact timeline of each iteration and current task state.</td>
+<td data-label="Updated by">Planner, coder, reviewer.</td>
+</tr>
+</tbody></table></section>
+<section class="section"><h2>Iteration model</h2>
+<ul>
+<li>Iteration 1 usually starts from the Jira task or the best available task source.</li>
+<li>Later iterations may be triggered by PR comments, review feedback, test failures, production bugs, or direct user instructions.</li>
+<li>Each iteration uses a datetime in minute precision: <code>YYYY-MM-DD HH:MM ±TZ</code>.</li>
+<li>Each artifact keeps earlier iterations rather than replacing them, so the task history stays in one place.</li>
+</ul></section>
+<section class="section"><h2>Workflow steps</h2>
+<pre class="mermaid">
+flowchart TD
+ A[Start: New task or follow-up request] --> B[Collect context\nJira / task.md / raw.md / user request]
+ B --> C[Planner investigates codebase, related tasks, ADRs]
+ C --> D[Planner shows investigation summary to user]
+ D --> E{User approves approach?}
+ E -- No / Adjust --> C
+ E -- Yes --> F[Append new iteration to plan.md]
+ F --> G[Append or update progress.md as Planned]
+ G --> H[Coder reads latest plan iteration]
+ H --> I[Implement changes and verify incrementally]
+ I --> J[Append iteration result to changelog.md]
+ J --> K[Update progress.md as Implemented or Needs Review]
+ K --> L[Reviewer reads task context + latest plan + changelog]
+ L --> M[Review code and append review pass to review.md]
+ M --> N[Update progress.md with verdict and next action]
+ N --> O{ADR suggested?}
+ O -- Yes --> P[User creates ADR manually with another skill]
+ O -- No --> Q[Done or next iteration]
+ P --> Q
+ Q --> R{More requests / PR comments / fixes?}
+ R -- Yes --> B
+ R -- No --> S[Task complete]
+</pre></section>
+<section class="section"><h2>Typical lifecycle</h2>
+<ol>
+<li>A Jira ticket arrives, or a user gives a coding request.</li>
+<li>The planner reads available context, investigates the repo, and proposes an approach.</li>
+<li>After approval, the planner appends a new iteration to <code>plan.md</code> and records it in <code>progress.md</code>.</li>
+<li>The coder implements the latest iteration, verifies it, and appends the delivery record to <code>changelog.md</code>.</li>
+<li>The reviewer evaluates the implementation, appends a review pass to <code>review.md</code>, and updates <code>progress.md</code> with the verdict and next action.</li>
+<li>If follow-up work appears, a new iteration is appended to the same files rather than creating new numbered files.</li>
+</ol></section>
+<section class="section"><h2>Why append-only files</h2>
+<ul>
+<li>Humans can read the task story without chasing many artifact filenames.</li>
+<li>LLMs can find stable filenames every time: <code>plan.md</code>, <code>changelog.md</code>, <code>review.md</code>, and <code>progress.md</code>.</li>
+<li>The latest iteration stays easy to identify, while earlier iterations remain available for context and auditability.</li>
+</ul></section>
+<section class="section"><h2>Why <code>progress.md</code> exists</h2>
+<p><code>progress.md</code> is the fastest file to read when resuming work on a task. It gives a compact timeline of each iteration, current status, next action, and whether an ADR is suggested, while the other files hold the detailed planning, implementation, and review evidence.</p></section>
+<section class="section"><h2>Source flexibility</h2>
+<p>This workflow does not require local task files to exist before it can be used. Local files are preferred when present, but the planner can fall back to Jira via MCP or even direct user instructions when necessary, which makes the system easier for developers to adopt without extra setup.</p></section>
+<section class="section"><h2>ADR policy</h2>
+<p>ADR creation is intentionally outside the reviewer workflow. The reviewer can recommend that an ADR would be useful, especially for architectural changes such as new services, schema changes, or auth flow changes, but the actual ADR is created manually or by a separate dedicated skill.</p></section>
+<section class="section"><h2>Recommended operating rules</h2>
+<ul>
+<li>Keep the stable sections at the top of each artifact up to date, but do not rewrite history silently.</li>
+<li>Append new iterations instead of creating <code>plan-2.md</code>, <code>review-3.md</code>, or similar numbered files.</li>
+<li>Keep each iteration small enough to scan quickly, but detailed enough for an agent to implement or review without guesswork.</li>
+<li>Use <code>progress.md</code> as the resume layer and the other files as detailed evidence.</li>
+</ul></section>
+<section class="section"><h2>Example task flow</h2>
+<ul>
+<li>Iteration 1 comes from Jira and adds the initial implementation plan.</li>
+<li>A pull request review finds two issues, so the next planner or user request creates Iteration 2 based on PR comments or review follow-up.</li>
+<li>The coder implements only the Iteration 2 delta, appends to <code>changelog.md</code>, and the reviewer appends a second review pass.</li>
+<li>The task remains in one folder with one set of stable artifact names throughout its lifetime.</li>
+</ul></section>
+  </main>
+</body>
+</html>

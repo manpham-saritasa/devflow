@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 def parse_inline(t: str) -> str:
     """Convert inline Markdown formatting to HTML."""
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
-    t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+    t = re.sub(r"`([^`]+)`", lambda m: f"<code>{html.escape(m.group(1))}</code>", t)
     t = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', t)
     t = re.sub(r"\*(.+?)\*", r"<em>\1</em>", t)
     return t
@@ -23,6 +23,7 @@ class _State:
     in_list: bool = False
     list_tag: str = "ul"
     in_code_block: bool = False
+    code_lang: str = ""
     code_buf: list = field(default_factory=list)
 
 
@@ -128,12 +129,18 @@ def _handle_table_line(line, state, emit):
 def _handle_code_block(line: str, state: _State, emit, i: int) -> int:
     """Open or close a fenced code block. Returns next line index."""
     if state.in_code_block:
-        escaped = html.escape("".join(state.code_buf).rstrip())
-        emit(f"<pre><code>{escaped}</code></pre>")
+        content = "".join(state.code_buf).rstrip()
+        if state.code_lang == "mermaid":
+            emit(f'<pre class="mermaid">\n{content}\n</pre>')
+        else:
+            emit(f"<pre><code>{html.escape(content)}</code></pre>")
         state.code_buf = []
         state.in_code_block = False
+        state.code_lang = ""
     else:
         state.in_code_block = True
+        lang_match = re.match(r"^```(\S*)", line.strip())
+        state.code_lang = lang_match.group(1) if lang_match else ""
     return i + 1
 
 
@@ -167,7 +174,7 @@ def _emit_table_row(line: str, state: _State, emit) -> None:
 def _handle_list(
     lines: list[str], i: int, tag: str, content: str, state: _State, emit
 ) -> int:
-    """Handle a list item, including multi-line continuations. Returns next index."""
+    """Handle a list item, including continuations and nested sub-lists."""
     if not state.in_list or state.list_tag != tag:
         if state.in_list:
             emit(f"</{state.list_tag}>")
@@ -175,24 +182,75 @@ def _handle_list(
         state.list_tag = tag
         emit(f"<{tag}>")
 
+    base_indent = len(lines[i]) - len(lines[i].lstrip())
     html_content = parse_inline(content)
     j = i + 1
+
     while j < len(lines) and lines[j].strip():
-        next_line = lines[j].strip()
+        cur_line = lines[j]
+        cur_indent = len(cur_line) - len(cur_line.lstrip())
+        next_line = cur_line.strip()
+
+        # Indented sub-list: collect as nested <ul>
+        if cur_indent > base_indent and re.match(
+            r"^(\s*)(?:[-*]|\d+\.|\d+\s+-)\s+", cur_line
+        ):
+            nested_html, j = _collect_nested_list(lines, j, state)
+            html_content += nested_html
+            continue
+
+        # Same-level block elements: break
         if (
-            re.match(r"^(\s*)[-*]\s+", lines[j])
-            or re.match(r"^\s*\d+\.\s+", lines[j])
+            re.match(r"^(\s*)(?:[-*]|\d+\.)\s+", cur_line)
+            or re.match(r"^\s*\d+\.\s+", cur_line)
             or next_line.startswith("#")
             or next_line.startswith("|")
             or next_line.startswith("```")
             or re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", next_line)
         ):
             break
+
         html_content += "<br>" + parse_inline(next_line)
         j += 1
 
     emit(f"<li>{html_content}</li>")
     return j
+
+
+def _collect_nested_list(lines: list[str], start: int, state: _State):
+    """Collect indented sub-list items. Returns (nested_html, next_index)."""
+    items = []
+    j = start
+    nest_indent = (
+        len(lines[start]) - len(lines[start].lstrip()) if start < len(lines) else 0
+    )
+    nested_tag = "ol" if re.match(r"^\d+(\.|\s+-)", lines[start].strip()) else "ul"
+    while j < len(lines) and lines[j].strip():
+        cur_indent = len(lines[j]) - len(lines[j].lstrip())
+        if cur_indent < nest_indent:
+            break
+        m = re.match(r"^(\s*)(?:[-*]|\d+\.|\d+\s+-)\s+(.+)$", lines[j])
+        if not m:
+            break
+        inner = parse_inline(m.group(2))
+        k = j + 1
+        while k < len(lines) and lines[k].strip():
+            k_line = lines[k].strip()
+            if (
+                re.match(r"^(\s*)[-*]\s+", lines[k])
+                or re.match(r"^\s*\d+\.\s+", lines[k])
+                or k_line.startswith("#")
+                or k_line.startswith("|")
+                or k_line.startswith("```")
+                or re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", k_line)
+            ):
+                break
+            inner += "<br>" + parse_inline(k_line)
+            k += 1
+        items.append(f"<li>{inner}</li>")
+        j = k
+    nested = f"<{nested_tag}>" + "".join(items) + f"</{nested_tag}>"
+    return nested, j
 
 
 def _cell_to_list(cell_html: str) -> str:

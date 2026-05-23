@@ -121,7 +121,7 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
   --accent: #0f766e;
   --accent-soft: #e6f4f1;
   --warning: #9a3412;
-  --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius: 14px;
   --title: #1e3a5f;
   --th-bg: #e6f4f8;
@@ -150,7 +150,7 @@ body {
   border-radius: 9px;
   box-shadow: var(--shadow);
   padding: 28px;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
   overflow: hidden;
 }
 .eyebrow {
@@ -198,7 +198,7 @@ h1 {
   border-radius: 9px;
   box-shadow: var(--shadow);
   padding: 24px;
-  margin-bottom: 26px;
+  margin-bottom: 20px;
   overflow: hidden;
 }
 h2 {
@@ -276,9 +276,6 @@ pre code {
   color: inherit;
   background: transparent;
   padding: 0;
-}
-pre.mermaid {
-  background: #f8fafc;
 }
 p code, li code, td code {
   background: #eef3f7;
