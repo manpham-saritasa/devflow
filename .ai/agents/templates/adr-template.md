@@ -56,9 +56,9 @@
 
 ## 4. Decision Reasons
 
-#### Main decision
+#### Main reasons
 
-- [Why this option was chosen.]
+- [Restate the main decision and why this option was chosen.]
 - [If relevant, summarize why it is the better cost or long-term direction.]
 
 <br>

@@ -119,6 +119,7 @@ Unless the user explicitly asks for a different style, reuse this CSS baseline d
   --warning: #9a3412;
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius: 14px;
+  --title: #1e3a5f;
   --table-even-row: #f8fafc;
   --table-border: #e5e7eb;
 }
@@ -139,7 +140,7 @@ body {
 .header {
   background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 9px;
   box-shadow: var(--shadow);
   padding: 28px;
   margin-bottom: 24px;
@@ -148,7 +149,7 @@ body {
 .eyebrow {
   display: inline-block;
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: 9px;
   background: var(--accent-soft);
   color: var(--accent);
   font-size: 12px;
@@ -161,7 +162,7 @@ h1 {
   margin: 0 0 10px;
   font-size: 38px;
   line-height: 1.15;
-  color: var(--accent);
+  color: var(--title);
 }
 .meta {
   display: grid;
@@ -172,7 +173,7 @@ h1 {
 .meta-item {
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 9px;
   padding: 12px 14px;
 }
 .meta-label {
@@ -187,7 +188,7 @@ h1 {
 .section {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 9px;
   box-shadow: var(--shadow);
   padding: 24px;
   margin-bottom: 20px;
@@ -196,11 +197,15 @@ h1 {
 h2 {
   margin: 0 0 16px;
   font-size: 28px;
-  color: var(--accent);
+  color: var(--title);
 }
 h3 {
   margin: 24px 0 10px;
   font-size: 20px;
+  color: var(--title);
+}
+h4 {
+  color: var(--title);
 }
 p.note {
   margin: 0 0 14px;
@@ -216,7 +221,7 @@ table {
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid var(--table-border);
-  border-radius: 12px;
+  border-radius: 9px;
   overflow: hidden;
   background: #fff;
 }
@@ -231,7 +236,7 @@ th, td {
 th {
   background: #e6f4f8;
   font-size: 15px;
-  color: #334155;
+  color: var(--title);
 }
 tr:last-child td,
 tr:last-child th {
@@ -252,7 +257,7 @@ pre {
   padding: 16px;
   overflow-x: auto;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 9px;
   background: #0f172a;
   color: #e5eefc;
 }
@@ -267,12 +272,12 @@ pre code {
 p code, li code, td code {
   background: #eef3f7;
   padding: 2px 6px;
-  border-radius: 6px;
+  border-radius: 9px;
 }
 .block-card {
   border: 1px solid var(--border);
   background: #fbfcfd;
-  border-radius: 12px;
+  border-radius: 9px;
   padding: 14px 16px;
   overflow: hidden;
 }
@@ -282,7 +287,8 @@ p code, li code, td code {
 }
 .q { font-weight: 700; margin: 0 0 8px; color: var(--text); }
 .a { color: var(--muted); margin: 0; }
-a, strong, h1, h2 { color: var(--accent); text-decoration: none; }
+strong, h2, h3, h4 { color: var(--title); }
+a, h1 { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .page { padding: 18px 12px 36px; }
@@ -336,106 +342,17 @@ Use this general shape:
 </html>
 ```
 
-## Conversion workflow
+## Usage
 
-1. Read the source Markdown file.
-2. Identify the document title and major sections.
-3. Convert the Markdown structure into clean semantic HTML.
-4. Wrap the document in the approved HTML layout and CSS theme.
-5. Make sure lists inside tables use `<ul><li>`.
-6. Make sure there is no `<br>` used for layout spacing.
-7. Share the generated HTML file with the user.
+Run the bundled converter script:
 
-## Post-processing fixes
-
-Apply these after converting Markdown to HTML body. A Markdown library produces flat HTML — these steps turn it into the card-based layout.
-
-### Strip `<br>` from source
-
-Markdown libraries pass `<br>` through from source verbatim. Strip them before conversion:
-```
-body_md = body_md.replace('<br>', '')
+```bash
+python .ai/skills/md-to-html/convert.py <input.md> [output.html]
 ```
 
-### Strip `<hr>` separators
+If `output.html` is omitted, it writes to `<input_stem>.html` alongside the source file.
 
-Card sections already provide visual separation. Remove all `<hr />` tags from the HTML body:
-```
-html_body = html_body.replace('<hr />', '')
-```
-
-### Wrap sections in cards
-
-Split HTML by `<h2>` and wrap each chunk in `<section class="section">`. The first chunk (before first heading) is usually empty.
-```python
-parts = html_body.split('<h2>')
-for i, part in enumerate(parts):
-    if i == 0: continue
-    idx = part.index('</h2>')
-    heading = part[:idx + 5]
-    rest = part[idx + 5:]
-    wrapped_parts.append(f'<section class="section"><h2>{heading}\n{rest}</section>')
-```
-
-### Add `data-label` to table cells
-
-Extract `<th>` text, then assign each `<td>` a matching `data-label` for responsive mobile stacking.
-```python
-def add_data_labels(html):
-    def process_table(m):
-        table = m.group(0)
-        headers = re.findall(r'<th>(.+?)</th>', table)
-        for h in headers:
-            label = re.sub(r'<.*?>', '', h).strip()
-            table = table.replace('<td>', f'<td data-label="{label}">', 1)
-        return table
-    return re.sub(r'<table>.*?</table>', process_table, html, flags=re.DOTALL)
-```
-
-### Normalize heading levels
-
-Markdown `####` becomes `<h4>`, but the CSS only styles up to `<h3>`. Convert them:
-```
-html_body = html_body.replace('<h4>', '<h3>').replace('</h4>', '</h3>')
-```
-
-### Convert Q&A lists to card blocks
-
-If source uses `**Q1:**` / `**A1:**` patterns inside a list, convert `<ul><li>` to cards.
-
-First, replace the section's `<ul>` with `<div class="block-grid">`. Then replace each `<li>` that starts with `<strong>Q` with a card wrapper: `<div class="block-card"><p class="q">` and split the content at the answer marker (e.g. `<strong>A1:</strong>`) into `.q` and `.a` paragraphs.
-
-Markdown lib may or may not wrap in `<p>` inside `<li>` depending on source formatting — handle both cases.
-
-Concrete implementation:
-
-```python
-# Replace outer <ul> with block-grid
-html_body = html_body.replace(
-    '<h2>9. Open Questions</h2>\n<ul>',
-    '<h2>9. Open Questions</h2>\n<div class="block-grid">'
-)
-html_body = html_body.replace('</ul>', '</div>')
-
-# Wrap each Q item in a card
-# Handles both: <li><strong>Q1:...  and  <li>\n<p><strong>Q1:...</p>\n</li>
-def wrap_qa(m):
-    raw = m.group(1)
-    q_match = re.search(r'(<strong>Q\d+:.*?)<strong>A', raw, re.DOTALL)
-    if q_match:
-        q = re.sub(r'^<p>|</p>$', '', q_match.group(1)).strip()
-        a = re.sub(r'^.*?<strong>A\d+:.*?</strong>\s*', '', raw, flags=re.DOTALL)
-        a = re.sub(r'^<p>|</p>$', '', a).strip()
-        return f'<div class="block-card"><p class="q">{q}</p><p class="a">{a}</p></div>'
-    return m.group(0)
-
-html_body = re.sub(
-    r'<li>(?:\n)?(?:<p>)?(<strong>Q\d+:.*?<strong>A\d+:.*?)(?:</p>)?(?:\n)?</li>',
-    wrap_qa,
-    html_body,
-    flags=re.DOTALL
-)
-```
+The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, `<br>`/`<hr>` stripping, bullet-list-in-table-cells, `data-label` attributes for responsive tables, and Q&A `block-card` grids.
 
 ## File naming
 
@@ -444,9 +361,3 @@ Use descriptive lowercase hyphenated filenames, for example:
 - `technical-notes.html`
 - `migration-report.html`
 - `converted-document.html`
-
-## Reusable prompt block
-
-When this skill is used, follow this instruction pattern:
-
-> Convert the provided Markdown file into a standalone HTML document using the approved clean document styling. Use the exact approved CSS theme unless a different visual style is requested. Preserve headings, paragraphs, lists, tables, links, and code blocks. Use section cards, responsive tables, and HTML unordered lists inside table cells where needed. Keep the language clean and readable. Do not use `<br>` for layout. Do not include citations in the HTML file unless explicitly requested.
