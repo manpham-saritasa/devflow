@@ -43,14 +43,27 @@ class PreProcessor:
         lines = md_text.split("\n")
         i = 0
 
+        # Skip leading blank lines
         while i < len(lines) and not lines[i].strip():
             i += 1
 
+        # Preserve blockquote lines that appear before the title heading
+        preserved: list[str] = []
+        while i < len(lines) and lines[i].strip().startswith(">"):
+            preserved.append(lines[i])
+            i += 1
+        # Also capture blank lines immediately after blockquotes
+        while i < len(lines) and not lines[i].strip():
+            preserved.append(lines[i])
+            i += 1
+
+        # Strip the title heading
         if title and i < len(lines) and lines[i].strip() == f"# {title}":
             i += 1
             while i < len(lines) and not lines[i].strip():
                 i += 1
 
+        # Strip metadata block after title
         consumed_metadata = False
         while i < len(lines):
             stripped = lines[i].strip()
@@ -71,7 +84,10 @@ class PreProcessor:
                 while i < len(lines) and not lines[i].strip():
                     i += 1
 
-        return "\n".join(lines[i:])
+        remaining = "\n".join(lines[i:])
+        if preserved:
+            remaining = "\n".join(preserved) + "\n" + remaining
+        return remaining
 
 
 # ── PostProcessor ───────────────────────────────────────────────────────────

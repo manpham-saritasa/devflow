@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p {
+    margin: 0 0 14px;
+}
+ul, ol {
+    margin: 0;
+    padding-left: 20px;
+}
+ul li, ol li {
+    margin: 6px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+}
+  </style>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-get-summary</div>
+    <div class="meta-item"><span class="meta-label">description</span>Generate both non-technical (Jira) and technical (PR) changelog reports from task evidence. Preview reports without creating a PR or commenting Jira. Useful for past PRs, standalone reports, or dry-run previews.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-get-summary, get-summary, get-report</div>
+  </div>
+</section>
+<section class="section"><h2>When to Use</h2>
+<ul>
+<li><code>/dev-get-summary [KEY]</code> — generate both reports from <code>.local/tasks/[KEY]/changelog.md</code></li>
+<li><code>/dev-get-summary</code> — auto-detect KEY from current branch, generate both reports</li>
+<li><code>/dev-get-summary [PR_URL]</code> — generate both reports from a GitHub PR (e.g. <code>https://github.com/owner/repo/pull/123</code>)</li>
+</ul>
+<p>Use this when:</p>
+<ul>
+<li>You want a clean report for a past PR, email, docs, or review</li>
+<li>You want to preview reports before shipping (dry-run)</li>
+<li>Another skill needs a non-technical or technical summary of changes</li>
+<li>You have a PR URL but no local changelog</li>
+</ul></section>
+<section class="section"><h2>Paths</h2>
+<ul>
+<li>DEV_ROOT: <code>.local</code></li>
+<li>TASK_DIR: <code>[DEV_ROOT]/tasks/[KEY]</code> — replace [KEY] with Jira ticket key</li>
+<li>JIRA_TEMPLATE: <code>./jira-summary-template.md</code> — non-technical, for testers/PMs/clients</li>
+<li>PR_TEMPLATE: <code>./pr-summary-template.md</code> — technical, for future engineers</li>
+</ul></section>
+<section class="section"><h2>Output Style</h2>
+<p><strong>Jira report</strong> — use <code>JIRA_TEMPLATE</code>. Non-technical: behavior + user impact only. Audience: testers, PMs, clients. Never mention code-level details.</p>
+<p><strong>PR report</strong> — use <code>PR_TEMPLATE</code>. Technical: architecture, decisions, risks, reuse patterns. Audience: future engineers. Include file paths, method names, code patterns when relevant.</p></section>
+<section class="section"><h2>Workflow</h2>
+<h3>Step 1: Extract Task Key</h3>
+<p>If KEY provided as argument: use it.</p>
+<p>Otherwise: <code>git branch --show-current</code>, extract KEY via regex <code>([A-Z0-9]+-\d+)</code>.</p>
+<p>If fail: ask user for KEY or Jira link. Stop if no valid KEY.</p>
+<h3>Step 2: Read Source</h3>
+<p>Source priority (try each in order):</p>
+<ol>
+<li><strong>PR URL provided</strong> — If the user gives a GitHub PR URL, fetch it with <code>gh pr view [NUMBER] --repo [OWNER/REPO] --json ...</code> and <code>gh pr diff</code>. Extract the task key from the PR title or branch name. Use PR title, body, commits, reviews, files, and diff as evidence.</li>
+<li><strong>Local changelog</strong> — Read <code>TASK_DIR/changelog.md</code>. If it exists, use it.</li>
+<li><strong>Git diff fallback</strong> — Run <code>git diff develop..HEAD</code> to extract changes from the current branch.</li>
+</ol>
+<p>If all sources are empty: stop and tell user "No evidence found for [KEY]. Provide a PR URL, create a changelog, or run from the feature branch."</p>
+<h3>Step 3: Generate Both Reports</h3>
+<p>Generate TWO reports from the changelog evidence:</p>
+<p><strong>Jira report</strong> — follow <code>JIRA_TEMPLATE</code> strictly.</p>
+<ul>
+<li>Non-technical, business language.</li>
+<li>Added / Changed / Fixed / Testers / Notes sections.</li>
+<li>Omit empty sections.</li>
+</ul>
+<p><strong>PR report</strong> — follow <code>PR_TEMPLATE</code> strictly.</p>
+<ul>
+<li>Technical, engineering language.</li>
+<li>Goal / Added / Changed / Fixed / Key decisions / Risks / Testing / Related areas / Future reuse guidance sections.</li>
+<li>Omit empty sections.</li>
+</ul>
+<h3>Step 4: Show Result</h3>
+<p>Display both reports as <strong>separate copyable code blocks</strong> so the user can copy each one independently:</p>
+<p><strong>Jira Report:</strong></p>
+<pre><code>[rendered output from JIRA_TEMPLATE]</code></pre>
+<p><strong>PR Report:</strong></p>
+<pre><code>[rendered output from PR_TEMPLATE]</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Always output two separate blocks with clear labels: <code>**Jira Report:**</code> and <code>**PR Report:**</code>.</li>
+<li>Each block must be a standalone fenced code block with no extra wrapping — the user should be able to triple-click and copy the entire report in one action.</li>
+<li>Do not merge both reports into a single block.</li>
+<li>Do not add extra commentary inside the code blocks.</li>
+</ul></section>
+  </main>
+</body>
+</html>

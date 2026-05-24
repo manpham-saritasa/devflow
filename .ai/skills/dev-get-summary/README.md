@@ -5,40 +5,50 @@ Preview reports without creating a PR or commenting Jira. Useful for past PRs, s
 
 ## What do I need?
 
-Before using this skill:
-1. A task key (like `PROJ-123`) — comes from your branch name or you can provide it
-2. A changelog file (`.local/tasks/[KEY]/changelog.md`) — where your technical notes are stored
+Pick one:
+
+- **A GitHub PR URL** — just paste the link, the skill fetches everything from GitHub
+- **A task key** (like `PROJ-123`) — from your branch name or you can provide it, plus a changelog at `.local/tasks/[KEY]/changelog.md`
+- **A feature branch** — run it from the branch and it falls back to `git diff`
 
 ## When to use it
 
 Use this skill when:
 - You want a **clean report for a past PR** (for email, docs, or review)
 - You want to **preview reports** before shipping (dry-run, test format and wording)
-- You already have a `changelog.md` and want to **generate both reports** from it
+- You want **both Jira and PR reports** generated from the same source
 - Another skill needs a clean non-technical or technical summary of your changes
 
 ## How to run it
 
-Type:
-
 ```
-/dev-get-summary [KEY]
+/dev-get-summary [KEY | PR_URL]
 ```
 
-Replace `[KEY]` with your task ID (like `PROJ-123`), or omit it to auto-detect from your current branch.
+Examples:
+- `/dev-get-summary PROJ-123` — from local changelog
+- `/dev-get-summary` — auto-detect key from current branch
+- `/dev-get-summary https://github.com/owner/repo/pull/123` — from a GitHub PR
 
 The skill will:
-1. Read your technical changelog from `.local/tasks/[KEY]/changelog.md`
+1. Extract evidence (PR API → local changelog → git diff, in that order)
 2. Generate a **non-technical Jira report** (for testers, PMs, clients)
 3. Generate a **technical PR report** (for future engineers)
-4. Show you both results
+4. Output both as **separate copyable code blocks**
+
+## Output format
+
+Reports are displayed in two standalone fenced code blocks — triple-click to copy each one.
+
+**Jira Report:** links to the PR, title format: `[KEY] — PR #[N]`
+**PR Report:** links to the Jira task, title format: `[KEY] — Task summary`
 
 ## Templates
 
 This skill uses the same templates as `/dev-ship`:
 
-- `jira-summary-template.md` — non-technical report with Added / Changed / Fixed / Testers / Notes
-- `pr-summary-template.md` — technical report with Goal / Added / Changed / Fixed / Key decisions / Risks / Testing / Related areas / Future reuse guidance
+- `jira-summary-template.md` — non-technical report: Added / Changed / Fixed / Testers / Notes
+- `pr-summary-template.md` — technical report: Goal / Added / Changed / Fixed / Key decisions / Risks / Testing / Related areas / Future reuse guidance
 
 ## Format rules
 

@@ -192,6 +192,33 @@ td code {
     padding: 14px 16px;
     overflow: hidden;
 }
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
 .block-grid {
     display: grid;
     gap: 14px;

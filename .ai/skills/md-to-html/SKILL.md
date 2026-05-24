@@ -49,6 +49,23 @@ This skill is specifically for:
 - If the source Markdown has repeated separators or formatting noise, clean it up during conversion.
 - If the source Markdown uses weak formatting that would render poorly in HTML, normalize it into cleaner HTML structure.
 
+### Good/Bad example boxes
+
+When the source Markdown contains paired examples using ✅ (good) and ❌ (bad) markers, wrap each in a styled example box:
+
+- `✅ ...` items → `<div class="example-box good-box"><p>✅ ...</p></div>`
+- `❌ ...` items → `<div class="example-box bad-box"><p>❌ ...</p></div>`
+
+Group examples under their parent heading. Place each example-box as a sibling, not nested inside a list. The `p { margin: 0; }` inside `.example-box` is already handled by the theme — do not add extra margin or `<br>` inside these boxes.
+
+### Blockquote cards
+
+Convert `<blockquote>` elements into styled `.blockquotes` cards:
+
+- `<blockquote><p>...</p></blockquote>` → `<div class="blockquotes"><p>...</p></div>`
+
+Applies to all blockquotes in the document. The `p { margin: 0; }` inside `.blockquotes` is already handled by the theme.
+
 ## Writing rules
 
 - Keep the original meaning of the Markdown file.
@@ -291,6 +308,33 @@ p code, li code, td code {
   border-radius: 9px;
   padding: 14px 16px;
   overflow: hidden;
+}
+.example-box {
+  border: 1px solid var(--border);
+  background: #fbfcfd;
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+.example-box p {
+  margin: 0;
+}
+.example-box.good-box {
+  border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+  border-left: 4px solid #9a3412;
+}
+.blockquotes {
+  border: 1px solid var(--border);
+  background: #fbfcfd;
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+  margin: 0;
 }
 .block-grid {
   display: grid;

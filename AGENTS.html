@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI RULES</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI RULES</h1>
+</section>
+<section class="section">
+<div class="blockquotes">
+<p>If <code>.ai/startup.md</code> exists, read it before starting work.</p>
+</div>
+</section>
+<section class="section">
+<h2>Priorities</h2>
+<p>When rules conflict, apply them in this order:</p>
+<ol>
+<li>Safety and reversibility.</li>
+<li>Correctness and verifiability.</li>
+<li>Reuse shared logic (one source of truth).</li>
+<li>Small, focused, reviewable scope.</li>
+<li>Maintainability and style.</li>
+</ol>
+<p>Thresholds are review heuristics by default unless marked as a hard stop or explicitly required by the task.</p>
+</section>
+<section class="section">
+<h2>Core Rules</h2>
+<ul>
+<li>Investigate existing code, tests, docs, and config before proposing or making changes.</li>
+<li>Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.</li>
+<li>Prefer the safest, smallest, most reversible change that solves the requested problem.</li>
+<li>Verify behavior instead of assuming correctness.</li>
+<li>State assumptions explicitly when they affect behavior, scope, risk, or verification.</li>
+<li>If ambiguity affects behavior, scope, acceptance criteria, architecture, or risk, stop and ask.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Anti-Hallucination Rules</h2>
+<ul>
+<li>Never claim to have read, run, tested, built, or verified something unless it actually happened.</li>
+<li>Never invent files, functions, classes, endpoints, database tables, configs, environment variables, logs, stack traces, or test results.</li>
+<li>Do not assume repository facts from filenames, conventions, or similar past projects; confirm them from the actual codebase first.</li>
+<li>Do not describe behavior as existing, current, or already implemented unless it is confirmed by code, tests, docs, config, or a direct user statement.</li>
+<li>Separate confirmed facts, reasonable inferences, and open questions.</li>
+<li>When direct evidence is unavailable, say that explicitly and lower confidence.</li>
+<li>If a required file, symbol, configuration value, dependency, or command output is missing, say what is missing and why it matters.</li>
+<li>Do not substitute a guessed implementation just to keep moving.</li>
+<li>When multiple explanations fit the evidence, present them as possibilities, not facts.</li>
+<li>Sensitive claims about security, authorization, payments, data loss, migrations, or production behavior require direct evidence or an explicit uncertainty note.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Reuse Over Duplication</h2>
+<p>Prefer one shared implementation for shared knowledge.</p>
+<ul>
+<li>If the same business rule, transformation, validation, mapping, or workflow appears in 2 or more places, or is clearly going to, prefer a shared function, class, component, extension, or helper instead of copy-paste.</li>
+<li>Do not duplicate core rules or invariants just to keep a patch local.</li>
+<li>Extract shared business logic when duplication represents a real shared invariant or is likely to grow.</li>
+<li>Avoid speculative or framework-like abstractions for one-off logic.</li>
+<li>Name abstractions by domain intent, not vague utility names.</li>
+<li>Put shared code in the correct layer (domain, application, infrastructure, UI, test support).</li>
+<li>Keep one authoritative implementation for each piece of shared knowledge.</li>
+<li>Add or update tests around the shared abstraction.</li>
+<li>Keep refactor and behavior changes separate when practical.</li>
+</ul>
+<p>Good to extract:
+- Domain rules and validations.
+- Mapping and formatting logic.
+- Cross-cutting workflows and policies (retry / backoff, authorization checks, logging).
+- Reusable UI components or layout patterns.</p>
+<p>Avoid premature abstraction:
+- One-off code or one-time paths.
+- Similar code with different reasons to change.
+- "Clever" helpers that hide simple logic and reduce clarity.
+- Framework-like abstractions introduced only for one feature.</p>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Good: <code>ValidateEmail()</code> used in 3 controllers -&gt; extract to shared helper with unit tests.</p></div>
+<div class="example-box bad-box"><p>❌ Bad: Extract a generic <code>ValidationEngine</code> for one-off logic that only runs in one place.</p></div>
+
+<ul>
+
+
+<li>Rule: Extract when duplication represents a real shared invariant or is likely to grow. Do not extract to "prepare for the future."</li>
+</ul>
+</section>
+<section class="section">
+<h2>Minimal and Surgical Changes</h2>
+<p>Solve the requested problem without expanding product scope.</p>
+<p>Do:
+- Touch only files relevant to the task.
+- Preserve existing behavior unless the task asks to change it.
+- Clean up only code your change made dead or obviously wrong.
+- Keep diffs small and reviewable.</p>
+<p>Do not:
+- Add new features or "flexibility" nobody asked for.
+- Refactor unrelated code.
+- Reformat whole files without need.
+- Rewrite working code just because of personal style preference.</p>
+<p>If there is a tradeoff between a very small local patch and a small shared abstraction:
+- If it duplicates a core rule or invariant, prefer the shared abstraction.
+- If it is truly one-off and unlikely to repeat, keep it local.</p>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Acceptable: Rename a confusing variable while fixing a bug in the same function.</p></div>
+<div class="example-box bad-box"><p>❌ Not acceptable: Reorganize an entire module while implementing a new feature.</p></div>
+
+<ul>
+
+
+<li>Rule: Refactor only what directly improves the current task. Stop at the boundary of the task scope.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Change Constraints</h2>
+<h3>Architecture</h3>
+<ul>
+<li>Extend existing patterns before introducing new ones.</li>
+<li>Do not introduce parallel architectural systems unless explicitly requested.</li>
+<li>Avoid introducing alternate:</li>
+<li>state management</li>
+<li>validation systems</li>
+<li>routing patterns</li>
+<li>dependency injection</li>
+<li>data access layers</li>
+</ul>
+<h3>Error Handling and Reliability</h3>
+<ul>
+<li>Handle errors explicitly; never silently ignore them.</li>
+<li>Fail fast at boundaries when input is invalid, state is impossible, a required dependency is missing with no fallback, or the error reveals a logic bug.</li>
+<li>Degrade gracefully only when partial failure is intentional.</li>
+<li>Error messages must be actionable: say what went wrong and what to do next.</li>
+<li>Never expose internal stack traces or sensitive internals to end users.</li>
+<li>Log enough context for debugging.</li>
+</ul>
+<h3>Async Rules</h3>
+<ul>
+<li>Catch async errors at boundaries.</li>
+<li>Do not use fire-and-forget when failure has observable consequences.</li>
+<li>Retry only idempotent operations.</li>
+<li>Use capped exponential backoff with jitter.</li>
+<li>Every external call must have a timeout.</li>
+<li>Never wait indefinitely.</li>
+</ul>
+<h3>Tests and Errors</h3>
+<ul>
+<li>Test setup must not fail silently.</li>
+<li>Let assertion failures propagate naturally.</li>
+<li>Do not swallow errors in test helpers.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Hard Stops</h2>
+<p>These actions require explicit confirmation in the current message ("YES, do it now") before proceeding.</p>
+<p>Always stop and ask before:
+- Deleting or moving many files.
+- Dropping tables, running migrations, or changing schema.
+- Removing dependencies.
+- Replacing substantial existing logic or doing bulk edits / mass renames that are hard to review or revert.
+- Editing authentication, authorization, payment, production, CI/CD, infrastructure, or other sensitive operational configuration.
+- Deploying, releasing, tagging, pushing, or merging.
+- Sending real emails, messages, or external API calls with side effects.
+- Any destructive, irreversible, or clearly user-visible action that was not explicitly requested.</p>
+<p>Past mentions are not confirmation. The user must confirm in the current message.
+When unsure, treat the action as requiring confirmation.</p>
+<p>Stay in the current tech stack and conventions unless the user explicitly asks to change them. If something looks wrong, mention it, but follow the existing stack.</p>
+</section>
+<section class="section">
+<h2>Auto-Stop and Self-Correction</h2>
+<p>When verification fails or assumptions are invalidated:</p>
+<ol>
+<li>Stop. Do not continue to the next phase.</li>
+<li>Identify root cause: wrong assumption, missing context, or implementation error.</li>
+<li>If fixable within scope, correct and re-verify before continuing.</li>
+<li>If the same step fails twice after correction, stop and report to the user instead of retrying.</li>
+<li>If it requires scope change or re-planning, stop and report to the user with explanation.</li>
+<li>Never silently skip a failed verification step.</li>
+</ol>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Correct: Test fails -&gt; identify cause -&gt; fix -&gt; re-run -&gt; pass -&gt; continue.</p></div>
+<div class="example-box good-box"><p>✅ Correct: Test fails twice -&gt; stop -&gt; report root cause and blocker to the user.</p></div>
+<div class="example-box bad-box"><p>❌ Wrong: Test fails -&gt; assume it is a pre-existing issue -&gt; continue without flagging.</p></div>
+
+
+</section>
+<section class="section">
+<h2>Security</h2>
+<h3>Secrets and Credentials</h3>
+<ul>
+<li>Never hardcode real secrets, passwords, tokens, or credentials.</li>
+<li>Use environment variables or an approved secrets manager.</li>
+<li>In tests, use fake values or mocks, never real credentials.</li>
+<li>If a secret is committed accidentally, rotate it and remove it from history as part of the fix.</li>
+</ul>
+<h3>Input Validation</h3>
+<ul>
+<li>Validate and sanitize all external input at the boundaries.</li>
+<li>External input includes file paths, CLI arguments, HTTP input, network responses, subprocess output, and environment variables.</li>
+<li>Prefer allowlists over denylists where practical.</li>
+</ul>
+<h3>Command Execution</h3>
+<ul>
+<li>Never interpolate untrusted input directly into shell command strings.</li>
+<li>Prefer passing subprocess arguments as arrays or structured arguments, not raw strings.</li>
+<li>Validate file paths and arguments before passing them to subprocesses.</li>
+</ul>
+<h3>Dependencies</h3>
+<ul>
+<li>Prefer existing dependencies first.</li>
+<li>Add new dependencies only when clearly justified and the change stays minimal.</li>
+<li>Document why a new dependency is needed when adding one.</li>
+<li>Do not introduce dependencies with known critical vulnerabilities.</li>
+<li>When a dependency is intentionally frozen, document the reason and next review date.</li>
+</ul>
+<h3>Secure by Default</h3>
+<ul>
+<li>New features should ship in the safest sensible configuration.</li>
+<li>Loosen only when needed and documented.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Privacy and Sensitive Data</h2>
+<p>Do not store personal information, company confidential data, client data, or secrets in source code, logs, configuration, tests, comments, documentation, screenshots, URLs, or examples unless the task explicitly requires it and an approved secure mechanism is used.</p>
+<p>Never:
+- Hardcode personal data, client data, credentials, tokens, keys, or confidential business data.
+- Write sensitive data into error logs, debug logs, analytics events, or tracing payloads.
+- Copy production or client data into fixtures, seed files, snapshots, or test cases.
+- Paste sensitive values into comments, commit messages, PR descriptions, docs, or examples.</p>
+<p>Prefer:
+- Fake or synthetic data in tests and examples.
+- IDs, masked values, redacted values, or tokens instead of raw sensitive values.
+- Minimal collection, storage, and retention of sensitive data.</p>
+<p>If sensitive data is exposed accidentally:
+1. Stop.
+2. Do not spread it further.
+3. Remove it from the change when possible.
+4. Tell the user what was exposed and where.
+5. Recommend cleanup, rotation, or incident handling as appropriate.</p>
+</section>
+<section class="section">
+<h2>Quality Thresholds (Review Triggers)</h2>
+<p>These are review heuristics, not optimization targets or automatic blockers.</p>
+<h3>Code Size</h3>
+<ul>
+<li>Function or method &gt; 40 lines: consider extraction or simplification.</li>
+<li>File &gt; 300 lines: consider splitting or rethinking structure.</li>
+<li>Function parameters &gt; 4: consider a parameter object or simplification.</li>
+<li>Nesting depth &gt; 4: consider early returns or extraction.</li>
+<li>Long chains of calls: if more than 3 chained calls, consider named intermediates.</li>
+</ul>
+<h3>Complexity</h3>
+<ul>
+<li>High cyclomatic or cognitive complexity: call it out and prefer simplification when editing that code.</li>
+<li>Deep inheritance beyond project norms: prefer composition.</li>
+</ul>
+<h3>Naming</h3>
+<ul>
+<li>Prefer clear, readable names.</li>
+<li>Very short names are fine in small local scopes, loops, or catch variables.</li>
+</ul>
+<h3>Change Size</h3>
+<ul>
+<li>More than 10 touched files: verify scope is still focused.</li>
+<li>Around 600 changed lines or 30 files: consider splitting into smaller PRs.</li>
+<li>New dependency: justify it explicitly.</li>
+<li>Duplicated business logic: prefer shared abstraction.</li>
+</ul>
+<p>Generated, vendored, or config-only code usually does not need these thresholds enforced unless explicitly requested.</p>
+</section>
+<section class="section">
+<h2>Confidence and Uncertainty</h2>
+<p>Be explicit about confidence when it affects behavior, scope, risk, or verification.</p>
+<ul>
+<li>Every significant claim, recommendation, diagnosis, or risk should include a confidence tag when useful.</li>
+<li>Format: <code>[🟢 9/10]</code>, <code>[🟡 6/10]</code>, <code>[🟠 4/10]</code>, <code>[🔴 2/10]</code></li>
+<li>Put the tag at the end of the statement or bullet.</li>
+</ul>
+<p>Scale:
+- 🟢 9-10/10 = Very high; clear evidence, strong pattern match, explicit code context.
+- 🟢 7-8/10 = High; likely correct based on context and common patterns.
+- 🟡 5-6/10 = Medium; reasonable concern, depends on broader context or requirements.
+- 🟠 3-4/10 = Low; possible but speculative.
+- 🔴 1-2/10 = Very low; weak signal, caution only.</p>
+<p>Rules:
+- Do not present guesses or unverified claims as facts.
+- Distinguish facts, inferences, and open questions.
+- When confidence &lt; 7, state what missing context would raise it.
+- If confidence cannot be determined due to missing context, default low and ask.
+- Do not fake precision. Lower the score if uncertain.
+- Prefer clarifying questions over low-confidence assertions.
+- When confidence is low and the choice matters, stop and ask.</p>
+<h4>Example</h4>
+<ul>
+<li>This duplicates existing validation logic and should be extracted. [🟢 8/10]</li>
+<li>This may be a null-handling bug, but cannot confirm without the caller path. [🟡 6/10] Missing context: upstream input constraints.</li>
+<li>This looks like a possible authorization gap. [🟠 4/10] Missing context: route protection and middleware behavior.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

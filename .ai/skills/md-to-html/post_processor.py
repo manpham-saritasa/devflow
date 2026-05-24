@@ -24,6 +24,8 @@ class PostProcessor:
         body_html = self._build_header(title, metadata) + "\n" + body_html
         body_html = self._add_data_labels(body_html)
         body_html = self._wrap_qa_cards(body_html)
+        body_html = self._wrap_example_boxes(body_html)
+        body_html = self._wrap_blockquotes(body_html)
         return body_html
 
     @staticmethod
@@ -192,6 +194,62 @@ class PostProcessor:
         return re.sub(
             r'<section class="section">\s*<h2>[^<]*Questions?[^<]*</h2>.*?</section>',
             _process_qa_section,
+            html_body,
+            flags=re.DOTALL,
+        )
+
+    @staticmethod
+    def _wrap_example_boxes(html_body: str) -> str:
+        """Convert ✅/❌ list items under Example headings into styled example-box divs."""
+
+        def _process_examples(match: re.Match[str]) -> str:
+            block = match.group(0)
+            # Find all li items starting with ✅ or ❌
+            items = re.findall(r"<li>(✅.*?)</li>|<li>(❌.*?)</li>", block, re.DOTALL)
+            if not items:
+                return block
+
+            boxes = []
+            for good, bad in items:
+                if good:
+                    klass = "example-box good-box"
+                    content = good.strip()
+                else:
+                    klass = "example-box bad-box"
+                    content = bad.strip()
+                boxes.append(f'<div class="{klass}"><p>{content}</p></div>')
+
+            # Remove the original li items from the block
+            remaining = block
+            for good, bad in items:
+                item = good or bad
+                remaining = remaining.replace(f"<li>{item}</li>", "", 1)
+
+            # Remove any empty ul left behind
+            remaining = re.sub(r"<ul>\s*</ul>", "", remaining)
+
+            # Insert boxes after the Example heading
+            example_heading = re.search(r"<h4>Example</h4>", remaining)
+            if example_heading:
+                insert_pos = example_heading.end()
+                boxes_html = "\n" + "\n".join(boxes) + "\n"
+                remaining = remaining[:insert_pos] + boxes_html + remaining[insert_pos:]
+
+            return remaining
+
+        return re.sub(
+            r"<h4>Example</h4>.*?(?=<h[234]>|</section>)",
+            _process_examples,
+            html_body,
+            flags=re.DOTALL,
+        )
+
+    @staticmethod
+    def _wrap_blockquotes(html_body: str) -> str:
+        """Convert <blockquote> elements into styled .blockquotes div cards."""
+        return re.sub(
+            r"<blockquote>(.*?)</blockquote>",
+            r'<div class="blockquotes">\1</div>',
             html_body,
             flags=re.DOTALL,
         )

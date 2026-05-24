@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Summary</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p {
+    margin: 0 0 14px;
+}
+ul, ol {
+    margin: 0;
+    padding-left: 20px;
+}
+ul li, ol li {
+    margin: 6px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+}
+  </style>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Get Summary</h1>
+</section>
+<section class="section"><h2>What do I need?</h2>
+<p>Pick one:</p>
+<ul>
+<li><strong>A GitHub PR URL</strong> — just paste the link, the skill fetches everything from GitHub</li>
+<li><strong>A task key</strong> (like <code>PROJ-123</code>) — from your branch name or you can provide it, plus a changelog at <code>.local/tasks/[KEY]/changelog.md</code></li>
+<li><strong>A feature branch</strong> — run it from the branch and it falls back to <code>git diff</code></li>
+</ul></section>
+<section class="section"><h2>When to use it</h2>
+<p>Use this skill when:</p>
+<ul>
+<li>You want a <strong>clean report for a past PR</strong> (for email, docs, or review)</li>
+<li>You want to <strong>preview reports</strong> before shipping (dry-run, test format and wording)</li>
+<li>You want <strong>both Jira and PR reports</strong> generated from the same source</li>
+<li>Another skill needs a clean non-technical or technical summary of your changes</li>
+</ul></section>
+<section class="section"><h2>How to run it</h2>
+<pre><code>/dev-get-summary [KEY | PR_URL]</code></pre>
+<p>Examples:</p>
+<ul>
+<li><code>/dev-get-summary PROJ-123</code> — from local changelog</li>
+<li><code>/dev-get-summary</code> — auto-detect key from current branch</li>
+<li><code>/dev-get-summary https://github.com/owner/repo/pull/123</code> — from a GitHub PR</li>
+</ul>
+<p>The skill will:</p>
+<ol>
+<li>Extract evidence (PR API → local changelog → git diff, in that order)</li>
+<li>Generate a <strong>non-technical Jira report</strong> (for testers, PMs, clients)</li>
+<li>Generate a <strong>technical PR report</strong> (for future engineers)</li>
+<li>Output both as <strong>separate copyable code blocks</strong></li>
+</ol></section>
+<section class="section"><h2>Output format</h2>
+<p>Reports are displayed in two standalone fenced code blocks — triple-click to copy each one.</p>
+<p><strong>Jira Report:</strong> links to the PR, title format: <code>[KEY] — PR #[N]</code></p>
+<p><strong>PR Report:</strong> links to the Jira task, title format: <code>[KEY] — Task summary</code></p></section>
+<section class="section"><h2>Templates</h2>
+<p>This skill uses the same templates as <code>/dev-ship</code>:</p>
+<ul>
+<li><code>jira-summary-template.md</code> — non-technical report: Added / Changed / Fixed / Testers / Notes</li>
+<li><code>pr-summary-template.md</code> — technical report: Goal / Added / Changed / Fixed / Key decisions / Risks / Testing / Related areas / Future reuse guidance</li>
+</ul></section>
+<section class="section"><h2>Format rules</h2>
+<h3>Jira report (non-technical)</h3>
+<ul>
+<li>Past tense, outcome-focused, minimal English</li>
+<li><strong>Never</strong>: variable names, function names, class names, file paths, method calls, code-level details</li>
+<li>Describe behavior and user impact only</li>
+<li>Omit empty sections</li>
+</ul>
+<h3>PR report (technical)</h3>
+<ul>
+<li>Past tense, design and behavior focused</li>
+<li>Include file paths, method names, architectural decisions, code patterns</li>
+<li>Separate verified from not-verified in testing section</li>
+<li>Mark reuse patterns with Safe to copy: YES/NO/WITH CARE</li>
+<li>Omit empty sections</li>
+</ul></section>
+<section class="section"><h2>Who needs this?</h2>
+<p>This skill is used by:</p>
+<ul>
+<li><code>dev-ship-pr-jira</code> — automatically generates reports when you ship</li>
+<li>You — when you need clean reports for any other reason (past PRs, docs, review, dry-run)</li>
+</ul></section>
+  </main>
+</body>
+</html>
