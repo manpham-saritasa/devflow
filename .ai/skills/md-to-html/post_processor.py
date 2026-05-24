@@ -26,6 +26,7 @@ class PostProcessor:
         body_html = self._wrap_qa_cards(body_html)
         body_html = self._wrap_example_boxes(body_html)
         body_html = self._wrap_blockquotes(body_html)
+        body_html = self._add_blank_target(body_html)
         return body_html
 
     @staticmethod
@@ -204,7 +205,6 @@ class PostProcessor:
 
         def _process_examples(match: re.Match[str]) -> str:
             block = match.group(0)
-            # Find all li items starting with ✅ or ❌
             items = re.findall(r"<li>(✅.*?)</li>|<li>(❌.*?)</li>", block, re.DOTALL)
             if not items:
                 return block
@@ -219,16 +219,13 @@ class PostProcessor:
                     content = bad.strip()
                 boxes.append(f'<div class="{klass}"><p>{content}</p></div>')
 
-            # Remove the original li items from the block
             remaining = block
             for good, bad in items:
                 item = good or bad
                 remaining = remaining.replace(f"<li>{item}</li>", "", 1)
 
-            # Remove any empty ul left behind
             remaining = re.sub(r"<ul>\s*</ul>", "", remaining)
 
-            # Insert boxes after the Example heading
             example_heading = re.search(r"<h4>Example</h4>", remaining)
             if example_heading:
                 insert_pos = example_heading.end()
@@ -252,4 +249,13 @@ class PostProcessor:
             r'<div class="blockquotes">\1</div>',
             html_body,
             flags=re.DOTALL,
+        )
+
+    @staticmethod
+    def _add_blank_target(html_body: str) -> str:
+        """Add target="_blank" to all <a> tags that don't already have it."""
+        return re.sub(
+            r"<a (?![^>]*target=)([^>]*)>",
+            r'<a target="_blank" \1>',
+            html_body,
         )

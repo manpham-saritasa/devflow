@@ -19,6 +19,8 @@ Role: Architecture documentation agent. Review the completed task context and im
 - Check `ADR_TEMPLATE` exists. Missing → stop: "Error: ADR template not found."
 - Read repository guidance and conventions files when present, such as `AGENTS.md`, `CLAUDE.md`, `README.md`, `CONTRIBUTING.md`, `docs/`, architecture docs, and existing ADRs in `ADR_DIR`.
 - Read all available files in `TASK_DIR` when present, including `task.md`, `raw.md`, `plan.md`, `changelog.md`, `review.md`, `progress.md`, and `pr.md`.
+- **When `TASK_DIR` is missing or incomplete**: search for GitHub PRs using `gh search prs "[KEY]" --merged --json ...` and `gh pr view [NUMBER] --repo [OWNER/REPO] --json ...` to find merged PRs for the task key. Use `gh pr diff` to inspect the actual code changes. Also fetch the Jira task via the URL in the PR body (typically `https://[domain].atlassian.net/browse/[KEY]`).
+- **Always collect the Jira task URL and GitHub PR URLs** (when found) as clickable markdown links for the Supporting Evidence section.
 - Treat `task.md` and `raw.md` as requirement and discussion context.
 - Treat `plan.md` as intended implementation direction.
 - Treat `changelog.md` as the delivered implementation summary.
@@ -58,6 +60,27 @@ If none apply:
 - Use concrete repository terms: real services, modules, interfaces, schemas, endpoints, jobs, or components when known.
 - Never invent technical details not supported by task files or repository evidence.
 
+## Supporting Evidence Rules
+
+Section 10 (Supporting Evidence) must include **clickable markdown links** whenever URLs are available:
+
+- **Jira task URL** — always include: `[KEY](https://[domain].atlassian.net/browse/KEY)`
+- **GitHub PR URLs** — include every relevant PR found: `[PR #[N]](https://github.com/owner/repo/pull/N)`
+- **Task files** — list only files that actually exist and were used
+- **Related ADRs** — link to existing ADR files when they exist in `ADR_DIR`
+
+Format each evidence item as a bullet with a clickable link. Never use plain text URLs — always use markdown link syntax.
+
+Example:
+
+```
+- **Task evidence:** [KEY-123](https://example.atlassian.net/browse/KEY-123) — short summary of the task goal.
+- **PR evidence:**
+    - [PR #456](https://github.com/owner/repo/pull/456) — main implementation details.
+    - [PR #789](https://github.com/owner/repo/pull/789) — follow-up fixes.
+- **Related ADRs / prior tasks:** [ADR-001](docs/adrs/adr-001.md) — related decision, or `None`.
+```
+
 ## Write Result
 
 - Write one new ADR to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case for the summary.
@@ -66,7 +89,7 @@ If none apply:
 - Fill every section with task-specific content.
 - Replace placeholders with real values derived from the task and repository.
 - If the template requires status, default to `Accepted` when the work is already implemented and merged or effectively complete; otherwise use the best status supported by the evidence.
-- If the template requires date, use today’s actual date.
+- If the template requires date, use today's actual date.
 
 ## Output to User
 
@@ -79,7 +102,7 @@ Use this format:
 - Summarize the architectural decision in 1-2 bullets.
 
 **Evidence used**
-- List the key task files and repository evidence used.
+- List the key task files and repository evidence used, with clickable URLs.
 
 **Notable tradeoffs**
 - List major tradeoffs, risks, or follow-up items captured in the ADR, or say `None`.
@@ -93,3 +116,4 @@ Use this format:
 - Did it avoid inventing unsupported rationale or consequences?
 - Did the ADR filename use `[KEY]-[short-decision-summary].md` in kebab-case?
 - Were all `[Summary or explanation about...]` placeholders in the template replaced with real 1-2 sentence summaries? None should remain as-is or be silently removed.
+- Does Section 10 (Supporting Evidence) include clickable markdown links for Jira and all relevant GitHub PRs?

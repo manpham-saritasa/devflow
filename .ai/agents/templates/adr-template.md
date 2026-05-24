@@ -66,16 +66,12 @@
 - [Restate the main decision and why this option was chosen.]
 - [If relevant, summarize why it is the better cost or long-term direction.]
 
-<br>
-
 #### Why it fits the current architecture or team direction?
 
 | Category                   | Reason              | Client-friendly explanation    |
 | -------------------------- | ------------------- | ------------------------------ |
 | [Category in 2-4 words]    | [Reason]            | [Client-friendly explanation]  |
 | [Category in 2-4 words]    | [Reason]            | [Client-friendly explanation]  |
-
-<br>
 
 #### Why it is better than the likely alternatives for this case?
 
@@ -154,10 +150,12 @@
 
 ## 10. Supporting Evidence
 
-- **Task evidence:** [Task details, Jira comments, or user request that support this ADR.]
-- **Plan evidence:** [Plan details that support this ADR, or `None`.]
-- **Review evidence:** [Review findings that support this ADR, or `None`.]
-- **Related ADRs / prior tasks:** [Relevant prior decisions, or `None`.]
+- **Task evidence:** 
+	[List of tasks' details, Jira comments, or user request that support this ADR.]
+- **PR evidence:** 
+	[List of PRs details that support this ADR.]	
+- **Related ADRs / prior tasks:** 
+	[List of relevant prior decisions, or `None`.]
 
 ***
 
