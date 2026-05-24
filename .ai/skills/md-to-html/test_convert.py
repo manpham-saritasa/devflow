@@ -252,6 +252,24 @@ def test_converter_end_to_end() -> None:
     )
 
 
+def test_converter_table_cell_list_fixture() -> None:
+    fixture_path = Path(__file__).parent / "test" / "table-cell-lists.md"
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        html_path = Path(tmp_dir) / "table-cell-lists.html"
+        _ = Converter().convert(fixture_path, html_path)
+        result = html_path.read_text(encoding="utf-8")
+
+    check_true(
+        "converter table cell list fixture",
+        '<td data-label="Details"><ul><li>First item</li><li>Second item</li><li>Third item</li></ul></td>'
+        in result
+        and '<td data-label="Details"><ul><li>Alpha</li><li>Beta</li><li>Gamma</li></ul></td>'
+        in result
+        and '<td data-label="Details">Single line only</td>' in result,
+        result,
+    )
+
+
 # ── Run ─────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
@@ -285,6 +303,7 @@ if __name__ == "__main__":
 
     print("\n=== Converter integration ===")
     test_converter_end_to_end()
+    test_converter_table_cell_list_fixture()
 
     print(f"\n{'=' * 40}")
     print(f"Passed: {pass_count}  Failed: {fail_count}")
