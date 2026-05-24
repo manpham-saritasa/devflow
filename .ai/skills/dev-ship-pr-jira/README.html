@@ -281,9 +281,9 @@ a:hover {
 <section class="section"><h2>What do I need?</h2>
 <p>Before using this skill, make sure you have:</p>
 <ol>
-<li><strong>gh CLI</strong> — GitHub command-line tool, installed and logged in</li>
-<li><strong>Jira MCP</strong> — connection to Jira (must be set up)</li>
-<li><strong>Environment variables</strong> — these should be set:<ul><li><code>JIRA_DOMAIN</code> — your Jira server address</li><li><code>JIRA_PROJECT</code> — your project key</li></ul></li>
+<li><strong>gh CLI</strong> - GitHub command-line tool, installed and logged in</li>
+<li><strong>Jira MCP</strong> - connection to Jira (must be set up)</li>
+<li><strong>Environment variables</strong> - these should be set:<ul><li><code>JIRA_DOMAIN</code> - your Jira server address</li><li><code>JIRA_PROJECT</code> - your project key</li></ul></li>
 </ol></section>
 <section class="section"><h2>What does this skill do?</h2>
 <ol>
@@ -294,8 +294,8 @@ a:hover {
 </ol>
 <p>It uses two different templates:</p>
 <ul>
-<li><strong>PR body</strong> — technical (architecture, decisions, risks, reuse patterns)</li>
-<li><strong>Jira comment</strong> — non-technical (behavior, user impact, testing notes)</li>
+<li><strong>PR body</strong> - technical (architecture, decisions, risks, reuse patterns)</li>
+<li><strong>Jira comment</strong> - non-technical (behavior, user impact, testing notes)</li>
 </ul></section>
 <section class="section"><h2>When should I use it?</h2>
 <p>Use this skill when:</p>
@@ -347,14 +347,14 @@ a:hover {
 </ul></section>
 <section class="section"><h2>What happens step by step?</h2>
 <ol>
-<li><strong>Check your code</strong> — looks at what you changed</li>
-<li><strong>Get the task ID</strong> — reads it from your branch name</li>
-<li><strong>Generate reports</strong> — creates two reports:<ul><li>Technical PR report (for future developers)</li><li>Non-technical Jira report (for testers and PMs)</li></ul></li>
-<li><strong>Show you a preview</strong> — displays both reports</li>
-<li><strong>Ask for permission</strong> — waits for you to say YES</li>
-<li><strong>Create the PR</strong> — sends code to GitHub with the technical report</li>
-<li><strong>Save progress</strong> — writes what happened to a progress file</li>
-<li><strong>Comment on Jira</strong> — posts the non-technical report with the PR link</li>
+<li><strong>Check your code</strong> - looks at what you changed</li>
+<li><strong>Get the task ID</strong> - reads it from your branch name</li>
+<li><strong>Generate reports</strong> - creates two reports:<ul><li>Technical PR report (for future developers)</li><li>Non-technical Jira report (for testers and PMs)</li></ul></li>
+<li><strong>Show you a preview</strong> - displays both reports</li>
+<li><strong>Ask for permission</strong> - waits for you to say YES</li>
+<li><strong>Create the PR</strong> - sends code to GitHub with the technical report</li>
+<li><strong>Save progress</strong> - writes what happened to a progress file</li>
+<li><strong>Comment on Jira</strong> - posts the non-technical report with the PR link</li>
 </ol></section>
 <section class="section"><h2>Examples</h2>
 <h3>Example 1: Add a login feature</h3>
@@ -375,6 +375,58 @@ a:hover {
 <li>Creates a PR with title: <code>Fix crash PROJ-456</code></li>
 <li>Comments on Jira task <code>PROJ-456</code> with the PR link</li>
 </ul></section>
+<section class="section"><h2>Future reuse guidance</h2>
+<p>This section exists in the PR template.</p>
+<p>Use it to record whether part of the implementation is safe to copy into future work, what exact pattern is reusable, and what caveat must be checked before reuse.</p>
+<p>This helps future engineers and LLMs answer questions like:</p>
+<ul>
+<li>Can we follow the same pattern in a similar task?</li>
+<li>Is this a stable approach or only a one-off workaround?</li>
+<li>What condition must be checked before reusing it?</li>
+</ul>
+<p>Write it like this:</p>
+<pre><code>## Future reuse guidance
+- Safe to copy: [YES / NO / WITH CARE]
+- Reusable pattern: ...
+- Caveat: ...</code></pre>
+<h3>When to use it</h3>
+<p>Use this section when the PR shows a reusable pattern clearly enough, for example:</p>
+<ul>
+<li>Request validation flow</li>
+<li>State handling pattern</li>
+<li>API request shaping</li>
+<li>Mapping logic</li>
+<li>UI interaction flow</li>
+<li>Integration boundary rule</li>
+<li>Permission check pattern</li>
+</ul>
+<h3>When not to use it</h3>
+<p>Do not use this section for:</p>
+<ul>
+<li>Vague advice</li>
+<li>One-off hacks</li>
+<li>Temporary debug code</li>
+<li>Legacy fallback logic that should not spread</li>
+<li>Anything not clearly supported by the PR evidence</li>
+</ul>
+<h3>Example: safe to copy</h3>
+<pre><code>## Future reuse guidance
+- Safe to copy: YES
+- Reusable pattern: Reuse the same request-validation pipeline for new admin write endpoints.
+- Caveat: Keep the same role check and error response shape.</code></pre>
+<p>Use <code>YES</code> when the pattern looks intentional, review-safe, and not tightly coupled to one-off constraints.</p>
+<h3>Example: use with care</h3>
+<pre><code>## Future reuse guidance
+- Safe to copy: WITH CARE
+- Reusable pattern: Reuse the optimistic UI update pattern for small inline field edits.
+- Caveat: Confirm rollback behavior and stale-data handling before applying it to multi-step flows.</code></pre>
+<p>Use <code>WITH CARE</code> when the pattern is probably useful but depends on assumptions, missing verification, or context-specific trade-offs.</p>
+<h3>Example: do not copy</h3>
+<pre><code>## Future reuse guidance
+- Safe to copy: NO
+- Reusable pattern: Temporary fallback mapping for legacy invoice status values.
+- Caveat: This exists only for backward compatibility and should not be used in new flows.</code></pre>
+<p>Use <code>NO</code> when the logic is transitional, workaround-based, legacy-only, or clearly unsuitable as a standard pattern.</p></section>
   </main>
 </body>
 </html>
