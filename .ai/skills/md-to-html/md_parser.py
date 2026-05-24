@@ -68,7 +68,8 @@ def _process_line(lines, i, state, emit):
                 break
             if re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", nxt):
                 break
-            sep = "" if nxt.startswith("//") else " "; content += sep + nxt
+            sep = "" if nxt.startswith("//") else " "
+            content += sep + nxt
             j += 1
         return _emit_heading_raw(content, m_h.group(1), state, emit, j)
     if _handle_table_line(line, state, emit):
@@ -123,7 +124,7 @@ def _emit_heading(line, state, emit):
 
 
 def _emit_heading_raw(content, hashes, state, emit, next_i):
-    """Emit heading from pre-joined multi-line content. Returns next index."""
+    """Emit heading from pre-joined multi-line content."""
     _close_table(state, emit)
     if state.in_list:
         emit(f"</{state.list_tag}>")

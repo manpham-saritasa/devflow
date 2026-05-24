@@ -5,12 +5,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from main import (
-    _build_header,
-    _join_split_links,
-    extract_metadata,
-    parse_frontmatter,
-)
+from post_processor import PostProcessor
+from main import Converter, PreProcessor
+from frontmatter import parse_frontmatter, extract_metadata
 from md_parser import md_body_to_html, parse_inline
 
 PASS = 0
@@ -138,7 +135,7 @@ def test_code_block_escaped():
 
 def test_join_split_link():
     """Split paragraph link should be joined."""
-    result = _join_split_links(
+    result = PostProcessor._join_split_links(
         "<p>[[KEY] — Title](https</p>\n<p>//github.com/pull/1)</p>"
     )
     check(
@@ -150,7 +147,7 @@ def test_join_split_link():
 
 def test_join_split_link_no_match():
     """Normal paragraphs should be unchanged."""
-    result = _join_split_links("<p>Hello</p>\n<p>World</p>")
+    result = PostProcessor._join_split_links("<p>Hello</p>\n<p>World</p>")
     check("no false join", result, "<p>Hello</p>\n<p>World</p>")
 
 
@@ -159,7 +156,7 @@ def test_join_split_link_no_match():
 
 def test_eyebrow_split_colon_space():
     """ADR: Title should split on ': '."""
-    result = _build_header("ADR: Migrate DB")
+    result = PostProcessor._build_header("ADR: Migrate DB")
     check(
         "eyebrow split on colon-space", "ADR" in result and "Migrate DB" in result, True
     )
@@ -167,13 +164,13 @@ def test_eyebrow_split_colon_space():
 
 def test_no_eyebrow_on_url():
     """Title with https:// should not split eyebrow."""
-    result = _build_header("[[KEY] — Title](https://example.com)")
+    result = PostProcessor._build_header("[[KEY] — Title](https://example.com)")
     check("no eyebrow on URL colon", "eyebrow" not in result, True)
 
 
 def test_h1_has_link():
     """h1 should render markdown links as <a> tags."""
-    result = _build_header("Hello [world](https://example.com)")
+    result = PostProcessor._build_header("Hello [world](https://example.com)")
     check("h1 renders link", '<a href="https://example.com">world</a>' in result, True)
 
 
