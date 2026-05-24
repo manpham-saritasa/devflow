@@ -67,7 +67,7 @@ Tone and style:
 - Changed: Existing behavior, workflow, wording, validation, or UX changed.
 - Fixed: Previous behavior was wrong and is now corrected. Write root cause in plain business language only.
 - Testers: Give only the minimum practical information needed to begin testing. Include entry URL, API route, request example, feature flag, account, environment, seed data, or manual setup only when they are required to test the task.
-- Notes: Only rollout note, limitation, dependency note, or “no product behavior change” note.
+- Notes: Only rollout note, limitation, dependency note, or "no product behavior change" note.
 
 ## Tester rules
 - Include `API / endpoint / URL` only when testers need it to execute or validate the task.
