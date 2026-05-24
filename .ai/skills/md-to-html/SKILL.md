@@ -241,6 +241,7 @@ ul.clean {
   padding-left: 20px;
 }
 ul.clean li { margin: 6px 0; }
+ul, ol { margin: -5px 0 1em 0; }
 table {
   width: 100%;
   border-collapse: separate;

@@ -66,8 +66,68 @@ def _normalize_mermaid_blocks(rendered_html: str) -> str:
     )
 
 
+def _normalize_sublist_indent(text: str) -> str:
+    """Normalize 2-space sublist indentation to 4 spaces under colon-ending list items."""
+    lines = text.split("\n")
+    result: list[str] = []
+    in_sublist = False
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        starts_with_list = stripped.startswith(("- ", "* "))
+
+        # Detect start of a sublist: list item ending with colon + next line is list item
+        if starts_with_list and stripped.endswith(":"):
+            # Check if next non-blank line is also a list item
+            for j in range(i + 1, len(lines)):
+                nxt = lines[j].strip()
+                if nxt:
+                    if nxt.startswith(("- ", "* ")):
+                        in_sublist = True
+                    break
+            result.append(line)
+            continue
+
+        # Handle 2-space indented sublist items
+        is_2space = (
+            starts_with_list and line.startswith("  ") and not line.startswith("    ")
+        )
+        if is_2space and in_sublist:
+            result.append("    " + stripped)
+            continue
+
+        # Exit sublist on non-blank, non-indented, non-list line (or unindented list)
+        if stripped and not line.startswith("  "):
+            in_sublist = False
+
+        result.append(line)
+
+    return "\n".join(result)
+
+
+def _insert_blank_before_list(text: str) -> str:
+    """Insert blank line between colon-ending paragraphs and following list items."""
+    lines = text.split("\n")
+    result: list[str] = []
+    for i, line in enumerate(lines):
+        result.append(line)
+        stripped = line.strip()
+        # Colon-ending paragraph (not a heading, not a list item) followed by list
+        if stripped.endswith(":") and not stripped.startswith(("- ", "* ", "#")):
+            for j in range(i + 1, len(lines)):
+                nxt = lines[j].strip()
+                if not nxt:
+                    continue
+                if nxt.startswith(("- ", "* ")):
+                    result.append("")
+                break
+    return "\n".join(result)
+
+
 def md_body_to_html(text: str) -> str:
     """Convert Markdown body text to HTML using a real Markdown parser."""
+    text = _insert_blank_before_list(text)
+    text = _normalize_sublist_indent(text)
     renderer = _new_renderer()
     _ = renderer.reset()
     rendered_html = renderer.convert(text)
