@@ -1,3 +1,5 @@
+> **LLM**: Follow this format strictly. Read all instructions below before writing. Do not skip sections, reorder items, or change the output structure.
+
 ## Output template
 
 ```md
