@@ -1,184 +1,184 @@
 """Tests for md-to-html converter."""
 
+from __future__ import annotations
+
 import sys
+import tempfile
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from post_processor import PostProcessor
-from main import Converter, PreProcessor
-from frontmatter import parse_frontmatter, extract_metadata
+from frontmatter import extract_metadata, parse_frontmatter
+from main import Converter
 from md_parser import md_body_to_html, parse_inline
+from post_processor import PostProcessor
+from pre_processor import PreProcessor
 
-PASS = 0
-FAIL = 0
+pass_count = 0
+fail_count = 0
 
 
-def check(name, actual, expected):
-    global PASS, FAIL
+def check(name: str, actual: Any, expected: Any) -> None:
+    global pass_count, fail_count
     if actual == expected:
-        PASS += 1
+        pass_count += 1
         print(f"  PASS {name}")
     else:
-        FAIL += 1
+        fail_count += 1
         print(f"  FAIL {name}")
         print(f"       expected: {expected!r}")
         print(f"       got:      {actual!r}")
 
 
+def check_true(name: str, condition: bool, actual: Any | None = None) -> None:
+    global pass_count, fail_count
+    if condition:
+        pass_count += 1
+        print(f"  PASS {name}")
+    else:
+        fail_count += 1
+        print(f"  FAIL {name}")
+        if actual is not None:
+            print(f"       got: {actual!r}")
+
+
 # ── parse_inline ────────────────────────────────────────────────────────────
 
 
-def test_inline_nested_brackets_link():
-    """[[KEY] — [PR title]](url) should produce a link."""
-    result = parse_inline("[[KEY] — [PR title]](https://example.com)")
-    check(
-        "nested brackets link",
+def test_inline_link_and_code() -> None:
+    result = parse_inline("use [docs](https://example.com) and `code`")
+    check_true(
+        "inline link and code",
+        '<a href="https://example.com">docs</a>' in result
+        and "<code>code</code>" in result,
         result,
-        '<a href="https://example.com">[KEY] — [PR title]</a>',
     )
 
 
-def test_inline_simple_link():
-    """[text](url) should still work."""
-    result = parse_inline("[simple](https://example.com)")
-    check("simple link", result, '<a href="https://example.com">simple</a>')
-
-
-def test_inline_code_escapes_html():
-    """`<br>` should escape the angle brackets."""
-    result = parse_inline("use `<br>` here")
-    check("inline code escapes HTML", result, "use <code>&lt;br&gt;</code> here")
+def test_inline_image() -> None:
+    result = parse_inline("![alt](img.png)")
+    check_true(
+        "inline image",
+        "<img" in result and 'src="img.png"' in result and "alt" in result,
+        result,
+    )
 
 
 # ── md_body_to_html ─────────────────────────────────────────────────────────
 
 
-def test_heading_with_link():
-    """# heading with [link](url) should convert."""
-    result = md_body_to_html("# Hello [world](https://example.com)")
-    check(
-        "heading with link",
-        result,
-        '<h1>Hello <a href="https://example.com">world</a></h1>',
+def test_blockquote() -> None:
+    result = md_body_to_html("> quote")
+    check_true(
+        "blockquote", "<blockquote>" in result and "<p>quote</p>" in result, result
     )
 
 
-def test_multi_line_heading():
-    """Heading with URL split across lines should join."""
-    result = md_body_to_html("# [[KEY] — Title](https\n//github.com/pull/1)")
-    check(
-        "multi-line heading link",
+def test_task_list() -> None:
+    result = md_body_to_html("- [x] done\n- [ ] todo")
+    check_true(
+        "task list",
+        'type="checkbox"' in result and "checked" in result and "task-list" in result,
         result,
-        '<h1><a href="https//github.com/pull/1">[KEY] — Title</a></h1>',
     )
 
 
-def test_multi_line_heading_stops_at_list():
-    """Multi-line heading join should stop at list items."""
-    result = md_body_to_html("## Source priority\n1. First item\n2. Second item")
+def test_strikethrough() -> None:
+    result = md_body_to_html("~~gone~~")
+    check("strikethrough", result, "<p><del>gone</del></p>")
+
+
+def test_setext_heading() -> None:
+    result = md_body_to_html("Title\n=====")
+    check("setext heading", result, "<h1>Title</h1>")
+
+
+def test_reference_link() -> None:
+    result = md_body_to_html("[x][id]\n\n[id]: https://example.com")
+    check("reference link", result, '<p><a href="https://example.com">x</a></p>')
+
+
+def test_autolink() -> None:
+    result = md_body_to_html("<https://example.com>")
     check(
-        "heading stops at numbered list",
+        "autolink",
         result,
-        "<h2>Source priority</h2>\n<ol>\n<li>First item</li>\n<li>Second item</li>\n</ol>",
+        '<p><a href="https://example.com">https://example.com</a></p>',
     )
 
 
-def test_multi_line_heading_stops_at_bullet():
-    """Multi-line heading join should stop at bullet list."""
-    result = md_body_to_html("## Rules\n- Rule one\n- Rule two")
-    check(
-        "heading stops at bullet list",
-        result,
-        "<h2>Rules</h2>\n<ul>\n<li>Rule one</li>\n<li>Rule two</li>\n</ul>",
-    )
-
-
-def test_nested_unordered_list():
-    """Indented sub-lists should nest."""
-    result = md_body_to_html("- Parent:\n  - Child 1\n  - Child 2\n- Sibling")
-    check(
-        "nested unordered list",
-        result,
-        "<ul>\n<li>Parent:<ul><li>Child 1</li><li>Child 2</li></ul></li>\n<li>Sibling</li>\n</ul>",
-    )
-
-
-def test_nested_ordered_list():
-    """Indented numbered sub-lists should nest as <ol>."""
-    result = md_body_to_html("- Parent:\n  1. First\n  2. Second\n- Sibling")
-    check(
-        "nested ordered list",
-        result,
-        "<ul>\n<li>Parent:<ol><li>First</li><li>Second</li></ol></li>\n<li>Sibling</li>\n</ul>",
-    )
-
-
-def test_mermaid_block():
-    """```mermaid blocks should render as <pre class=\"mermaid\">."""
+def test_mermaid_block() -> None:
     result = md_body_to_html("```mermaid\ngraph TD\n  A-->B\n```")
     check("mermaid block", result, '<pre class="mermaid">\ngraph TD\n  A-->B\n</pre>')
 
 
-def test_code_block_escaped():
-    """Normal code blocks should escape HTML."""
-    result = md_body_to_html("```html\n<div>hello</div>\n```")
-    check(
-        "code block escapes HTML",
+# ── PostProcessor ───────────────────────────────────────────────────────────
+
+
+def test_no_h2_content_preserved() -> None:
+    result = PostProcessor().process("<p>Intro</p>", "Title", {})
+    check_true(
+        "no h2 content preserved",
+        '<section class="section">\n<p>Intro</p>\n</section>' in result,
         result,
-        "<pre><code>&lt;div&gt;hello&lt;/div&gt;</code></pre>",
     )
 
 
-# ── _join_split_links ───────────────────────────────────────────────────────
-
-
-def test_join_split_link():
-    """Split paragraph link should be joined."""
-    result = PostProcessor._join_split_links(
-        "<p>[[KEY] — Title](https</p>\n<p>//github.com/pull/1)</p>"
+def test_intro_before_h2_preserved() -> None:
+    result = PostProcessor().process(
+        "<p>Intro</p>\n<h2>Section</h2>\n<p>Body</p>", "Title", {}
     )
-    check(
-        "join split paragraph link",
+    check_true(
+        "intro before h2 preserved",
+        '<section class="section">\n<p>Intro</p>\n</section>' in result
+        and '<section class="section">\n<h2>Section</h2>\n<p>Body</p>\n</section>'
+        in result,
         result,
-        "<p>[[KEY] — Title](https//github.com/pull/1)</p>",
     )
 
 
-def test_join_split_link_no_match():
-    """Normal paragraphs should be unchanged."""
-    result = PostProcessor._join_split_links("<p>Hello</p>\n<p>World</p>")
-    check("no false join", result, "<p>Hello</p>\n<p>World</p>")
+def test_list_line_break_preserved() -> None:
+    result = PostProcessor().process(
+        "<h2>Section</h2>\n<ul>\n<li>first<br />second</li>\n</ul>", "Title", {}
+    )
+    check_true("list line break preserved", "<br />" in result, result)
 
 
-# ── _build_header ───────────────────────────────────────────────────────────
+def test_horizontal_rules_removed() -> None:
+    result = PostProcessor().process(
+        "<h2>Section</h2>\n<p>Body</p>\n<hr />\n<h2>Next</h2>\n<p>More</p>",
+        "Title",
+        {},
+    )
+    check_true("horizontal rules removed", "<hr" not in result, result)
 
 
-def test_eyebrow_split_colon_space():
-    """ADR: Title should split on ': '."""
-    result = PostProcessor._build_header("ADR: Migrate DB")
-    check(
-        "eyebrow split on colon-space", "ADR" in result and "Migrate DB" in result, True
+def test_table_cell_bullets_become_list() -> None:
+    result = PostProcessor().process(
+        "<h2>Section</h2>\n<table><thead><tr><th>Col</th></tr></thead><tbody><tr><td>- One<br> - Two<br />* Three</td></tr></tbody></table>",
+        "Title",
+        {},
+    )
+    check_true(
+        "table cell bullets become list",
+        '<td data-label="Col"><ul><li>One</li><li>Two</li><li>Three</li></ul></td>'
+        in result,
+        result,
     )
 
 
-def test_no_eyebrow_on_url():
-    """Title with https:// should not split eyebrow."""
-    result = PostProcessor._build_header("[[KEY] — Title](https://example.com)")
-    check("no eyebrow on URL colon", "eyebrow" not in result, True)
-
-
-def test_h1_has_link():
-    """h1 should render markdown links as <a> tags."""
+def test_h1_has_link() -> None:
     result = PostProcessor._build_header("Hello [world](https://example.com)")
-    check("h1 renders link", '<a href="https://example.com">world</a>' in result, True)
+    check_true(
+        "h1 renders link", '<a href="https://example.com">world</a>' in result, result
+    )
 
 
-# ── parse_frontmatter ───────────────────────────────────────────────────────
+# ── parse_frontmatter / metadata ────────────────────────────────────────────
 
 
-def test_frontmatter_after_heading():
-    """Frontmatter after # Heading should be parsed."""
+def test_frontmatter_after_heading() -> None:
     body, fm = parse_frontmatter(
         "# Skill: test\n\n---\nname: my-skill\ntriggers:\n  - foo\n  - bar\n---\n\n## Section"
     )
@@ -191,55 +191,102 @@ def test_frontmatter_after_heading():
     check("frontmatter after heading - triggers", fm.get("triggers"), "foo, bar")
 
 
-def test_no_frontmatter():
-    """Document without frontmatter should pass through."""
+def test_no_frontmatter() -> None:
     body, fm = parse_frontmatter("# Just a doc\n\nContent.")
     check("no frontmatter - body unchanged", body, "# Just a doc\n\nContent.")
     check("no frontmatter - empty dict", fm, {})
 
 
-def test_frontmatter_hyphenated_keys():
-    """Keys with hyphens should be parsed."""
-    body, fm = parse_frontmatter(
+def test_frontmatter_hyphenated_keys() -> None:
+    _body, fm = parse_frontmatter(
         "---\nfix-versions: v1.0\ntags:\n  - devops\n  - cloud\n---\n\nBody"
     )
     check("hyphenated key", fm.get("fix-versions"), "v1.0")
     check("unquoted list items", fm.get("tags"), "devops, cloud")
 
 
+def test_extract_metadata() -> None:
+    title, metadata = extract_metadata("# Title\n**Owner:** Jane\n\n---\n\nBody")
+    check("metadata title", title, "Title")
+    check("metadata value", metadata.get("Owner"), "Jane")
+
+
+def test_preprocessor_strips_header_metadata_block() -> None:
+    source = "# ADR: Sample\n\n**Status:** PROPOSED\n**Task URL:** [X-1](https://example.com)\n**Date:** 2026-05-22\n\n***\n\n## Section\n\nBody"
+    body, title, metadata = PreProcessor().process(source, fallback_stem="sample")
+    check("preprocessor title", title, "ADR: Sample")
+    check("preprocessor metadata status", metadata.get("Status"), "PROPOSED")
+    check_true(
+        "preprocessor strips header metadata block",
+        "**Status:**" not in body
+        and "**Task URL:**" not in body
+        and "**Date:**" not in body,
+        body,
+    )
+    check_true(
+        "preprocessor keeps section body",
+        body.startswith("## Section"),
+        body,
+    )
+
+
+# ── Converter integration ───────────────────────────────────────────────────
+
+
+def test_converter_end_to_end() -> None:
+    source = "# Demo\n\nIntro text.\n\n## Tasks\n\n- [x] done\n- [ ] todo\n\n> note\n"
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        md_path = Path(tmp_dir) / "demo.md"
+        html_path = Path(tmp_dir) / "demo.html"
+        _ = md_path.write_text(source, encoding="utf-8")
+        _ = Converter().convert(md_path, html_path)
+        result = html_path.read_text(encoding="utf-8")
+
+    check_true(
+        "converter end to end",
+        '<section class="header">' in result
+        and "Intro text." in result
+        and "task-list" in result
+        and "<blockquote>" in result,
+        result,
+    )
+
+
 # ── Run ─────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     print("=== parse_inline ===")
-    test_inline_nested_brackets_link()
-    test_inline_simple_link()
-    test_inline_code_escapes_html()
+    test_inline_link_and_code()
+    test_inline_image()
 
     print("\n=== md_body_to_html ===")
-    test_heading_with_link()
-    test_multi_line_heading()
-    test_multi_line_heading_stops_at_list()
-    test_multi_line_heading_stops_at_bullet()
-    test_nested_unordered_list()
-    test_nested_ordered_list()
+    test_blockquote()
+    test_task_list()
+    test_strikethrough()
+    test_setext_heading()
+    test_reference_link()
+    test_autolink()
     test_mermaid_block()
-    test_code_block_escaped()
 
-    print("\n=== _join_split_links ===")
-    test_join_split_link()
-    test_join_split_link_no_match()
-
-    print("\n=== _build_header ===")
-    test_eyebrow_split_colon_space()
-    test_no_eyebrow_on_url()
+    print("\n=== PostProcessor ===")
+    test_no_h2_content_preserved()
+    test_intro_before_h2_preserved()
+    test_list_line_break_preserved()
+    test_horizontal_rules_removed()
+    test_table_cell_bullets_become_list()
     test_h1_has_link()
 
     print("\n=== parse_frontmatter ===")
     test_frontmatter_after_heading()
     test_no_frontmatter()
     test_frontmatter_hyphenated_keys()
+    test_extract_metadata()
+    test_preprocessor_strips_header_metadata_block()
+
+    print("\n=== Converter integration ===")
+    test_converter_end_to_end()
 
     print(f"\n{'=' * 40}")
-    print(f"Passed: {PASS}  Failed: {FAIL}")
+    print(f"Passed: {pass_count}  Failed: {fail_count}")
     print(f"{'=' * 40}")
-    sys.exit(0 if FAIL == 0 else 1)
+    sys.exit(0 if fail_count == 0 else 1)

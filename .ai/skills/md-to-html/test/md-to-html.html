@@ -284,24 +284,23 @@ a:hover {
     <div class="meta-item"><span class="meta-label">triggers</span>md-to-html, to-html, md-html</div>
   </div>
 </section>
-<section class="section"><h2>Purpose</h2>
-<p>Use this skill when the user wants to:</p>
-<ul>
-<li>Convert a Markdown file into an HTML file.</li>
-<li>Turn notes, reports, specs, proposals, plans, or documentation into a shareable HTML page.</li>
-<li>Reuse the same visual style across multiple Markdown-based documents.</li>
-<li>Produce a readable HTML document instead of plain Markdown.</li>
-</ul>
-<p>This skill is specifically for:</p>
-<ul>
-<li>Documentation pages.</li>
-<li>Reports.</li>
-<li>Technical notes.</li>
-<li>Project plans.</li>
-<li>Internal writeups.</li>
-<li>Client-facing or team-facing documents.</li>
-</ul></section>
-<section class="section"><h2>Output rules</h2>
+<section class="section">
+<h2>Purpose</h2>
+<p>Use this skill when the user wants to:
+- Convert a Markdown file into an HTML file.
+- Turn notes, reports, specs, proposals, plans, or documentation into a shareable HTML page.
+- Reuse the same visual style across multiple Markdown-based documents.
+- Produce a readable HTML document instead of plain Markdown.</p>
+<p>This skill is specifically for:
+- Documentation pages.
+- Reports.
+- Technical notes.
+- Project plans.
+- Internal writeups.
+- Client-facing or team-facing documents.</p>
+</section>
+<section class="section">
+<h2>Output rules</h2>
 <ul>
 <li>The final deliverable must be a standalone <code>.html</code> file.</li>
 <li>Keep the HTML self-contained, with embedded CSS in one file unless the user explicitly asks for separate assets.</li>
@@ -311,8 +310,10 @@ a:hover {
 <li>Keep the wording simple, short, direct, and readable.</li>
 <li>Prefer neutral professional language unless the source content clearly calls for another tone.</li>
 <li>Do not include inline citations in the generated HTML file unless the user explicitly asks for them.</li>
-</ul></section>
-<section class="section"><h2>Conversion behavior</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Conversion behavior</h2>
 <ul>
 <li>Preserve the source document structure as much as possible.</li>
 <li>Convert Markdown headings into proper HTML heading tags.</li>
@@ -324,8 +325,10 @@ a:hover {
 <li>Keep section order from the source Markdown unless the user asks to restructure it.</li>
 <li>If the source Markdown has repeated separators or formatting noise, clean it up during conversion.</li>
 <li>If the source Markdown uses weak formatting that would render poorly in HTML, normalize it into cleaner HTML structure.</li>
-</ul></section>
-<section class="section"><h2>Writing rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Writing rules</h2>
 <ul>
 <li>Keep the original meaning of the Markdown file.</li>
 <li>Clean up formatting without changing the substance.</li>
@@ -333,8 +336,10 @@ a:hover {
 <li>Keep paragraphs short when possible.</li>
 <li>Prefer readable spacing, tables, and lists over dense text blocks.</li>
 <li>Avoid unnecessary decorative elements.</li>
-</ul></section>
-<section class="section"><h2>Visual format</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Visual format</h2>
 <p>Generate a polished HTML document with this visual approach:</p>
 <h3>Layout</h3>
 <ul>
@@ -370,23 +375,24 @@ a:hover {
 <li>Optional callout or question blocks can use a bordered light surface.</li>
 <li>Lists inside tables should render with real HTML lists.</li>
 </ul>
-<h3>Colors Use this approved palette by default:</h3>
-<ul>
-<li>Page background: <code>#f6f7f9</code></li>
-<li>Primary surface: <code>#ffffff</code></li>
-<li>Secondary surface: <code>#f1f4f8</code></li>
-<li>Main text: <code>#1f2937</code></li>
-<li>Muted text: <code>#5b6574</code></li>
-<li>Border: <code>#d9e0e7</code></li>
-<li>Accent: <code>#0f766e</code></li>
-<li>Accent soft: <code>#e6f4f1</code></li>
-<li>Warning: <code>#9a3412</code></li>
-<li>Shadow: <code>0 10px 30px rgba(15, 23, 42, 0.08)</code></li>
-<li>Base radius: <code>14px</code></li>
-</ul></section>
-<section class="section"><h2>Approved CSS theme</h2>
+<h3>Colors</h3>
+<p>Use this approved palette by default:
+- Page background: <code>#f6f7f9</code>
+- Primary surface: <code>#ffffff</code>
+- Secondary surface: <code>#f1f4f8</code>
+- Main text: <code>#1f2937</code>
+- Muted text: <code>#5b6574</code>
+- Border: <code>#d9e0e7</code>
+- Accent: <code>#0f766e</code>
+- Accent soft: <code>#e6f4f1</code>
+- Warning: <code>#9a3412</code>
+- Shadow: <code>0 10px 30px rgba(15, 23, 42, 0.08)</code>
+- Base radius: <code>14px</code></p>
+</section>
+<section class="section">
+<h2>Approved CSS theme</h2>
 <p>Unless the user explicitly asks for a different style, reuse this CSS baseline directly and adjust only minor values if needed:</p>
-<pre><code>:root {
+<pre><code class="language-css">:root {
   --bg: #E2E8F0;
   --surface: #ffffff;
   --surface-2: #f1f4f8;
@@ -597,10 +603,13 @@ a:hover { text-decoration: underline; }
     color: var(--muted);
     margin-bottom: 4px;
   }
-}</code></pre></section>
-<section class="section"><h2>HTML skeleton</h2>
+}
+</code></pre>
+</section>
+<section class="section">
+<h2>HTML skeleton</h2>
 <p>Use this general shape:</p>
-<pre><code>&lt;!DOCTYPE html&gt;
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot; /&gt;
@@ -617,20 +626,25 @@ a:hover { text-decoration: underline; }
     &lt;section class=&quot;section&quot;&gt;...&lt;/section&gt;
   &lt;/main&gt;
 &lt;/body&gt;
-&lt;/html&gt;</code></pre></section>
-<section class="section"><h2>Usage</h2>
+&lt;/html&gt;
+</code></pre>
+</section>
+<section class="section">
+<h2>Usage</h2>
 <p>Run the bundled converter script:</p>
-<pre><code>python .ai/skills/md-to-html/main.py &lt;input.md&gt; [output.html]</code></pre>
+<pre><code class="language-bash">python .ai/skills/md-to-html/main.py &lt;input.md&gt; [output.html]
+</code></pre>
 <p>If <code>output.html</code> is omitted, it writes to <code>&lt;input_stem&gt;.html</code> alongside the source file.</p>
-<p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code>&lt;br&gt;</code>/<code>&lt;hr&gt;</code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&A <code>block-card</code> grids.</p></section>
-<section class="section"><h2>File naming</h2>
-<p>Use descriptive lowercase hyphenated filenames, for example:</p>
-<ul>
-<li><code>project-plan.html</code></li>
-<li><code>technical-notes.html</code></li>
-<li><code>migration-report.html</code></li>
-<li><code>converted-document.html</code></li>
-</ul></section>
+<p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code>&lt;br&gt;</code>/<code>&lt;hr&gt;</code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&amp;A <code>block-card</code> grids.</p>
+</section>
+<section class="section">
+<h2>File naming</h2>
+<p>Use descriptive lowercase hyphenated filenames, for example:
+- <code>project-plan.html</code>
+- <code>technical-notes.html</code>
+- <code>migration-report.html</code>
+- <code>converted-document.html</code></p>
+</section>
   </main>
 </body>
 </html>

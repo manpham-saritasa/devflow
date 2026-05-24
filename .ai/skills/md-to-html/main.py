@@ -4,12 +4,18 @@ md-to-html — Convert Markdown files into polished standalone HTML files.
 Usage:
     python main.py <input.md> [output.html]
 """
+
 import sys
 from pathlib import Path
 
-from md_parser import md_body_to_html
-from pre_processor import PreProcessor
-from post_processor import PostProcessor
+try:
+    from .md_parser import md_body_to_html
+    from .post_processor import PostProcessor
+    from .pre_processor import PreProcessor
+except ImportError:  # pragma: no cover - script execution fallback
+    from md_parser import md_body_to_html
+    from post_processor import PostProcessor
+    from pre_processor import PreProcessor
 
 
 class Converter:
@@ -63,8 +69,6 @@ class Converter:
 
 
 # ── CLI ─────────────────────────────────────────────────────────────────────
-
-
 
 
 def main():

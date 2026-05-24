@@ -1,75 +1,83 @@
 """Card layout, responsive tables, Q&A cards, HTML wrap."""
+
+from __future__ import annotations
+
+import html
 import re
-from md_parser import parse_inline
+
+try:
+    from .md_parser import parse_inline
+except ImportError:  # pragma: no cover - script execution fallback
+    from md_parser import parse_inline
+
 
 class PostProcessor:
     """Apply card-based layout, responsive tables, Q&A cards, and final HTML wrap."""
 
-    def process(self, body_html: str, title: str, metadata: dict | None = None) -> str:
+    def process(
+        self, body_html: str, title: str, metadata: dict[str, str] | None = None
+    ) -> str:
         """Run all post-processing steps."""
-        body_html = body_html.replace("<br>", "")
-        body_html = self._join_split_links(body_html)
+        body_html = self._strip_duplicate_title_heading(body_html, title)
+        body_html = self._strip_horizontal_rules(body_html)
         body_html = self._wrap_sections(body_html)
         body_html = self._build_header(title, metadata) + "\n" + body_html
         body_html = self._add_data_labels(body_html)
         body_html = self._wrap_qa_cards(body_html)
         return body_html
 
-    # ── Private helpers ──────────────────────────────────────────────────
+    @staticmethod
+    def _strip_duplicate_title_heading(html_body: str, title: str) -> str:
+        """Remove the first body h1 when it duplicates the rendered header title."""
+        title_html = parse_inline(title).strip()
+        pattern = rf"^\s*<h1>{re.escape(title_html)}</h1>\s*"
+        return re.sub(pattern, "", html_body, count=1)
 
     @staticmethod
-    def _join_split_links(html: str) -> str:
-        """Join links split across lines: <p>...](https</p><p>//...)</p>"""
-        return re.sub(
-            r"<p>(.+?)\((.+?)</p>\s*<p>(//.+?)\)</p>",
-            r"<p>\1(\2\3)</p>",
-            html,
-            flags=re.DOTALL,
-        )
+    def _strip_horizontal_rules(html_body: str) -> str:
+        """Remove markdown separator rules; card layout already separates sections."""
+        return re.sub(r"\s*<hr\s*/?>\s*", "\n", html_body, flags=re.IGNORECASE)
 
     @staticmethod
     def _wrap_sections(html_body: str) -> str:
-        """Wrap each h2 chunk in a section card."""
-        parts = html_body.split("<h2>")
-        wrapped = []
-        for part in parts[1:]:
-            if "</h2>" not in part:
+        """Wrap document chunks in card sections while preserving intro content."""
+        html_body = html_body.strip()
+        if not html_body:
+            return ""
+
+        chunks = re.split(r"(?=<h2(?:\s|>))", html_body)
+        wrapped: list[str] = []
+
+        for chunk in chunks:
+            chunk = chunk.strip()
+            if not chunk:
                 continue
-            idx = part.index("</h2>")
-            heading = part[:idx]
-            rest = part[idx + 5 :].strip()
-            wrapped.append(
-                f'<section class="section"><h2>{heading}</h2>\n{rest}</section>'
-            )
+            wrapped.append(f'<section class="section">\n{chunk}\n</section>')
+
         return "\n".join(wrapped)
 
     @staticmethod
-    def _build_header(title: str, metadata: dict | None = None) -> str:
+    def _build_header(title: str, metadata: dict[str, str] | None = None) -> str:
         """Build the header card with eyebrow, h1, and metadata grid."""
         eyebrow = ""
         clean_title = title
-        if ": " in title:
+        if ": " in title and "http://" not in title and "https://" not in title:
             parts = title.split(": ", 1)
             eyebrow = parts[0].strip()
             clean_title = parts[1].strip() if len(parts) > 1 else title
 
         lines = ['<section class="header">']
         if eyebrow:
-            lines.append(f'  <div class="eyebrow">{eyebrow}</div>')
+            lines.append(f'  <div class="eyebrow">{html.escape(eyebrow)}</div>')
         lines.append(f"  <h1>{parse_inline(clean_title)}</h1>")
 
         if metadata:
             lines.append('  <div class="meta">')
             for key, value in metadata.items():
-                link_match = re.match(r"\[(.+?)\]\((.+?)\)", value)
-                if link_match:
-                    display, url = link_match.groups()
-                    val_html = f'<a href="{url}">{display}</a>'
-                else:
-                    val_html = value
+                val_html = parse_inline(value) if value else ""
                 lines.append(
                     f'    <div class="meta-item">'
-                    f'<span class="meta-label">{key}</span>{val_html}'
+                    f'<span class="meta-label">{html.escape(str(key))}</span>{val_html}'
                     f"</div>"
                 )
             lines.append("  </div>")
@@ -81,9 +89,9 @@ class PostProcessor:
     def _add_data_labels(html_body: str) -> str:
         """Add data-label attributes to td elements based on th text."""
 
-        def _process_table(m):
-            table = m.group(0)
-            headers = re.findall(r"<th>(.+?)</th>", table)
+        def _process_table(match: re.Match[str]) -> str:
+            table = match.group(0)
+            headers = re.findall(r"<th>(.+?)</th>", table, re.DOTALL)
             if not headers:
                 return table
             clean_headers = [re.sub(r"<.*?>", "", h).strip() for h in headers]
@@ -95,11 +103,14 @@ class PostProcessor:
                     continue
                 tds = re.findall(r"<td>(.*?)</td>", row_html, re.DOTALL)
                 new_row = row_html
-                for j, td_content in enumerate(tds):
-                    if j < len(clean_headers):
-                        label = clean_headers[j]
+                for index, td_content in enumerate(tds):
+                    if index < len(clean_headers):
+                        label = html.escape(clean_headers[index], quote=True)
+                        normalized_content = (
+                            PostProcessor._normalize_table_cell_content(td_content)
+                        )
                         old = f"<td>{td_content}</td>"
-                        new = f'<td data-label="{label}">{td_content}</td>'
+                        new = f'<td data-label="{label}">{normalized_content}</td>'
                         new_row = new_row.replace(old, new, 1)
                 new_rows.append(new_row)
             for old_row, new_row in zip(rows, new_rows):
@@ -109,29 +120,56 @@ class PostProcessor:
         return re.sub(r"<table>.*?</table>", _process_table, html_body, flags=re.DOTALL)
 
     @staticmethod
+    def _normalize_table_cell_content(td_content: str) -> str:
+        """Convert bullet-like line breaks inside table cells back into real HTML lists."""
+        parts = [
+            part.strip() for part in re.split(r"<br\s*/?>", td_content) if part.strip()
+        ]
+        if len(parts) < 2:
+            return td_content
+
+        bullet_items: list[str] = []
+        for part in parts:
+            match = re.match(r"^[-*•]\s+(.+)$", part, flags=re.DOTALL)
+            if not match:
+                return td_content
+            bullet_items.append(match.group(1).strip())
+
+        return "<ul>" + "".join(f"<li>{item}</li>" for item in bullet_items) + "</ul>"
+
+    @staticmethod
     def _wrap_qa_cards(html_body: str) -> str:
         """Convert Q&A pattern lists into block-card grids."""
 
-        def _process_qa_section(m):
-            section = m.group(0)
+        def _process_qa_section(match: re.Match[str]) -> str:
+            section = match.group(0)
             all_items = re.findall(r"<li>(.*?)</li>", section, re.DOTALL)
             if not all_items:
                 return section
 
             cards = []
             for inner in all_items:
-                q_match = re.search(r"(<strong>Q\d+:.*?)<strong>A", inner, re.DOTALL)
-                if q_match:
-                    q_content = q_match.group(1).strip()
-                    a_content = inner[q_match.end() - len("<strong>A") :].strip()
-                    q_content = re.sub(r"^<p>|</p>$", "", q_content).strip()
-                    a_content = re.sub(r"^<p>|</p>$", "", a_content).strip()
-                    cards.append(
-                        f'<div class="block-card">'
-                        f'<p class="q">{q_content}</p>'
-                        f'<p class="a">{a_content}</p>'
-                        f"</div>"
-                    )
+                q_match = re.search(
+                    r"(<strong>Q\d+:.*?)(?:<strong>A|A:)", inner, re.DOTALL
+                )
+                if not q_match:
+                    continue
+
+                q_content = q_match.group(1).strip()
+                a_start = (
+                    q_match.end() - len("<strong>A")
+                    if "<strong>A" in inner
+                    else q_match.end() - len("A:")
+                )
+                a_content = inner[a_start:].strip()
+                q_content = re.sub(r"^<p>|</p>$", "", q_content).strip()
+                a_content = re.sub(r"^<p>|</p>$", "", a_content).strip()
+                cards.append(
+                    f'<div class="block-card">'
+                    f'<p class="q">{q_content}</p>'
+                    f'<p class="a">{a_content}</p>'
+                    f"</div>"
+                )
 
             if not cards:
                 return section
@@ -157,8 +195,3 @@ class PostProcessor:
             html_body,
             flags=re.DOTALL,
         )
-
-
-# ── Converter ───────────────────────────────────────────────────────────────
-
-

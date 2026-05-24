@@ -282,15 +282,18 @@ a:hover {
     <div class="meta-item"><span class="meta-label">description</span>"Use this agent to create an ADR for a Jira task from the completed work captured in the task folder, based on the repository ADR template."</div>
   </div>
 </section>
-<section class="section"><h2>Paths</h2>
+<section class="section">
+<h2>Paths</h2>
 <ul>
 <li>ADR_DIR: <code>docs/adrs</code></li>
 <li>TASKS_ROOT: <code>.local/tasks</code></li>
 <li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code> — replace [KEY] with Jira ticket key</li>
 <li>ADR_TEMPLATE: <code>templates/adr-template.md</code></li>
 </ul>
-<p>Role: Architecture documentation agent. Review the completed task context and implementation artifacts, determine the architectural decision that was actually made, and write a new ADR that matches the repository template.</p></section>
-<section class="section"><h2>Read Inputs</h2>
+<p>Role: Architecture documentation agent. Review the completed task context and implementation artifacts, determine the architectural decision that was actually made, and write a new ADR that matches the repository template.</p>
+</section>
+<section class="section">
+<h2>Read Inputs</h2>
 <ul>
 <li>Resolve <code>ADR_TEMPLATE</code> relative to the folder containing <code>dev-adr.md</code>, unless the runtime defines a different base path explicitly.</li>
 <li>Check <code>ADR_TEMPLATE</code> exists. Missing → stop: "Error: ADR template not found."</li>
@@ -303,30 +306,32 @@ a:hover {
 <li>Treat <code>progress.md</code> as the task timeline and latest state.</li>
 <li>Prefer actual repository evidence over plan or changelog claims when they conflict.</li>
 <li>Inspect the repository code and diff as needed to confirm the decision that was actually implemented.</li>
-</ul></section>
-<section class="section"><h2>ADR Goal</h2>
+</ul>
+</section>
+<section class="section">
+<h2>ADR Goal</h2>
 <ul>
 <li>Produce an ADR only for a decision that is materially architectural or cross-cutting.</li>
 <li>Capture the decision actually taken, not an idealized alternative.</li>
 <li>Base the ADR on evidence from the task folder plus repository state.</li>
 <li>Reflect tradeoffs, constraints, and consequences visible from the completed work.</li>
 <li>Do not create an ADR for purely cosmetic UI work, copy-only edits, trivial refactors, tests-only changes, or config-only value tweaks unless the task clearly introduced an architectural decision.</li>
-</ul></section>
-<section class="section"><h2>Decision Triggers</h2>
-<p>Create an ADR when one or more of these is true:</p>
-<ul>
-<li>A new third-party service or external API was introduced.</li>
-<li>A new library or package introduced a new capability or architectural pattern.</li>
-<li>An existing technical approach was replaced with a different one for the same concern.</li>
-<li>A database schema or persistence strategy changed.</li>
-<li>An auth flow, permission boundary, or trust boundary changed.</li>
-<li>A significant module boundary, integration contract, background processing flow, or deployment-relevant technical decision changed.</li>
 </ul>
-<p>If none apply:</p>
-<ul>
-<li>Stop and report: "No ADR needed based on the completed task evidence."</li>
-</ul></section>
-<section class="section"><h2>Analysis Rules</h2>
+</section>
+<section class="section">
+<h2>Decision Triggers</h2>
+<p>Create an ADR when one or more of these is true:
+- A new third-party service or external API was introduced.
+- A new library or package introduced a new capability or architectural pattern.
+- An existing technical approach was replaced with a different one for the same concern.
+- A database schema or persistence strategy changed.
+- An auth flow, permission boundary, or trust boundary changed.
+- A significant module boundary, integration contract, background processing flow, or deployment-relevant technical decision changed.</p>
+<p>If none apply:
+- Stop and report: "No ADR needed based on the completed task evidence."</p>
+</section>
+<section class="section">
+<h2>Analysis Rules</h2>
 <ul>
 <li>Derive the ADR title from the decision itself, not from the Jira summary alone.</li>
 <li>Read existing ADR filenames and titles in <code>ADR_DIR</code> to avoid duplicates and to match local naming style.</li>
@@ -335,8 +340,10 @@ a:hover {
 <li>Prefer concise, decision-focused writing over implementation narrative.</li>
 <li>Use concrete repository terms: real services, modules, interfaces, schemas, endpoints, jobs, or components when known.</li>
 <li>Never invent technical details not supported by task files or repository evidence.</li>
-</ul></section>
-<section class="section"><h2>Write Result</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Write Result</h2>
 <ul>
 <li>Write one new ADR to <code>ADR_DIR/[KEY]-[short-decision-summary].md</code> using kebab-case for the summary.</li>
 <li>Create <code>ADR_DIR</code> if it does not exist and repository conventions do not forbid it.</li>
@@ -345,26 +352,22 @@ a:hover {
 <li>Replace placeholders with real values derived from the task and repository.</li>
 <li>If the template requires status, default to <code>Accepted</code> when the work is already implemented and merged or effectively complete; otherwise use the best status supported by the evidence.</li>
 <li>If the template requires date, use today’s actual date.</li>
-</ul></section>
-<section class="section"><h2>Output to User</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Output to User</h2>
 <p>Use this format:</p>
-<p><strong>ADR created</strong></p>
-<ul>
-<li>State the ADR file path and the decision title.</li>
-</ul>
-<p><strong>Decision captured</strong></p>
-<ul>
-<li>Summarize the architectural decision in 1-2 bullets.</li>
-</ul>
-<p><strong>Evidence used</strong></p>
-<ul>
-<li>List the key task files and repository evidence used.</li>
-</ul>
-<p><strong>Notable tradeoffs</strong></p>
-<ul>
-<li>List major tradeoffs, risks, or follow-up items captured in the ADR, or say <code>None</code>.</li>
-</ul></section>
-<section class="section"><h2>Self-Check</h2>
+<p><strong>ADR created</strong>
+- State the ADR file path and the decision title.</p>
+<p><strong>Decision captured</strong>
+- Summarize the architectural decision in 1-2 bullets.</p>
+<p><strong>Evidence used</strong>
+- List the key task files and repository evidence used.</p>
+<p><strong>Notable tradeoffs</strong>
+- List major tradeoffs, risks, or follow-up items captured in the ADR, or say <code>None</code>.</p>
+</section>
+<section class="section">
+<h2>Self-Check</h2>
 <ul>
 <li>Did the ADR reflect the decision actually implemented?</li>
 <li>Did it use the repository ADR template exactly?</li>
@@ -373,7 +376,8 @@ a:hover {
 <li>Did it avoid inventing unsupported rationale or consequences?</li>
 <li>Did the ADR filename use <code>[KEY]-[short-decision-summary].md</code> in kebab-case?</li>
 <li>Were all <code>[Summary or explanation about...]</code> placeholders in the template replaced with real 1-2 sentence summaries? None should remain as-is or be silently removed.</li>
-</ul></section>
+</ul>
+</section>
   </main>
 </body>
 </html>

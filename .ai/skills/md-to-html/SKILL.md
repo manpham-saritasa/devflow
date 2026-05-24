@@ -355,7 +355,13 @@ Use this general shape:
 
 ## Usage
 
-Run the bundled converter script:
+Install the parser dependencies first:
+
+```bash
+python -m pip install -r .ai/skills/md-to-html/requirements.txt
+```
+
+Then run the bundled converter script:
 
 ```bash
 python .ai/skills/md-to-html/main.py <input.md> [output.html]
