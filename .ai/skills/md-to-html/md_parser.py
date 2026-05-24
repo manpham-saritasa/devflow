@@ -9,7 +9,7 @@ def parse_inline(t: str) -> str:
     """Convert inline Markdown formatting to HTML."""
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
     t = re.sub(r"`([^`]+)`", lambda m: f"<code>{html.escape(m.group(1))}</code>", t)
-    t = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', t)
+    t = re.sub(r"\[(.+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', t)
     t = re.sub(r"\*(.+?)\*", r"<em>\1</em>", t)
     return t
 
@@ -57,8 +57,20 @@ def _process_line(lines, i, state, emit):
         return i + 1
     if _handle_hr(line, state, emit):
         return i + 1
-    if _emit_heading(line, state, emit):
-        return i + 1
+    # Multi-line heading (e.g. URL split across lines)
+    m_h = re.match(r"^(#{1,6})\s+(.+)$", line)
+    if m_h:
+        content = m_h.group(2)
+        j = i + 1
+        while j < len(lines) and lines[j].strip():
+            nxt = lines[j].strip()
+            if nxt.startswith("#") or nxt.startswith("|") or nxt.startswith("`") or re.match(r"^\d+\.", nxt) or re.match(r"^[-*] ", nxt):
+                break
+            if re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", nxt):
+                break
+            sep = "" if nxt.startswith("//") else " "; content += sep + nxt
+            j += 1
+        return _emit_heading_raw(content, m_h.group(1), state, emit, j)
     if _handle_table_line(line, state, emit):
         return i + 1
 
@@ -108,6 +120,17 @@ def _emit_heading(line, state, emit):
     level = min(len(m.group(1)), 3)
     emit(f"<h{level}>{parse_inline(m.group(2))}</h{level}>")
     return True
+
+
+def _emit_heading_raw(content, hashes, state, emit, next_i):
+    """Emit heading from pre-joined multi-line content. Returns next index."""
+    _close_table(state, emit)
+    if state.in_list:
+        emit(f"</{state.list_tag}>")
+        state.in_list = False
+    level = min(len(hashes), 3)
+    emit(f"<h{level}>{parse_inline(content)}</h{level}>")
+    return next_i
 
 
 def _handle_table_line(line, state, emit):

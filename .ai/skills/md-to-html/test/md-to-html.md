@@ -355,7 +355,7 @@ Use this general shape:
 Run the bundled converter script:
 
 ```bash
-python .ai/skills/md-to-html/convert.py <input.md> [output.html]
+python .ai/skills/md-to-html/main.py <input.md> [output.html]
 ```
 
 If `output.html` is omitted, it writes to `<input_stem>.html` alongside the source file.

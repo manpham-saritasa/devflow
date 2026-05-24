@@ -11,7 +11,7 @@ import re
 import sys
 from pathlib import Path
 
-from md_parser import md_body_to_html
+from md_parser import md_body_to_html, parse_inline
 
 HERE = Path(__file__).parent
 CSS = (HERE / "theme.css").read_text(encoding="utf-8")
@@ -20,9 +20,20 @@ CSS = (HERE / "theme.css").read_text(encoding="utf-8")
 # ── Post-processing ─────────────────────────────────────────────────────────
 
 
+def _join_split_links(html: str) -> str:
+    """Join links split across lines."""
+    return re.sub(
+        r"<p>(.+?)\((.+?)</p>\s*<p>(//.+?)\)</p>",
+        r"<p>\1(\2\3)</p>",
+        html,
+        flags=re.DOTALL,
+    )
+
+
 def post_process(html_body: str, title: str, metadata: dict | None = None) -> str:
     """Apply card-based layout and all post-processing fixes."""
     html_body = html_body.replace("<br>", "")
+    html_body = _join_split_links(html_body)
 
     # Wrap each h2 chunk in a section card
     parts = html_body.split("<h2>")
@@ -48,15 +59,15 @@ def _build_header(title: str, metadata: dict | None = None) -> str:
     """Build the header card section."""
     eyebrow = ""
     clean_title = title
-    if ":" in title:
-        parts = title.split(":", 1)
+    if ": " in title:
+        parts = title.split(": ", 1)
         eyebrow = parts[0].strip()
         clean_title = parts[1].strip() if len(parts) > 1 else title
 
     lines = ['<section class="header">']
     if eyebrow:
         lines.append(f'  <div class="eyebrow">{eyebrow}</div>')
-    lines.append(f"  <h1>{clean_title}</h1>")
+    lines.append(f"  <h1>{parse_inline(clean_title)}</h1>")
 
     if metadata:
         lines.append('  <div class="meta">')
@@ -138,7 +149,7 @@ def _wrap_qa_cards(html_body: str) -> str:
 
         heading_match = re.search(r"(<h2>[^<]*Questions?[^<]*</h2>)", section)
         heading = heading_match.group(1) if heading_match else ""
-        after_heading = section[heading_match.end():] if heading_match else section
+        after_heading = section[heading_match.end() :] if heading_match else section
         prefix = ""
         ul_idx = after_heading.find("<ul>")
         if ul_idx > 0:
@@ -260,7 +271,7 @@ def convert(md_path: Path, out_path: Path) -> Path:
     if 'class="mermaid"' in final_body:
         mermaid_script = (
             '<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js">'
-            '</script>\n'
+            "</script>\n"
             '<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>'
         )
 
