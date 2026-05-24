@@ -1,50 +1,83 @@
-## Fill guide
-- Audience: Testers, PMs, clients.
-- Rule: Describe behavior and user impact only. Do not mention code-level details.
-- Use these evidence sources, in this order:
-  1. Jira task title and description.
-  2. Acceptance criteria or business notes.
-  3. Commit messages.
-  4. Local changed files and diff, but translate technical changes into user-visible behavior.
-- Prefer facts stated in Jira when available.
-- Use local code changes only to confirm what behavior changed.
-- Do not mention variable names, function names, class names, file paths, method calls, database tables, or internal architecture.
-- If a detail is not clear from evidence, omit it.
-- Extract from evidence only. Do not invent reasons, impacts, or root causes.
-- Group small technical edits into one meaningful user-facing change.
-- If unclear, omit rather than guess.
-- Omit empty sections.
-- Use past tense.
-
-## Fill rules by section
-- Summary: One short sentence. State the main delivered outcome.
-- Added: Use for new user-visible capabilities only.
-- Changed: Use for behavior updates, workflow changes, wording changes, validation changes, or UX improvements.
-- Fixed: Use for bugs or incorrect previous behavior. Root cause should be written in plain business language, not technical internals.
-- Notes: Use only for important tester guidance, rollout notes, or clear limitations.
-
 ## Output template
 
 ```md
-## [KEY] — [Task summary]
+# [[KEY] — [PR title]](https://github.com/.../pull/123)
 
 ## Added
-**[1] - [Category] - [Item].**
-  - Purpose: ...
-  - Details: ...
+** - [Category] - [Item].**[1]
+- Purpose: ...
+- Details: ...
 
 ## Changed
-**[1] - [Category] - [Item].**
-  - Reason: ...
-  - Impact: ...
+** - [Category] - [Item].**[1]
+- Reason: ...
+- Impact: ...
 
 ## Fixed
-**[1] - [Category] - [Item].**
-  - Root cause: ...
-  - Resolution: ...
+** - [Category] - [Item].**[1]
+- Root cause: ...
+- Resolution: ...
+
+## Testers
+- Start here: ...
+- Preconditions: ...
+- Test data / account: ...
+- API / endpoint / URL: ...
+- How to verify: ...
+- Known limitation: ...
 
 ## Notes
-- [Testing focus / rollout note / known limitation]
-
-## [PR title - Github PR URL]
+- [Rollout note / no product behavior change / important context]
 ```
+
+Audience: Testers, PMs, clients.
+Purpose: Store a short business-facing history of what changed and how to start testing it.
+Rule: Describe behavior and user impact only. No code-level detail.
+
+Tone and style:
+- Use simple, short, direct, non-marketing English.
+- Do not trim away core or important details needed for understanding or testing.
+- Write for testers, PMs, and clients.
+- Focus on user-visible behavior and impact, not implementation details.
+- Prefer durable domain terms over temporary implementation labels.
+- Use past tense.
+
+## Source priority
+1. Jira task title and description.
+2. Acceptance criteria or business notes.
+3. PR title and PR body.
+4. Commit messages.
+5. Local code changes and diff, but only to confirm visible behavior and testing entry points.
+
+## Core rules
+- Extract. Do not invent.
+- Prefer explicit business context from Jira over inference from code.
+- Use code changes only to confirm what behavior changed and how testers can access it.
+- If a detail is unclear and not important to testers, omit it.
+- Group small technical edits into one meaningful user-facing change.
+- Use stable categories such as feature area, workflow, API, validation, permissions, notifications, reporting, sync, or UI.
+- Do not use file names, class names, function names, or vague categories like `Misc`.
+- Do not mention variable names, function names, class names, file paths, method names, database tables, or internal implementation mechanics.
+- Omit empty sections.
+
+## Section rules
+- Added: New user-visible capability or new stakeholder-visible workflow only.
+- Changed: Existing behavior, workflow, wording, validation, or UX changed.
+- Fixed: Previous behavior was wrong and is now corrected. Write root cause in plain business language only.
+- Testers: Give only the minimum practical information needed to begin testing. Include entry URL, API route, request example, feature flag, account, environment, seed data, or manual setup only when they are required to test the task.
+- Notes: Only rollout note, limitation, dependency note, or “no product behavior change” note.
+
+## Tester rules
+- Include `API / endpoint / URL` only when testers need it to execute or validate the task.
+- Include example request shape only when the task introduces or changes an API and the request is not obvious from the Jira description.
+- Include credentials, account type, role, seed data, feature flag, or environment name only when needed for testing.
+- If there are multiple ways to test, prefer the shortest reliable path.
+- If testing cannot start without another task, environment, or dependency, say that clearly.
+- Do not dump raw curl commands, payloads, or internal implementation details unless they are the only practical way for testers to start.
+- If no special setup is needed, write: `- Start here: No special setup required.`
+
+## Omit rules
+- Omit any item that is only about internal refactor, docs-only cleanup, template path changes, placeholder variable changes, or generated artifacts.
+- Omit technical implementation details even if they appear in commits or diff.
+- If the task changes internal workflow only, say that clearly in Notes instead of pretending there is product impact.
+- If unclear, omit rather than guess.

@@ -1,6 +1,6 @@
 ---
 name: dev-ship-pr-jira
-description: |
+description:
   Ship feature: create GitHub PR, comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.
   
 triggers: 
@@ -150,7 +150,7 @@ contentFormat: markdown
 
 ```
 ✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
 ✅ Jira: [KEY] commented
+✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 (Omit skipped steps per flags.)
