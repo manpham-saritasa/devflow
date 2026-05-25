@@ -46,7 +46,7 @@ body {
     border-radius: 9px;
     box-shadow: var(--shadow);
     padding: 28px;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
     overflow: hidden;
 }
 .eyebrow {
@@ -94,7 +94,7 @@ h1 {
     border-radius: 9px;
     box-shadow: var(--shadow);
     padding: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 26px;
     overflow: hidden;
 }
 h2 {
@@ -279,7 +279,11 @@ a:hover {
 <section class="header">
   <h1>Agent Workflow README</h1>
 </section>
-<section class="section"><h2>Goals</h2>
+<section class="section">
+<p>This workflow uses three agents — planner, coder, and reviewer — stored in <code>.ai/agents</code>, plus a small set of tracked templates, to manage software tasks in an append-only, iteration-based way. Local task artifacts live under <code>.local/tasks</code>, which keeps developer working state separate from tracked agent definitions.</p>
+</section>
+<section class="section">
+<h2>Goals</h2>
 <ul>
 <li>Keep tracked agent definitions and templates in <code>.ai/agents</code>.</li>
 <li>Keep one local working folder per task in <code>.local/tasks/[KEY]</code>.</li>
@@ -288,9 +292,11 @@ a:hover {
 <li>Support iteration 1 from Jira, then later iterations from PR comments, review findings, bug reports, or manual user instructions.</li>
 <li>Keep planning context rich enough for implementation, but compact enough for repeated LLM reading.</li>
 <li>Separate ADR recommendation from ADR creation; the reviewer can suggest an ADR, but a different skill or a human creates it manually.</li>
-</ul></section>
-<section class="section"><h2>Directory layout</h2>
-<pre><code>.ai/
+</ul>
+</section>
+<section class="section">
+<h2>Directory layout</h2>
+<pre><code class="language-text">.ai/
 └── agents/
   ├── dev-planner.md
   ├── dev-coder.md
@@ -309,17 +315,23 @@ a:hover {
      ├── plan.md
      ├── changelog.md
      ├── review.md
-     └── progress.md</code></pre>
-<pre><code>.local/tasks/</code></pre>
+     └── progress.md
+</code></pre>
+<pre><code class="language-gitignore">.local/tasks/
+</code></pre>
 <ul>
 <li><code>task.md</code> stores normalized task requirements when available.</li>
 <li><code>raw.md</code> stores Jira description, comments, and raw context when available.</li>
 <li><code>plan.md</code>, <code>changelog.md</code>, and <code>review.md</code> are append-only files that accumulate iterations and review passes over time.</li>
 <li><code>progress.md</code> is the compact timeline used to quickly understand current state and next action.</li>
-</ul></section>
-<section class="section"><h2>Core idea</h2>
-<p>The workflow keeps tracked agent logic and templates under <code>.ai/agents</code>, while stable task-level context and append-only working artifacts live under <code>.local/tasks/[KEY]</code>. Each artifact keeps stable context at the top and appends iteration-specific sections below it, which reduces repetition while preserving enough structure for agents to read the latest work, understand earlier decisions, and continue from the correct state.</p></section>
-<section class="section"><h2>Roles</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Core idea</h2>
+<p>The workflow keeps tracked agent logic and templates under <code>.ai/agents</code>, while stable task-level context and append-only working artifacts live under <code>.local/tasks/[KEY]</code>. Each artifact keeps stable context at the top and appends iteration-specific sections below it, which reduces repetition while preserving enough structure for agents to read the latest work, understand earlier decisions, and continue from the correct state.</p>
+</section>
+<section class="section">
+<h2>Roles</h2>
 <h3>Planner</h3>
 <ul>
 <li>Reads task context from the best available source: local task files first when present, otherwise Jira via MCP, otherwise the user message.</li>
@@ -341,11 +353,19 @@ a:hover {
 <li>Appends a new review pass to <code>review.md</code> and updates the task state in <code>progress.md</code>.</li>
 <li>Records verdicts as <code>Pass</code>, <code>Pass with Changes</code>, or <code>Fail</code> in the review artifact, and maps these to practical next actions for the team.</li>
 <li>Suggests whether an ADR would be appropriate, but does not create ADR files.</li>
-</ul></section>
-<section class="section"><h2>File responsibilities</h2>
-<table><thead>
-<tr><th>File</th><th>Purpose</th><th>Updated by</th></tr>
-</thead><tbody>
+</ul>
+</section>
+<section class="section">
+<h2>File responsibilities</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Updated by</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="File"><code>task.md</code></td>
 <td data-label="Purpose">Stable task requirements and normalized context when available.</td>
@@ -376,15 +396,20 @@ a:hover {
 <td data-label="Purpose">Compact timeline of each iteration and current task state.</td>
 <td data-label="Updated by">Planner, coder, reviewer.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>Iteration model</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Iteration model</h2>
 <ul>
 <li>Iteration 1 usually starts from the Jira task or the best available task source.</li>
 <li>Later iterations may be triggered by PR comments, review feedback, test failures, production bugs, or direct user instructions.</li>
 <li>Each iteration uses a datetime in minute precision: <code>YYYY-MM-DD HH:MM ±TZ</code>.</li>
 <li>Each artifact keeps earlier iterations rather than replacing them, so the task history stays in one place.</li>
-</ul></section>
-<section class="section"><h2>Workflow steps</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Workflow steps</h2>
 <pre class="mermaid">
 flowchart TD
  A[Start: New task or follow-up request] --> B[Collect context\nJira / task.md / raw.md / user request]
@@ -408,8 +433,10 @@ flowchart TD
  Q --> R{More requests / PR comments / fixes?}
  R -- Yes --> B
  R -- No --> S[Task complete]
-</pre></section>
-<section class="section"><h2>Typical lifecycle</h2>
+</pre>
+</section>
+<section class="section">
+<h2>Typical lifecycle</h2>
 <ol>
 <li>A Jira ticket arrives, or a user gives a coding request.</li>
 <li>The planner reads available context, investigates the repo, and proposes an approach.</li>
@@ -417,33 +444,46 @@ flowchart TD
 <li>The coder implements the latest iteration, verifies it, and appends the delivery record to <code>changelog.md</code>.</li>
 <li>The reviewer evaluates the implementation, appends a review pass to <code>review.md</code>, and updates <code>progress.md</code> with the verdict and next action.</li>
 <li>If follow-up work appears, a new iteration is appended to the same files rather than creating new numbered files.</li>
-</ol></section>
-<section class="section"><h2>Why append-only files</h2>
+</ol>
+</section>
+<section class="section">
+<h2>Why append-only files</h2>
 <ul>
 <li>Humans can read the task story without chasing many artifact filenames.</li>
 <li>LLMs can find stable filenames every time: <code>plan.md</code>, <code>changelog.md</code>, <code>review.md</code>, and <code>progress.md</code>.</li>
 <li>The latest iteration stays easy to identify, while earlier iterations remain available for context and auditability.</li>
-</ul></section>
-<section class="section"><h2>Why <code>progress.md</code> exists</h2>
-<p><code>progress.md</code> is the fastest file to read when resuming work on a task. It gives a compact timeline of each iteration, current status, next action, and whether an ADR is suggested, while the other files hold the detailed planning, implementation, and review evidence.</p></section>
-<section class="section"><h2>Source flexibility</h2>
-<p>This workflow does not require local task files to exist before it can be used. Local files are preferred when present, but the planner can fall back to Jira via MCP or even direct user instructions when necessary, which makes the system easier for developers to adopt without extra setup.</p></section>
-<section class="section"><h2>ADR policy</h2>
-<p>ADR creation is intentionally outside the reviewer workflow. The reviewer can recommend that an ADR would be useful, especially for architectural changes such as new services, schema changes, or auth flow changes, but the actual ADR is created manually or by a separate dedicated skill.</p></section>
-<section class="section"><h2>Recommended operating rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Why <code>progress.md</code> exists</h2>
+<p><code>progress.md</code> is the fastest file to read when resuming work on a task. It gives a compact timeline of each iteration, current status, next action, and whether an ADR is suggested, while the other files hold the detailed planning, implementation, and review evidence.</p>
+</section>
+<section class="section">
+<h2>Source flexibility</h2>
+<p>This workflow does not require local task files to exist before it can be used. Local files are preferred when present, but the planner can fall back to Jira via MCP or even direct user instructions when necessary, which makes the system easier for developers to adopt without extra setup.</p>
+</section>
+<section class="section">
+<h2>ADR policy</h2>
+<p>ADR creation is intentionally outside the reviewer workflow. The reviewer can recommend that an ADR would be useful, especially for architectural changes such as new services, schema changes, or auth flow changes, but the actual ADR is created manually or by a separate dedicated skill.</p>
+</section>
+<section class="section">
+<h2>Recommended operating rules</h2>
 <ul>
 <li>Keep the stable sections at the top of each artifact up to date, but do not rewrite history silently.</li>
 <li>Append new iterations instead of creating <code>plan-2.md</code>, <code>review-3.md</code>, or similar numbered files.</li>
 <li>Keep each iteration small enough to scan quickly, but detailed enough for an agent to implement or review without guesswork.</li>
 <li>Use <code>progress.md</code> as the resume layer and the other files as detailed evidence.</li>
-</ul></section>
-<section class="section"><h2>Example task flow</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Example task flow</h2>
 <ul>
 <li>Iteration 1 comes from Jira and adds the initial implementation plan.</li>
 <li>A pull request review finds two issues, so the next planner or user request creates Iteration 2 based on PR comments or review follow-up.</li>
 <li>The coder implements only the Iteration 2 delta, appends to <code>changelog.md</code>, and the reviewer appends a second review pass.</li>
 <li>The task remains in one folder with one set of stable artifact names throughout its lifetime.</li>
-</ul></section>
+</ul>
+</section>
   </main>
 </body>
 </html>

@@ -284,11 +284,17 @@ a:hover {
     <div class="meta-item"><span class="meta-label">Date</span>2026-05-22</div>
   </div>
 </section>
-<section class="section"><h2>1. Current Context</h2>
+<section class="section">
+<h2>1. Current Context</h2>
 <p>The GEO database and SSRS run on a single aging SQL Server 2017 VM. The client needs a modernization plan that resolves performance issues and sets a foundation for future RMA migration.</p>
-<table><thead>
-<tr><th>Area</th><th>Details</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Area">Task goal</td>
 <td data-label="Details">Plan migration of the GEO database off legacy infrastructure to a modern SQL platform. Provide setup guidelines and best practices for the new SQL server to Don Piliero (Certerra team). Resolve recurring performance issues on the current GEO server.</td>
@@ -305,20 +311,31 @@ a:hover {
 <td data-label="Area">Existing pattern or baseline</td>
 <td data-label="Details">GEO database on SQL Server 2017 running on a single Windows Server VM. Same VM also hosts the SSRS engine and its catalog database.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>2. Chosen Direction</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>2. Chosen Direction</h2>
 <ul>
 <li>Migrate the <strong>GEO database</strong> (and later the <strong>RMA database</strong>) to <strong>Azure SQL Managed Instance</strong> — a managed PaaS offering with near-full SQL Server surface compatibility.</li>
 <li>Move the <strong>SSRS catalog database</strong> to Azure SQL Managed Instance alongside the GEO DB.</li>
 <li>Keep the <strong>SSRS engine</strong> on a small dedicated Windows VM — SSRS has no PaaS equivalent.</li>
 <li>Refactor file I/O out of stored procedures into the application layer.</li>
 <li>Run a <strong>migration assessment</strong> via the SQL IaaS Agent Extension before locking in SKU, cost estimates, and the final migration plan.</li>
-</ul></section>
-<section class="section"><h2>3. Decision Scope</h2>
+</ul>
+</section>
+<section class="section">
+<h2>3. Decision Scope</h2>
 <p>This ADR decides the target platform and migration approach for the GEO database. It does not prescribe the full implementation plan or the separate documentation deliverables.</p>
-<table><thead>
-<tr><th>Scope Type</th><th>Details</th><th>Client-friendly explanation</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Scope Type</th>
+<th>Details</th>
+<th>Client-friendly explanation</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Scope Type">In scope</td>
 <td data-label="Details"><ul><li>GEO DB and SSRS catalog DB migration to Azure SQL Managed Instance.</li><li>SSRS engine stays on a small dedicated VM.</li><li>Refactoring file I/O out of stored procedures.</li><li>Running a migration assessment for compatibility blockers, SKU sizing, and cost estimates.</li></ul></td>
@@ -334,20 +351,29 @@ a:hover {
 <td data-label="Details"><ul><li>Azure access (Contributor on the resource group containing the VM) will be granted, or the client will run the assessment steps themselves.</li><li>File I/O refactoring is feasible — devs already confirmed.</li><li>Migration assessment will not reveal hard blockers for Azure SQL Managed Instance.</li></ul></td>
 <td data-label="Client-friendly explanation">We assume your team will either grant us Azure access or run the compatibility scan yourselves, and that the scan won't find major surprises.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>4. Decision Reasons</h2>
-<h3>Main reasons</h3>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>4. Decision Reasons</h2>
+<h4>Main reasons</h4>
 <ul>
 <li>Azure SQL Managed Instance supports the full SQL Server surface (SQL Agent, linked servers, cross-database queries, CLR) — minimizing rewrites compared to Azure SQL DB.</li>
 <li>Eliminates the Windows Server management layer for the database workload — no OS or SQL Server patching.</li>
 <li>Built-in high availability, automated backups, and point-in-time restore out of the box.</li>
 <li>Natively hosts the SSRS catalog database — Azure SQL DB cannot, which would block the reporting dependency.</li>
 </ul>
-<p></p>
-<h3>Why it fits the current architecture or team direction?</h3>
-<table><thead>
-<tr><th>Category</th><th>Reason</th><th>Client-friendly explanation</th></tr>
-</thead><tbody>
+<p><br></p>
+<h4>Why it fits the current architecture or team direction?</h4>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Reason</th>
+<th>Client-friendly explanation</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Category">PaaS-first strategy</td>
 <td data-label="Reason">Shifts the heavy database workload from self-managed VMs to a managed Azure service, reducing operational overhead.</td>
@@ -363,12 +389,19 @@ a:hover {
 <td data-label="Reason">Azure SQL Managed Instance is the closest PaaS match to on-prem SQL Server — least code change required.</td>
 <td data-label="Client-friendly explanation">Your existing SQL code needs the fewest changes with this option.</td>
 </tr>
-</tbody></table>
-<p></p>
-<h3>Why it is better than the likely alternatives for this case?</h3>
-<table><thead>
-<tr><th>Summary</th><th>Reason</th><th>Client-friendly explanation</th></tr>
-</thead><tbody>
+</tbody>
+</table>
+<p><br></p>
+<h4>Why it is better than the likely alternatives for this case?</h4>
+<table>
+<thead>
+<tr>
+<th>Summary</th>
+<th>Reason</th>
+<th>Client-friendly explanation</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Summary">SSRS catalog compatibility</td>
 <td data-label="Reason">Azure SQL DB cannot host the SSRS catalog database — Azure SQL Managed Instance can.</td>
@@ -384,12 +417,22 @@ a:hover {
 <td data-label="Reason">Migration assessment provides an exhaustive compatibility report with concrete object names — no guessing.</td>
 <td data-label="Client-friendly explanation">A detailed report shows exactly what needs to change before we commit.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>5. Options Considered</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>5. Options Considered</h2>
 <p>Three options were evaluated against compatibility, operational cost, and long-term maintainability.</p>
-<table><thead>
-<tr><th>Option</th><th>Benefits</th><th>Tradeoffs</th><th>Client-friendly explanation</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Benefits</th>
+<th>Tradeoffs</th>
+<th>Client-friendly explanation</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Option"><strong>Option 1 — Azure SQL Managed Instance (chosen)</strong></td>
 <td data-label="Benefits"><ul><li>Near-full SQL Server surface compatibility.</li><li>No Windows OS management.</li><li>Built-in HA and automated backups.</li><li>SSRS catalog DB supported natively.</li><li>Migration assessment available.</li></ul></td>
@@ -408,12 +451,20 @@ a:hover {
 <td data-label="Tradeoffs"><ul><li>No SQL Agent, linked servers, or cross-DB queries.</li><li>Cannot host SSRS catalog DB — blocks the reporting dependency outright.</li><li>Likely requires significant application rewrites.</li></ul></td>
 <td data-label="Client-friendly explanation">The simplest cloud database, but it does not support many SQL Server features you rely on. Would require rebuilding parts of the application.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>6. Change Impact</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>6. Change Impact</h2>
 <p>Moving from a self-managed VM to Azure SQL Managed Instance affects code, operations, security, and performance. The migration assessment will quantify these impacts.</p>
-<table><thead>
-<tr><th>Area</th><th>Impact</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Area">Code impact</td>
 <td data-label="Impact"><ul><li>Stored procedures that read/write local disk files must be refactored to the application layer.</li><li>Connection strings change to point to Azure SQL Managed Instance.</li></ul></td>
@@ -438,12 +489,21 @@ a:hover {
 <td data-label="Area">Testing impact</td>
 <td data-label="Impact"><ul><li>Migration assessment validates compatibility before migration.</li><li>Application regression testing for connection string changes and file I/O refactoring.</li><li>Performance testing to validate SKU choice under real workload.</li></ul></td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>7. Expected Outcomes</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>7. Expected Outcomes</h2>
 <p>If accepted, this decision reduces operational burden, provides built-in reliability, and creates a repeatable pattern for the RMA migration. It also introduces new cost and refactoring requirements.</p>
-<table><thead>
-<tr><th>Area</th><th>Details</th><th>Client-friendly explanation</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Details</th>
+<th>Client-friendly explanation</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Area">Benefits</td>
 <td data-label="Details"><ul><li>Eliminates Windows Server management for the database layer.</li><li>Built-in high availability and automated backups.</li><li>Modern, supported platform with a clear upgrade path.</li><li>Consistent target for future RMA DB migration — same platform, same approach.</li></ul></td>
@@ -464,12 +524,20 @@ a:hover {
 <td data-label="Details"><ul><li>Migration assessment may reveal hard blockers for Azure SQL Managed Instance.</li><li>File I/O refactoring scope may be larger than estimated.</li><li>Azure access delays may stall the assessment — speed depends on the client.</li><li>Cost may exceed client expectations depending on the recommended SKU.</li></ul></td>
 <td data-label="Client-friendly explanation">There is a small chance the compatibility scan finds issues we cannot easily fix, or that costs are higher than expected. The scan is designed to catch these before we commit.</td>
 </tr>
-</tbody></table></section>
-<section class="section"><h2>8. Pending Items</h2>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>8. Pending Items</h2>
 <p>Several items must be resolved before migration can proceed. The migration assessment is the critical first step — it will answer most of the open validation questions below.</p>
-<table><thead>
-<tr><th>Type</th><th>Details</th></tr>
-</thead><tbody>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td data-label="Type">Pending validations</td>
 <td data-label="Details"><ul><li>Migration assessment report: compatibility blockers, SKU recommendation, cost estimates.</li><li>1-week workload perf data collection to validate SKU sizing.</li><li>Full list of databases and services affected (currently only high-level picture known; report reveals hidden details).</li></ul></td>
@@ -482,7 +550,9 @@ a:hover {
 <td data-label="Type">Deferred decisions</td>
 <td data-label="Details"><ul><li>RMA DB migration timing and scope.</li><li>SSRS engine long-term direction: stay on VM vs. migrate paginated reports to Power BI.</li><li>Whether GEO and RMA databases consolidate on a single Azure SQL Managed Instance or use separate instances.</li></ul></td>
 </tr>
-</tbody></table></section>
+</tbody>
+</table>
+</section>
 <section class="section">
 <h2>9. Open Questions</h2>
 <p>These questions need answers from the client or team before finalizing the migration plan. Prefilled answers suggest the likely direction.</p>
@@ -493,21 +563,25 @@ a:hover {
 <div class="block-card"><p class="q"><strong>Q4:</strong> Is the client open to refactoring SSRS paginated reports to Power BI in the future, which would eliminate the SSRS VM entirely?</p><p class="a"><strong>A4:</strong> Not yet discussed. A separate workstream if the client shows interest.</p></div>
 </div>
 </section>
-<section class="section"><h2>10. Supporting Evidence</h2>
+<section class="section">
+<h2>10. Supporting Evidence</h2>
 <ul>
 <li><strong>Task evidence:</strong> RMASUP-2134 — DevOps recommendation by Maxim Omelchenko to use Azure SQL Managed Instance. Rationale documented in Jira comments (2026-05-19 through 2026-05-21). Confluence report at <a href="https://saritasa.atlassian.net/wiki/spaces/RC/pages/3924426753/2134+-+New+SQL+Server+and+GEO+Database+Migration">2134 - New SQL Server and GEO Database Migration</a>. Client: Don Piliero (Certerra team).</li>
 <li><strong>Plan evidence:</strong> None — no formal <code>plan.md</code> exists.</li>
 <li><strong>Review evidence:</strong> None — no <code>review.md</code> exists.</li>
 <li><strong>Related ADRs / prior tasks:</strong> None.</li>
-</ul></section>
-<section class="section"><h2>11. Future Review Guidance</h2>
+</ul>
+</section>
+<section class="section">
+<h2>11. Future Review Guidance</h2>
 <ul>
 <li>Future changes in this area should follow the PaaS-first principle: prefer Azure SQL Managed Instance over VMs for SQL Server workloads unless a specific incompatibility is proven by the migration assessment.</li>
 <li>Revisit this ADR if the migration assessment reveals a hard blocker for Azure SQL Managed Instance that cannot be resolved within acceptable effort.</li>
 <li>Revisit this ADR if the recommended SKU cost exceeds the client's budget by more than 50% of the current VM cost.</li>
 <li>Revisit when the RMA DB migration is planned — the decision to consolidate on one instance vs. separate instances should be made at that time.</li>
 <li>Revisit if the full list of databases and services from the assessment report reveals components not accounted for in the current scope.</li>
-</ul></section>
+</ul>
+</section>
   </main>
 </body>
 </html>

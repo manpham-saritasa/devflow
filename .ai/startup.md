@@ -31,9 +31,10 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 
 | Step | Action |
 |---|---|
-| 1 | Read `instructions/communication.md` if it exists and follow the instructions there |
-| 2 | Read `instructions/coding.md` if it exists and follow the instructions there |
-| 3 | Keep all in mind for the whole session |
+| 1 | Read `rules/communication-rules.md` if it exists and follow the instructions there |
+| 2 | Read `rules/coding-rules.md` if it exists and follow the instructions there |
+| 3 | Read `rules/pr-rules.md` if it exists and follow the instructions there |
+| 4 | Keep all in mind for the whole session |
 
 If session is long, task changes, or context is fuzzy, re-read them.
 
@@ -75,9 +76,10 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | 2 | Chosen agent from `agents/` |
 | 3 | Chosen skill from `skills/` |
 | 4 | `AGENTS.md` rules |
-| 5 | `coding.md` |
-| 6 | `communication.md` |
-| 7 | Default AI behavior |
+| 5 | `coding-rules.md` |
+| 6 | `communication-rules.md` |
+| 7 | `pr-rules.md` |
+| 8 | Default AI behavior |
 
 ---
 

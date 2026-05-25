@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[[KEY] — [Task summary]](https://your-jira-site.atlassian.net/browse/KEY)</title>
+  <style>
 :root {
     --bg: #e2e8f0;
     --surface: #ffffff;
@@ -112,10 +119,6 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
-ul,
-ol {
-    margin: -5px 0 1em 0;
-}
 ul.clean li {
     margin: 6px 0;
 }
@@ -196,33 +199,6 @@ td code {
     padding: 14px 16px;
     overflow: hidden;
 }
-.example-box {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-}
-.example-box p {
-    margin: 0;
-}
-.example-box.good-box {
-    border-left: 4px solid #0f766e;
-}
-.example-box.bad-box {
-    border-left: 4px solid #9a3412;
-}
-.blockquotes {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-    border-left: 4px solid #e67e22;
-}
-.blockquotes p {
-    margin: 0;
-}
 .block-grid {
     display: grid;
     gap: 14px;
@@ -293,3 +269,109 @@ a:hover {
         margin-bottom: 4px;
     }
 }
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1><a href="https://your-jira-site.atlassian.net/browse/KEY">[KEY] — [Task summary]</a></h1>
+</section>
+<section class="section"><h2>Output template</h2>
+<pre><code># [[KEY] — [Task summary]](https://your-jira-site.atlassian.net/browse/KEY)
+
+## Goal
+- [Problem solved and why it matters]
+
+## Added
+** - [Category] - [Item].**[1]
+- Purpose: ...
+- Details: ...
+
+## Changed
+** - [Category] - [Item].**[1]
+- Reason: ...
+- Impact: ...
+
+## Fixed
+** - [Category] - [Item].**[1]
+- Root cause: ...
+- Resolution: ...
+
+## Key decisions
+- [Decision] — Why: ...
+- [Decision] — Why: ...
+
+## Risks
+- [Risk] — Mitigation: ...
+- [Risk] — Mitigation: ...
+
+## Testing
+- Verified: ...
+- Not verified: ...
+
+## Related areas
+- [Feature / flow / module / integration / component]
+
+## Future reuse guidance
+- Safe to copy: [YES / NO / WITH CARE]
+- Reusable pattern: ...
+- Caveat: ...</code></pre>
+<p>Purpose: Store technical memory from this PR so future engineers and LLMs can safely revise related changes.</p>
+<p>Tone and style:</p>
+<ul>
+<li>Use simple, short, direct, non-marketing English.</li>
+<li>Do not trim away core or important technical details.</li>
+<li>Write for future engineers and LLMs.</li>
+<li>Focus on behavior, design, decisions, risks, and verification.</li>
+<li>Prefer durable domain terms over temporary implementation details.</li>
+<li>Use past tense.</li>
+</ul></section>
+<section class="section"><h2>Source priority</h2>
+<ol>
+<li>PR title and PR body.</li>
+<li>Jira task title, description, and acceptance criteria.</li>
+<li>Local changed files and diff.</li>
+<li>Commit messages.</li>
+<li>Review comments and review decisions.</li>
+</ol></section>
+<section class="section"><h2>Core rules</h2>
+<ul>
+<li>Extract. Do not invent.</li>
+<li>Prefer explicit facts from PR/Jira text over code inference.</li>
+<li>Use local diff to identify actual changed behavior, touched flows, edge cases, constraints, and reusable implementation patterns.</li>
+<li>Use review comments to capture rejected approaches, concerns, and important caveats.</li>
+<li>Group small edits into meaningful change units.</li>
+<li>Use stable categories such as feature area, workflow, API, validation, permissions, notifications, reporting, sync, state handling, or integration.</li>
+<li>Do not use file names as categories unless they are true domain terms.</li>
+<li>Do not repeat the same fact across sections.</li>
+<li>Omit empty sections.</li>
+</ul></section>
+<section class="section"><h2>Section rules</h2>
+<ul>
+<li>Goal: One or two bullets only. State the problem solved and intended outcome.</li>
+<li>Added / Changed / Fixed: Use the same grouped change format as Jira, but allow slightly more technical precision when it improves future reuse. Keep the wording at behavior or design level, not file-by-file diff narration.</li>
+<li>Key decisions: Keep only decisions that affect architecture, data flow, validation, integration boundaries, state handling, or maintainability.</li>
+<li>Risks: Include regression risk, correctness risk, rollout risk, hidden assumptions, or known edge cases relevant to future work.</li>
+<li>Testing: Separate what was actually verified from what was not verified. Do not imply verification that did not happen.</li>
+<li>Related areas: Name the feature, flow, module, integration, or component area touched. Prefer stable domain terms over file names.</li>
+<li>Future reuse guidance: Record whether the pattern is safe to reuse later, what exact idea is reusable, and what condition must be checked before reuse.</li>
+</ul></section>
+<section class="section"><h2>Uncertainty rules</h2>
+<ul>
+<li>If evidence is weak, write: Not clear from PR evidence.</li>
+<li>If a decision seems implied but not explicit, include it only when the diff and review comments strongly support it.</li>
+<li>If a risk is possible but not evidenced, omit it.</li>
+<li>If end-to-end behavior was not verified, say so in Testing and reduce confidence in Future reuse guidance.</li>
+</ul></section>
+<section class="section"><h2>Omit rules</h2>
+<ul>
+<li>Omit trivial formatting edits, generated preview artifacts, and file rename inventory unless they matter to design, workflow, or future reuse.</li>
+<li>Omit stakeholder-only wording that belongs in Jira unless it also matters technically.</li>
+<li>Omit raw diff narration.</li>
+<li>If unclear, omit rather than guess.</li>
+</ul></section>
+  </main>
+</body>
+</html>

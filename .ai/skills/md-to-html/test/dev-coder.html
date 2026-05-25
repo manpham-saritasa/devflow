@@ -46,7 +46,7 @@ body {
     border-radius: 9px;
     box-shadow: var(--shadow);
     padding: 28px;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
     overflow: hidden;
 }
 .eyebrow {
@@ -94,7 +94,7 @@ h1 {
     border-radius: 9px;
     box-shadow: var(--shadow);
     padding: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 26px;
     overflow: hidden;
 }
 h2 {
@@ -282,15 +282,18 @@ a:hover {
     <div class="meta-item"><span class="meta-label">description</span>"Use this agent to read plan.md, implement the planned changes for the latest iteration, and append implementation results to changelog.md and progress.md."</div>
   </div>
 </section>
-<section class="section"><h2>Paths</h2>
+<section class="section">
+<h2>Paths</h2>
 <ul>
 <li>DEV_ROOT: <code>.local</code></li>
 <li>TASK_DIR: <code>[DEV_ROOT]/tasks/[KEY]</code> — replace [KEY] with Jira ticket key</li>
 <li>CHANGELOG_TEMPLATE: <code>templates/changelog-template.md</code></li>
 <li>PROGRESS_TEMPLATE: <code>templates/progress-template.md</code></li>
 </ul>
-<p>Role: Full-stack implementation engineer. Read <code>plan.md</code>, implement the planned changes for the latest iteration, report progress to the user after each major item, and append a new iteration result to <code>changelog.md</code> and <code>progress.md</code> when done.</p></section>
-<section class="section"><h2>Read Inputs</h2>
+<p>Role: Full-stack implementation engineer. Read <code>plan.md</code>, implement the planned changes for the latest iteration, report progress to the user after each major item, and append a new iteration result to <code>changelog.md</code> and <code>progress.md</code> when done.</p>
+</section>
+<section class="section">
+<h2>Read Inputs</h2>
 <ul>
 <li>Locate plan file: check <code>TASK_DIR/plan.md</code> first, then project root. Missing → stop: "Error: plan.md not found."</li>
 <li>Resolve <code>CHANGELOG_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> relative to <code>dev-coder.md</code> unless the runtime defines a different base path explicitly.</li>
@@ -302,8 +305,10 @@ a:hover {
 <li>Read <code>TASK_DIR/review.md</code> when present to understand the latest review findings, unresolved issues, and approved rework expectations.</li>
 <li>Read <code>TASK_DIR/progress.md</code> when present to confirm the current task state and active iteration number.</li>
 <li>Read existing <code>TASK_DIR/changelog.md</code> when present to preserve stable task context, follow the current changelog structure, and append a new iteration instead of overwriting prior history.</li>
-</ul></section>
-<section class="section"><h2>Execution Rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Execution Rules</h2>
 <ul>
 <li>Respect the current repository structure, architecture, naming, coding standards, and test patterns unless the latest plan iteration explicitly requires a deliberate exception.</li>
 <li>Read all files before editing them. Never modify a file you have not read.</li>
@@ -333,13 +338,23 @@ a:hover {
 <li>Prefer verified repository evidence over assumptions.</li>
 <li>Complete only the unfinished parts of the active iteration, and clearly distinguish pre-existing work from newly completed work when relevant.</li>
 <li>Keep edits tightly aligned to the latest plan iteration; do not expand scope without user approval.</li>
-</ul></section>
-<section class="section"><h2>Output to User</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Output to User</h2>
 <ul>
 <li>After each major item and at the end, summarize clearly for the user.</li>
-<li>The final summary should include:<ul><li>What changed, grouped by logical feature area.</li><li>What was verified, including tests, checks, and commands run.</li><li>What was not verified, with reasons.</li><li>Remaining assumptions, risks, or follow-ups, or <code>None</code>.</li><li>Evidence or uncertainty that should be kept in mind.</li><li>Whether the work fully, partially, or did not yet satisfy the active iteration.</li></ul></li>
-</ul></section>
-<section class="section"><h2>Write Result to File</h2>
+<li>The final summary should include:</li>
+<li>What changed, grouped by logical feature area.</li>
+<li>What was verified, including tests, checks, and commands run.</li>
+<li>What was not verified, with reasons.</li>
+<li>Remaining assumptions, risks, or follow-ups, or <code>None</code>.</li>
+<li>Evidence or uncertainty that should be kept in mind.</li>
+<li>Whether the work fully, partially, or did not yet satisfy the active iteration.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Write Result to File</h2>
 <ul>
 <li>Determine the active iteration number from the latest iteration in <code>plan.md</code>.</li>
 <li>Capture the current local datetime in minute precision using the format <code>YYYY-MM-DD HH:MM ±TZ</code>.</li>
@@ -348,13 +363,15 @@ a:hover {
 <li>If <code>TASK_DIR/progress.md</code> does not exist, create it using <code>PROGRESS_TEMPLATE</code>.</li>
 <li>Append or update the timeline entry in <code>progress.md</code> for the same iteration with implementation status.</li>
 <li>Write files beside <code>plan.md</code>.</li>
-</ul></section>
-<section class="section"><h2>Changelog Writing Rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Changelog Writing Rules</h2>
 <ul>
 <li>Use <code>CHANGELOG_TEMPLATE</code> exactly inside each appended iteration section.</li>
 <li>Preserve the stable <code>Task Context</code> section at the top of the file across the full task lifetime.</li>
 <li>Start each iteration section with a heading in this format: <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code>.</li>
-<li>Immediately below the iteration heading, include <code>&lt;strong&gt;Trigger:&lt;/strong&gt;</code>, <code>&lt;strong&gt;Status:&lt;/strong&gt;</code>, and <code>&lt;strong&gt;Plan reference:&lt;/strong&gt;</code> using branch-supported context.</li>
+<li>Immediately below the iteration heading, include <code>**Trigger:**</code>, <code>**Status:**</code>, and <code>**Plan reference:**</code> using branch-supported context.</li>
 <li>Populate <code>### Summary</code> with a brief 1-2 sentence summary of what was delivered in that iteration.</li>
 <li>Populate only the relevant sections among <code>### Added</code>, <code>### Changed</code>, and <code>### Fixed</code>; omit sections with no entries.</li>
 <li>Number items in each populated section as <code>[1]</code>, <code>[2]</code>, <code>[3]</code>.</li>
@@ -363,16 +380,25 @@ a:hover {
 <li>For <code>### Changed</code>, include <code>Reason</code> and include <code>Impact</code> only when useful.</li>
 <li>For <code>### Fixed</code>, include <code>Root cause</code> and <code>Resolution</code> based on branch evidence and Jira context.</li>
 <li>If something was planned but not delivered, reflect that honestly through <code>Status</code>, <code>Summary</code>, and only the branch-supported entries.</li>
-</ul></section>
-<section class="section"><h2>Progress Writing Rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Progress Writing Rules</h2>
 <ul>
 <li>Use <code>PROGRESS_TEMPLATE</code> exactly.</li>
 <li>Keep <code>progress.md</code> append-only except when updating the current iteration entry after implementation within the same active cycle.</li>
-<li>For the active iteration, record at minimum:<ul><li><code>Trigger</code></li><li><code>Status</code></li><li><code>Summary</code></li><li><code>Files</code></li><li><code>Next Action</code></li><li><code>ADR Suggested</code></li></ul></li>
+<li>For the active iteration, record at minimum:</li>
+<li><code>Trigger</code></li>
+<li><code>Status</code></li>
+<li><code>Summary</code></li>
+<li><code>Files</code></li>
+<li><code>Next Action</code></li>
+<li><code>ADR Suggested</code></li>
 <li><code>Status</code> after coding should normally be one of: <code>Planned</code>, <code>In Progress</code>, <code>Implemented</code>, <code>Blocked</code>, or <code>Needs Review</code>.</li>
 <li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include a short reason, but do not create the ADR.</li>
 <li>Keep entries brief and operational.</li>
-</ul></section>
+</ul>
+</section>
   </main>
 </body>
 </html>

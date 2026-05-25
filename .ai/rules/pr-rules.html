@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Github PR fixing rules</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Github PR fixing rules</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">Overlap rule</span>If a comment led to both a code change and a reply, use the code change status (🔧 Fixed or ✅ Resolved). Code change supersedes reply.</div>
+    <div class="meta-item"><span class="meta-label">Kept rule</span>If a human has already replied to the thread with a decision to defer or keep (e.g., "Keep it for now"), mark it as 🔒 Kept — not 🔴 Open.</div>
+    <div class="meta-item"><span class="meta-label">How to resolve</span>Use the GraphQL <code>resolveReviewThread</code> mutation.</div>
+  </div>
+</section>
+<section class="section">
+<div class="blockquotes">
+<p>Always confirm changes before applying them.</p>
+</div>
+</section>
+<section class="section">
+<h2>Category Legend</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Step</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Category">🔴 Open</td>
+<td data-label="Step">§1, §2</td>
+<td data-label="Meaning">Not yet resolved — needs a fix or discussion</td>
+</tr>
+<tr>
+<td data-label="Category">🔧 Fixed</td>
+<td data-label="Step">§3, §4</td>
+<td data-label="Meaning">Code changed locally, not yet pushed or resolved on PR</td>
+</tr>
+<tr>
+<td data-label="Category">✅ Resolved</td>
+<td data-label="Step">§4</td>
+<td data-label="Meaning">Pushed to origin and comment resolved on PR</td>
+</tr>
+<tr>
+<td data-label="Category">💬 Replied</td>
+<td data-label="Step">§4</td>
+<td data-label="Meaning">Conversation reply pushed to PR (no code change)</td>
+</tr>
+<tr>
+<td data-label="Category">🔒 Kept</td>
+<td data-label="Step">§4</td>
+<td data-label="Meaning">Comment acknowledged but no change made</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overlap rule:</strong> If a comment led to both a code change and a reply, use the code change status (🔧 Fixed or ✅ Resolved). Code change supersedes reply.  </p>
+<p><strong>Kept rule:</strong> If a human has already replied to the thread with a decision to defer or keep (e.g., "Keep it for now"), mark it as 🔒 Kept — not 🔴 Open.</p>
+</section>
+<section class="section">
+<h2>Priority Ordering</h2>
+<p>For §1 and §2 (listing and planning), use 🔴 Open for all unresolved comments.<br>
+For §4 (review), use the resolved categories: 🔧 Fixed → ✅ Resolved → 💬 Replied → 🔒 Kept.<br>
+Within the same category, order by file path alphabetically.</p>
+</section>
+<section class="section">
+<h2>1. List comments step</h2>
+<p>When asked about any comments unresolved or unanswered in the PR:</p>
+<ul>
+<li>Reread to get the answer from the PR</li>
+<li>Order all comments by priority from top to bottom</li>
+<li>Show all comments in a table format with these columns: category, commented file (file name as clickable URL to the comment using <code>/files#r{id}</code> format, e.g., <code>https://github.com/org/repo/pull/123/files#r456</code>), who commented, comment's content.</li>
+</ul>
+</section>
+<section class="section">
+<h2>2. Planning step</h2>
+<p>When reviewing changes for fixing comments in a PR:</p>
+<ul>
+<li><strong>Easy fix</strong>: Single-line change, typo, rename, or already resolved in a later commit. Auto-propose these.</li>
+<li><strong>Non-trivial</strong>: Logic change, new file creation, deletion, multi-file change, or anything ambiguous. Ask me one by one.</li>
+<li>List all comments by priority from top to bottom in a table format with these columns: category, commented file (file name as clickable URL using <code>/files#r{id}</code> format), who commented, comment's content, the change proposed.</li>
+</ul>
+</section>
+<section class="section">
+<h2>3. Fixing step</h2>
+<h3>Changing code</h3>
+<p>When applying the changes for comments that need code changes:</p>
+<ul>
+<li>Always show me the diff before committing. Do not commit silently.</li>
+<li>If a single comment fix involves multiple files, group them into one commit.</li>
+<li>If a single comment fix involves only one file, group it with other similar fixes, but maximum 3 files per commit. Exception: bulk identical changes (e.g., typos, renames across many files) can go in one commit.</li>
+<li>For multi-fix commits, list each fix as a bullet in the commit body (not just the JIRA key in the subject).</li>
+<li>Use commit message format: <code>[Task summary] #[JIRA Task KEY]</code> (e.g., <code>Fix PR comments #PROJ-2050</code>).</li>
+<li>Commit on local only, do not push to origin automatically, unless I order you to do so.</li>
+</ul>
+<h3>Resolving code-fix comments</h3>
+<p>After pushing the code fix to origin:</p>
+<ol>
+<li>Before pushing, show me a list of which PR comment threads will be resolved so I can approve or adjust.</li>
+<li>After I approve, push and resolve each thread silently. Do not add a reply — just mark it resolved.</li>
+<li>Only add a reply if there is an important note or breaking change to call out.</li>
+</ol>
+<p><strong>How to resolve:</strong> Use the GraphQL <code>resolveReviewThread</code> mutation.  </p>
+<p>Find unresolved thread IDs:</p>
+<pre><code class="language-sh">gh api graphql -f query='query { repository(owner:&quot;org&quot;, name:&quot;repo&quot;) { pullRequest(number:N) { reviewThreads(first:50) { nodes { id isResolved } } } } }'
+</code></pre>
+<p>Resolve a thread silently:</p>
+<pre><code class="language-sh">gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: &quot;ID&quot;}) { thread { isResolved } } }'
+</code></pre>
+<p>Note: posting a reply to a thread also auto-resolves it — use the GraphQL mutation only when you want a silent resolve without a reply. If you add a reply for an important note, skip the mutation — the reply handles it.</p>
+<h3>Replying comments</h3>
+<p>For comments that need a reply to resolve or discuss (does not need a code change yet):</p>
+<ol>
+<li>Show me the exact reply content in the §4 review table before pushing.</li>
+<li>After I approve, push the reply to the PR. Do not resolve the comment thread — only the reply. I will resolve conversations myself in the PR UI.</li>
+</ol>
+</section>
+<section class="section">
+<h2>4. Reviewing step</h2>
+<p>After done fixing the comments in step #3, show result for me to review all changes you made.</p>
+<ul>
+<li>
+<p>For code changes, list them in priority order, in a table format with these columns: category, commented file (file name as clickable URL using <code>/files#r{id}</code> format), who commented, comment's content, file diff / change summary.</p>
+</li>
+<li>
+<p>If a single comment fix spans multiple files, list each file on its own line within the same row, using compact inline diff per file (e.g., <code>file1.cs: old → new</code>, <code>file2.cs: deleted</code>). Do not create separate rows for the same comment.</p>
+</li>
+<li>
+<p>For comments' replies, list them in priority order, in a table format with these columns: category, commented file (file name as clickable URL using <code>/files#r{id}</code> format), who commented, comment's content, the reply you drafted.</p>
+</li>
+</ul>
+</section>
+<section class="section">
+<h2>5. Closure step</h2>
+<p>After reviewing the tables in step #4, I will tell you to:</p>
+<ul>
+<li>Amend a commit</li>
+<li>Push to origin (after push, resolve code-fix threads silently; do not resolve reply threads)</li>
+<li>Make further changes</li>
+</ul>
+<p>Do not proceed until I give one of these instructions.</p>
+</section>
+<section class="section">
+<h2>Edge Cases</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Scenario">Comment on a deleted file</td>
+<td data-label="Handling">Reply with the reason for deletion; no code change needed</td>
+</tr>
+<tr>
+<td data-label="Scenario">Duplicate Copilot comments (re-review cycle)</td>
+<td data-label="Handling">Group duplicates into one row; note "Duplicate of #N"</td>
+</tr>
+<tr>
+<td data-label="Scenario">Existing replies in the thread</td>
+<td data-label="Handling">Skip — already resolved; list as 🔒 Kept if no further action needed</td>
+</tr>
+<tr>
+<td data-label="Scenario">Copilot bot comment (no human follow-up)</td>
+<td data-label="Handling">Still fix if valid; no reply needed unless a human also flagged it</td>
+</tr>
+<tr>
+<td data-label="Scenario">Comment on a line that no longer exists in HEAD</td>
+<td data-label="Handling">Use the original commit ID and line from the comment's diff hunk</td>
+</tr>
+<tr>
+<td data-label="Scenario">Thread already marked <code>isResolved: true</code> on GitHub</td>
+<td data-label="Handling">Mark as ✅ Resolved — no action needed</td>
+</tr>
+</tbody>
+</table>
+</section>
+  </main>
+</body>
+</html>

@@ -1,8 +1,6 @@
 ---
 name: dev-ship-pr-jira
-description: |
-  Ship feature: create GitHub PR, comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.
-  
+description: ship feature to create GitHub PR and comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.
 triggers: 
   - "dev-ship-pr-jira"
   - "dev-ship-pr-jira --pr-only"
@@ -39,7 +37,8 @@ triggers:
 
 - DEV_ROOT: `.local`
 - TASK_DIR: `[DEV_ROOT]/tasks/[KEY]` — replace [KEY] with Jira ticket key
-- REPORT_TEMPLATE: `report-template.md`
+- JIRA_TEMPLATE: `jira-summary-template.md` — non-technical, for testers/PMs/clients
+- PR_TEMPLATE: `pr-summary-template.md` — technical, for future engineers
 
 ## Variables
 
@@ -48,10 +47,9 @@ triggers:
 
 ## Output Style
 
-Use `REPORT_TEMPLATE`: `Added / Changed / Fixed` headings, numbered items [1][2][3], sub-bullets (Purpose/Details/Reason/Impact/Root cause/Resolution).
-- Past tense, outcome-focused, minimal English
-- **Never: variable names, function names, class names, file paths, method calls, code-level details. Behavior + user impact only. No exceptions.**
-- Omit empty sections, bullet lists, short + scannable
+**Jira comment** — use `JIRA_TEMPLATE`. Non-technical: behavior + user impact only. Audience: testers, PMs, clients. Never mention code-level details.
+
+**PR body** — use `PR_TEMPLATE`. Technical: architecture, decisions, risks, reuse patterns. Audience: future engineers. Include file paths, method names, code patterns when relevant.
 
 ## Workflow
 
@@ -66,22 +64,28 @@ Use `REPORT_TEMPLATE`: `Added / Changed / Fixed` headings, numbered items [1][2]
 `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
 If fail: ask user for KEY or Jira link. Stop if no valid KEY.
 
-### Step 3: Extract Report Content
+### Step 3: Generate Reports
 
-Generate report from branch evidence (commits, diff, changed files, Jira context).
+Generate TWO reports from branch evidence (commits, diff, changed files, Jira context):
+
+**Jira report** — use `JIRA_TEMPLATE`. Non-technical, business language. Audience: testers/PMs/clients.
+**PR report** — use `PR_TEMPLATE`. Technical, engineering language. Audience: future developers.
 
 Source priority:
-1. If `TASK_DIR/changelog.md` exists: reclassify latest iteration into `Added / Changed / Fixed`, minimal English
+1. If `TASK_DIR/changelog.md` exists: reclassify latest iteration
 2. Else: `git diff develop..HEAD`, auto-extract + populate
 
-Rules:
-- Jira = business intent; diff/commits/files = actual implementation
-- If diff narrower than Jira, describe narrower shipped version
-- Exclude refactors/renames/formatting/tests unless behavior changed
+Rules for Jira report:
+- Behavior + user impact only. No variable/function/class/path/method names.
+- Past tense, outcome-focused. Short + scannable.
 - Classification: Added = new capabilities | Changed = updated behavior | Fixed = bugs
-- **Non-technical**: No variable/function/class/path/method/code-detail mentions. Behavior + user impact only. No exceptions.
-- Short + specific main lines; past tense. Non-redundant sub-bullets only.
-- Omit empty sections
+- Omit empty sections.
+
+Rules for PR report:
+- Include file paths, method names, architectural decisions, code patterns.
+- Group meaningful changes. Omit trivial refactors unless they support a key decision.
+- Separate verified from not-verified in testing section.
+- Mark reuse patterns with Safe to copy: YES/NO.
 
 ### Step 4: Build Commit Message
 
@@ -89,7 +93,7 @@ Format: `{action} {description} [KEY]` (e.g., `Fix PDF landscape scaling [KEY]`)
 
 ### Step 5: Show Preview
 
-If `--text-only`: show both changelogs, skip to Step 9.
+If `--text-only`: show both reports, skip to Step 9.
 If `--technical-only`: write/update `TASK_DIR/changelog.md` with technical iteration, show preview, skip to Step 9.
 
 ```
@@ -97,24 +101,20 @@ Commit: {MSG}
 
 ## Technical Changelog (.local)
 ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
-### Summary
-...
-### Changed
-...
-### Fixed
 ...
 
-## Non-Technical Report (Jira/GitHub)
+## PR Report (GitHub)
 ## [KEY] — Title
+## Goal
+...
+
+## Jira Report
+## [KEY] — Task summary
 ## Added
-[1] - ...
-## Changed
-[1] - ...
-## Fixed
-[1] - ...
+...
 ```
 
-If NOT `--text-only` or `--technical-only`: show report only, ask "Ready? Say YES."
+If NOT `--text-only` or `--technical-only`: show both reports, ask "Ready? Say YES."
 
 ### Step 6: Create PR
 
@@ -123,7 +123,7 @@ Skip if `--jira-only` or `--text-only`:
 git push origin $(git branch --show-current)
 gh pr create --base develop --head $(git branch --show-current) --title "{MSG}" --body "{BODY}"
 ```
-Capture PR URL.
+Capture PR URL. `{PR_BODY}` is the output from `PR_TEMPLATE`.
 
 ### Step 7: Update Progress
 
@@ -137,17 +137,18 @@ Skip if `--pr-only` or `--text-only`:
 ```
 cloudId: [JIRA_DOMAIN]
 issueIdOrKey: [KEY]
-commentBody: {BODY}\n\n[View PR]({PR_URL})
+commentBody: {JIRA_BODY}\n\n[View PR]({PR_URL})
 contentFormat: markdown
 ```
 
 **Required**: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: `[View PR]({PR_URL})`). Never omit or move to top.
+`{JIRA_BODY}` is the output from `JIRA_TEMPLATE`.
 
 ### Step 9: Success
 
 ```
 ✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
 ✅ Jira: [KEY] commented
+✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 (Omit skipped steps per flags.)
