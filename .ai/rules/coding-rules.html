@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Coding Workflow</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI Coding Workflow</h1>
+</section>
+<section class="section">
+<div class="blockquotes">
+<p>If not specified, use this workflow when asked to implement a feature, fix a bug, or complete a multi-step coding task.</p>
+</div>
+</section>
+<section class="section">
+<h2>Task Workflow</h2>
+<h3>1. Clarify</h3>
+<ul>
+<li>Turn the request into checkable goals.</li>
+<li>Break work into logical groups.</li>
+<li>Define verification steps for each phase.</li>
+<li>If multiple valid interpretations remain, stop and ask instead of guessing.</li>
+</ul>
+<h3>2. Plan</h3>
+<ul>
+<li>Make a short, phase-by-phase plan before coding.</li>
+<li>Show the plan first when the task is multi-step, high-risk, or likely to produce a broad diff.</li>
+<li>Group work into meaningful review slices, for example: "Data Model", "Business Logic", "API", "UI", or "Tests".</li>
+<li>Each phase must include a concrete check such as a test, build, lint, or command.</li>
+</ul>
+<h3>3. Implement</h3>
+<ul>
+<li>Work incrementally and verify one logical group before moving to the next.</li>
+<li>Touch only files relevant to the task.</li>
+<li>Preserve existing behavior unless the task explicitly asks to change it.</li>
+<li>Avoid unrelated refactors, broad reformatting, or extra features.</li>
+<li>Small related refactors are acceptable only when they directly improve correctness, reuse, maintainability, or verification.</li>
+</ul>
+<h3>4. Stop Conditions</h3>
+<p>Stop and ask if:</p>
+<ul>
+<li>an assumption fails;</li>
+<li>requirements conflict;</li>
+<li>existing code or behavior conflicts with the plan;</li>
+<li>a verification step fails and the correct fix is unclear;</li>
+<li>the requested change appears to violate an invariant, architectural boundary, or business rule;</li>
+<li>the implementation becomes significantly more complex or broader than planned;</li>
+<li>the plan requires a scope change or re-planning.</li>
+</ul>
+<h3>5. Verification</h3>
+<ul>
+<li>Run the tests, builds, linters, or checks relevant to the change.</li>
+<li>Prefer the smallest verification that proves the requested behavior.</li>
+<li>If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.</li>
+<li>For bug fixes, add or update a test when practical; if not, explain how the fix was verified.</li>
+<li>For behavior changes or new business logic, add or update tests when practical.</li>
+<li>Never mark something as verified without saying what was actually checked.</li>
+<li>Never pretend verification happened.</li>
+</ul>
+<h3>6. Report</h3>
+<p>Summarize using this format:  </p>
+<p><strong>What changed</strong></p>
+<ul>
+<li>Grouped by logical feature area, not file list.</li>
+</ul>
+<p><strong>What was verified</strong></p>
+<ul>
+<li>Tests run, checks passed, and commands executed.</li>
+</ul>
+<p><strong>What was not verified</strong></p>
+<ul>
+<li>Explain what was not verified and why.</li>
+</ul>
+<p><strong>Remaining assumptions, risks, or follow-ups</strong></p>
+<ul>
+<li>List them explicitly, or say <code>None</code>.</li>
+</ul>
+<p><strong>Evidence / uncertainty</strong></p>
+<ul>
+<li>List key assumptions, missing context, and any conclusions that are inferred rather than directly verified.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

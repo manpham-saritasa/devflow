@@ -113,6 +113,33 @@ def test_mermaid_block() -> None:
     check("mermaid block", result, '<pre class="mermaid">\ngraph TD\n  A-->B\n</pre>')
 
 
+def test_numbered_list_after_paragraph() -> None:
+    result = md_body_to_html("Steps:\n1. First\n2. Second")
+    check(
+        "numbered list after paragraph",
+        result,
+        "<p>Steps:</p>\n<ol>\n<li>First</li>\n<li>Second</li>\n</ol>",
+    )
+
+
+def test_bullet_list_after_paragraph() -> None:
+    result = md_body_to_html("Rules:\n- One\n- Two")
+    check(
+        "bullet list after paragraph",
+        result,
+        "<p>Rules:</p>\n<ul>\n<li>One</li>\n<li>Two</li>\n</ul>",
+    )
+
+
+def test_plain_paragraph_preserves_newlines() -> None:
+    result = md_body_to_html("Line one.\nLine two.\nLine three.")
+    check(
+        "plain paragraph preserves newlines",
+        result,
+        "<p>Line one.<br>\nLine two.<br>\nLine three.</p>",
+    )
+
+
 # ── PostProcessor ───────────────────────────────────────────────────────────
 
 
@@ -247,7 +274,7 @@ def test_converter_end_to_end() -> None:
         '<section class="header">' in result
         and "Intro text." in result
         and "task-list" in result
-        and "<blockquote>" in result,
+        and "blockquotes" in result,
         result,
     )
 
@@ -285,6 +312,9 @@ if __name__ == "__main__":
     test_reference_link()
     test_autolink()
     test_mermaid_block()
+    test_numbered_list_after_paragraph()
+    test_bullet_list_after_paragraph()
+    test_plain_paragraph_preserves_newlines()
 
     print("\n=== PostProcessor ===")
     test_no_h2_content_preserved()

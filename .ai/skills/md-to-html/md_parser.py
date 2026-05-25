@@ -66,6 +66,11 @@ def _normalize_mermaid_blocks(rendered_html: str) -> str:
     )
 
 
+def _is_list_item(stripped: str) -> bool:
+    """Check if a line is a bullet or numbered list item."""
+    return stripped.startswith(("- ", "* ")) or bool(re.match(r"^\d+\.", stripped))
+
+
 def _normalize_sublist_indent(text: str) -> str:
     """Normalize 2-space sublist indentation to 4 spaces under colon-ending list items."""
     lines = text.split("\n")
@@ -74,7 +79,7 @@ def _normalize_sublist_indent(text: str) -> str:
 
     for i, line in enumerate(lines):
         stripped = line.strip()
-        starts_with_list = stripped.startswith(("- ", "* "))
+        starts_with_list = _is_list_item(stripped)
 
         # Detect start of a sublist: list item ending with colon + next line is list item
         if starts_with_list and stripped.endswith(":"):
@@ -82,7 +87,7 @@ def _normalize_sublist_indent(text: str) -> str:
             for j in range(i + 1, len(lines)):
                 nxt = lines[j].strip()
                 if nxt:
-                    if nxt.startswith(("- ", "* ")):
+                    if _is_list_item(nxt):
                         in_sublist = True
                     break
             result.append(line)
@@ -106,26 +111,79 @@ def _normalize_sublist_indent(text: str) -> str:
 
 
 def _insert_blank_before_list(text: str) -> str:
-    """Insert blank line between colon-ending paragraphs and following list items."""
+    """Insert blank line between paragraphs and following list items."""
     lines = text.split("\n")
     result: list[str] = []
     for i, line in enumerate(lines):
         result.append(line)
         stripped = line.strip()
-        # Colon-ending paragraph (not a heading, not a list item) followed by list
-        if stripped.endswith(":") and not stripped.startswith(("- ", "* ", "#")):
-            for j in range(i + 1, len(lines)):
-                nxt = lines[j].strip()
-                if not nxt:
-                    continue
-                if nxt.startswith(("- ", "* ")):
-                    result.append("")
+        # Not a heading, not a list item, not blank
+        if not stripped or stripped.startswith("#") or _is_list_item(stripped):
+            continue
+        # Check if next non-blank line is a list item
+        for j in range(i + 1, len(lines)):
+            nxt = lines[j].strip()
+            if not nxt:
+                continue
+            if _is_list_item(nxt):
+                result.append("")
+            break
+    return "\n".join(result)
+
+
+def _preserve_newlines(text: str) -> str:
+    """Add markdown hard-break markers so consecutive lines are not merged into one paragraph."""
+    lines = text.split("\n")
+    result: list[str] = []
+    in_code_block = False
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        # Track code block boundaries
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            result.append(line)
+            continue
+        # Never modify content inside code blocks
+        if in_code_block:
+            result.append(line)
+            continue
+        # Skip headings, list items, blank lines, table rows, link definitions
+        if (
+            not stripped
+            or stripped.startswith("#")
+            or stripped.startswith(("- ", "* "))
+            or bool(re.match(r"^\d+\.", stripped))
+            or stripped.startswith("|")
+            or bool(re.match(r"^\[.+\]:", stripped))
+        ):
+            result.append(line)
+            continue
+        # Look ahead: only add hard break if next non-blank line is also a paragraph line
+        has_next = False
+        for j in range(i + 1, len(lines)):
+            nxt = lines[j].strip()
+            if not nxt:
+                continue
+            if nxt.startswith("```") or bool(re.match(r"^\[.+\]:", nxt)):
                 break
+            if not (
+                nxt.startswith("#")
+                or nxt.startswith(("- ", "* "))
+                or bool(re.match(r"^\d+\.", nxt))
+                or nxt.startswith("|")
+            ):
+                has_next = True
+            break
+        if has_next:
+            result.append(line.rstrip() + "  ")
+        else:
+            result.append(line)
     return "\n".join(result)
 
 
 def md_body_to_html(text: str) -> str:
     """Convert Markdown body text to HTML using a real Markdown parser."""
+    text = _preserve_newlines(text)
     text = _insert_blank_before_list(text)
     text = _normalize_sublist_indent(text)
     renderer = _new_renderer()
