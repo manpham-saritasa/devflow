@@ -89,10 +89,10 @@ Runs plan → code → review in sequence with checkpoints between phases. Use f
 
 | Trigger | What it does |
 |---------|-------------|
-| `/dev-start` or `devstart` | Create a worktree from a Jira key. `--hotfix` branches from `main`, `--force` from current, `--dry-run` previews. |
+| `/dev-start` or `devstart` | Create a worktree from a Jira key. Fetches latest base branch, copies `.env` to worktree. `--hotfix` branches from `main`, `--force` from current, `--dry-run` previews. |
 | `/dev-plan` | Analyze task + codebase, produce `plan.md` + `progress.md`. |
-| `/dev-code` | Read `plan.md`, implement changes, write `changelog.md`. |
-| `/dev-review` | Review changes via `git diff`, write `review.md`, issue verdict. |
+| `/dev-code` | Read `plan.md`, implement changes, capture manual changes, write `changelog.md` with `Delivery` tracking. |
+| `/dev-review` | Review changes via `git diff`, check changelog for unlogged changes, write `review.md`, issue verdict. |
 | `/dev-ship` or `dev-ship-pr-jira` | Create PR + comment Jira. `--pr-only`, `--jira-only`, `--dry-run`, `--technical-only`, `--from-pr [URL]`. |
 | `/dev-fix-pr` or `devfixpr` | List, plan, fix, and resolve PR review comments. Loops for multiple rounds. `--dry-run` available. |
 | `/dev-finish` or `devfinish` | Merge approved PR, delete worktree + branch. `--worktree-only` skips PR. `--dry-run` previews. |

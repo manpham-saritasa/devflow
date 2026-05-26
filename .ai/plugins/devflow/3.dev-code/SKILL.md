@@ -47,18 +47,28 @@ Work through `## Proposed Changes` in order. For each change:
 - Never claim verification that didn't happen
 - If verification is incomplete, state what was/wasn't run and why
 
-### Step 5: Write Changelog
+### Step 5: Capture Manual Changes
+
+Before writing the changelog, ask the user:
+
+> "I implemented [N] changes from the plan. Did you make any additional manual changes outside this session? If yes, describe them and I'll include them as `[manual]` items in the changelog."
+
+- If user says no → `**Delivery:** Skill`.
+- If user describes additional changes → `**Delivery:** Mixed`. Include those changes in the changelog, annotated with `[manual]`. Skill-implemented items get `[skill]`.
+
+### Step 6: Write Changelog
 
 Append a new iteration to `TASK_DIR/changelog.md` using `CHANGELOG_TEMPLATE`:
 - `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`
-- `**Trigger:**`, `**Status:**`, `**Plan reference:**`
+- `**Trigger:**`, `**Status:**`, `**Delivery:**`, `**Plan reference:**`
 - Populate relevant sections: `### Added`, `### Changed`, `### Fixed`
 - Number items `[1]`, `[2]`, `[3]`; past tense, outcome-focused
+- When `Delivery` is `Mixed`, note in the `### Summary` which items were manual vs. skill
 - For `### Fixed`: include `Root cause` and `Resolution` based on evidence
   - If root cause cannot be proven, state best-supported explanation and label as inferred
   - If fixed without reliable reproduction, state that explicitly
 
-### Step 6: Update Progress
+### Step 7: Update Progress
 
 Append/update timeline entry in `TASK_DIR/progress.md` using `PROGRESS_TEMPLATE`:
 - `Trigger`, `Status`, `Summary`, `Files`, `Next Action`, `ADR Suggested`

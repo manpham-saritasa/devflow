@@ -16,6 +16,7 @@
 ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
 **Trigger:** [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]
 **Status:** [Implemented | Partially Implemented | Blocked | Deferred]
+**Delivery:** [Skill | Manual | Mixed]
 **Plan reference:** [short reference to matching plan iteration]
 
 ### Summary
@@ -35,3 +36,8 @@
 **[1] - Fixed [item].**
   - Root cause: ...
   - Resolution: ...
+
+<!--
+When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.
+When Delivery is "Skill" or "Manual", no annotation needed.
+-->
