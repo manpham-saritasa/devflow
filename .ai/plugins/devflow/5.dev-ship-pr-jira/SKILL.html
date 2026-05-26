@@ -419,13 +419,13 @@ If fail: ask user for KEY or Jira link. Stop if no valid KEY.</p>
 <strong>PR report</strong> — use <code>PR_TEMPLATE</code>. Technical, engineering language. Audience: future developers.  </p>
 <p>Source priority:</p>
 <ol>
-<li>
-<p><strong>If <code>--from-pr [URL]</code>:</strong> fetch PR details and diff as evidence:
-   <code>bash
-   gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,body,commits,reviews,files
-   gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]</code>
-   Use PR title, body, commits, reviews, files, and diff. Skip local changelog and git diff.</p>
+<li><strong>If <code>--from-pr [URL]</code>:</strong> fetch PR details and diff as evidence:<pre><code>gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,body,commits,reviews,files
+gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
+</code></pre>
 </li>
+</ol>
+<p>Use PR title, body, commits, reviews, files, and diff. Skip local changelog and git diff.</p>
+<ol start="2">
 <li>
 <p><strong>If <code>TASK_DIR/changelog.md</code> exists:</strong> reclassify latest iteration.</p>
 </li>

@@ -9,6 +9,7 @@ Before using this skill, make sure you have:
 1. **gh CLI** - GitHub command-line tool, installed and logged in
 2. **Jira MCP** - connection to Jira (must be set up)
 3. **`.env` file** - create a `.env` file in the repo root with your Jira credentials:
+
    ```
    JIRA_COMPANY_DOMAIN=saritasa
    JIRA_PROJECT_KEY=RMASUP
