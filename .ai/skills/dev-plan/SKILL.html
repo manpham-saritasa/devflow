@@ -341,6 +341,10 @@ a:hover {
 <li>Read <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>README.md</code>, <code>docs/</code>, lint/formatter configs</li>
 <li>Explore project structure with task context in mind</li>
 <li>Identify relevant files, modules, functions, integration points</li>
+<li><strong>Repo-match check:</strong> Determine if the current repository is related to the task using concrete evidence: matching services, modules, domains, feature names, or task-specific components.</li>
+<li>If the repo appears unrelated, stop and ask: "This repository does not appear to contain the code for this task. Wrong repo? Continue anyway or switch? (continue/switch)"</li>
+<li><code>continue</code> → proceed but note mismatch risk in investigation summary.</li>
+<li><code>switch</code> → stop and wait for correct repo.</li>
 <li>Check <code>ADR_DIR</code> for matching ADRs — note constraints and decisions</li>
 </ul>
 <h3>Step 3: Research Related Tasks</h3>
@@ -356,6 +360,7 @@ a:hover {
 **Key files:** ...
 **Patterns observed:** ...
 **ADR constraints:** ...
+**Repo match:** [yes / no (mismatch risk noted)]
 **Approach:** [1-2 sentence proposal]
 
 Proceed? (yes/no/adjust)

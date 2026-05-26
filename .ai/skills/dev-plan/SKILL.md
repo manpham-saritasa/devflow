@@ -32,6 +32,10 @@ If local files are missing, fall back to Jira MCP or user message. Do not fail o
 - Read `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/`, lint/formatter configs
 - Explore project structure with task context in mind
 - Identify relevant files, modules, functions, integration points
+- **Repo-match check:** Determine if the current repository is related to the task using concrete evidence: matching services, modules, domains, feature names, or task-specific components.
+- If the repo appears unrelated, stop and ask: "This repository does not appear to contain the code for this task. Wrong repo? Continue anyway or switch? (continue/switch)"
+  - `continue` → proceed but note mismatch risk in investigation summary.
+  - `switch` → stop and wait for correct repo.
 - Check `ADR_DIR` for matching ADRs — note constraints and decisions
 
 ### Step 3: Research Related Tasks
@@ -50,6 +54,7 @@ Output an investigation summary:
 **Key files:** ...
 **Patterns observed:** ...
 **ADR constraints:** ...
+**Repo match:** [yes / no (mismatch risk noted)]
 **Approach:** [1-2 sentence proposal]
 
 Proceed? (yes/no/adjust)
