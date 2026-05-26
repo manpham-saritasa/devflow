@@ -8,9 +8,17 @@ Before using this skill, make sure you have:
 
 1. **gh CLI** - GitHub command-line tool, installed and logged in
 2. **Jira MCP** - connection to Jira (must be set up)
-3. **Environment variables** - these should be set:
-   - `JIRA_DOMAIN` - your Jira server address
-   - `JIRA_PROJECT` - your project key
+3. **`.env` file** - create a `.env` file in the repo root with your Jira credentials:
+   ```
+   JIRA_COMPANY_DOMAIN=saritasa
+   JIRA_PROJECT_KEY=RMASUP
+   JIRA_EMAIL=john.doe@saritasa.com
+   JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+   ```
+   - `JIRA_COMPANY_DOMAIN` — your Jira subdomain (the part before `.atlassian.net`)
+   - `JIRA_PROJECT_KEY` — your project key (e.g. `RMASUP`)
+   - `JIRA_EMAIL` — your Atlassian account email
+   - `JIRA_API_TOKEN` — API token from https://id.atlassian.com/manage-profile/security/api-tokens
 
 ## What does this skill do?
 

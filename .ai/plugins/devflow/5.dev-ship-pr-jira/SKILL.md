@@ -38,7 +38,7 @@ triggers:
 | `--dry-run` | Skip Step 6-9 (preview both changelogs). Show preview only. |
 | `--technical-only` | Skip Step 6-9. Generate technical changelog to `.local` only. |
 | `--from-pr [URL]` | Generate reports from a past GitHub PR. Skip Steps 6-9 (no PR, no Jira). |
-| `--no-jira` | Create PR + progress, skip Jira report and Jira comment. No Jira env vars needed. |
+| `--no-jira` | Create PR + progress, skip Jira report and Jira comment. No `.env` file needed. |
 
 ## Paths
 
@@ -47,10 +47,21 @@ Read shared paths from `config.md`. `TASK_DIR` is defined there (as `[TASKS_ROOT
 - `JIRA_TEMPLATE`: `jira-summary-template.md` — non-technical, for testers/PMs/clients
 - `PR_TEMPLATE`: `pr-summary-template.md` — technical, for future engineers
 
-## Variables
+## Jira Credentials
 
-- JIRA_DOMAIN: env var `$JIRA_DOMAIN`
-- JIRA_PROJECT: env var `$JIRA_PROJECT`
+Read Jira credentials from `.env` in the repository root. Required variables:
+
+```
+JIRA_COMPANY_DOMAIN=saritasa
+JIRA_PROJECT_KEY=RMASUP
+JIRA_EMAIL=john.doe@saritasa.com
+JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+```
+
+- `JIRA_COMPANY_DOMAIN` — your Jira instance subdomain (the part before `.atlassian.net`)
+- `JIRA_PROJECT_KEY` — the project key (e.g. `RMASUP`, `PROJ`)
+- `JIRA_EMAIL` — the email associated with your Atlassian account
+- `JIRA_API_TOKEN` — your Atlassian API token (generate at https://id.atlassian.com/manage-profile/security/api-tokens)
 
 ## Output Style
 
@@ -165,12 +176,42 @@ Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`:
 
 ### Step 8: Comment Jira
 
-Skip if `--pr-only`, `--dry-run`, `--technical-only`, `--from-pr`, or `--no-jira`:
+Skip if `--pr-only`, `--dry-run`, `--technical-only`, `--from-pr`, or `--no-jira`.
+
+Before commenting, verify `.env` is present in the repo root and contains all required variables (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If missing or incomplete, stop: "Jira credentials not found. Add them to `.env` in the repo root. See the Jira Credentials section for format."
+
+Use Jira API with the credentials from `.env`:
+- Base URL: `https://[JIRA_COMPANY_DOMAIN].atlassian.net`
+- Auth: Basic auth using `[JIRA_EMAIL]:[JIRA_API_TOKEN]`
+- Endpoint: `POST /rest/api/3/issue/[KEY]/comment`
+
 ```
-cloudId: [JIRA_DOMAIN]
-issueIdOrKey: [KEY]
-commentBody: {JIRA_BODY}\n\n[View PR]({PR_URL})
-contentFormat: markdown
+POST https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/issue/[KEY]/comment
+Authorization: Basic [base64(JIRA_EMAIL:JIRA_API_TOKEN)]
+Content-Type: application/json
+
+{
+  "body": {
+    "type": "doc",
+    "version": 1,
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "{JIRA_BODY}\n\n"
+          },
+          {
+            "type": "text",
+            "text": "View PR: ",
+            "marks": [{"type": "link", "attrs": {"href": "{PR_URL}"}}]
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
 **Required**: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: `[View PR]({PR_URL})`). Never omit or move to top.

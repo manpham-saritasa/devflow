@@ -127,9 +127,14 @@ pwd
 ```
 If `pwd` starts with `[WORKTREE_PATH]`, set `WAS_IN_WORKTREE = true`. The user's shell will be in a deleted directory after this step — they'll need to `cd` out.
 
-Remove the worktree (use `-C` so the command runs from the main repo, regardless of cwd):
+Remove the worktree from git tracking (use `-C` so the command runs from the main repo, regardless of cwd):
 ```bash
 git -C "[MAIN_REPO]" worktree remove "[WORKTREE_PATH]" --force
+```
+
+Delete the entire worktree folder from disk (ensures any untracked or gitignored files are also removed):
+```bash
+rm -rf "[WORKTREE_PATH]"
 ```
 
 Delete the local branch (it may still exist after worktree removal):

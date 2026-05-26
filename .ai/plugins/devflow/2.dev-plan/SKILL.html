@@ -1,359 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill</title>
-  <style>
-:root {
-    --bg: #e2e8f0;
-    --surface: #ffffff;
-    --surface-2: #f1f4f8;
-    --text: #1f2937;
-    --muted: #5b6574;
-    --border: #d9e0e7;
-    --accent: #0f766e;
-    --accent-soft: #e6f4f1;
-    --warning: #9a3412;
-    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
-    --radius: 9px;
-    --title: #1e3a5f;
-    --th-bg: #e6f4f8;
-    --th-title: #1e3a5f;
-    --h2-border-line: rgb(13, 148, 136);
-    --table-even-row: #f8fafc;
-    --table-border: #e5e7eb;
-}
-* {
-    box-sizing: border-box;
-}
-body {
-    margin: 0;
-    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 17px;
-    color: var(--text);
-    background: var(--bg);
-    line-height: 1.65;
-}
-.page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 20px 56px;
-}
-.header {
-    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    box-shadow: var(--shadow);
-    padding: 28px;
-    margin-bottom: 26px;
-    overflow: hidden;
-}
-.eyebrow {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 9px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-h1 {
-    margin: 0 0 10px;
-    font-size: 38px;
-    line-height: 1.15;
-    color: var(--title);
-}
-.meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin-top: 18px;
-}
-.meta-item {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 12px 14px;
-}
-.meta-label {
-    display: block;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--muted);
-    margin-bottom: 4px;
-    font-weight: 700;
-}
-.section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    box-shadow: var(--shadow);
-    padding: 24px;
-    margin-bottom: 26px;
-    overflow: hidden;
-}
-h2 {
-    margin: 0 0 16px;
-    font-size: 28px;
-    color: var(--title);
-    border-bottom: 2px solid var(--h2-border-line);
-}
-h3 {
-    margin: 24px 0 10px;
-    font-size: 20px;
-    color: var(--title);
-}
-h4 {
-    color: var(--title);
-}
-p.note {
-    margin: 0 0 14px;
-    color: var(--muted);
-}
-ul.clean {
-    margin: 0;
-    padding-left: 20px;
-}
-ul,
-ol {
-    margin: -5px 0 1em 0;
-}
-ul.clean li {
-    margin: 6px 0;
-}
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid var(--table-border);
-    border-radius: 9px;
-    overflow: hidden;
-    background: #fff;
-}
-th,
-td {
-    border-bottom: 1px solid var(--table-border);
-    border-right: 1px solid var(--table-border);
-    vertical-align: top;
-    text-align: left;
-    padding: 16px 16px;
-    font-size: 15px;
-}
-th {
-    background: var(--th-bg);
-    font-size: 15px;
-    color: var(--th-title);
-}
-tr:last-child td,
-tr:last-child th {
-    border-bottom: none;
-}
-td:last-child,
-th:last-child {
-    border-right: none;
-}
-tbody tr:nth-child(even) td {
-    background: var(--table-even-row);
-}
-td ul {
-    margin: 0;
-    padding-left: 18px;
-}
-td li {
-    margin: 4px 0;
-}
-pre {
-    margin: 0;
-    padding: 16px;
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: #0f172a;
-    color: #e5eefc;
-}
-code {
-    font-family:
-        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
-        monospace;
-}
-pre code {
-    color: inherit;
-    background: transparent;
-    padding: 0;
-}
-pre.mermaid {
-    background: #f8fafc;
-}
-p code,
-li code,
-td code {
-    background: #eef3f7;
-    padding: 2px 6px;
-    border-radius: 9px;
-}
-.block-card {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    overflow: hidden;
-}
-.example-box {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-}
-.example-box p {
-    margin: 0;
-}
-.example-box.good-box {
-    border-left: 4px solid #0f766e;
-}
-.example-box.bad-box {
-    border-left: 4px solid #9a3412;
-}
-.blockquotes {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-    border-left: 4px solid #e67e22;
-}
-.blockquotes p {
-    margin: 0;
-}
-.block-grid {
-    display: grid;
-    gap: 14px;
-}
-.q {
-    font-weight: 700;
-    margin: 0 0 8px;
-    color: var(--text);
-}
-.a {
-    color: var(--muted);
-    margin: 0;
-}
-strong,
-h2,
-h3,
-h4 {
-    color: var(--title);
-}
-a,
-h1 {
-    color: var(--accent);
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-@media (max-width: 760px) {
-    .page {
-        padding: 18px 12px 36px;
-    }
-    .header,
-    .section {
-        padding: 16px;
-    }
-    h1 {
-        font-size: 32px;
-    }
-    h2 {
-        font-size: 24px;
-    }
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-        display: block;
-    }
-    thead {
-        display: none;
-    }
-    tr {
-        border: 1px solid var(--table-border);
-        padding: 10px 0;
-    }
-    td {
-        border: none;
-        padding: 8px 0;
-    }
-    td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 4px;
-    }
-}
-
-  </style>
-
-</head>
-<body>
-  <main class="page">
-<section class="header">
-  <h1>Skill</h1>
-  <div class="meta">
-    <div class="meta-item"><span class="meta-label">name</span>dev-plan</div>
-    <div class="meta-item"><span class="meta-label">description</span>Create a structured execution plan from task evidence and codebase investigation. Saves to plan.md and progress.md.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>dev-plan, devplan</div>
-  </div>
-</section>
-<section class="section">
-<h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, <code>ADR_DIR</code>, and template variables are defined there.  </p>
-</section>
-<section class="section">
-<h2>Workflow</h2>
-<h3>Step 0: Check Templates</h3>
-<p>Check <code>PLAN_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
-<h3>Step 1: Gather Context</h3>
-<p>Read from <code>TASK_DIR</code> when present:</p>
-<ul>
-<li><code>task.md</code> — requirements, constraints, open questions</li>
-<li><code>raw.md</code> — Jira description, comments, implementation notes</li>
-<li><code>plan.md</code> — prior iterations, unresolved work, decisions</li>
-<li><code>review.md</code> — prior review outcomes, unresolved findings</li>
-<li><code>progress.md</code> — task timeline, next iteration number</li>
-<li>PR review feedback captured in <code>review.md</code> or user message — comments to address</li>
-</ul>
-<p>If local files are missing, fall back to Jira MCP or user message. Do not fail on missing files.</p>
-<h3>Step 2: Investigate Codebase</h3>
-<ul>
-<li>Read <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>README.md</code>, <code>docs/</code>, lint/formatter configs</li>
-<li>Explore project structure with task context in mind</li>
-<li>Identify relevant files, modules, functions, integration points</li>
-<li><strong>Repo-match check:</strong> Determine if the current repository is related to the task using concrete evidence: matching services, modules, domains, feature names, or task-specific components.</li>
-<li>If the repo appears unrelated, stop and ask: "This repository does not appear to contain the code for this task. Wrong repo? Continue anyway or switch? (continue/switch)"</li>
-<li><code>continue</code> → proceed but note mismatch risk in investigation summary.</li>
-<li><code>switch</code> → stop and wait for correct repo.</li>
-<li>Check <code>ADR_DIR</code> for matching ADRs — note constraints and decisions</li>
-</ul>
-<h3>Step 3: Research Related Tasks</h3>
-<ul>
-<li>Collect related task keys from <code>task.md</code> (Related Issues), Jira links, ADRs, code comments, prior plans, prior reviews</li>
-<li>For each related key, read <code>TASKS_ROOT/[RELATED_KEY]/</code> task files when present</li>
-<li>Extract patterns used, decisions made, file paths touched, constraints, review findings, and delivered behavior</li>
-<li>From <code>pr.md</code> when present: shipped scope, tradeoffs, regressions avoided, follow-up work</li>
-</ul>
-<h3>Step 4: Summarize &amp; Confirm</h3>
-<p>Output an investigation summary:</p>
-<pre><code>## Investigation Summary
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Skill</title>
+        <style>
+            :root {
+                --bg: #e2e8f0;
+                --surface: #ffffff;
+                --surface-2: #f1f4f8;
+                --text: #1f2937;
+                --muted: #5b6574;
+                --border: #d9e0e7;
+                --accent: #0f766e;
+                --accent-soft: #e6f4f1;
+                --warning: #9a3412;
+                --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+                --radius: 9px;
+                --title: #1e3a5f;
+                --th-bg: #e6f4f8;
+                --th-title: #1e3a5f;
+                --h2-border-line: rgb(13, 148, 136);
+                --table-even-row: #f8fafc;
+                --table-border: #e5e7eb;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+                font-size: 17px;
+                color: var(--text);
+                background: var(--bg);
+                line-height: 1.65;
+            }
+            .page {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 32px 20px 56px;
+            }
+            .header {
+                background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                box-shadow: var(--shadow);
+                padding: 28px;
+                margin-bottom: 26px;
+                overflow: hidden;
+            }
+            .eyebrow {
+                display: inline-block;
+                padding: 6px 10px;
+                border-radius: 9px;
+                background: var(--accent-soft);
+                color: var(--accent);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 12px;
+            }
+            h1 {
+                margin: 0 0 10px;
+                font-size: 38px;
+                line-height: 1.15;
+                color: var(--title);
+            }
+            .meta {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 12px;
+                margin-top: 18px;
+            }
+            .meta-item {
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                padding: 12px 14px;
+            }
+            .meta-label {
+                display: block;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: var(--muted);
+                margin-bottom: 4px;
+                font-weight: 700;
+            }
+            .section {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                box-shadow: var(--shadow);
+                padding: 24px;
+                margin-bottom: 26px;
+                overflow: hidden;
+            }
+            h2 {
+                margin: 0 0 16px;
+                font-size: 28px;
+                color: var(--title);
+                border-bottom: 2px solid var(--h2-border-line);
+            }
+            h3 {
+                margin: 24px 0 10px;
+                font-size: 20px;
+                color: var(--title);
+            }
+            h4 {
+                color: var(--title);
+            }
+            p.note {
+                margin: 0 0 14px;
+                color: var(--muted);
+            }
+            ul.clean {
+                margin: 0;
+                padding-left: 20px;
+            }
+            ul,
+            ol {
+                margin: -5px 0 1em 0;
+            }
+            ul.clean li {
+                margin: 6px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                border: 1px solid var(--table-border);
+                border-radius: 9px;
+                overflow: hidden;
+                background: #fff;
+            }
+            th,
+            td {
+                border-bottom: 1px solid var(--table-border);
+                border-right: 1px solid var(--table-border);
+                vertical-align: top;
+                text-align: left;
+                padding: 16px 16px;
+                font-size: 15px;
+            }
+            th {
+                background: var(--th-bg);
+                font-size: 15px;
+                color: var(--th-title);
+            }
+            tr:last-child td,
+            tr:last-child th {
+                border-bottom: none;
+            }
+            td:last-child,
+            th:last-child {
+                border-right: none;
+            }
+            tbody tr:nth-child(even) td {
+                background: var(--table-even-row);
+            }
+            td ul {
+                margin: 0;
+                padding-left: 18px;
+            }
+            td li {
+                margin: 4px 0;
+            }
+            pre {
+                margin: 0;
+                padding: 16px;
+                overflow-x: auto;
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                background: #0f172a;
+                color: #e5eefc;
+            }
+            code {
+                font-family:
+                    "Cascadia Code", "SFMono-Regular", Consolas,
+                    "Liberation Mono", Menlo, monospace;
+            }
+            pre code {
+                color: inherit;
+                background: transparent;
+                padding: 0;
+            }
+            pre.mermaid {
+                background: #f8fafc;
+            }
+            p code,
+            li code,
+            td code {
+                background: #eef3f7;
+                padding: 2px 6px;
+                border-radius: 9px;
+            }
+            .block-card {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                overflow: hidden;
+            }
+            .example-box {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                margin: 12px 0;
+            }
+            .example-box p {
+                margin: 0;
+            }
+            .example-box.good-box {
+                border-left: 4px solid #0f766e;
+            }
+            .example-box.bad-box {
+                border-left: 4px solid #9a3412;
+            }
+            .blockquotes {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                margin: 12px 0;
+                border-left: 4px solid #e67e22;
+            }
+            .blockquotes p {
+                margin: 0;
+            }
+            .block-grid {
+                display: grid;
+                gap: 14px;
+            }
+            .q {
+                font-weight: 700;
+                margin: 0 0 8px;
+                color: var(--text);
+            }
+            .a {
+                color: var(--muted);
+                margin: 0;
+            }
+            strong,
+            h2,
+            h3,
+            h4 {
+                color: var(--title);
+            }
+            a,
+            h1 {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 760px) {
+                .page {
+                    padding: 18px 12px 36px;
+                }
+                .header,
+                .section {
+                    padding: 16px;
+                }
+                h1 {
+                    font-size: 32px;
+                }
+                h2 {
+                    font-size: 24px;
+                }
+                table,
+                thead,
+                tbody,
+                th,
+                td,
+                tr {
+                    display: block;
+                }
+                thead {
+                    display: none;
+                }
+                tr {
+                    border: 1px solid var(--table-border);
+                    padding: 10px 0;
+                }
+                td {
+                    border: none;
+                    padding: 8px 0;
+                }
+                td::before {
+                    content: attr(data-label);
+                    display: block;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    color: var(--muted);
+                    margin-bottom: 4px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="page">
+            <section class="header">
+                <h1>Skill</h1>
+                <div class="meta">
+                    <div class="meta-item">
+                        <span class="meta-label">name</span>dev-plan
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">description</span>Create a
+                        structured execution plan from task evidence and
+                        codebase investigation. Saves to plan.md and
+                        progress.md.
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">triggers</span>dev-plan,
+                        devplan
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <h2>Paths</h2>
+                <p>
+                    Read shared paths from <code>config.md</code>. All
+                    <code>TASKS_ROOT</code>, <code>TASK_DIR</code>,
+                    <code>ADR_DIR</code>, and template variables are defined
+                    there.
+                </p>
+            </section>
+            <section class="section">
+                <h2>Workflow</h2>
+                <h3>Step 0: Check Templates</h3>
+                <p>
+                    Check <code>PLAN_TEMPLATE</code> and
+                    <code>PROGRESS_TEMPLATE</code> exist. Missing → stop:
+                    "Error: template not found."
+                </p>
+                <h3>Step 1: Gather Context</h3>
+                <p>Read from <code>TASK_DIR</code> when present:</p>
+                <ul>
+                    <li>
+                        <code>task.md</code> — requirements, constraints, open
+                        questions
+                    </li>
+                    <li>
+                        <code>raw.md</code> — Jira description, comments,
+                        implementation notes
+                    </li>
+                    <li>
+                        <code>plan.md</code> — prior iterations, unresolved
+                        work, decisions
+                    </li>
+                    <li>
+                        <code>review.md</code> — prior review outcomes,
+                        unresolved findings
+                    </li>
+                    <li>
+                        <code>progress.md</code> — task timeline, next iteration
+                        number
+                    </li>
+                    <li>
+                        PR review feedback captured in <code>review.md</code> or
+                        user message — comments to address
+                    </li>
+                </ul>
+                <p>
+                    If local files are missing, fall back to Jira MCP (requires
+                    <code>.env</code> in repo root with
+                    <code>JIRA_COMPANY_DOMAIN</code>,
+                    <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>,
+                    <code>JIRA_API_TOKEN</code>) or user message. Do not fail on
+                    missing files.
+                </p>
+                <h3>Step 2: Investigate Codebase</h3>
+                <ul>
+                    <li>
+                        Read <code>AGENTS.md</code>, <code>CLAUDE.md</code>,
+                        <code>README.md</code>, <code>docs/</code>,
+                        lint/formatter configs
+                    </li>
+                    <li>Explore project structure with task context in mind</li>
+                    <li>
+                        Identify relevant files, modules, functions, integration
+                        points
+                    </li>
+                    <li>
+                        <strong>Repo-match check:</strong> Determine if the
+                        current repository is related to the task using concrete
+                        evidence: matching services, modules, domains, feature
+                        names, or task-specific components.
+                    </li>
+                    <li>
+                        If the repo appears unrelated, stop and ask: "This
+                        repository does not appear to contain the code for this
+                        task. Wrong repo? Continue anyway or switch?
+                        (continue/switch)"
+                    </li>
+                    <li>
+                        <code>continue</code> → proceed but note mismatch risk
+                        in investigation summary.
+                    </li>
+                    <li>
+                        <code>switch</code> → stop and wait for correct repo.
+                    </li>
+                    <li>
+                        Check <code>ADR_DIR</code> for matching ADRs — note
+                        constraints and decisions
+                    </li>
+                </ul>
+                <h3>Step 3: Research Related Tasks</h3>
+                <ul>
+                    <li>
+                        Collect related task keys from
+                        <code>task.md</code> (Related Issues), Jira links, ADRs,
+                        code comments, prior plans, prior reviews
+                    </li>
+                    <li>
+                        For each related key, read
+                        <code>TASKS_ROOT/[RELATED_KEY]/</code> task files when
+                        present
+                    </li>
+                    <li>
+                        Extract patterns used, decisions made, file paths
+                        touched, constraints, review findings, and delivered
+                        behavior
+                    </li>
+                    <li>
+                        From <code>pr.md</code> when present: shipped scope,
+                        tradeoffs, regressions avoided, follow-up work
+                    </li>
+                </ul>
+                <h3>Step 4: Summarize &amp; Confirm</h3>
+                <p>Output an investigation summary:</p>
+                <pre><code>## Investigation Summary
 
 **Key files:** [relevant files found]
 **Patterns observed:** [conventions/patterns from codebase + related tasks]
@@ -367,58 +449,133 @@ a:hover {
 
 Proceed? (yes/no/adjust)
 </code></pre>
-<p>Do not write plan.md until user confirms.</p>
-<h3>Step 5: Create Plan</h3>
-<ul>
-<li>Determine next iteration number from progress.md or plan.md (default: 1)</li>
-<li>Capture datetime: <code>YYYY-MM-DD HH:MM ±TZ</code></li>
-<li>Break solution into ordered <code>## Proposed Changes</code></li>
-<li>Use <code>PLAN_TEMPLATE</code> structure exactly</li>
-<li>For each change: <code>User outcome</code>, <code>Why</code>, <code>Affected area</code>, <code>Confidence</code>, <code>Implementation</code>, <code>Test Impact</code></li>
-<li>End each <code>Implementation</code> with a concrete <code>Verify</code> step</li>
-<li>Populate <code>Constraints</code>, <code>Risks</code>, <code>Open Questions</code>, <code>Done Criteria</code></li>
-</ul>
-<h3>Step 6: Write Files</h3>
-<ul>
-<li>Append new iteration to <code>TASK_DIR/plan.md</code></li>
-<li>Append timeline entry to <code>TASK_DIR/progress.md</code></li>
-<li>Create files if they don't exist</li>
-</ul>
-</section>
-<section class="section">
-<h2>Plan Writing Rules</h2>
-<ul>
-<li>Start with: <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
-<li>Include <code>**Trigger:** [new request | review follow-up | bug fix | scope update]</code></li>
-<li>Order changes by implementation sequence; call out dependencies and parallelism</li>
-<li>Use exact file paths from codebase investigation — never invent</li>
-<li>Keep concise and executable by another coding agent</li>
-</ul>
-</section>
-<section class="section">
-<h2>Progress Writing Rules</h2>
-<ul>
-<li>Use <code>PROGRESS_TEMPLATE</code> exactly</li>
-<li>Keep <code>progress.md</code> append-only</li>
-<li>Append one timeline block per iteration: <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
-<li>Record: <code>Trigger</code>, <code>Status</code>, <code>Summary</code>, <code>Files</code>, <code>Next Action</code>, <code>ADR Suggested</code></li>
-<li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include short reason but do not create ADR.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Pre-Save Checklist</h2>
-<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Task context gathered from available sources?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Repo-match verified or mismatch risk noted?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Codebase explored and key files identified?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> ADR constraints checked?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Related tasks researched?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Investigation summary confirmed by user?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Template structure followed exactly?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Changes ordered by sequence with dependencies called out?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Plan and progress appended with correct datetime?</li>
-</ul>
-</section>
-  </main>
-</body>
+                <p>Do not write plan.md until user confirms.</p>
+                <h3>Step 5: Create Plan</h3>
+                <ul>
+                    <li>
+                        Determine next iteration number from progress.md or
+                        plan.md (default: 1)
+                    </li>
+                    <li>Capture datetime: <code>YYYY-MM-DD HH:MM ±TZ</code></li>
+                    <li>
+                        Break solution into ordered
+                        <code>## Proposed Changes</code>
+                    </li>
+                    <li>Use <code>PLAN_TEMPLATE</code> structure exactly</li>
+                    <li>
+                        For each change: <code>User outcome</code>,
+                        <code>Why</code>, <code>Affected area</code>,
+                        <code>Confidence</code>, <code>Implementation</code>,
+                        <code>Test Impact</code>
+                    </li>
+                    <li>
+                        End each <code>Implementation</code> with a concrete
+                        <code>Verify</code> step
+                    </li>
+                    <li>
+                        Populate <code>Constraints</code>, <code>Risks</code>,
+                        <code>Open Questions</code>, <code>Done Criteria</code>
+                    </li>
+                </ul>
+                <h3>Step 6: Write Files</h3>
+                <ul>
+                    <li>
+                        Append new iteration to <code>TASK_DIR/plan.md</code>
+                    </li>
+                    <li>
+                        Append timeline entry to
+                        <code>TASK_DIR/progress.md</code>
+                    </li>
+                    <li>Create files if they don't exist</li>
+                </ul>
+            </section>
+            <section class="section">
+                <h2>Plan Writing Rules</h2>
+                <ul>
+                    <li>
+                        Start with:
+                        <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code>
+                    </li>
+                    <li>
+                        Include
+                        <code
+                            >**Trigger:** [new request | review follow-up | bug
+                            fix | scope update]</code
+                        >
+                    </li>
+                    <li>
+                        Order changes by implementation sequence; call out
+                        dependencies and parallelism
+                    </li>
+                    <li>
+                        Use exact file paths from codebase investigation — never
+                        invent
+                    </li>
+                    <li>Keep concise and executable by another coding agent</li>
+                </ul>
+            </section>
+            <section class="section">
+                <h2>Progress Writing Rules</h2>
+                <ul>
+                    <li>Use <code>PROGRESS_TEMPLATE</code> exactly</li>
+                    <li>Keep <code>progress.md</code> append-only</li>
+                    <li>
+                        Append one timeline block per iteration:
+                        <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code>
+                    </li>
+                    <li>
+                        Record: <code>Trigger</code>, <code>Status</code>,
+                        <code>Summary</code>, <code>Files</code>,
+                        <code>Next Action</code>, <code>ADR Suggested</code>
+                    </li>
+                    <li>
+                        <code>ADR Suggested</code> must be <code>Yes</code> or
+                        <code>No</code>. If <code>Yes</code>, include short
+                        reason but do not create ADR.
+                    </li>
+                </ul>
+            </section>
+            <section class="section">
+                <h2>Pre-Save Checklist</h2>
+                <ul class="task-list">
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Task context gathered
+                        from available sources?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Repo-match verified
+                        or mismatch risk noted?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Codebase explored and
+                        key files identified?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> ADR constraints
+                        checked?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Related tasks
+                        researched?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Investigation summary
+                        confirmed by user?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Template structure
+                        followed exactly?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Changes ordered by
+                        sequence with dependencies called out?
+                    </li>
+                    <li class="task-list-item">
+                        <input type="checkbox" disabled /> Plan and progress
+                        appended with correct datetime?
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </body>
 </html>

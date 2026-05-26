@@ -77,7 +77,7 @@ Stop if branch requirements not met (except `--force`, which skips all of Step 3
 
 ### Step 4: Fetch Task Summary
 
-Use Jira MCP to fetch the task summary and build the branch name. If Jira MCP is unavailable, ask user: "Short summary for branch name? (e.g. `login-with-google`)"
+Use Jira MCP to fetch the task summary and build the branch name. Jira MCP requires credentials from `.env` in the repo root (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If Jira MCP or `.env` is unavailable, ask user: "Short summary for branch name? (e.g. `login-with-google`)"
 
 ### Step 5: Build Branch Name
 
@@ -113,7 +113,7 @@ Stop here. Do not proceed to Steps 7-9.
 ### Step 7: Create Task Folder
 
 Create `TASK_DIR` if it doesn't exist.
-Save the Jira task summary to `TASK_DIR/task.md` if Jira MCP is available and file doesn't exist.
+Save the Jira task summary to `TASK_DIR/task.md` if Jira MCP is available (requires `.env` with Jira credentials) and file doesn't exist.
 
 ### Step 8: Create Worktree
 
