@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>[[KEY] — [PR title]](https://github.com/.../pull/123)</title>
+  <title>[[KEY] — PR #[N]](https://github.com/.../pull/123)</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -199,6 +203,33 @@ td code {
     padding: 14px 16px;
     overflow: hidden;
 }
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
 .block-grid {
     display: grid;
     gap: 14px;
@@ -276,23 +307,32 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1><a href="https://github.com/.../pull/123">[KEY] — [PR title]</a></h1>
+  <h1><a target="_blank" href="https://github.com/.../pull/123">[KEY] — PR #[N]</a></h1>
 </section>
-<section class="section"><h2>Output template</h2>
-<pre><code># [[KEY] — [PR title]](https://github.com/.../pull/123)
+<section class="section">
+<div class="blockquotes">
+<p><strong>LLM</strong>: Follow this format strictly. Read all instructions below before writing. Do not skip sections, reorder items, or change the output structure.</p>
+</div>
+</section>
+<section class="section">
+<h2>Output template</h2>
+<pre><code class="language-md"># [[KEY] — PR #[N]](https://github.com/.../pull/123)
 
 ## Added
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
+
 - Purpose: ...
 - Details: ...
 
 ## Changed
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
+
 - Reason: ...
 - Impact: ...
 
 ## Fixed
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
+
 - Root cause: ...
 - Resolution: ...
 
@@ -305,10 +345,11 @@ a:hover {
 - Known limitation: ...
 
 ## Notes
-- [Rollout note / no product behavior change / important context]</code></pre>
-<p>Audience: Testers, PMs, clients.</p>
-<p>Purpose: Store a short business-facing history of what changed and how to start testing it.</p>
-<p>Rule: Describe behavior and user impact only. No code-level detail.</p>
+- [Rollout note / no product behavior change / important context]
+</code></pre>
+<p>Audience: Testers, PMs, clients.<br>
+Purpose: Store a short business-facing history of what changed and how to start testing it.<br>
+Rule: Describe behavior and user impact only. No code-level detail.  </p>
 <p>Tone and style:</p>
 <ul>
 <li>Use simple, short, direct, non-marketing English.</li>
@@ -317,16 +358,20 @@ a:hover {
 <li>Focus on user-visible behavior and impact, not implementation details.</li>
 <li>Prefer durable domain terms over temporary implementation labels.</li>
 <li>Use past tense.</li>
-</ul></section>
-<section class="section"><h2>Source priority</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Source priority</h2>
 <ol>
 <li>Jira task title and description.</li>
 <li>Acceptance criteria or business notes.</li>
 <li>PR title and PR body.</li>
 <li>Commit messages.</li>
 <li>Local code changes and diff, but only to confirm visible behavior and testing entry points.</li>
-</ol></section>
-<section class="section"><h2>Core rules</h2>
+</ol>
+</section>
+<section class="section">
+<h2>Core rules</h2>
 <ul>
 <li>Extract. Do not invent.</li>
 <li>Prefer explicit business context from Jira over inference from code.</li>
@@ -337,16 +382,20 @@ a:hover {
 <li>Do not use file names, class names, function names, or vague categories like <code>Misc</code>.</li>
 <li>Do not mention variable names, function names, class names, file paths, method names, database tables, or internal implementation mechanics.</li>
 <li>Omit empty sections.</li>
-</ul></section>
-<section class="section"><h2>Section rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Section rules</h2>
 <ul>
 <li>Added: New user-visible capability or new stakeholder-visible workflow only.</li>
 <li>Changed: Existing behavior, workflow, wording, validation, or UX changed.</li>
 <li>Fixed: Previous behavior was wrong and is now corrected. Write root cause in plain business language only.</li>
 <li>Testers: Give only the minimum practical information needed to begin testing. Include entry URL, API route, request example, feature flag, account, environment, seed data, or manual setup only when they are required to test the task.</li>
 <li>Notes: Only rollout note, limitation, dependency note, or “no product behavior change” note.</li>
-</ul></section>
-<section class="section"><h2>Tester rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Tester rules</h2>
 <ul>
 <li>Include <code>API / endpoint / URL</code> only when testers need it to execute or validate the task.</li>
 <li>Include example request shape only when the task introduces or changes an API and the request is not obvious from the Jira description.</li>
@@ -355,14 +404,17 @@ a:hover {
 <li>If testing cannot start without another task, environment, or dependency, say that clearly.</li>
 <li>Do not dump raw curl commands, payloads, or internal implementation details unless they are the only practical way for testers to start.</li>
 <li>If no special setup is needed, write: <code>- Start here: No special setup required.</code></li>
-</ul></section>
-<section class="section"><h2>Omit rules</h2>
+</ul>
+</section>
+<section class="section">
+<h2>Omit rules</h2>
 <ul>
 <li>Omit any item that is only about internal refactor, docs-only cleanup, template path changes, placeholder variable changes, or generated artifacts.</li>
 <li>Omit technical implementation details even if they appear in commits or diff.</li>
 <li>If the task changes internal workflow only, say that clearly in Notes instead of pretending there is product impact.</li>
 <li>If unclear, omit rather than guess.</li>
-</ul></section>
+</ul>
+</section>
   </main>
 </body>
 </html>
