@@ -368,6 +368,22 @@ Review full changed files when context is needed to judge correctness, not just 
 <li><strong>Pass with Changes</strong> — fit acceptable, minor issues remain</li>
 <li><strong>Fail</strong> — acceptance criterion fails, plan violation, or blocking issue exists</li>
 </ul>
+<h3>Step 5.5: Changelog Gap Check</h3>
+<p>Before writing the review, compare <code>git diff</code> against the latest changelog iteration:</p>
+<ul>
+<li>Identify changes present in the diff but not in <code>changelog.md</code>.</li>
+<li>If small unlogged manual fixes found:<ul>
+<li>Prompt user: "Found [N] unlogged changes. Describe them and I'll add them to the changelog."</li>
+<li>Update the latest changelog iteration: set <code>**Delivery:** Mixed</code>, note manual items in <code>### Summary</code>.</li>
+<li>Continue with the review.</li>
+</ul>
+</li>
+<li>If large unlogged changes found (new files, significant logic):<ul>
+<li>Flag as a review finding: "Significant unlogged changes detected. Consider running <code>dev-code</code> to create a proper iteration before review."</li>
+<li>Do not auto-append to changelog — the user should plan these properly.</li>
+</ul>
+</li>
+</ul>
 <h3>Step 6: Write Review</h3>
 <p>Determine the next review pass number from prior <code>review.md</code> (default: 1).<br>
 Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p>

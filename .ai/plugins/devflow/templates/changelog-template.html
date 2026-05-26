@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill</title>
+  <title>Task Changelog</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -307,95 +307,55 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Skill</h1>
-  <div class="meta">
-    <div class="meta-item"><span class="meta-label">name</span>dev-code</div>
-    <div class="meta-item"><span class="meta-label">description</span>Read plan.md, implement the planned changes for the latest iteration, and append results to changelog.md and progress.md.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>dev-code, devcode</div>
-  </div>
+  <h1>Task Changelog</h1>
 </section>
 <section class="section">
-<h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and template variables are defined there.  </p>
-</section>
-<section class="section">
-<h2>Workflow</h2>
-<h3>Step 0: Check Templates</h3>
-<p>Check <code>CHANGELOG_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
-<h3>Step 1: Read Plan</h3>
-<p>Read <code>TASK_DIR/plan.md</code>. Fallback: check project root. Treat the latest <code>## Iteration [N]</code> section as the active implementation source. Missing → stop: "Error: plan.md not found."  </p>
-<p>Also read: <code>task.md</code>, <code>raw.md</code>, <code>review.md</code>, <code>progress.md</code>, <code>changelog.md</code> (if present) for constraints, review findings, and prior state.  </p>
-<p>If <code>review.md</code> exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.</p>
-<h3>Step 2: Read Codebase</h3>
+<h2>Task Context</h2>
 <ul>
-<li>Read all files before editing them. Never modify unread files.</li>
-<li>Respect repository conventions, architecture, naming, and test patterns.</li>
-<li>Do not edit prior iteration sections in <code>plan.md</code>, <code>changelog.md</code>, <code>review.md</code>, or <code>progress.md</code> except to fix obvious typos with user approval.</li>
-</ul>
-<h3>Step 3: Implement</h3>
-<p>Work through <code>## Proposed Changes</code> in order. For each change:</p>
-<ul>
-<li>Follow <code>Implementation</code>, <code>Verify</code>, and <code>Test Impact</code> exactly</li>
-<li>Verify one logical group before moving to the next</li>
-<li>Touch only relevant files; avoid unrelated refactors</li>
-<li>Report progress to user after each major item</li>
-</ul>
-<h3>Step 4: Verify</h3>
-<ul>
-<li>Run relevant tests, builds, linters</li>
-<li>Prefer the smallest verification that proves the requested behavior</li>
-<li>Never claim verification that didn't happen</li>
-<li>If verification is incomplete, state what was/wasn't run and why</li>
-</ul>
-<h3>Step 5: Capture Manual Changes</h3>
-<p>Before writing the changelog, ask the user:  </p>
-<div class="blockquotes">
-<p>"I implemented [N] changes from the plan. Did you make any additional manual changes outside this session? If yes, describe them and I'll include them as <code>[manual]</code> items in the changelog."</p>
-</div>
-<ul>
-<li>If user says no → <code>**Delivery:** Skill</code>.</li>
-<li>If user describes additional changes → <code>**Delivery:** Mixed</code>. Include those changes in the changelog, annotated with <code>[manual]</code>. Skill-implemented items get <code>[skill]</code>.</li>
-</ul>
-<h3>Step 6: Write Changelog</h3>
-<p>Append a new iteration to <code>TASK_DIR/changelog.md</code> using <code>CHANGELOG_TEMPLATE</code>:</p>
-<ul>
-<li><code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
-<li><code>**Trigger:**</code>, <code>**Status:**</code>, <code>**Delivery:**</code>, <code>**Plan reference:**</code></li>
-<li>Populate relevant sections: <code>### Added</code>, <code>### Changed</code>, <code>### Fixed</code></li>
-<li>Number items <code>[1]</code>, <code>[2]</code>, <code>[3]</code>; past tense, outcome-focused</li>
-<li>When <code>Delivery</code> is <code>Mixed</code>, note in the <code>### Summary</code> which items were manual vs. skill</li>
-<li>For <code>### Fixed</code>: include <code>Root cause</code> and <code>Resolution</code> based on evidence</li>
-<li>If root cause cannot be proven, state best-supported explanation and label as inferred</li>
-<li>If fixed without reliable reproduction, state that explicitly</li>
-</ul>
-<h3>Step 7: Update Progress</h3>
-<p>Append/update timeline entry in <code>TASK_DIR/progress.md</code> using <code>PROGRESS_TEMPLATE</code>:</p>
-<ul>
-<li><code>Trigger</code>, <code>Status</code>, <code>Summary</code>, <code>Files</code>, <code>Next Action</code>, <code>ADR Suggested</code></li>
-<li>Status after coding: <code>Implemented</code>, <code>In Progress</code>, <code>Blocked</code>, or <code>Needs Review</code></li>
-<li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include short reason but do not create ADR.</li>
+<li>ID: [JIRA-KEY or task identifier]</li>
+<li>Title: [Task title]</li>
+<li>Repository / Project: [name]</li>
+<li>Purpose: [short task purpose]</li>
 </ul>
 </section>
 <section class="section">
-<h2>ADR Triggers</h2>
-<p>Set <code>ADR Suggested = Yes</code> if any of:</p>
+<h2>Notes for Future Iterations</h2>
 <ul>
-<li>New third-party service or external API integrated</li>
-<li>New library/package introduces new capability or pattern</li>
-<li>Existing technical approach replaced</li>
-<li>Database schema changed</li>
-<li>Auth flow structure changed</li>
+<li>Keep the sections above stable across the task lifetime.</li>
+<li>Append new iterations below. Do not delete prior iterations.</li>
+<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Stop Conditions</h2>
-<p>Stop and ask user if:</p>
+<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
+<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
+<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
+<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
+<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
+<h3>Summary</h3>
+<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
+<h3>Added</h3>
+<p><strong>[1] - Added [item].</strong></p>
 <ul>
-<li>Requirements conflict, plan assumptions fail, or code conflicts with plan</li>
-<li>Verification fails and correct fix is unclear</li>
-<li>Change violates an invariant, architectural boundary, or business rule</li>
-<li>Implementation becomes significantly broader than planned</li>
+<li>Purpose: ...</li>
+<li>Details: ...   // optional</li>
 </ul>
+<h3>Changed</h3>
+<p><strong>[1] - Changed [item].</strong></p>
+<ul>
+<li>Reason: ...</li>
+<li>Impact: ...   // optional</li>
+</ul>
+<h3>Fixed</h3>
+<p><strong>[1] - Fixed [item].</strong></p>
+<ul>
+<li>Root cause: ...</li>
+<li>Resolution: ...</li>
+</ul>
+<!--  
+When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
+When Delivery is "Skill" or "Manual", no annotation needed.  
+-->
 </section>
   </main>
 </body>
