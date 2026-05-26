@@ -93,7 +93,7 @@ PR status: [PR_STATUS]
 Action: [merge PR + delete worktree | delete worktree only | no action (blocked)]
 ```
 
-Stop here. Do not proceed to Steps 5-8.
+Stop here. Do not proceed to Steps 5-7.
 
 ### Step 5: Handle PR
 
@@ -143,21 +143,7 @@ git -C "[MAIN_REPO]" branch -D "[BRANCH_NAME]" 2>/dev/null
 ```
 If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.
 
-### Step 7: Write Changelog and Update Progress
-
-Skip if `--dry-run`.
-
-**Write `TASK_DIR/changelog.md`:** Append a new iteration recording the finish action. Use the same iteration-number-as-heading format used by other skills:
-- `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`
-- `**Trigger:** dev-finish — PR merged, worktree cleaned up`
-- Record PR URL, merge status, worktree removal, branch deletion
-- Create the file if it doesn't exist
-
-**Update `TASK_DIR/progress.md`:**
-- If exists: prepend status "Finished", PR URL, timestamp
-- Else: create new file with status "Finished"
-
-### Step 8: Report Result
+### Step 7: Report Result
 
 ```
 ✅ dev-finish complete for [KEY]
@@ -165,8 +151,6 @@ Skip if `--dry-run`.
 PR: [PR_URL | skipped | no PR found]
 Worktree removed: [WORKTREE_PATH]
 Branch deleted: [BRANCH_NAME]
-Changelog: .local/tasks/[KEY]/changelog.md
-Progress: .local/tasks/[KEY]/progress.md
 ```
 
 If `WAS_IN_WORKTREE = true`, add:
