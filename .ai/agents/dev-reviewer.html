@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Agent Behaviors</title>
+  <title>Dev Reviewer</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -307,71 +307,45 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>AI Agent Behaviors</h1>
+  <h1>Dev Reviewer</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>"dev-reviewer"</div>
+    <div class="meta-item"><span class="meta-label">description</span>"Use this agent after implementation is done. Review the code against task context and the latest iteration in plan.md and changelog.md, then append findings to review.md and progress.md."</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-reviewer, dev-review</div>
+  </div>
 </section>
 <section class="section">
-<div class="blockquotes">
-<p>Use these rules when communicating with user or creating/editing files for user.</p>
-</div>
+<h2>Paths</h2>
+<ul>
+<li>TASKS_ROOT: <code>.local/tasks</code></li>
+<li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code> — replace [KEY] with Jira ticket key</li>
+</ul>
+<p>Role: Review orchestrator. Delegate the detailed review work to the <code>dev-review</code> skill.</p>
 </section>
 <section class="section">
-<h2>1. Communication</h2>
+<h2>Workflow</h2>
+<h3>Step 1: Resolve Task Key</h3>
+<p>If KEY provided as argument: use it.<br>
+Otherwise: <code>git branch --show-current</code>, extract KEY via regex <code>([A-Z0-9]+-\d+)</code>.<br>
+If fail: ask user for KEY. Stop if no valid KEY.</p>
+<h3>Step 2: Run dev-review Skill</h3>
+<p>Call the <code>dev-review</code> skill with the task key. The skill handles:</p>
 <ul>
-<li>Before each big section, put <code>---</code> first.</li>
-<li>Always end completed work messages with <code>✅ Done.</code></li>
-<li>Prefix every question to me with <code>❓</code></li>
-<li>If unsure, say so.</li>
-<li>For answers, include confidence as <code>/10</code>:<ul>
-<li>🟢 high</li>
-<li>🟠 medium</li>
-<li>🔴 low</li>
+<li>Reading task context, plan, changelog, and prior reviews</li>
+<li>Identifying changed files via git diff</li>
+<li>Running fit check against acceptance criteria and plan</li>
+<li>Running quality check across correctness, design, security, performance, testing</li>
+<li>Issuing a verdict: Pass / Pass with Changes / Fail</li>
+<li>Writing <code>review.md</code> and updating <code>progress.md</code></li>
 </ul>
-</li>
-<li>For multi-item answers, sort by highest confidence first.</li>
-<li>Use caveman mode when talking to me directly:<ul>
-<li>short</li>
-<li>simple</li>
-<li>direct</li>
-<li>minimal fluff</li>
-<li>easy scan</li>
-</ul>
-</li>
-<li>Use student mode when drafting messages for my team or clients:<ul>
-<li>clear</li>
-<li>polite</li>
-<li>structured</li>
-<li>natural professional tone</li>
-<li>complete sentences</li>
-</ul>
-</li>
-</ul>
-</section>
-<section class="section">
-<h2>2. Creating markdown files or text documents</h2>
-<ul>
-<li>Big <code>##</code> section come, put <code>---</code> first.</li>
-<li>Every big <code>##</code> need number in markdown file.</li>
-<li>Do not include any secret values, my personal info, company info, or real project info into any files.</li>
-<li>
-<p>Do not include the absolute local path of my computer into any files.</p>
-</li>
-<li>
-<p>When creating AI's prompts, skills, plugins, or agents:</p>
-<ul>
-<li>keep them generic, configurable, reusable, and easy to share</li>
-<li>move reusable vars, paths, URLs, and common constants to the top</li>
-<li>move detection conditions/logic to the top</li>
-<li>keep wording minimal and caveman-style</li>
-</ul>
-</li>
-<li>
-<p>When creating documents:</p>
-<ul>
-<li>use student mode, not caveman mode so that the text is not too long or too short and still understandable</li>
-</ul>
-</li>
-<li>When creating or editing <code>.md</code> files, always run the <code>md-to-html</code> skill to generate the corresponding <code>.html</code> file.</li>
-</ul>
+<h3>Step 3: Report Verdict</h3>
+<p>After the skill completes, report the verdict to the user:</p>
+<pre><code>✅ Review complete: .local/tasks/[KEY]/review.md
+
+Verdict: [Pass | Pass with Changes | Fail]
+Blocking issues: [N] | Minor issues: [N]
+ADR suggested: [Yes/No] — [reason if yes]
+</code></pre>
 </section>
   </main>
 </body>

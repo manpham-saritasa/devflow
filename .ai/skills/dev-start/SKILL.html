@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Agent Behaviors</title>
+  <title>Skill</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -307,71 +307,112 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>AI Agent Behaviors</h1>
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-start</div>
+    <div class="meta-item"><span class="meta-label">description</span>Start a gitflow worktree for a Jira task. Creates a feature or hotfix branch in a sibling worktree folder, ready for development.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-start, devstart</div>
+  </div>
 </section>
 <section class="section">
-<div class="blockquotes">
-<p>Use these rules when communicating with user or creating/editing files for user.</p>
-</div>
-</section>
-<section class="section">
-<h2>1. Communication</h2>
+<h2>Paths</h2>
 <ul>
-<li>Before each big section, put <code>---</code> first.</li>
-<li>Always end completed work messages with <code>✅ Done.</code></li>
-<li>Prefix every question to me with <code>❓</code></li>
-<li>If unsure, say so.</li>
-<li>For answers, include confidence as <code>/10</code>:<ul>
-<li>🟢 high</li>
-<li>🟠 medium</li>
-<li>🔴 low</li>
-</ul>
-</li>
-<li>For multi-item answers, sort by highest confidence first.</li>
-<li>Use caveman mode when talking to me directly:<ul>
-<li>short</li>
-<li>simple</li>
-<li>direct</li>
-<li>minimal fluff</li>
-<li>easy scan</li>
-</ul>
-</li>
-<li>Use student mode when drafting messages for my team or clients:<ul>
-<li>clear</li>
-<li>polite</li>
-<li>structured</li>
-<li>natural professional tone</li>
-<li>complete sentences</li>
-</ul>
-</li>
+<li>TASKS_ROOT: <code>.local/tasks</code></li>
+<li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code></li>
+<li>WORKTREE_ROOT: <code>[REPO_NAME]-worktrees</code> — sibling folder to the repo, e.g. <code>../proj-api-worktrees</code></li>
 </ul>
 </section>
 <section class="section">
-<h2>2. Creating markdown files or text documents</h2>
+<h2>Workflow</h2>
+<h3>Step 1: Parse Input</h3>
 <ul>
-<li>Big <code>##</code> section come, put <code>---</code> first.</li>
-<li>Every big <code>##</code> need number in markdown file.</li>
-<li>Do not include any secret values, my personal info, company info, or real project info into any files.</li>
-<li>
-<p>Do not include the absolute local path of my computer into any files.</p>
-</li>
-<li>
-<p>When creating AI's prompts, skills, plugins, or agents:</p>
+<li>Extract <code>KEY</code> from user input (regex: <code>([A-Z0-9]+-\d+)</code>).</li>
+<li>Parse flags: <code>--hotfix</code> (branch from main), <code>--force</code> (branch from current branch).</li>
+<li>If no KEY: ask user for a Jira task key. Stop if none provided.</li>
+</ul>
+<h3>Step 2: Validate Branch State</h3>
+<p>Run <code>git branch --show-current</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Required branch</th>
+<th>Alert if not on this branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none, default)</td>
+<td data-label="Required branch"><code>develop</code></td>
+<td data-label="Alert if not on this branch">"You are not on <code>develop</code>. Feature branches should be created from <code>develop</code>. Switch to <code>develop</code> first or use <code>--force</code> to branch from current."</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--hotfix</code></td>
+<td data-label="Required branch"><code>main</code></td>
+<td data-label="Alert if not on this branch">"You are not on <code>main</code>. Hotfix branches should be created from <code>main</code>. Switch to <code>main</code> first."</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--force</code></td>
+<td data-label="Required branch">any</td>
+<td data-label="Alert if not on this branch">No alert. Branch from current.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For <code>--hotfix</code>:</strong> also check <code>main</code> is up to date:</p>
+<pre><code class="language-bash">git fetch origin main
+git rev-list --count HEAD..origin/main
+</code></pre>
+<p>If behind: "<code>main</code> is behind origin by [N] commits. Pull latest <code>main</code> before creating a hotfix."  </p>
+<p>Stop if branch requirements not met (except <code>--force</code>).</p>
+<h3>Step 3: Fetch Task Summary</h3>
+<p>Try to get a short summary from Jira MCP or the PR body to build the branch name. If unavailable, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
+<h3>Step 4: Build Branch Name</h3>
+<p>Format: <code>[type]/[task-key-lowercase]-[short-summary]</code>  </p>
+<p>Examples:</p>
 <ul>
-<li>keep them generic, configurable, reusable, and easy to share</li>
-<li>move reusable vars, paths, URLs, and common constants to the top</li>
-<li>move detection conditions/logic to the top</li>
-<li>keep wording minimal and caveman-style</li>
+<li>Feature: <code>feature/rmasup-2145-adjust-pdf-text-spacing</code></li>
+<li>Hotfix: <code>hotfix/rmasup-2145-fix-login-crash</code></li>
 </ul>
-</li>
-<li>
-<p>When creating documents:</p>
+<p>Rules:</p>
 <ul>
-<li>use student mode, not caveman mode so that the text is not too long or too short and still understandable</li>
+<li>Task key: lowercase, no spaces.</li>
+<li>Summary: lowercase, words separated by hyphens, max 5-6 words.</li>
+<li>Strip special characters, keep only a-z, 0-9, and hyphens.</li>
 </ul>
-</li>
-<li>When creating or editing <code>.md</code> files, always run the <code>md-to-html</code> skill to generate the corresponding <code>.html</code> file.</li>
-</ul>
+<h3>Step 5: Create Task Folder</h3>
+<p>Create <code>TASK_DIR</code> if it doesn't exist.<br>
+Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is available and file doesn't exist.</p>
+<h3>Step 6: Create Worktree</h3>
+<p>Determine the repo name:</p>
+<pre><code class="language-bash">basename $(git rev-parse --show-toplevel)
+</code></pre>
+<p>Create worktree root if it doesn't exist:</p>
+<pre><code>mkdir -p ../[REPO_NAME]-worktrees
+</code></pre>
+<p>Create the worktree:</p>
+<pre><code class="language-bash">git worktree add ../[REPO_NAME]-worktrees/[BRANCH_NAME] -b [BRANCH_NAME]
+</code></pre>
+<h3>Step 7: Setup Worktree</h3>
+<pre><code class="language-bash">cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+</code></pre>
+<p>Copy <code>.env</code> from the main repo if it exists:</p>
+<pre><code class="language-bash">cp ../../.env .env 2&gt;/dev/null || echo &quot;No .env found to copy&quot;
+</code></pre>
+<h3>Step 8: Report Result</h3>
+<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+
+Branch: [BRANCH_NAME]
+Type: [feature | hotfix | force]
+Task: [KEY]
+Env: [.env copied | no .env found]
+
+Switch to worktree first:
+  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+
+Then start:
+  /devflow [KEY]
+</code></pre>
+<p><strong>Important:</strong> All further work must be done from the worktree folder. Tell the user to <code>cd</code> into it first.</p>
 </section>
   </main>
 </body>
