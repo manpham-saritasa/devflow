@@ -388,7 +388,7 @@
                         <tr>
                             <td data-label="Flag">(none)</td>
                             <td data-label="Behavior">
-                                Run all steps: PR + changelog + progress + Jira
+                                Run all steps: PR + progress + Jira
                             </td>
                         </tr>
                         <tr>
@@ -406,7 +406,7 @@
                         <tr>
                             <td data-label="Flag"><code>--dry-run</code></td>
                             <td data-label="Behavior">
-                                Skip Step 5b-9 (preview both changelogs). Show
+                                Skip Step 5b-9 (preview both reports). Show
                                 preview only.
                             </td>
                         </tr>
@@ -415,8 +415,8 @@
                                 <code>--technical-only</code>
                             </td>
                             <td data-label="Behavior">
-                                Skip Step 6, 8 (PR, Jira). Generate changelog +
-                                progress to
+                                Skip Step 6-9. Generate technical report preview
+                                + progress to
                                 <code>.local</code> only.
                             </td>
                         </tr>
@@ -622,7 +622,7 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
                     <code>Fix PDF landscape scaling [KEY]</code>)
                 </p>
                 <p>Skip if <code>--from-pr</code> (no commit to build).</p>
-                <h3>Step 5: Show Preview and Write Changelog</h3>
+                <h3>Step 5: Show Preview</h3>
                 <p>
                     Skip to Step 9 if <code>--dry-run</code> or
                     <code>--from-pr</code> (read-only — show preview only, no
@@ -631,20 +631,20 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
                 <p>Show the preview:</p>
                 <pre><code>Commit: {MSG}
 
-                ## Technical Changelog (.local)
-                ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
-                ...
+                                ## Technical Changelog (.local)
+                                ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
+                                ...
 
-                ## PR Report (GitHub)
-                ## [KEY] — Title
-                ## Goal
-                ...
+                                ## PR Report (GitHub)
+                                ## [KEY] — Title
+                                ## Goal
+                                ...
 
-                ## Jira Report
-                ## [KEY] — Task summary
-                ## Added
-                ...
-                </code></pre>
+                                ## Jira Report
+                                ## [KEY] — Task summary
+                                ## Added
+                                ...
+                                </code></pre>
                 <p>
                     When <code>--from-pr</code>: omit the
                     <code>Commit</code> and
@@ -653,17 +653,9 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
                     When <code>--no-jira</code>: omit the
                     <code>Jira Report</code> section. Show only the PR report.
                 </p>
-                <h3>Step 5b: Write Technical Changelog</h3>
-                <p>Skip if <code>--dry-run</code> or <code>--from-pr</code>.</p>
                 <p>
-                    Write/update <code>TASK_DIR/changelog.md</code> with the
-                    technical iteration (append new iteration, following the
-                    same iteration-number-as-heading format used by other
-                    skills). Create the file if it doesn't exist.
-                </p>
-                <p>
-                    If <code>--technical-only</code>: after writing changelog,
-                    proceed to Step 7 (update progress), then skip to Step 9.
+                    If <code>--technical-only</code>: show preview, proceed to
+                    Step 7 (update progress), then skip to Step 9.
                 </p>
                 <p>
                     If NOT <code>--dry-run</code>,
@@ -762,8 +754,7 @@ Content-Type: application/json
                     <code>JIRA_TEMPLATE</code>.
                 </p>
                 <h3>Step 9: Success</h3>
-                <pre><code>✅ Changelog: .local/tasks/[KEY]/changelog.md
-                ✅ PR: {PR_URL}
+                <pre><code>✅ PR: {PR_URL}
                 ✅ Jira: [KEY] commented
                 ✅ Progress: .local/tasks/[KEY]/progress.md
                 </code></pre>
@@ -771,18 +762,15 @@ Content-Type: application/json
                 <pre><code>✅ Reports generated from PR: {PR_URL}
                 </code></pre>
                 <p>If <code>--no-jira</code>:</p>
-                <pre><code>✅ Changelog: .local/tasks/[KEY]/changelog.md
-                ✅ PR: {PR_URL}
+                <pre><code>✅ PR: {PR_URL}
                 ✅ Progress: .local/tasks/[KEY]/progress.md
                 </code></pre>
                 <p>If <code>--jira-only</code>:</p>
-                <pre><code>✅ Changelog: .local/tasks/[KEY]/changelog.md
-                ✅ Jira: [KEY] commented
+                <pre><code>✅ Jira: [KEY] commented
                 ✅ Progress: .local/tasks/[KEY]/progress.md
                 </code></pre>
                 <p>If <code>--technical-only</code>:</p>
-                <pre><code>✅ Changelog: .local/tasks/[KEY]/changelog.md
-                ✅ Progress: .local/tasks/[KEY]/progress.md
+                <pre><code>✅ Progress: .local/tasks/[KEY]/progress.md
                 </code></pre>
                 <p>(Omit skipped steps per flags.)</p>
             </section>

@@ -32,13 +32,13 @@ triggers:
 
 | Flag | Behavior |
 |------|----------|
-| (none) | Run all steps: PR + changelog + progress + Jira |
+| (none) | Run all steps: PR + progress + Jira |
 | `--pr-only` | Skip Step 8 (Jira comment) |
 | `--jira-only` | Skip Step 6 (PR creation) |
-| `--dry-run` | Skip Step 5b-9 (preview both changelogs). Show preview only. |
-| `--technical-only` | Skip Step 6, 8 (PR, Jira). Generate changelog + progress to `.local` only. |
+| `--dry-run` | Skip Step 5b-9 (preview both reports). Show preview only. |
+| `--technical-only` | Skip Step 6-9. Generate technical report preview + progress to `.local` only. |
 | `--from-pr [URL]` | Generate reports from a past GitHub PR. Skip Steps 5b-9 (no PR, no Jira). |
-| `--no-jira` | Create PR + changelog + progress, skip Jira report and Jira comment. No `.env` file needed. |
+| `--no-jira` | Create PR + progress, skip Jira report and Jira comment. No `.env` file needed. |
 
 ## Paths
 
@@ -129,7 +129,7 @@ Format: `{action} {description} [KEY]` (e.g., `Fix PDF landscape scaling [KEY]`)
 
 Skip if `--from-pr` (no commit to build).
 
-### Step 5: Show Preview and Write Changelog
+### Step 5: Show Preview
 
 Skip to Step 9 if `--dry-run` or `--from-pr` (read-only — show preview only, no writes).
 
@@ -156,13 +156,7 @@ Commit: {MSG}
 When `--from-pr`: omit the `Commit` and `Technical Changelog` lines — show only the PR and Jira reports.
 When `--no-jira`: omit the `Jira Report` section. Show only the PR report.
 
-### Step 5b: Write Technical Changelog
-
-Skip if `--dry-run` or `--from-pr`.
-
-Write/update `TASK_DIR/changelog.md` with the technical iteration (append new iteration, following the same iteration-number-as-heading format used by other skills). Create the file if it doesn't exist.
-
-If `--technical-only`: after writing changelog, proceed to Step 7 (update progress), then skip to Step 9.
+If `--technical-only`: show preview, proceed to Step 7 (update progress), then skip to Step 9.
 
 If NOT `--dry-run`, `--technical-only`, `--from-pr`: show both reports, ask "Ready? Say YES."
 
@@ -229,7 +223,6 @@ Content-Type: application/json
 ### Step 9: Success
 
 ```
-✅ Changelog: .local/tasks/[KEY]/changelog.md
 ✅ PR: {PR_URL}
 ✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
@@ -241,19 +234,16 @@ If `--from-pr`:
 ```
 If `--no-jira`:
 ```
-✅ Changelog: .local/tasks/[KEY]/changelog.md
 ✅ PR: {PR_URL}
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 If `--jira-only`:
 ```
-✅ Changelog: .local/tasks/[KEY]/changelog.md
 ✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 If `--technical-only`:
 ```
-✅ Changelog: .local/tasks/[KEY]/changelog.md
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 (Omit skipped steps per flags.)

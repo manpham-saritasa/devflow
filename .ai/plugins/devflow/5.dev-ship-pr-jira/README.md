@@ -71,11 +71,10 @@ The skill will show you what it will do, then ask you to say "YES" before making
    - Technical PR report (for future developers)
    - Non-technical Jira report (for testers and PMs)
 4. **Show you a preview** - displays both reports
-5. **Write changelog** - saves the technical changelog to `.local/tasks/[KEY]/changelog.md`
-6. **Ask for permission** - waits for you to say YES
-7. **Create the PR** - sends code to GitHub with the technical report
-8. **Save progress** - updates `.local/tasks/[KEY]/progress.md`
-9. **Comment on Jira** - posts the non-technical report with the PR link
+5. **Ask for permission** - waits for you to say YES
+6. **Create the PR** - sends code to GitHub with the technical report
+7. **Save progress** - updates `.local/tasks/[KEY]/progress.md`
+8. **Comment on Jira** - posts the non-technical report with the PR link
 
 ## Examples
 
