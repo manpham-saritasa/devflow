@@ -454,64 +454,6 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 <li>Comments on Jira task <code>PROJ-456</code> with the PR link</li>
 </ul>
 </section>
-<section class="section">
-<h2>Future reuse guidance</h2>
-<p>This section exists in the PR template.  </p>
-<p>Use it to record whether part of the implementation is safe to copy into future work, what exact pattern is reusable, and what caveat must be checked before reuse.  </p>
-<p>This helps future engineers and LLMs answer questions like:</p>
-<ul>
-<li>Can we follow the same pattern in a similar task?</li>
-<li>Is this a stable approach or only a one-off workaround?</li>
-<li>What condition must be checked before reusing it?</li>
-</ul>
-<p>Write it like this:</p>
-<pre><code class="language-md">## Future reuse guidance
-- Safe to copy: [YES / NO / WITH CARE]
-- Reusable pattern: ...
-- Caveat: ...
-</code></pre>
-<h3>When to use it</h3>
-<p>Use this section when the PR shows a reusable pattern clearly enough, for example:</p>
-<ul>
-<li>Request validation flow</li>
-<li>State handling pattern</li>
-<li>API request shaping</li>
-<li>Mapping logic</li>
-<li>UI interaction flow</li>
-<li>Integration boundary rule</li>
-<li>Permission check pattern</li>
-</ul>
-<h3>When not to use it</h3>
-<p>Do not use this section for:</p>
-<ul>
-<li>Vague advice</li>
-<li>One-off hacks</li>
-<li>Temporary debug code</li>
-<li>Legacy fallback logic that should not spread</li>
-<li>Anything not clearly supported by the PR evidence</li>
-</ul>
-<h3>Example: safe to copy</h3>
-<pre><code class="language-md">## Future reuse guidance
-- Safe to copy: YES
-- Reusable pattern: Reuse the same request-validation pipeline for new admin write endpoints.
-- Caveat: Keep the same role check and error response shape.
-</code></pre>
-<p>Use <code>YES</code> when the pattern looks intentional, review-safe, and not tightly coupled to one-off constraints.</p>
-<h3>Example: use with care</h3>
-<pre><code class="language-md">## Future reuse guidance
-- Safe to copy: WITH CARE
-- Reusable pattern: Reuse the optimistic UI update pattern for small inline field edits.
-- Caveat: Confirm rollback behavior and stale-data handling before applying it to multi-step flows.
-</code></pre>
-<p>Use <code>WITH CARE</code> when the pattern is probably useful but depends on assumptions, missing verification, or context-specific trade-offs.</p>
-<h3>Example: do not copy</h3>
-<pre><code class="language-md">## Future reuse guidance
-- Safe to copy: NO
-- Reusable pattern: Temporary fallback mapping for legacy invoice status values.
-- Caveat: This exists only for backward compatibility and should not be used in new flows.
-</code></pre>
-<p>Use <code>NO</code> when the logic is transitional, workaround-based, legacy-only, or clearly unsuitable as a standard pattern.</p>
-</section>
   </main>
 </body>
 </html>
