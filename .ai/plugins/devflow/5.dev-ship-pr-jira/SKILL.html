@@ -406,8 +406,8 @@
                         <tr>
                             <td data-label="Flag"><code>--dry-run</code></td>
                             <td data-label="Behavior">
-                                Skip Step 5b-9 (preview both reports). Show
-                                preview only.
+                                Show preview only. Skip Steps 6-8 (no PR, no
+                                Jira, no writes).
                             </td>
                         </tr>
                         <tr>
@@ -415,8 +415,8 @@
                                 <code>--technical-only</code>
                             </td>
                             <td data-label="Behavior">
-                                Skip Step 6-9. Generate technical report preview
-                                + progress to
+                                Skip Steps 6, 8 (PR, Jira). Show preview + write
+                                progress to
                                 <code>.local</code> only.
                             </td>
                         </tr>
@@ -426,7 +426,7 @@
                             </td>
                             <td data-label="Behavior">
                                 Generate reports from a past GitHub PR. Skip
-                                Steps 6-9 (no PR, no Jira).
+                                Steps 5-9 (no PR, no Jira, no writes).
                             </td>
                         </tr>
                         <tr>
@@ -623,11 +623,6 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
                 </p>
                 <p>Skip if <code>--from-pr</code> (no commit to build).</p>
                 <h3>Step 5: Show Preview</h3>
-                <p>
-                    Skip to Step 9 if <code>--dry-run</code> or
-                    <code>--from-pr</code> (read-only — show preview only, no
-                    writes).
-                </p>
                 <p>Show the preview:</p>
                 <pre><code>Commit: {MSG}
 
@@ -654,13 +649,17 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
                     <code>Jira Report</code> section. Show only the PR report.
                 </p>
                 <p>
-                    If <code>--technical-only</code>: show preview, proceed to
-                    Step 7 (update progress), then skip to Step 9.
+                    If <code>--dry-run</code> or <code>--from-pr</code>: skip to
+                    Step 9 (read-only — no PR, no Jira, no writes).
+                </p>
+                <p>
+                    If <code>--technical-only</code>: proceed to Step 7 (update
+                    progress), then skip to Step 9.
                 </p>
                 <p>
                     If NOT <code>--dry-run</code>,
-                    <code>--technical-only</code>, <code>--from-pr</code>: show
-                    both reports, ask "Ready? Say YES."
+                    <code>--technical-only</code>, <code>--from-pr</code>: ask
+                    "Ready? Say YES."
                 </p>
                 <h3>Step 6: Create PR</h3>
                 <p>

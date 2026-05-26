@@ -22,8 +22,8 @@ triggers:
 - `/dev-ship-pr-jira`, `/dev-ship` — create PR + comment Jira (default)
 - `/dev-ship-pr-jira --pr-only`, `/dev-ship --pr-only` — create PR only, skip Jira
 - `/dev-ship-pr-jira --jira-only`, `/dev-ship --jira-only` — comment Jira only, skip PR
-- `/dev-ship-pr-jira --dry-run`, `/dev-ship --dry-run` — preview both changelogs, skip PR + Jira
-- `/dev-ship-pr-jira --technical-only`, `/dev-ship --technical-only` — generate/preview technical changelog to `.local` only, skip PR + Jira
+- `/dev-ship-pr-jira --dry-run`, `/dev-ship --dry-run` — preview both reports, skip PR + Jira
+- `/dev-ship-pr-jira --technical-only`, `/dev-ship --technical-only` — preview technical report + write progress to `.local` only, skip PR + Jira
 - `/dev-ship-pr-jira --from-pr [URL]`, `/dev-ship --from-pr [URL]` — generate reports from a past PR URL, skip PR + Jira (e.g. `https://github.com/owner/repo/pull/123`)
 - `/dev-ship-pr-jira --no-jira`, `/dev-ship --no-jira` — create PR only, skip all Jira steps and Jira report. Use when repo has no Jira integration.
 - `/dev-ship-pr-jira [KEY]`, `/dev-ship [KEY]` — explicit task key (auto-detected from branch if not given)
@@ -35,9 +35,9 @@ triggers:
 | (none) | Run all steps: PR + progress + Jira |
 | `--pr-only` | Skip Step 8 (Jira comment) |
 | `--jira-only` | Skip Step 6 (PR creation) |
-| `--dry-run` | Skip Step 5b-9 (preview both reports). Show preview only. |
-| `--technical-only` | Skip Step 6-9. Generate technical report preview + progress to `.local` only. |
-| `--from-pr [URL]` | Generate reports from a past GitHub PR. Skip Steps 5b-9 (no PR, no Jira). |
+| `--dry-run` | Show preview only. Skip Steps 6-8 (no PR, no Jira, no writes). |
+| `--technical-only` | Skip Steps 6, 8 (PR, Jira). Show preview + write progress to `.local` only. |
+| `--from-pr [URL]` | Generate reports from a past GitHub PR. Skip Steps 5-9 (no PR, no Jira, no writes). |
 | `--no-jira` | Create PR + progress, skip Jira report and Jira comment. No `.env` file needed. |
 
 ## Paths
@@ -131,8 +131,6 @@ Skip if `--from-pr` (no commit to build).
 
 ### Step 5: Show Preview
 
-Skip to Step 9 if `--dry-run` or `--from-pr` (read-only — show preview only, no writes).
-
 Show the preview:
 
 ```
@@ -156,9 +154,11 @@ Commit: {MSG}
 When `--from-pr`: omit the `Commit` and `Technical Changelog` lines — show only the PR and Jira reports.
 When `--no-jira`: omit the `Jira Report` section. Show only the PR report.
 
-If `--technical-only`: show preview, proceed to Step 7 (update progress), then skip to Step 9.
+If `--dry-run` or `--from-pr`: skip to Step 9 (read-only — no PR, no Jira, no writes).
 
-If NOT `--dry-run`, `--technical-only`, `--from-pr`: show both reports, ask "Ready? Say YES."
+If `--technical-only`: proceed to Step 7 (update progress), then skip to Step 9.
+
+If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Ready? Say YES."
 
 ### Step 6: Create PR
 
