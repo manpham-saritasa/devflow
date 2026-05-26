@@ -8,8 +8,8 @@ triggers:
 
 ## Paths
 
-- DEV_ROOT: `.local`
-- TASK_DIR: `[DEV_ROOT]/tasks/[KEY]` — replace [KEY] with Jira ticket key
+- TASKS_ROOT: `.local/tasks`
+- TASK_DIR: `[TASKS_ROOT]/[KEY]` — replace [KEY] with Jira ticket key
 
 ---
 
