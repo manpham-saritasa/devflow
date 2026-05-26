@@ -39,3 +39,4 @@
 
 - When creating documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
+- When creating or editing `.md` files, always run the `md-to-html` skill to generate the corresponding `.html` file.
