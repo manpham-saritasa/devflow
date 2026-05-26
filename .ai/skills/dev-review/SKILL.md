@@ -14,6 +14,10 @@ description: Review implemented code against task context and the latest plan/ch
 
 ## Workflow
 
+### Step 0: Check Templates
+
+Check `REVIEW_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error: template not found."
+
 ### Step 1: Read Context
 
 Read from `TASK_DIR`:
@@ -30,7 +34,9 @@ git diff develop...HEAD
 ```
 Fallback: `git diff main...HEAD`
 
-Collect `diff_files[]`, `plan_files[]`, compute `unexpected_files[]`.
+Collect `diff_files[]` from the branch diff.
+Collect `plan_files[]` from the latest plan iteration when explicit file paths are listed.
+Compute `unexpected_files[]` = files in diff but not in plan. Flag them — do not auto-fail if the change is justified and low-risk.
 
 ### Step 3: Fit Check
 
@@ -51,6 +57,8 @@ Review across these dimensions:
 - **Testing:** coverage, adequacy of verification
 
 Label every issue: `[blocking]` or `[minor]`.
+- `[blocking]` = broken requirement, crash, security flaw, data loss risk, regression risk, invariant violation.
+- `[minor]` = readability, consistency, maintainability, non-critical verification gap.
 
 ### Step 5: Verdict
 
@@ -83,3 +91,14 @@ Set `ADR Suggested = Yes` if:
 - Auth flow structure changed
 
 Do not create ADR files — only recommend.
+
+## Self-Check
+
+- [ ] Review compared actual code against task context, plan, and changelog?
+- [ ] Repository conventions and architecture respected?
+- [ ] Fit and quality reviewed separately?
+- [ ] Unexpected files flagged?
+- [ ] Blocking vs minor issues distinguished?
+- [ ] Progress.md updated?
+- [ ] Verdict matches findings?
+- [ ] ADR recommended only when appropriate?

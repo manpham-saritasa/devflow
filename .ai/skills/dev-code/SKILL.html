@@ -324,8 +324,10 @@ a:hover {
 </section>
 <section class="section">
 <h2>Workflow</h2>
+<h3>Step 0: Check Templates</h3>
+<p>Check <code>CHANGELOG_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
 <h3>Step 1: Read Plan</h3>
-<p>Read <code>TASK_DIR/plan.md</code>. Treat the latest <code>## Iteration [N]</code> section as the active implementation source. Missing → stop.  </p>
+<p>Read <code>TASK_DIR/plan.md</code>. Fallback: check project root. Treat the latest <code>## Iteration [N]</code> section as the active implementation source. Missing → stop: "Error: plan.md not found."  </p>
 <p>Also read: <code>task.md</code>, <code>raw.md</code>, <code>review.md</code>, <code>progress.md</code>, <code>changelog.md</code> (if present) for constraints, review findings, and prior state.</p>
 <h3>Step 2: Read Codebase</h3>
 <ul>
@@ -354,7 +356,9 @@ a:hover {
 <li><code>**Trigger:**</code>, <code>**Status:**</code>, <code>**Plan reference:**</code></li>
 <li>Populate relevant sections: <code>### Added</code>, <code>### Changed</code>, <code>### Fixed</code></li>
 <li>Number items <code>[1]</code>, <code>[2]</code>, <code>[3]</code>; past tense, outcome-focused</li>
-<li>For <code>Fixed</code>: include <code>Root cause</code> and <code>Resolution</code></li>
+<li>For <code>### Fixed</code>: include <code>Root cause</code> and <code>Resolution</code> based on evidence</li>
+<li>If root cause cannot be proven, state best-supported explanation and label as inferred</li>
+<li>If fixed without reliable reproduction, state that explicitly</li>
 </ul>
 <h3>Step 6: Update Progress</h3>
 <p>Append/update timeline entry in <code>TASK_DIR/progress.md</code> using <code>PROGRESS_TEMPLATE</code>:</p>

@@ -13,7 +13,7 @@ triggers:
 
 ---
 
-Role: Development flow orchestrator. Run the complete plan → code → review pipeline by delegating to `dev-plan`, `dev-code`, and `dev-review` skills in sequence. Stop at each phase for user confirmation before continuing.
+Role: Development flow orchestrator. Run the complete plan → code → review pipeline by delegating directly to `dev-plan`, `dev-code`, and `dev-review` skills in sequence. Stop at each phase for user confirmation before continuing.
 
 ## Workflow
 
@@ -28,44 +28,44 @@ If KEY provided as argument: use it.
 Otherwise: `git branch --show-current`, extract KEY via regex `([A-Z0-9]+-\d+)`.
 If fail: ask user for KEY. Stop if no valid KEY.
 
-### Phase 1 — Plan
+### Phase 1 — Plan (`dev-plan` skill)
 
-Run the `dev-plan` skill. It will:
-- Gather task context and investigate the codebase
-- Output an investigation summary
-- Wait for user confirmation before writing `plan.md`
+Read and execute `.ai/skills/dev-plan/SKILL.md`. The skill handles:
+- Gathering task context and investigating the codebase
+- Repo-match check: is this the right repo for the task?
+- Outputting an investigation summary for user confirmation
+- Writing `plan.md` + `progress.md`
 
-**Checkpoint:** After the plan is created, ask: "Proceed to implementation? (yes/no/adjust)"
+**Checkpoint:** "Proceed to implementation? (yes/no/adjust)"
 
-- `yes` → continue to Phase 2.
+- `yes` → Phase 2.
 - `no` → stop.
 - `adjust` → re-run planning with feedback.
 
-### Phase 2 — Code
+### Phase 2 — Code (`dev-code` skill)
 
-Run the `dev-code` skill. It will:
-- Read `plan.md` and implement `## Proposed Changes` in order
-- Verify each change
-- Write `changelog.md` and `progress.md`
-- Report progress after each major item
+Read and execute `.ai/skills/dev-code/SKILL.md`. The skill handles:
+- Reading `plan.md` and implementing `## Proposed Changes` in order
+- Verifying each change
+- Writing `changelog.md` + updating `progress.md`
+- Reporting progress after each major item
 
-**Stop conditions:** If the skill hits a conflict, failure, or scope creep, stop and relay to the user immediately.
+**Stop conditions:** If the skill hits a conflict, failure, scope creep, or violated invariant — stop and relay to user.
 
-**Checkpoint:** After implementation, ask: "Proceed to review? (yes/no)"
+**Checkpoint:** "Proceed to review? (yes/no)"
 
-- `yes` → continue to Phase 3.
-- `no` → stop (can review later with `/dev-reviewer [KEY]`).
+- `yes` → Phase 3.
+- `no` → stop (review later with `/devflow [KEY] --review-only`).
 
-### Phase 3 — Review
+### Phase 3 — Review (`dev-review` skill)
 
-Run the `dev-review` skill. It will:
-- Run fit check against acceptance criteria and plan
-- Run quality check across correctness, design, security, performance, testing
-- Issue a verdict and write `review.md`
+Read and execute `.ai/skills/dev-review/SKILL.md`. The skill handles:
+- Identifying changes via git diff
+- Fit check against acceptance criteria and plan
+- Quality check across correctness, design, security, performance, testing
+- Issuing a verdict and writing `review.md` + updating `progress.md`
 
 ### Final Summary
-
-After all phases complete:
 
 ```
 ✅ Devflow complete for [KEY]
@@ -75,15 +75,15 @@ Code: .local/tasks/[KEY]/changelog.md
 Review: .local/tasks/[KEY]/review.md
 
 Verdict: [Pass | Pass with Changes | Fail]
-Next: [ship with /dev-ship | re-plan | address review findings]
+Next: [ship with /dev-ship | address findings | re-plan]
 ```
 
 ## Phase Independence
 
-Each phase can be run independently if desired:
+Skip phases with flags:
 
 - `/devflow [KEY] --plan-only` — stop after planning
 - `/devflow [KEY] --code-only` — skip planning, start from code
 - `/devflow [KEY] --review-only` — only run review
 
-If no flag, run all three phases in sequence with checkpoints.
+No flags → run all three phases with checkpoints.

@@ -320,7 +320,7 @@ a:hover {
 <li>TASKS_ROOT: <code>.local/tasks</code></li>
 <li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code> — replace [KEY] with Jira ticket key</li>
 </ul>
-<p>Role: Development flow orchestrator. Run the complete plan → code → review pipeline by delegating to <code>dev-plan</code>, <code>dev-code</code>, and <code>dev-review</code> skills in sequence. Stop at each phase for user confirmation before continuing.</p>
+<p>Role: Development flow orchestrator. Run the complete plan → code → review pipeline by delegating directly to <code>dev-plan</code>, <code>dev-code</code>, and <code>dev-review</code> skills in sequence. Stop at each phase for user confirmation before continuing.</p>
 </section>
 <section class="section">
 <h2>Workflow</h2>
@@ -331,42 +331,43 @@ If <code>.local/tasks/[KEY]/task.md</code> does not exist and Jira MCP is availa
 <p>If KEY provided as argument: use it.<br>
 Otherwise: <code>git branch --show-current</code>, extract KEY via regex <code>([A-Z0-9]+-\d+)</code>.<br>
 If fail: ask user for KEY. Stop if no valid KEY.</p>
-<h3>Phase 1 — Plan</h3>
-<p>Run the <code>dev-plan</code> skill. It will:</p>
+<h3>Phase 1 — Plan (<code>dev-plan</code> skill)</h3>
+<p>Read and execute <code>.ai/skills/dev-plan/SKILL.md</code>. The skill handles:</p>
 <ul>
-<li>Gather task context and investigate the codebase</li>
-<li>Output an investigation summary</li>
-<li>Wait for user confirmation before writing <code>plan.md</code></li>
+<li>Gathering task context and investigating the codebase</li>
+<li>Repo-match check: is this the right repo for the task?</li>
+<li>Outputting an investigation summary for user confirmation</li>
+<li>Writing <code>plan.md</code> + <code>progress.md</code></li>
 </ul>
-<p><strong>Checkpoint:</strong> After the plan is created, ask: "Proceed to implementation? (yes/no/adjust)"</p>
+<p><strong>Checkpoint:</strong> "Proceed to implementation? (yes/no/adjust)"</p>
 <ul>
-<li><code>yes</code> → continue to Phase 2.</li>
+<li><code>yes</code> → Phase 2.</li>
 <li><code>no</code> → stop.</li>
 <li><code>adjust</code> → re-run planning with feedback.</li>
 </ul>
-<h3>Phase 2 — Code</h3>
-<p>Run the <code>dev-code</code> skill. It will:</p>
+<h3>Phase 2 — Code (<code>dev-code</code> skill)</h3>
+<p>Read and execute <code>.ai/skills/dev-code/SKILL.md</code>. The skill handles:</p>
 <ul>
-<li>Read <code>plan.md</code> and implement <code>## Proposed Changes</code> in order</li>
-<li>Verify each change</li>
-<li>Write <code>changelog.md</code> and <code>progress.md</code></li>
-<li>Report progress after each major item</li>
+<li>Reading <code>plan.md</code> and implementing <code>## Proposed Changes</code> in order</li>
+<li>Verifying each change</li>
+<li>Writing <code>changelog.md</code> + updating <code>progress.md</code></li>
+<li>Reporting progress after each major item</li>
 </ul>
-<p><strong>Stop conditions:</strong> If the skill hits a conflict, failure, or scope creep, stop and relay to the user immediately.  </p>
-<p><strong>Checkpoint:</strong> After implementation, ask: "Proceed to review? (yes/no)"</p>
+<p><strong>Stop conditions:</strong> If the skill hits a conflict, failure, scope creep, or violated invariant — stop and relay to user.  </p>
+<p><strong>Checkpoint:</strong> "Proceed to review? (yes/no)"</p>
 <ul>
-<li><code>yes</code> → continue to Phase 3.</li>
-<li><code>no</code> → stop (can review later with <code>/dev-reviewer [KEY]</code>).</li>
+<li><code>yes</code> → Phase 3.</li>
+<li><code>no</code> → stop (review later with <code>/devflow [KEY] --review-only</code>).</li>
 </ul>
-<h3>Phase 3 — Review</h3>
-<p>Run the <code>dev-review</code> skill. It will:</p>
+<h3>Phase 3 — Review (<code>dev-review</code> skill)</h3>
+<p>Read and execute <code>.ai/skills/dev-review/SKILL.md</code>. The skill handles:</p>
 <ul>
-<li>Run fit check against acceptance criteria and plan</li>
-<li>Run quality check across correctness, design, security, performance, testing</li>
-<li>Issue a verdict and write <code>review.md</code></li>
+<li>Identifying changes via git diff</li>
+<li>Fit check against acceptance criteria and plan</li>
+<li>Quality check across correctness, design, security, performance, testing</li>
+<li>Issuing a verdict and writing <code>review.md</code> + updating <code>progress.md</code></li>
 </ul>
 <h3>Final Summary</h3>
-<p>After all phases complete:</p>
 <pre><code>✅ Devflow complete for [KEY]
 
 Plan: .local/tasks/[KEY]/plan.md (Iteration [N])
@@ -374,18 +375,18 @@ Code: .local/tasks/[KEY]/changelog.md
 Review: .local/tasks/[KEY]/review.md
 
 Verdict: [Pass | Pass with Changes | Fail]
-Next: [ship with /dev-ship | re-plan | address review findings]
+Next: [ship with /dev-ship | address findings | re-plan]
 </code></pre>
 </section>
 <section class="section">
 <h2>Phase Independence</h2>
-<p>Each phase can be run independently if desired:</p>
+<p>Skip phases with flags:</p>
 <ul>
 <li><code>/devflow [KEY] --plan-only</code> — stop after planning</li>
 <li><code>/devflow [KEY] --code-only</code> — skip planning, start from code</li>
 <li><code>/devflow [KEY] --review-only</code> — only run review</li>
 </ul>
-<p>If no flag, run all three phases in sequence with checkpoints.</p>
+<p>No flags → run all three phases with checkpoints.</p>
 </section>
   </main>
 </body>

@@ -15,6 +15,10 @@ description: Create a structured execution plan from task evidence and codebase 
 
 ## Workflow
 
+### Step 0: Check Templates
+
+Check `PLAN_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error: template not found."
+
 ### Step 1: Gather Context
 
 Read from `TASK_DIR` when present:
@@ -85,3 +89,15 @@ Do not write plan.md until user confirms.
 - Order changes by implementation sequence; call out dependencies and parallelism
 - Use exact file paths from codebase investigation — never invent
 - Keep concise and executable by another coding agent
+
+## Pre-Save Checklist
+
+- [ ] Task context gathered from available sources?
+- [ ] Repo-match verified or mismatch risk noted?
+- [ ] Codebase explored and key files identified?
+- [ ] ADR constraints checked?
+- [ ] Related tasks researched?
+- [ ] Investigation summary confirmed by user?
+- [ ] Template structure followed exactly?
+- [ ] Changes ordered by sequence with dependencies called out?
+- [ ] Plan and progress appended with correct datetime?

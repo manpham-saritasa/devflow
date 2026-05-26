@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Coding Concepts for Local Dev</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI Coding Concepts for Local Dev</h1>
+</section>
+<section class="section">
+<h2>Slide 1 — Title</h2>
+<ul>
+<li>AI Coding Concepts for Local Dev.</li>
+<li>Prompts, rules, skills, agents, tools, context, and memory.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 2 — Why this matters</h2>
+<ul>
+<li>Same repo, different AI setups, different results.</li>
+<li>Shared setup makes output more consistent.</li>
+<li>Goal: less guesswork, better team workflow.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 3 — Big picture</h2>
+<ul>
+<li>Prompt tells the AI what to do.</li>
+<li>Context gives the AI what it can see now.</li>
+<li>Memory keeps what should survive later.</li>
+<li>Rules constrain behavior.</li>
+<li>Skills package repeatable workflows.</li>
+<li>Tools let the AI act.</li>
+<li>Agent combines them into execution.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 4 — LLM concept</h2>
+<ul>
+<li>LLM = language model that predicts the next tokens.</li>
+<li>Good at drafting, explaining, transforming, and summarizing.</li>
+<li>Not a source of truth.</li>
+<li>Must be checked with real files, tests, and outputs.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 5 — Tokens and context</h2>
+<ul>
+<li>Token = chunk of text, not exactly a word.</li>
+<li>Context window = how much the model can use now.</li>
+<li>Prompt, files, tool output, chat history all consume context.</li>
+<li>Bigger context helps, but too much noise hurts.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 6 — Session concept</h2>
+<ul>
+<li>Session = the current working conversation.</li>
+<li>It includes prompts, replies, tool calls, and temporary state.</li>
+<li>Session is larger than the context sent on one turn.</li>
+<li>Session is often temporary.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 7 — Diagram</h2>
+<pre><code class="language-text">Prompt + files + rules + memory + tool output
+                    |
+                    v
+                 Tokens
+                    |
+                    v
+            Current context window
+                    |
+                    v
+                   LLM
+                    |
+                    v
+        Response + tool actions + new state
+                    |
+                    v
+              Working session
+</code></pre>
+<ul>
+<li>Session is the workspace.</li>
+<li>Context is the slice sent now.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 8 — Session limits</h2>
+<ul>
+<li>Session may be lost next time.</li>
+<li>Long sessions get noisy.</li>
+<li>Important decisions can disappear in chat.</li>
+<li>Write key state to repo files.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 9 — Memory concept</h2>
+<ul>
+<li>Memory = stored information reused later.</li>
+<li>Short-term memory = current session and context.</li>
+<li>Long-term memory = external storage around the model.</li>
+<li>Common team pattern: Markdown memory files.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 10 — File-based memory</h2>
+<ul>
+<li>Pros: simple, visible, versioned, cross-tool.</li>
+<li>Pros: easy for humans and LLMs to read.</li>
+<li>Cons: can get stale, noisy, duplicated.</li>
+<li>Cons: large files reduce relevance.</li>
+<li>Keep memory small and curated.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 11 — Context rot</h2>
+<ul>
+<li>Quality drops when context gets too long or noisy.</li>
+<li>Model may forget earlier constraints.</li>
+<li>More context is not always better.</li>
+<li>Use fresh sessions and task-focused context.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 12 — Hallucinations</h2>
+<ul>
+<li>AI can invent files, APIs, facts, or behavior.</li>
+<li>Confident tone does not mean correct output.</li>
+<li>Hallucinations increase with vague or noisy context.</li>
+<li>Verify with code, tests, grep, and build output.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 13 — Other failure modes</h2>
+<ul>
+<li>Omission: skips an important step or requirement.</li>
+<li>Instruction drift: starts right, then ignores earlier constraints.</li>
+<li>Overconfidence: sounds certain when it should be uncertain.</li>
+<li>Tool misuse: picks the wrong tool or wrong parameters.</li>
+<li>Goal drift: starts solving a different problem.</li>
+<li>False completion: says done before the real task is complete.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 14 — Prompt concept</h2>
+<ul>
+<li>Prompt = instruction package for this task.</li>
+<li>Can include goal, context, constraints, format, examples.</li>
+<li>Good prompts reduce ambiguity.</li>
+<li>Structure matters more than length.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 15 — Prompt usage example</h2>
+<ul>
+<li>Bug fix: describe symptom, file, expected behavior, ask for minimal change + test.</li>
+<li>Refactor: state goal, files in scope, keep behavior, list tests to keep passing.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 16 — Big prompt example</h2>
+<pre><code class="language-text">Create a cinematic hero image for an internal engineering presentation.
+Subject: senior engineer, 3 monitors, code, Git graph, AI panel.
+Style: modern editorial, detailed, professional.
+Scene: night office, blue-teal glow, practical desk setup.
+Composition: 16:9, subject left, empty space right for title.
+Constraints: no logo, no broken hands, no extra fingers.
+Intent: trustworthy, practical, team presentation cover.
+</code></pre>
+<ul>
+<li>Big prompt is fine when every section adds signal.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 17 — Prompt - PROS</h2>
+<ul>
+<li>Fastest way to steer output.</li>
+<li>Easy to change per task.</li>
+<li>Can encode structure and format.</li>
+<li>Works across tools.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 18 — Prompt - CONS</h2>
+<ul>
+<li>Vague prompt, vague result.</li>
+<li>Too many scripts and templates reduce focus.</li>
+<li>Hard to debug when huge.</li>
+<li>Easy to forget constraints over time.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 19 — Skill concept</h2>
+<ul>
+<li>Skill = reusable workflow for a repeated job.</li>
+<li>Can include instructions, examples, scripts, references.</li>
+<li>Good for review, refactor, bug fix, docs, test generation.</li>
+<li>Load only when relevant.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 20 — Skill usage example</h2>
+<ul>
+<li>Have a /review-skill for PR review, used on every PR.</li>
+<li>Have a /refactor-skill for legacy cleanup tasks.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 21 — Skill - PROS</h2>
+<ul>
+<li>Reusable.</li>
+<li>Faster.</li>
+<li>More consistent.</li>
+<li>Captures team know-how.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 22 — Skill - CONS</h2>
+<ul>
+<li>Overlap causes confusion.</li>
+<li>Old skills become outdated.</li>
+<li>Too many skills are hard to discover.</li>
+<li>Needs pruning.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 23 — Agent concept</h2>
+<ul>
+<li>Agent = AI worker that can think and act in steps.</li>
+<li>Uses prompts, context, memory, rules, skills, and tools.</li>
+<li>Better for multi-step work than plain chat.</li>
+<li>More autonomy means more risk.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 24 — Agent usage example</h2>
+<ul>
+<li>Use coding agent for "implement feature X" with branch + tests.</li>
+<li>Use research agent to gather APIs and summarize options before coding.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 25 — Agent - PROS</h2>
+<ul>
+<li>Can plan and break down work.</li>
+<li>Can inspect files and run tools.</li>
+<li>Can iterate toward a goal.</li>
+<li>Good for bigger coding tasks.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 26 — Agent - CONS</h2>
+<ul>
+<li>Can drift or overreach.</li>
+<li>May misuse tools.</li>
+<li>Harder to predict.</li>
+<li>Needs boundaries and review.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 27 — Rule concept</h2>
+<ul>
+<li>Rule = instruction that should apply across many tasks.</li>
+<li>Covers safety, coding style, architecture, review limits.</li>
+<li>Rules reduce repeated prompting.</li>
+<li>Rules define what AI must always do or avoid.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 28 — Rule usage example</h2>
+<ul>
+<li>CLAUDE.md: always run tests before saying task is done.</li>
+<li>AGENTS.md: never change public APIs without explicit request.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 29 — Rule - PROS</h2>
+<ul>
+<li>Consistency.</li>
+<li>Safety.</li>
+<li>Team alignment.</li>
+<li>Reusable across sessions and tools.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 30 — Rule - CONS</h2>
+<ul>
+<li>Too many rules become noise.</li>
+<li>Duplicated rules can conflict.</li>
+<li>Hard to maintain if spread around.</li>
+<li>Needs clear owners.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 31 — Plugin / tool concept</h2>
+<ul>
+<li>Tool or plugin lets the AI act outside plain text.</li>
+<li>Examples: file read, search, terminal, Git, API.</li>
+<li>Tools reduce guessing by bringing real evidence.</li>
+<li>Model thinks; tools act.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 32 — Tool usage example</h2>
+<ul>
+<li>File tool: load only files in scope before asking for changes.</li>
+<li>Test tool: run tests and report failures before claiming done.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 33 — Tool - PROS</h2>
+<ul>
+<li>Better evidence.</li>
+<li>Less guessing.</li>
+<li>Enables real workflows.</li>
+<li>Connects AI to real systems.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 34 — Tool - CONS</h2>
+<ul>
+<li>Wrong permissions create risk.</li>
+<li>Too many tools add confusion.</li>
+<li>Bad tool choice wastes time.</li>
+<li>Needs safe defaults and clear scope.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 35 — Local repo setup</h2>
+<ul>
+<li><code>AGENTS.md</code> for shared agent guidance.</li>
+<li><code>CLAUDE.md</code> for Claude-specific onboarding.</li>
+<li><code>.ai/memory.md</code> for persistent project memory.</li>
+<li><code>.ai/agents/</code> for task agents or skills.</li>
+<li>Keep root files short.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 36 — Team workflow</h2>
+<ul>
+<li>Start with clear task prompt.</li>
+<li>Load only needed context.</li>
+<li>Use shared rules and memory.</li>
+<li>Run tools for evidence.</li>
+<li>Review diffs and tests before merge.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Slide 37 — Team policy</h2>
+<ul>
+<li>One source of truth for rules.</li>
+<li>Small prompts, small memory, small skills.</li>
+<li>Store durable knowledge in files, not chat only.</li>
+<li>Every AI change is review-required.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

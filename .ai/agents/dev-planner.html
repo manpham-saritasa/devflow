@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill</title>
+  <title>Dev Planner</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -307,107 +307,44 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Skill</h1>
+  <h1>Dev Planner</h1>
   <div class="meta">
-    <div class="meta-item"><span class="meta-label">name</span>dev-plan</div>
-    <div class="meta-item"><span class="meta-label">description</span>Create a structured execution plan from task evidence and codebase investigation. Saves to plan.md and progress.md.</div>
+    <div class="meta-item"><span class="meta-label">name</span>"dev-planner"</div>
+    <div class="meta-item"><span class="meta-label">description</span>"Use this agent when a coding task needs to be analyzed, broken down, and documented before implementation. Invoke for any new feature, bug fix, refactor, rework, or technical task that needs a structured execution plan saved to plan.md."</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-planner, dev-plan</div>
   </div>
 </section>
 <section class="section">
 <h2>Paths</h2>
 <ul>
 <li>TASKS_ROOT: <code>.local/tasks</code></li>
-<li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code></li>
-<li>ADR_DIR: <code>.local/adr</code></li>
-<li>PLAN_TEMPLATE: <code>.ai/agents/templates/plan-template.md</code></li>
-<li>PROGRESS_TEMPLATE: <code>.ai/agents/templates/progress-template.md</code></li>
+<li>TASK_DIR: <code>[TASKS_ROOT]/[KEY]</code> — replace [KEY] with Jira ticket key</li>
 </ul>
+<p>Role: Planning agent. Orchestrate task analysis and plan creation. Delegate the detailed work to the <code>dev-plan</code> skill.</p>
 </section>
 <section class="section">
 <h2>Workflow</h2>
-<h3>Step 0: Check Templates</h3>
-<p>Check <code>PLAN_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
-<h3>Step 1: Gather Context</h3>
-<p>Read from <code>TASK_DIR</code> when present:</p>
+<h3>Step 1: Resolve Task Key</h3>
+<p>If KEY provided as argument: use it.<br>
+Otherwise: <code>git branch --show-current</code>, extract KEY via regex <code>([A-Z0-9]+-\d+)</code>.<br>
+If fail: ask user for KEY. Stop if no valid KEY.</p>
+<h3>Step 2: Run dev-plan Skill</h3>
+<p>Call the <code>dev-plan</code> skill with the task key. The skill handles:</p>
 <ul>
-<li><code>task.md</code> — requirements, constraints, open questions</li>
-<li><code>raw.md</code> — Jira description, comments, implementation notes</li>
-<li><code>plan.md</code> — prior iterations, unresolved work, decisions</li>
-<li><code>review.md</code> — prior review outcomes, unresolved findings</li>
-<li><code>progress.md</code> — task timeline, next iteration number</li>
-<li><code>pr-feedback-[N].md</code> — PR review feedback to address</li>
+<li>Gathering task context from <code>TASK_DIR</code>, Jira MCP, or user message</li>
+<li>Investigating the codebase and ADR constraints</li>
+<li>Researching related tasks</li>
+<li>Outputting an investigation summary for user confirmation</li>
+<li>Creating the plan and writing <code>plan.md</code> + <code>progress.md</code></li>
 </ul>
-<p>If local files are missing, fall back to Jira MCP or user message. Do not fail on missing files.</p>
-<h3>Step 2: Investigate Codebase</h3>
-<ul>
-<li>Read <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>README.md</code>, <code>docs/</code>, lint/formatter configs</li>
-<li>Explore project structure with task context in mind</li>
-<li>Identify relevant files, modules, functions, integration points</li>
-<li><strong>Repo-match check:</strong> Determine if the current repository is related to the task using concrete evidence: matching services, modules, domains, feature names, or task-specific components.</li>
-<li>If the repo appears unrelated, stop and ask: "This repository does not appear to contain the code for this task. Wrong repo? Continue anyway or switch? (continue/switch)"</li>
-<li><code>continue</code> → proceed but note mismatch risk in investigation summary.</li>
-<li><code>switch</code> → stop and wait for correct repo.</li>
-<li>Check <code>ADR_DIR</code> for matching ADRs — note constraints and decisions</li>
-</ul>
-<h3>Step 3: Research Related Tasks</h3>
-<ul>
-<li>Collect related task keys from local files, Jira links, ADRs, code comments</li>
-<li>Read related task folders for patterns, approaches, review findings</li>
-<li>Extract reusable structure, rejected alternatives, lessons learned</li>
-</ul>
-<h3>Step 4: Summarize &amp; Confirm</h3>
-<p>Output an investigation summary:</p>
-<pre><code>## Investigation Summary
+<p>Follow the skill's workflow. Do not proceed to plan creation until the user confirms the investigation summary.</p>
+<h3>Step 3: Report Result</h3>
+<p>After the skill completes, summarize:</p>
+<pre><code>✅ Plan created: .local/tasks/[KEY]/plan.md (Iteration [N])
+✅ Progress updated: .local/tasks/[KEY]/progress.md
 
-**Key files:** ...
-**Patterns observed:** ...
-**ADR constraints:** ...
-**Repo match:** [yes / no (mismatch risk noted)]
-**Approach:** [1-2 sentence proposal]
-
-Proceed? (yes/no/adjust)
+Next: run /dev-coder [KEY] to implement.
 </code></pre>
-<p>Do not write plan.md until user confirms.</p>
-<h3>Step 5: Create Plan</h3>
-<ul>
-<li>Determine next iteration number from progress.md or plan.md (default: 1)</li>
-<li>Capture datetime: <code>YYYY-MM-DD HH:MM ±TZ</code></li>
-<li>Break solution into ordered <code>## Proposed Changes</code></li>
-<li>Use <code>PLAN_TEMPLATE</code> structure exactly</li>
-<li>For each change: <code>User outcome</code>, <code>Why</code>, <code>Affected area</code>, <code>Confidence</code>, <code>Implementation</code>, <code>Test Impact</code></li>
-<li>End each <code>Implementation</code> with a concrete <code>Verify</code> step</li>
-<li>Populate <code>Constraints</code>, <code>Risks</code>, <code>Open Questions</code>, <code>Done Criteria</code></li>
-</ul>
-<h3>Step 6: Write Files</h3>
-<ul>
-<li>Append new iteration to <code>TASK_DIR/plan.md</code></li>
-<li>Append timeline entry to <code>TASK_DIR/progress.md</code></li>
-<li>Create files if they don't exist</li>
-</ul>
-</section>
-<section class="section">
-<h2>Plan Writing Rules</h2>
-<ul>
-<li>Start with: <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
-<li>Include <code>**Trigger:** [new request | review follow-up | bug fix | scope update]</code></li>
-<li>Order changes by implementation sequence; call out dependencies and parallelism</li>
-<li>Use exact file paths from codebase investigation — never invent</li>
-<li>Keep concise and executable by another coding agent</li>
-</ul>
-</section>
-<section class="section">
-<h2>Pre-Save Checklist</h2>
-<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Task context gathered from available sources?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Repo-match verified or mismatch risk noted?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Codebase explored and key files identified?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> ADR constraints checked?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Related tasks researched?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Investigation summary confirmed by user?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Template structure followed exactly?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Changes ordered by sequence with dependencies called out?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Plan and progress appended with correct datetime?</li>
-</ul>
 </section>
   </main>
 </body>

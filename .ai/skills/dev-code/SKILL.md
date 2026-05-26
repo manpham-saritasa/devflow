@@ -14,9 +14,13 @@ description: Read plan.md, implement the planned changes for the latest iteratio
 
 ## Workflow
 
+### Step 0: Check Templates
+
+Check `CHANGELOG_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error: template not found."
+
 ### Step 1: Read Plan
 
-Read `TASK_DIR/plan.md`. Treat the latest `## Iteration [N]` section as the active implementation source. Missing → stop.
+Read `TASK_DIR/plan.md`. Fallback: check project root. Treat the latest `## Iteration [N]` section as the active implementation source. Missing → stop: "Error: plan.md not found."
 
 Also read: `task.md`, `raw.md`, `review.md`, `progress.md`, `changelog.md` (if present) for constraints, review findings, and prior state.
 
@@ -47,7 +51,9 @@ Append a new iteration to `TASK_DIR/changelog.md` using `CHANGELOG_TEMPLATE`:
 - `**Trigger:**`, `**Status:**`, `**Plan reference:**`
 - Populate relevant sections: `### Added`, `### Changed`, `### Fixed`
 - Number items `[1]`, `[2]`, `[3]`; past tense, outcome-focused
-- For `Fixed`: include `Root cause` and `Resolution`
+- For `### Fixed`: include `Root cause` and `Resolution` based on evidence
+  - If root cause cannot be proven, state best-supported explanation and label as inferred
+  - If fixed without reliable reproduction, state that explicitly
 
 ### Step 6: Update Progress
 
