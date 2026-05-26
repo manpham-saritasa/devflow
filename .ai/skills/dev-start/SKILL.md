@@ -53,6 +53,10 @@ Examples:
 - Feature: `feature/rmasup-2145-adjust-pdf-text-spacing`
 - Hotfix: `hotfix/rmasup-2145-fix-login-crash`
 
+Worktree folder name is the branch without the type prefix:
+- `feature/dev-7-fix-bug` → folder `dev-7-fix-bug`
+- `hotfix/dev-7-fix-crash` → folder `dev-7-fix-crash`
+
 Rules:
 - Task key: lowercase, no spaces.
 - Summary: lowercase, words separated by hyphens, max 5-6 words.
@@ -71,26 +75,26 @@ basename $(git rev-parse --show-toplevel)
 ```
 
 Create worktree root if it doesn't exist:
-```
+```bash
 mkdir -p ../[REPO_NAME]-worktrees
 ```
 
-Create the worktree:
+Create the worktree using the folder name (branch without type prefix):
 ```bash
-git worktree add ../[REPO_NAME]-worktrees/[BRANCH_NAME] -b [BRANCH_NAME]
+git worktree add ../[REPO_NAME]-worktrees/[FOLDER_NAME] -b [BRANCH_NAME]
 ```
 
 ### Step 7: Report Result
 
 ```
-✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+✅ Worktree ready: ../[REPO_NAME]-worktrees/[FOLDER_NAME]
 
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
 
 Switch to worktree first:
-  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+  cd ../[REPO_NAME]-worktrees/[FOLDER_NAME]
 
 Then start:
   /devflow [KEY]

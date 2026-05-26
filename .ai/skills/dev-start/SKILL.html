@@ -373,6 +373,11 @@ git rev-list --count HEAD..origin/main
 <li>Feature: <code>feature/rmasup-2145-adjust-pdf-text-spacing</code></li>
 <li>Hotfix: <code>hotfix/rmasup-2145-fix-login-crash</code></li>
 </ul>
+<p>Worktree folder name is the branch without the type prefix:</p>
+<ul>
+<li><code>feature/dev-7-fix-bug</code> → folder <code>dev-7-fix-bug</code></li>
+<li><code>hotfix/dev-7-fix-crash</code> → folder <code>dev-7-fix-crash</code></li>
+</ul>
 <p>Rules:</p>
 <ul>
 <li>Task key: lowercase, no spaces.</li>
@@ -387,20 +392,20 @@ Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is avail
 <pre><code class="language-bash">basename $(git rev-parse --show-toplevel)
 </code></pre>
 <p>Create worktree root if it doesn't exist:</p>
-<pre><code>mkdir -p ../[REPO_NAME]-worktrees
+<pre><code class="language-bash">mkdir -p ../[REPO_NAME]-worktrees
 </code></pre>
-<p>Create the worktree:</p>
-<pre><code class="language-bash">git worktree add ../[REPO_NAME]-worktrees/[BRANCH_NAME] -b [BRANCH_NAME]
+<p>Create the worktree using the folder name (branch without type prefix):</p>
+<pre><code class="language-bash">git worktree add ../[REPO_NAME]-worktrees/[FOLDER_NAME] -b [BRANCH_NAME]
 </code></pre>
 <h3>Step 7: Report Result</h3>
-<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[FOLDER_NAME]
 
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
 
 Switch to worktree first:
-  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+  cd ../[REPO_NAME]-worktrees/[FOLDER_NAME]
 
 Then start:
   /devflow [KEY]
