@@ -1,406 +1,492 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill</title>
-  <style>
-:root {
-    --bg: #e2e8f0;
-    --surface: #ffffff;
-    --surface-2: #f1f4f8;
-    --text: #1f2937;
-    --muted: #5b6574;
-    --border: #d9e0e7;
-    --accent: #0f766e;
-    --accent-soft: #e6f4f1;
-    --warning: #9a3412;
-    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
-    --radius: 9px;
-    --title: #1e3a5f;
-    --th-bg: #e6f4f8;
-    --th-title: #1e3a5f;
-    --h2-border-line: rgb(13, 148, 136);
-    --table-even-row: #f8fafc;
-    --table-border: #e5e7eb;
-}
-* {
-    box-sizing: border-box;
-}
-body {
-    margin: 0;
-    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 17px;
-    color: var(--text);
-    background: var(--bg);
-    line-height: 1.65;
-}
-.page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 20px 56px;
-}
-.header {
-    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    box-shadow: var(--shadow);
-    padding: 28px;
-    margin-bottom: 26px;
-    overflow: hidden;
-}
-.eyebrow {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 9px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-h1 {
-    margin: 0 0 10px;
-    font-size: 38px;
-    line-height: 1.15;
-    color: var(--title);
-}
-.meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin-top: 18px;
-}
-.meta-item {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 12px 14px;
-}
-.meta-label {
-    display: block;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--muted);
-    margin-bottom: 4px;
-    font-weight: 700;
-}
-.section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    box-shadow: var(--shadow);
-    padding: 24px;
-    margin-bottom: 26px;
-    overflow: hidden;
-}
-h2 {
-    margin: 0 0 16px;
-    font-size: 28px;
-    color: var(--title);
-    border-bottom: 2px solid var(--h2-border-line);
-}
-h3 {
-    margin: 24px 0 10px;
-    font-size: 20px;
-    color: var(--title);
-}
-h4 {
-    color: var(--title);
-}
-p.note {
-    margin: 0 0 14px;
-    color: var(--muted);
-}
-ul.clean {
-    margin: 0;
-    padding-left: 20px;
-}
-ul,
-ol {
-    margin: -5px 0 1em 0;
-}
-ul.clean li {
-    margin: 6px 0;
-}
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid var(--table-border);
-    border-radius: 9px;
-    overflow: hidden;
-    background: #fff;
-}
-th,
-td {
-    border-bottom: 1px solid var(--table-border);
-    border-right: 1px solid var(--table-border);
-    vertical-align: top;
-    text-align: left;
-    padding: 16px 16px;
-    font-size: 15px;
-}
-th {
-    background: var(--th-bg);
-    font-size: 15px;
-    color: var(--th-title);
-}
-tr:last-child td,
-tr:last-child th {
-    border-bottom: none;
-}
-td:last-child,
-th:last-child {
-    border-right: none;
-}
-tbody tr:nth-child(even) td {
-    background: var(--table-even-row);
-}
-td ul {
-    margin: 0;
-    padding-left: 18px;
-}
-td li {
-    margin: 4px 0;
-}
-pre {
-    margin: 0;
-    padding: 16px;
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: #0f172a;
-    color: #e5eefc;
-}
-code {
-    font-family:
-        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
-        monospace;
-}
-pre code {
-    color: inherit;
-    background: transparent;
-    padding: 0;
-}
-pre.mermaid {
-    background: #f8fafc;
-}
-p code,
-li code,
-td code {
-    background: #eef3f7;
-    padding: 2px 6px;
-    border-radius: 9px;
-}
-.block-card {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    overflow: hidden;
-}
-.example-box {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-}
-.example-box p {
-    margin: 0;
-}
-.example-box.good-box {
-    border-left: 4px solid #0f766e;
-}
-.example-box.bad-box {
-    border-left: 4px solid #9a3412;
-}
-.blockquotes {
-    border: 1px solid var(--border);
-    background: #fbfcfd;
-    border-radius: 9px;
-    padding: 14px 16px;
-    margin: 12px 0;
-    border-left: 4px solid #e67e22;
-}
-.blockquotes p {
-    margin: 0;
-}
-.block-grid {
-    display: grid;
-    gap: 14px;
-}
-.q {
-    font-weight: 700;
-    margin: 0 0 8px;
-    color: var(--text);
-}
-.a {
-    color: var(--muted);
-    margin: 0;
-}
-strong,
-h2,
-h3,
-h4 {
-    color: var(--title);
-}
-a,
-h1 {
-    color: var(--accent);
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-@media (max-width: 760px) {
-    .page {
-        padding: 18px 12px 36px;
-    }
-    .header,
-    .section {
-        padding: 16px;
-    }
-    h1 {
-        font-size: 32px;
-    }
-    h2 {
-        font-size: 24px;
-    }
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-        display: block;
-    }
-    thead {
-        display: none;
-    }
-    tr {
-        border: 1px solid var(--table-border);
-        padding: 10px 0;
-    }
-    td {
-        border: none;
-        padding: 8px 0;
-    }
-    td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 4px;
-    }
-}
-
-  </style>
-
-</head>
-<body>
-  <main class="page">
-<section class="header">
-  <h1>Skill</h1>
-  <div class="meta">
-    <div class="meta-item"><span class="meta-label">name</span>dev-finish</div>
-    <div class="meta-item"><span class="meta-label">description</span>Finish a gitflow worktree for a Jira task. Merges the PR, deletes the worktree, and cleans up the local branch.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>dev-finish, devfinish</div>
-  </div>
-</section>
-<section class="section">
-<h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code> and <code>TASK_DIR</code> variables are defined there.  </p>
-</section>
-<section class="section">
-<h2>Flags</h2>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Flag">(none)</td>
-<td data-label="Behavior">Merge PR if approved, then delete worktree and branch</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>--worktree-only</code></td>
-<td data-label="Behavior">Delete worktree and branch only, skip PR merge</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>--dry-run</code></td>
-<td data-label="Behavior">Preview what would happen without making changes (read-only)</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section class="section">
-<h2>Workflow</h2>
-<h3>Step 1: Parse Input</h3>
-<ul>
-<li>Extract <code>KEY</code> from user input (regex: <code>([A-Z0-9]+-\d+)</code>, case-insensitive).</li>
-<li>Parse flags: <code>--worktree-only</code>, <code>--dry-run</code>.</li>
-<li>If no KEY: detect from the current directory (see Step 2).</li>
-</ul>
-<h3>Step 2: Find the Worktree</h3>
-<p>List all worktrees:</p>
-<pre><code class="language-bash">git worktree list
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Skill</title>
+        <style>
+            :root {
+                --bg: #e2e8f0;
+                --surface: #ffffff;
+                --surface-2: #f1f4f8;
+                --text: #1f2937;
+                --muted: #5b6574;
+                --border: #d9e0e7;
+                --accent: #0f766e;
+                --accent-soft: #e6f4f1;
+                --warning: #9a3412;
+                --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+                --radius: 9px;
+                --title: #1e3a5f;
+                --th-bg: #e6f4f8;
+                --th-title: #1e3a5f;
+                --h2-border-line: rgb(13, 148, 136);
+                --table-even-row: #f8fafc;
+                --table-border: #e5e7eb;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+                font-size: 17px;
+                color: var(--text);
+                background: var(--bg);
+                line-height: 1.65;
+            }
+            .page {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 32px 20px 56px;
+            }
+            .header {
+                background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                box-shadow: var(--shadow);
+                padding: 28px;
+                margin-bottom: 26px;
+                overflow: hidden;
+            }
+            .eyebrow {
+                display: inline-block;
+                padding: 6px 10px;
+                border-radius: 9px;
+                background: var(--accent-soft);
+                color: var(--accent);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 12px;
+            }
+            h1 {
+                margin: 0 0 10px;
+                font-size: 38px;
+                line-height: 1.15;
+                color: var(--title);
+            }
+            .meta {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 12px;
+                margin-top: 18px;
+            }
+            .meta-item {
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                padding: 12px 14px;
+            }
+            .meta-label {
+                display: block;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: var(--muted);
+                margin-bottom: 4px;
+                font-weight: 700;
+            }
+            .section {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                box-shadow: var(--shadow);
+                padding: 24px;
+                margin-bottom: 26px;
+                overflow: hidden;
+            }
+            h2 {
+                margin: 0 0 16px;
+                font-size: 28px;
+                color: var(--title);
+                border-bottom: 2px solid var(--h2-border-line);
+            }
+            h3 {
+                margin: 24px 0 10px;
+                font-size: 20px;
+                color: var(--title);
+            }
+            h4 {
+                color: var(--title);
+            }
+            p.note {
+                margin: 0 0 14px;
+                color: var(--muted);
+            }
+            ul.clean {
+                margin: 0;
+                padding-left: 20px;
+            }
+            ul,
+            ol {
+                margin: -5px 0 1em 0;
+            }
+            ul.clean li {
+                margin: 6px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                border: 1px solid var(--table-border);
+                border-radius: 9px;
+                overflow: hidden;
+                background: #fff;
+            }
+            th,
+            td {
+                border-bottom: 1px solid var(--table-border);
+                border-right: 1px solid var(--table-border);
+                vertical-align: top;
+                text-align: left;
+                padding: 16px 16px;
+                font-size: 15px;
+            }
+            th {
+                background: var(--th-bg);
+                font-size: 15px;
+                color: var(--th-title);
+            }
+            tr:last-child td,
+            tr:last-child th {
+                border-bottom: none;
+            }
+            td:last-child,
+            th:last-child {
+                border-right: none;
+            }
+            tbody tr:nth-child(even) td {
+                background: var(--table-even-row);
+            }
+            td ul {
+                margin: 0;
+                padding-left: 18px;
+            }
+            td li {
+                margin: 4px 0;
+            }
+            pre {
+                margin: 0;
+                padding: 16px;
+                overflow-x: auto;
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                background: #0f172a;
+                color: #e5eefc;
+            }
+            code {
+                font-family:
+                    "Cascadia Code", "SFMono-Regular", Consolas,
+                    "Liberation Mono", Menlo, monospace;
+            }
+            pre code {
+                color: inherit;
+                background: transparent;
+                padding: 0;
+            }
+            pre.mermaid {
+                background: #f8fafc;
+            }
+            p code,
+            li code,
+            td code {
+                background: #eef3f7;
+                padding: 2px 6px;
+                border-radius: 9px;
+            }
+            .block-card {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                overflow: hidden;
+            }
+            .example-box {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                margin: 12px 0;
+            }
+            .example-box p {
+                margin: 0;
+            }
+            .example-box.good-box {
+                border-left: 4px solid #0f766e;
+            }
+            .example-box.bad-box {
+                border-left: 4px solid #9a3412;
+            }
+            .blockquotes {
+                border: 1px solid var(--border);
+                background: #fbfcfd;
+                border-radius: 9px;
+                padding: 14px 16px;
+                margin: 12px 0;
+                border-left: 4px solid #e67e22;
+            }
+            .blockquotes p {
+                margin: 0;
+            }
+            .block-grid {
+                display: grid;
+                gap: 14px;
+            }
+            .q {
+                font-weight: 700;
+                margin: 0 0 8px;
+                color: var(--text);
+            }
+            .a {
+                color: var(--muted);
+                margin: 0;
+            }
+            strong,
+            h2,
+            h3,
+            h4 {
+                color: var(--title);
+            }
+            a,
+            h1 {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 760px) {
+                .page {
+                    padding: 18px 12px 36px;
+                }
+                .header,
+                .section {
+                    padding: 16px;
+                }
+                h1 {
+                    font-size: 32px;
+                }
+                h2 {
+                    font-size: 24px;
+                }
+                table,
+                thead,
+                tbody,
+                th,
+                td,
+                tr {
+                    display: block;
+                }
+                thead {
+                    display: none;
+                }
+                tr {
+                    border: 1px solid var(--table-border);
+                    padding: 10px 0;
+                }
+                td {
+                    border: none;
+                    padding: 8px 0;
+                }
+                td::before {
+                    content: attr(data-label);
+                    display: block;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    color: var(--muted);
+                    margin-bottom: 4px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="page">
+            <section class="header">
+                <h1>Skill</h1>
+                <div class="meta">
+                    <div class="meta-item">
+                        <span class="meta-label">name</span>dev-finish
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">description</span>Finish a
+                        gitflow worktree for a Jira task. Merges the PR, deletes
+                        the worktree, and cleans up the local branch.
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">triggers</span>dev-finish,
+                        devfinish
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <h2>Paths</h2>
+                <p>
+                    Read shared paths from <code>config.md</code>. All
+                    <code>TASKS_ROOT</code> and <code>TASK_DIR</code> variables
+                    are defined there.
+                </p>
+            </section>
+            <section class="section">
+                <h2>Flags</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Flag</th>
+                            <th>Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Flag">(none)</td>
+                            <td data-label="Behavior">
+                                Merge PR if approved, then delete worktree and
+                                branch
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Flag">
+                                <code>--worktree-only</code>
+                            </td>
+                            <td data-label="Behavior">
+                                Delete worktree and branch only, skip PR merge
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Flag"><code>--dry-run</code></td>
+                            <td data-label="Behavior">
+                                Preview what would happen without making changes
+                                (read-only)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="section">
+                <h2>Workflow</h2>
+                <h3>Step 1: Parse Input</h3>
+                <ul>
+                    <li>
+                        Extract <code>KEY</code> from user input (regex:
+                        <code>([A-Z0-9]+-\d+)</code>, case-insensitive).
+                    </li>
+                    <li>
+                        Parse flags: <code>--worktree-only</code>,
+                        <code>--dry-run</code>.
+                    </li>
+                    <li>
+                        If no KEY: detect from the current directory (see Step
+                        2).
+                    </li>
+                </ul>
+                <h3>Step 2: Find the Worktree</h3>
+                <p>List all worktrees:</p>
+                <pre><code class="language-bash">git worktree list
 </code></pre>
-<p>Parse each line as whitespace-separated columns: <code>&lt;path&gt; &lt;HEAD-hash&gt; [&lt;branch&gt;]</code>.  </p>
-<p>Example output:</p>
-<pre><code>E:/devflow                           abc1234 [main]
+                <p>
+                    Parse each line as whitespace-separated columns:
+                    <code>&lt;path&gt; &lt;HEAD-hash&gt; [&lt;branch&gt;]</code
+                    >.
+                </p>
+                <p>Example output:</p>
+                <pre><code>E:/devflow                           abc1234 [main]
 E:/devflow-worktrees/dev-7-foo       def5678 [feature/dev-7-update-skill]
 </code></pre>
-<p><strong>If KEY was provided:</strong> find the line whose path or branch contains the KEY (case-insensitive).  </p>
-<p><strong>If no KEY was provided:</strong> find the line whose path matches the current directory (case-insensitive comparison, normalize path separators). Extract KEY from the branch name on that line (regex: <code>([A-Z0-9]+-\d+)</code>, case-insensitive). If no KEY can be extracted from the branch name, stop: "Cannot detect task key from the current directory. Provide a KEY: <code>dev-finish [KEY]</code>."  </p>
-<p>Extract from the matching line:</p>
-<ul>
-<li><code>WORKTREE_PATH</code> — first column (the directory path)</li>
-<li><code>BRANCH_NAME</code> — the branch name in brackets</li>
-<li><code>MAIN_REPO</code> — the path from the line whose branch is <code>main</code> (or <code>develop</code> if no <code>main</code> worktree exists)</li>
-</ul>
-<p><strong>If no match:</strong> "No worktree found for <code>[KEY]</code> on this machine." Stop.  </p>
-<p><strong>If multiple matches:</strong> show all and ask user to pick one.</p>
-<h3>Step 3: Check PR Status (Read-Only)</h3>
-<p>Find the open PR for this branch (<code>gh pr</code> works from any directory):</p>
-<pre><code class="language-bash">gh pr list --head &quot;[BRANCH_NAME]&quot; --state open --json number,title,url,reviewDecision
+                <p>
+                    <strong>If KEY was provided:</strong> find the line whose
+                    path or branch contains the KEY (case-insensitive).
+                </p>
+                <p>
+                    <strong>If no KEY was provided:</strong> find the line whose
+                    path matches the current directory (case-insensitive
+                    comparison, normalize path separators). Extract KEY from the
+                    branch name on that line (regex:
+                    <code>([A-Z0-9]+-\d+)</code>, case-insensitive). If no KEY
+                    can be extracted from the branch name, stop: "Cannot detect
+                    task key from the current directory. Provide a KEY:
+                    <code>dev-finish [KEY]</code>."
+                </p>
+                <p>Extract from the matching line:</p>
+                <ul>
+                    <li>
+                        <code>WORKTREE_PATH</code> — first column (the directory
+                        path)
+                    </li>
+                    <li>
+                        <code>BRANCH_NAME</code> — the branch name in brackets
+                    </li>
+                    <li>
+                        <code>MAIN_REPO</code> — the path from the line whose
+                        branch is <code>main</code> (or <code>develop</code> if
+                        no <code>main</code> worktree exists)
+                    </li>
+                </ul>
+                <p>
+                    <strong>If no match:</strong> "No worktree found for
+                    <code>[KEY]</code> on this machine." Stop.
+                </p>
+                <p>
+                    <strong>If multiple matches:</strong> show all and ask user
+                    to pick one.
+                </p>
+                <h3>Step 3: Check PR Status (Read-Only)</h3>
+                <p>
+                    Find the open PR for this branch (<code>gh pr</code> works
+                    from any directory):
+                </p>
+                <pre><code class="language-bash">gh pr list --head &quot;[BRANCH_NAME]&quot; --state open --json number,title,url,reviewDecision
 </code></pre>
-<table>
-<thead>
-<tr>
-<th>Result</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Result">No open PR</td>
-<td data-label="Action"><code>PR_STATUS</code> = <code>no PR found</code>. "No open PR found for branch <code>[BRANCH_NAME]</code>."</td>
-</tr>
-<tr>
-<td data-label="Result">Multiple PRs</td>
-<td data-label="Action">Show all, ask user to pick one, then use its status.</td>
-</tr>
-<tr>
-<td data-label="Result">Single PR</td>
-<td data-label="Action"><code>PR_STATUS</code> = the <code>reviewDecision</code> value (may be <code>APPROVED</code>, <code>CHANGES_REQUESTED</code>, <code>REVIEW_REQUIRED</code>, or blank/null).</td>
-</tr>
-</tbody>
-</table>
-<p>If <code>reviewDecision</code> is blank or null, treat it as <code>REVIEW_REQUIRED</code> (no reviews submitted yet).  </p>
-<p>Save <code>PR_URL</code> and <code>PR_NUMBER</code> for later steps.</p>
-<h3>Step 4: Dry-Run Preview</h3>
-<p>If <code>--dry-run</code>: display what would happen and stop.</p>
-<pre><code>## Dry-Run Preview
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Result</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Result">No open PR</td>
+                            <td data-label="Action">
+                                <code>PR_STATUS</code> =
+                                <code>no PR found</code>. "No open PR found for
+                                branch <code>[BRANCH_NAME]</code>."
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Result">Multiple PRs</td>
+                            <td data-label="Action">
+                                Show all, ask user to pick one, then use its
+                                status.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Result">Single PR</td>
+                            <td data-label="Action">
+                                <code>PR_STATUS</code> = the
+                                <code>reviewDecision</code> value (may be
+                                <code>APPROVED</code>,
+                                <code>CHANGES_REQUESTED</code>,
+                                <code>REVIEW_REQUIRED</code>, or blank/null).
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    If <code>reviewDecision</code> is blank or null, treat it as
+                    <code>REVIEW_REQUIRED</code> (no reviews submitted yet).
+                </p>
+                <p>
+                    Save <code>PR_URL</code> and <code>PR_NUMBER</code> for
+                    later steps.
+                </p>
+                <h3>Step 4: Dry-Run Preview</h3>
+                <p>
+                    If <code>--dry-run</code>: display what would happen and
+                    stop.
+                </p>
+                <pre><code>## Dry-Run Preview
 
 Task: [KEY]
 Worktree: [WORKTREE_PATH]
@@ -412,84 +498,175 @@ PR status: [PR_STATUS]
 
 Action: [merge PR + delete worktree | delete worktree only | no action (blocked)]
 </code></pre>
-<p>Stop here. Do not proceed to Steps 5-7.</p>
-<h3>Step 5: Handle PR</h3>
-<p>Skip this step if <code>--worktree-only</code>.</p>
-<table>
-<thead>
-<tr>
-<th>PR_STATUS</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="PR_STATUS"><code>no PR found</code></td>
-<td data-label="Action">"No open PR found for branch <code>[BRANCH_NAME]</code>. It may already be merged. Proceeding to clean up worktree." Continue to Step 6.</td>
-</tr>
-<tr>
-<td data-label="PR_STATUS"><code>APPROVED</code></td>
-<td data-label="Action">Merge the PR (proceed to Step 5a)</td>
-</tr>
-<tr>
-<td data-label="PR_STATUS"><code>CHANGES_REQUESTED</code></td>
-<td data-label="Action">"PR has requested changes. Resolve them before finishing: [PR_URL]" Stop.</td>
-</tr>
-<tr>
-<td data-label="PR_STATUS"><code>REVIEW_REQUIRED</code></td>
-<td data-label="Action">"PR is awaiting review. Cannot merge yet: [PR_URL]" Stop.</td>
-</tr>
-<tr>
-<td data-label="PR_STATUS">blank / null</td>
-<td data-label="Action">"PR has no reviews yet. Cannot merge: [PR_URL]" Stop.</td>
-</tr>
-</tbody>
-</table>
-<h4>Step 5a: Merge the PR</h4>
-<pre><code class="language-bash">gh pr merge [PR_NUMBER] --squash --delete-branch
+                <p>Stop here. Do not proceed to Steps 5-7.</p>
+                <h3>Step 5: Handle PR</h3>
+                <p>Skip this step if <code>--worktree-only</code>.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PR_STATUS</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="PR_STATUS">
+                                <code>no PR found</code>
+                            </td>
+                            <td data-label="Action">
+                                "No open PR found for branch
+                                <code>[BRANCH_NAME]</code>. It may already be
+                                merged. Proceeding to clean up worktree."
+                                Continue to Step 6.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="PR_STATUS">
+                                <code>APPROVED</code>
+                            </td>
+                            <td data-label="Action">
+                                Merge the PR (proceed to Step 5a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="PR_STATUS">
+                                <code>CHANGES_REQUESTED</code>
+                            </td>
+                            <td data-label="Action">
+                                "PR has requested changes. Resolve them before
+                                finishing: [PR_URL]" Stop.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="PR_STATUS">
+                                <code>REVIEW_REQUIRED</code>
+                            </td>
+                            <td data-label="Action">
+                                "PR is awaiting review. Cannot merge yet:
+                                [PR_URL]" Stop.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="PR_STATUS">blank / null</td>
+                            <td data-label="Action">
+                                "PR has no reviews yet. Cannot merge: [PR_URL]"
+                                Stop.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4>Step 5a: Merge the PR</h4>
+                <pre><code class="language-bash">gh pr merge [PR_NUMBER] --squash --delete-branch
 </code></pre>
-<p>If merge fails: report the error and stop. Do not delete the worktree.</p>
-<pre><code>✅ PR merged: [PR_URL]
+                <p>
+                    If merge fails: report the error and stop. Do not delete the
+                    worktree.
+                </p>
+                <pre><code>✅ PR merged: [PR_URL]
 </code></pre>
-<h3>Step 6: Delete Worktree</h3>
-<p>Check if the current working directory is inside the worktree:</p>
-<pre><code class="language-bash">pwd
+                <h3>Step 6: Delete Worktree</h3>
+                <p>
+                    Check if the current working directory is inside the
+                    worktree:
+                </p>
+                <pre><code class="language-bash">pwd
 </code></pre>
-<p>If <code>pwd</code> starts with <code>[WORKTREE_PATH]</code>, set <code>WAS_IN_WORKTREE = true</code>. The user's shell will be in a deleted directory after this step — they'll need to <code>cd</code> out.  </p>
-<p>Remove the worktree (use <code>-C</code> so the command runs from the main repo, regardless of cwd):</p>
-<pre><code class="language-bash">git -C &quot;[MAIN_REPO]&quot; worktree remove &quot;[WORKTREE_PATH]&quot; --force
+                <p>
+                    If <code>pwd</code> starts with
+                    <code>[WORKTREE_PATH]</code>, set
+                    <code>WAS_IN_WORKTREE = true</code>. The user's shell will
+                    be in a deleted directory after this step — they'll need to
+                    <code>cd</code> out.
+                </p>
+                <p>
+                    Remove the worktree from git tracking (use
+                    <code>-C</code> so the command runs from the main repo,
+                    regardless of cwd):
+                </p>
+                <pre><code class="language-bash">git -C &quot;[MAIN_REPO]&quot; worktree remove &quot;[WORKTREE_PATH]&quot; --force
 </code></pre>
-<p>Delete the local branch (it may still exist after worktree removal):</p>
-<pre><code class="language-bash">git -C &quot;[MAIN_REPO]&quot; branch -D &quot;[BRANCH_NAME]&quot; 2&gt;/dev/null
+                <p>
+                    Delete the entire worktree folder from disk (ensures any
+                    untracked or gitignored files are also removed):
+                </p>
+                <pre><code class="language-bash">rm -rf &quot;[WORKTREE_PATH]&quot;
 </code></pre>
-<p>If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.</p>
-<h3>Step 7: Report Result</h3>
-<pre><code>✅ dev-finish complete for [KEY]
+                <p>
+                    Delete the local branch (it may still exist after worktree
+                    removal):
+                </p>
+                <pre><code class="language-bash">git -C &quot;[MAIN_REPO]&quot; branch -D &quot;[BRANCH_NAME]&quot; 2&gt;/dev/null
+</code></pre>
+                <p>
+                    If branch deletion fails (already deleted by PR merge, or
+                    never existed), ignore the error.
+                </p>
+                <h3>Step 7: Report Result</h3>
+                <pre><code>✅ dev-finish complete for [KEY]
 
-PR: [PR_URL | skipped | no PR found]
-Worktree removed: [WORKTREE_PATH]
-Branch deleted: [BRANCH_NAME]
-</code></pre>
-<p>If <code>WAS_IN_WORKTREE = true</code>, add:</p>
-<pre><code>⚠️  Your shell is in a deleted directory. Switch to the main repo:
+                PR: [PR_URL | skipped | no PR found]
+                Worktree removed: [WORKTREE_PATH]
+                Branch deleted: [BRANCH_NAME]
+                </code></pre>
+                <p>If <code>WAS_IN_WORKTREE = true</code>, add:</p>
+                <pre><code>⚠️  Your shell is in a deleted directory. Switch to the main repo:
   cd [MAIN_REPO]
 </code></pre>
-</section>
-<section class="section">
-<h2>Edge Cases</h2>
-<ul>
-<li><strong>Worktree not found:</strong> fail fast with a clear message.</li>
-<li><strong>KEY not extractable from branch name:</strong> stop and ask user to provide KEY explicitly.</li>
-<li><strong>No <code>main</code> worktree:</strong> fall back to <code>develop</code> for <code>MAIN_REPO</code>. If neither exists, use the first worktree listed.</li>
-<li><strong><code>gh</code> CLI not installed:</strong> stop and tell user to install it (<code>gh auth login</code>).</li>
-<li><strong>No open PR:</strong> assume already merged, proceed to cleanup.</li>
-<li><strong>PR has unresolved comments / changes requested:</strong> stop and show PR URL.</li>
-<li><strong>PR with no reviews (null reviewDecision):</strong> treat as <code>REVIEW_REQUIRED</code>, stop.</li>
-<li><strong>Merge fails:</strong> stop, keep worktree intact, show error.</li>
-<li><strong>Multiple worktrees matching KEY:</strong> let user choose.</li>
-<li><strong>Running from the worktree itself:</strong> detect via <code>pwd</code>, warn the user their shell is in a deleted directory and show the <code>cd</code> command to escape.</li>
-</ul>
-</section>
-  </main>
-</body>
+            </section>
+            <section class="section">
+                <h2>Edge Cases</h2>
+                <ul>
+                    <li>
+                        <strong>Worktree not found:</strong> fail fast with a
+                        clear message.
+                    </li>
+                    <li>
+                        <strong>KEY not extractable from branch name:</strong>
+                        stop and ask user to provide KEY explicitly.
+                    </li>
+                    <li>
+                        <strong>No <code>main</code> worktree:</strong> fall
+                        back to <code>develop</code> for <code>MAIN_REPO</code>.
+                        If neither exists, use the first worktree listed.
+                    </li>
+                    <li>
+                        <strong><code>gh</code> CLI not installed:</strong> stop
+                        and tell user to install it (<code>gh auth login</code
+                        >).
+                    </li>
+                    <li>
+                        <strong>No open PR:</strong> assume already merged,
+                        proceed to cleanup.
+                    </li>
+                    <li>
+                        <strong
+                            >PR has unresolved comments / changes
+                            requested:</strong
+                        >
+                        stop and show PR URL.
+                    </li>
+                    <li>
+                        <strong
+                            >PR with no reviews (null reviewDecision):</strong
+                        >
+                        treat as <code>REVIEW_REQUIRED</code>, stop.
+                    </li>
+                    <li>
+                        <strong>Merge fails:</strong> stop, keep worktree
+                        intact, show error.
+                    </li>
+                    <li>
+                        <strong>Multiple worktrees matching KEY:</strong> let
+                        user choose.
+                    </li>
+                    <li>
+                        <strong>Running from the worktree itself:</strong>
+                        detect via <code>pwd</code>, warn the user their shell
+                        is in a deleted directory and show the
+                        <code>cd</code> command to escape.
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </body>
 </html>

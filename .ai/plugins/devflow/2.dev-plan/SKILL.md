@@ -28,7 +28,7 @@ Read from `TASK_DIR` when present:
 - `progress.md` — task timeline, next iteration number
 - PR review feedback captured in `review.md` or user message — comments to address
 
-If local files are missing, fall back to Jira MCP or user message. Do not fail on missing files.
+If local files are missing, fall back to Jira MCP (requires `.env` in repo root with `JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`) or user message. Do not fail on missing files.
 
 ### Step 2: Investigate Codebase
 
