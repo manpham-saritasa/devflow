@@ -456,7 +456,7 @@ flowchart TD
 <tbody>
 <tr>
 <td data-label="Trigger"><code>/dev-start</code> or <code>devstart</code></td>
-<td data-label="What it does">Create a worktree from a Jira key. Fetches latest base branch, copies <code>.env</code> to worktree. <code>--hotfix</code> branches from <code>main</code>, <code>--force</code> from current, <code>--dry-run</code> previews.</td>
+<td data-label="What it does">Create a worktree from a Jira key. <code>--hotfix</code> branches from <code>main</code>, <code>--force</code> from current, <code>--dry-run</code> previews.</td>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-plan</code></td>
@@ -464,11 +464,11 @@ flowchart TD
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-code</code></td>
-<td data-label="What it does">Read <code>plan.md</code>, implement changes, capture manual changes, write <code>changelog.md</code> with <code>Delivery</code> tracking.</td>
+<td data-label="What it does">Read <code>plan.md</code>, implement changes, write <code>changelog.md</code>.</td>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-review</code></td>
-<td data-label="What it does">Review changes via <code>git diff</code>, check changelog for unlogged changes, write <code>review.md</code>, issue verdict.</td>
+<td data-label="What it does">Review changes via <code>git diff</code>, write <code>review.md</code>, issue verdict.</td>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-ship</code> or <code>dev-ship-pr-jira</code></td>

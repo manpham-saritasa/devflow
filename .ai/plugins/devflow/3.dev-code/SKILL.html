@@ -347,28 +347,18 @@ a:hover {
 <li>Never claim verification that didn't happen</li>
 <li>If verification is incomplete, state what was/wasn't run and why</li>
 </ul>
-<h3>Step 5: Capture Manual Changes</h3>
-<p>Before writing the changelog, ask the user:  </p>
-<div class="blockquotes">
-<p>"I implemented [N] changes from the plan. Did you make any additional manual changes outside this session? If yes, describe them and I'll include them as <code>[manual]</code> items in the changelog."</p>
-</div>
-<ul>
-<li>If user says no → <code>**Delivery:** Skill</code>.</li>
-<li>If user describes additional changes → <code>**Delivery:** Mixed</code>. Include those changes in the changelog, annotated with <code>[manual]</code>. Skill-implemented items get <code>[skill]</code>.</li>
-</ul>
-<h3>Step 6: Write Changelog</h3>
+<h3>Step 5: Write Changelog</h3>
 <p>Append a new iteration to <code>TASK_DIR/changelog.md</code> using <code>CHANGELOG_TEMPLATE</code>:</p>
 <ul>
 <li><code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
-<li><code>**Trigger:**</code>, <code>**Status:**</code>, <code>**Delivery:**</code>, <code>**Plan reference:**</code></li>
+<li><code>**Trigger:**</code>, <code>**Status:**</code>, <code>**Plan reference:**</code></li>
 <li>Populate relevant sections: <code>### Added</code>, <code>### Changed</code>, <code>### Fixed</code></li>
 <li>Number items <code>[1]</code>, <code>[2]</code>, <code>[3]</code>; past tense, outcome-focused</li>
-<li>When <code>Delivery</code> is <code>Mixed</code>, note in the <code>### Summary</code> which items were manual vs. skill</li>
 <li>For <code>### Fixed</code>: include <code>Root cause</code> and <code>Resolution</code> based on evidence</li>
 <li>If root cause cannot be proven, state best-supported explanation and label as inferred</li>
 <li>If fixed without reliable reproduction, state that explicitly</li>
 </ul>
-<h3>Step 7: Update Progress</h3>
+<h3>Step 6: Update Progress</h3>
 <p>Append/update timeline entry in <code>TASK_DIR/progress.md</code> using <code>PROGRESS_TEMPLATE</code>:</p>
 <ul>
 <li><code>Trigger</code>, <code>Status</code>, <code>Summary</code>, <code>Files</code>, <code>Next Action</code>, <code>ADR Suggested</code></li>

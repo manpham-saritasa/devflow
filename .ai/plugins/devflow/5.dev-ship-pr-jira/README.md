@@ -97,3 +97,76 @@ The skill:
 - Reads what you fixed
 - Creates a PR with title: `Fix crash PROJ-456`
 - Comments on Jira task `PROJ-456` with the PR link
+
+## Future reuse guidance
+
+This section exists in the PR template.
+
+Use it to record whether part of the implementation is safe to copy into future work, what exact pattern is reusable, and what caveat must be checked before reuse.
+
+This helps future engineers and LLMs answer questions like:
+- Can we follow the same pattern in a similar task?
+- Is this a stable approach or only a one-off workaround?
+- What condition must be checked before reusing it?
+
+Write it like this:
+
+```md
+## Future reuse guidance
+- Safe to copy: [YES / NO / WITH CARE]
+- Reusable pattern: ...
+- Caveat: ...
+```
+
+### When to use it
+
+Use this section when the PR shows a reusable pattern clearly enough, for example:
+- Request validation flow
+- State handling pattern
+- API request shaping
+- Mapping logic
+- UI interaction flow
+- Integration boundary rule
+- Permission check pattern
+
+### When not to use it
+
+Do not use this section for:
+- Vague advice
+- One-off hacks
+- Temporary debug code
+- Legacy fallback logic that should not spread
+- Anything not clearly supported by the PR evidence
+
+### Example: safe to copy
+
+```md
+## Future reuse guidance
+- Safe to copy: YES
+- Reusable pattern: Reuse the same request-validation pipeline for new admin write endpoints.
+- Caveat: Keep the same role check and error response shape.
+```
+
+Use `YES` when the pattern looks intentional, review-safe, and not tightly coupled to one-off constraints.
+
+### Example: use with care
+
+```md
+## Future reuse guidance
+- Safe to copy: WITH CARE
+- Reusable pattern: Reuse the optimistic UI update pattern for small inline field edits.
+- Caveat: Confirm rollback behavior and stale-data handling before applying it to multi-step flows.
+```
+
+Use `WITH CARE` when the pattern is probably useful but depends on assumptions, missing verification, or context-specific trade-offs.
+
+### Example: do not copy
+
+```md
+## Future reuse guidance
+- Safe to copy: NO
+- Reusable pattern: Temporary fallback mapping for legacy invoice status values.
+- Caveat: This exists only for backward compatibility and should not be used in new flows.
+```
+
+Use `NO` when the logic is transitional, workaround-based, legacy-only, or clearly unsuitable as a standard pattern.
