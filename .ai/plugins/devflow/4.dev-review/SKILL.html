@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-review</div>
+    <div class="meta-item"><span class="meta-label">description</span>Review implemented code against task context and the latest plan/changelog iteration. Append findings to review.md and progress.md.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-review, devreview</div>
+  </div>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and template variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>Workflow</h2>
+<h3>Step 0: Check Templates</h3>
+<p>Check <code>REVIEW_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
+<h3>Step 1: Read Context</h3>
+<p>Read from <code>TASK_DIR</code>:</p>
+<ul>
+<li><code>task.md</code>, <code>raw.md</code> — requirements, constraints, acceptance criteria</li>
+<li><code>plan.md</code> — latest iteration as planned baseline</li>
+<li><code>changelog.md</code> — latest iteration as claimed summary (not source of truth)</li>
+<li><code>review.md</code> — prior passes, determine next review pass number, track unresolved findings</li>
+<li><code>progress.md</code> — current state, active iteration</li>
+</ul>
+<h3>Step 2: Identify Changes</h3>
+<pre><code class="language-bash">git diff develop...HEAD
+</code></pre>
+<p>Fallback: <code>git diff main...HEAD</code>  </p>
+<p>Collect <code>diff_files[]</code> from the branch diff.<br>
+Collect <code>plan_files[]</code> from the latest plan iteration when explicit file paths are listed.<br>
+Compute <code>unexpected_files[]</code> = files in diff but not in plan. Flag them — do not auto-fail if the change is justified and low-risk.<br>
+Review full changed files when context is needed to judge correctness, not just diff hunks.</p>
+<h3>Step 3: Fit Check</h3>
+<ul>
+<li>Evaluate every acceptance criterion and planned item</li>
+<li>Accept deviations only when result is equivalent or better</li>
+<li>Check <code>Out of scope</code>, <code>Do not modify</code>, and other plan constraints</li>
+<li>Verify the latest changelog iteration accurately reflects implementation</li>
+</ul>
+<h3>Step 4: Quality Check</h3>
+<p>Review across these dimensions:</p>
+<ul>
+<li><strong>Correctness:</strong> edge cases, null handling, control flow, regression risk</li>
+<li><strong>Quality:</strong> readability, naming, duplication, complexity, maintainability</li>
+<li><strong>Design:</strong> alignment with abstractions, separation of concerns, patterns</li>
+<li><strong>Security:</strong> validation, auth/authz, injection, data exposure</li>
+<li><strong>Performance:</strong> queries, loops, memory, repeated work</li>
+<li><strong>Error handling:</strong> logging, failure behavior</li>
+<li><strong>Testing:</strong> coverage, adequacy of verification</li>
+</ul>
+<p>Label every issue: <code>[blocking]</code> or <code>[minor]</code>.</p>
+<ul>
+<li><code>[blocking]</code> = broken requirement, crash, security flaw, data loss risk, regression risk, invariant violation.</li>
+<li><code>[minor]</code> = readability, consistency, maintainability, non-critical verification gap.</li>
+</ul>
+<h3>Step 5: Verdict</h3>
+<ul>
+<li><strong>Pass</strong> — fit clean, no blocking issues</li>
+<li><strong>Pass with Changes</strong> — fit acceptable, minor issues remain</li>
+<li><strong>Fail</strong> — acceptance criterion fails, plan violation, or blocking issue exists</li>
+</ul>
+<h3>Step 6: Write Review</h3>
+<p>Determine the next review pass number from prior <code>review.md</code> (default: 1).<br>
+Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p>
+<ul>
+<li>New review pass for the active iteration</li>
+<li>Every acceptance criterion in <code>Acceptance Criteria Review</code></li>
+<li>Every planned change in <code>Plan Coverage Review</code></li>
+<li>Every issue with severity, category, location, explanation, suggested fix</li>
+<li>Empty sections: write <code>None</code></li>
+</ul>
+<h3>Step 7: Update Progress</h3>
+<p>Update <code>TASK_DIR/progress.md</code>:</p>
+<ul>
+<li>Status: <code>Approved</code>, <code>Approved with Changes</code>, <code>Rejected</code>, <code>Blocked</code>, or <code>Needs Review</code></li>
+<li><code>ADR Suggested</code>: <code>Yes</code>/<code>No</code> with reason if yes</li>
+</ul>
+</section>
+<section class="section">
+<h2>ADR Triggers</h2>
+<p>Set <code>ADR Suggested = Yes</code> if:</p>
+<ul>
+<li>New third-party service or external API integrated</li>
+<li>New library/package introduces new capability or pattern</li>
+<li>Existing technical approach replaced</li>
+<li>Database schema changed</li>
+<li>Auth flow structure changed</li>
+</ul>
+<p>Do not create ADR files — only recommend.</p>
+</section>
+<section class="section">
+<h2>Self-Check</h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Review compared actual code against task context, plan, and changelog?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Repository conventions and architecture respected?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Full files reviewed when context needed, not just diff hunks?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fit and quality reviewed separately?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Unexpected files flagged?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Blocking vs minor issues distinguished?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review pass number determined from prior reviews?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Progress.md updated?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verdict matches findings?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> ADR recommended only when appropriate?</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

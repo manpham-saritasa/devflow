@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-start</div>
+    <div class="meta-item"><span class="meta-label">description</span>Start a gitflow worktree for a Jira task. Creates a feature or hotfix branch in a sibling worktree folder, ready for development.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-start, devstart</div>
+  </div>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<p>Read shared paths from <code>config.md</code>. <code>TASKS_ROOT</code> and <code>TASK_DIR</code> are defined there.</p>
+<ul>
+<li><code>WORKTREE_ROOT</code>: <code>[REPO_NAME]-worktrees</code> — sibling folder to the repo, e.g. <code>../proj-worktrees</code></li>
+</ul>
+</section>
+<section class="section">
+<h2>Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Feature branch from <code>develop</code></td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--hotfix</code></td>
+<td data-label="Behavior">Hotfix branch from <code>main</code></td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--force</code></td>
+<td data-label="Behavior">Branch from current branch, skip branch-state validation</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--dry-run</code></td>
+<td data-label="Behavior">Validate and preview without creating worktree or task folder</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Workflow</h2>
+<h3>Step 1: Parse Input</h3>
+<ul>
+<li>Extract <code>KEY</code> from user input (regex: <code>([A-Z0-9]+-\d+)</code>).</li>
+<li>Parse flags: <code>--hotfix</code>, <code>--force</code>, <code>--dry-run</code>.</li>
+<li>If no KEY: ask user for a Jira task key. Stop if none provided.</li>
+</ul>
+<h3>Step 2: Check for Existing Worktree</h3>
+<p>Determine the repo name:</p>
+<pre><code class="language-bash">basename $(git rev-parse --show-toplevel)
+</code></pre>
+<p>Check if a worktree for this task already exists (match on the task key):</p>
+<pre><code class="language-bash">find &quot;../[REPO_NAME]-worktrees&quot; -maxdepth 1 -type d -name &quot;*[KEY]*&quot; 2&gt;/dev/null
+</code></pre>
+<p>If a match is found: "A worktree for <code>[KEY]</code> already exists: <code>[MATCHED_PATH]</code>. Switch to it instead: <code>cd [MATCHED_PATH]</code>". Stop.  </p>
+<p>Skip this step if <code>--dry-run</code>.</p>
+<h3>Step 3: Validate Branch State</h3>
+<p>Run <code>git branch --show-current</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Required branch</th>
+<th>Alert if not on this branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none, default)</td>
+<td data-label="Required branch"><code>develop</code></td>
+<td data-label="Alert if not on this branch">"You are not on <code>develop</code>. Feature branches should be created from <code>develop</code>. Switch to <code>develop</code> first or use <code>--force</code> to branch from current."</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--hotfix</code></td>
+<td data-label="Required branch"><code>main</code></td>
+<td data-label="Alert if not on this branch">"You are not on <code>main</code>. Hotfix branches should be created from <code>main</code>. Switch to <code>main</code> first."</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--force</code></td>
+<td data-label="Required branch">any</td>
+<td data-label="Alert if not on this branch">No alert. Branch from current.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For <code>--hotfix</code>:</strong> also check for uncommitted changes and that <code>main</code> is up to date:</p>
+<pre><code class="language-bash"># Check working tree is clean
+git status --porcelain
+</code></pre>
+<p>If dirty: "Working tree has uncommitted changes. Commit or stash them before creating a hotfix from <code>main</code>." Stop.</p>
+<pre><code class="language-bash">git fetch origin main
+git rev-list --count HEAD..origin/main
+</code></pre>
+<p>If behind: "<code>main</code> is behind origin by [N] commits. Pull latest <code>main</code> before creating a hotfix." Stop.  </p>
+<p>Stop if branch requirements not met (except <code>--force</code>, which skips all of Step 3).</p>
+<h3>Step 4: Fetch Task Summary</h3>
+<p>Use Jira MCP to fetch the task summary and build the branch name. If Jira MCP is unavailable, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
+<h3>Step 5: Build Branch Name</h3>
+<p>Format: <code>[type]/[task-key-lowercase]-[short-summary]</code>  </p>
+<p>Examples:</p>
+<ul>
+<li>Feature: <code>feature/proj-2145-adjust-pdf-text-spacing</code></li>
+<li>Hotfix: <code>hotfix/proj-2145-fix-login-crash</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Task key: lowercase, no spaces.</li>
+<li>Summary: lowercase, words separated by hyphens, max 5-6 words.</li>
+<li>Strip special characters, keep only a-z, 0-9, and hyphens.</li>
+</ul>
+<h3>Step 6: Dry-Run Preview</h3>
+<p>If <code>--dry-run</code>: display what would happen and stop. Do not create anything.</p>
+<pre><code>## Dry-Run Preview
+
+Branch: [BRANCH_NAME]
+Type: [feature | hotfix | force]
+Task: [KEY]
+Summary: [short-summary]
+
+Worktree would be created at: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+Task folder would be: .local/tasks/[KEY]
+</code></pre>
+<p>Stop here. Do not proceed to Steps 7-9.</p>
+<h3>Step 7: Create Task Folder</h3>
+<p>Create <code>TASK_DIR</code> if it doesn't exist.<br>
+Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is available and file doesn't exist.</p>
+<h3>Step 8: Create Worktree</h3>
+<p><strong>Pre-flight checks:</strong>  </p>
+<p>Check the branch name is not already in use:</p>
+<pre><code class="language-bash">git branch --list &quot;[BRANCH_NAME]&quot;
+</code></pre>
+<p>If the branch exists: "Branch <code>[BRANCH_NAME]</code> already exists. Choose a different summary or delete the old branch." Stop.  </p>
+<p>Verify the parent directory is writable:</p>
+<pre><code class="language-bash">test -w &quot;..&quot; &amp;&amp; echo &quot;WRITABLE&quot; || echo &quot;NOT_WRITABLE&quot;
+</code></pre>
+<p>If not writable: "Parent directory <code>..</code> is not writable. Cannot create worktree root." Stop.  </p>
+<p>Create worktree root if it doesn't exist:</p>
+<pre><code class="language-bash">mkdir -p &quot;../[REPO_NAME]-worktrees&quot;
+</code></pre>
+<p>Create the worktree:</p>
+<pre><code class="language-bash">git worktree add &quot;../[REPO_NAME]-worktrees/[BRANCH_NAME]&quot; -b [BRANCH_NAME]
+</code></pre>
+<p><strong>If worktree creation fails:</strong> report the error. If the task folder was created in Step 7, note it:<br>
+"Worktree creation failed. The task folder <code>.local/tasks/[KEY]</code> was already created — you may want to remove it if retrying with a different branch name."</p>
+<h3>Step 9: Report Result</h3>
+<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+
+Branch: [BRANCH_NAME]
+Type: [feature | hotfix | force]
+Task: [KEY]
+
+Switch to worktree first:
+  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+
+Then start:
+  Full flow:  /devflow [KEY]
+  Plan only:  /dev-plan [KEY]
+</code></pre>
+<p><strong>Important:</strong> All further work must be done from the worktree folder. Tell the user to <code>cd</code> into it first.</p>
+</section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devflow Plugin</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Devflow Plugin</h1>
+</section>
+<section class="section">
+<p>A self-contained AI workflow plugin for gitflow-based Jira task development. Automates the full lifecycle: start → plan → code → review → ship → fix → finish → document.</p>
+<pre class="mermaid">
+flowchart TD
+    START[dev-start]:::accent0 --> PLAN[dev-plan]:::accent1
+    PLAN --> CODE[dev-code]:::accent2
+    CODE --> REVIEW[dev-review]:::accent3
+    REVIEW --> SHIP[dev-ship]:::accent4
+    SHIP --> PR{PR Review}:::accent5
+    PR -->|changes requested| FIX[dev-fix-pr]:::accent6
+    FIX --> PR
+    PR -->|approved| FINISH[dev-finish]:::accent7
+    FINISH --> ADR{Architectural?}:::accent0
+    ADR -->|yes| DOC[dev-adr]:::accent1
+    ADR -->|no| DONE[Done]:::accent2
+    DOC --> DONE
+</pre>
+</section>
+<section class="section">
+<h2>Structure</h2>
+<pre><code>devflow/
+  config.md                   ← shared paths and templates
+  agent.md                    ← orchestrator (full pipeline)
+  templates/                  ← shared templates (plan, changelog, review, ADR)
+
+  1.dev-start/                ← create worktree + branch
+  2.dev-plan/                 ← analyze + create execution plan
+  3.dev-code/                 ← implement planned changes
+  4.dev-review/               ← review code against plan + criteria
+  5.dev-ship-pr-jira/         ← create PR + comment Jira + generate reports
+  6.dev-fix-pr/               ← fix PR review comments (multi-round loop)
+  7.dev-finish/               ← merge PR + delete worktree + cleanup
+  8.dev-adr/                  ← create Architecture Decision Record
+</code></pre>
+</section>
+<section class="section">
+<h2>PROs</h2>
+<table>
+<thead>
+<tr>
+<th>Advantage</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Advantage"><strong>Self-contained</strong></td>
+<td data-label="Detail">All paths are relative to the plugin root. Move, copy, or share the entire folder — nothing breaks.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Single config</strong></td>
+<td data-label="Detail"><code>config.md</code> defines all shared paths and templates. Change it once, every skill follows.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Full lifecycle</strong></td>
+<td data-label="Detail">Covers every phase from worktree creation to PR merge to archival documentation.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Multi-round support</strong></td>
+<td data-label="Detail"><code>dev-fix-pr</code> loops until all review comments are resolved — no re-invocation needed.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Checkpoint gating</strong></td>
+<td data-label="Detail">Every destructive step has a user checkpoint. Nothing is pushed, merged, or deleted without approval.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Consistent conventions</strong></td>
+<td data-label="Detail">Same commit message format, branch naming, folder structure, and table layouts across all skills.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>Composable</strong></td>
+<td data-label="Detail">Use individual skills (<code>/dev-plan</code>, <code>/dev-ship</code>) or the full orchestrator (<code>/devflow</code>).</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>GraphQL-native</strong></td>
+<td data-label="Detail">PR operations use GitHub GraphQL API — no screen scraping, no brittle REST parsing.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>No duplication</strong></td>
+<td data-label="Detail"><code>dev-get-summary</code> merged into <code>dev-ship-pr-jira</code>. Thin wrapper agents eliminated. One source of truth per capability.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>CONS</h2>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Limitation"><strong>GitHub-only</strong></td>
+<td data-label="Detail">Uses <code>gh</code> CLI and GitHub GraphQL API. No GitLab/Bitbucket support.</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>Jira-dependent</strong></td>
+<td data-label="Detail">Assumes Jira task keys (<code>PROJ-123</code>) for branch naming, task folders, and PR descriptions.</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>Worktree required</strong></td>
+<td data-label="Detail"><code>dev-start</code> and <code>dev-finish</code> assume git worktree workflow. Legacy branch fallback in <code>dev-fix-pr</code> only.</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>50-thread limit</strong></td>
+<td data-label="Detail">GraphQL queries paginate at 50 review threads. Very large PRs may miss threads (pagination not yet implemented).</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>Squash-merge only</strong></td>
+<td data-label="Detail"><code>dev-finish</code> and <code>dev-ship-pr-jira</code> default to <code>--squash</code>. Custom merge strategies require manual override.</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>No dry-run on all skills</strong></td>
+<td data-label="Detail"><code>dev-start</code>, <code>dev-ship</code>, <code>dev-fix-pr</code>, and <code>dev-finish</code> have <code>--dry-run</code>. Planning/coding/reviewing skills rely on checkpoints instead.</td>
+</tr>
+<tr>
+<td data-label="Limitation"><strong>Agent-dependent</strong></td>
+<td data-label="Detail">Skills are markdown instructions for AI agents — not executable scripts. Requires an AI tool that reads and follows them.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Usage</h2>
+<h3>Full pipeline (orchestrator)</h3>
+<pre><code>/devflow PROJ-123
+</code></pre>
+<p>Runs plan → code → review in sequence with checkpoints between phases. Use flags to skip phases:</p>
+<pre><code>/devflow PROJ-123 --plan-only
+/devflow PROJ-123 --code-only
+/devflow PROJ-123 --review-only
+</code></pre>
+<h3>Individual skills</h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Trigger"><code>/dev-start</code> or <code>devstart</code></td>
+<td data-label="What it does">Create a worktree from a Jira key. <code>--hotfix</code> branches from <code>main</code>, <code>--force</code> from current, <code>--dry-run</code> previews.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-plan</code></td>
+<td data-label="What it does">Analyze task + codebase, produce <code>plan.md</code> + <code>progress.md</code>.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-code</code></td>
+<td data-label="What it does">Read <code>plan.md</code>, implement changes, write <code>changelog.md</code>.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-review</code></td>
+<td data-label="What it does">Review changes via <code>git diff</code>, write <code>review.md</code>, issue verdict.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-ship</code> or <code>dev-ship-pr-jira</code></td>
+<td data-label="What it does">Create PR + comment Jira. <code>--pr-only</code>, <code>--jira-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr [URL]</code>.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-fix-pr</code> or <code>devfixpr</code></td>
+<td data-label="What it does">List, plan, fix, and resolve PR review comments. Loops for multiple rounds. <code>--dry-run</code> available.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-finish</code> or <code>devfinish</code></td>
+<td data-label="What it does">Merge approved PR, delete worktree + branch. <code>--worktree-only</code> skips PR. <code>--dry-run</code> previews.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-adr</code> or <code>adr</code></td>
+<td data-label="What it does">Create an ADR from completed task evidence. Skips non-architectural tasks.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Examples</h2>
+<h3>Start to finish</h3>
+<pre><code class="language-bash"># 1. Start a new task
+dev-start PROJ-2050
+cd ../proj-worktrees/feature/proj-2050-login-google
+
+# 2. Full pipeline (plan → code → review)
+/devflow PROJ-2050
+
+# 3. Ship the PR
+/dev-ship PROJ-2050
+
+# 4. Reviewer adds comments — fix them
+/dev-fix-pr
+# → fixes round 1, pushes, detects new comments → fixes round 2 → all resolved
+
+# 5. PR approved — merge and clean up
+/dev-finish
+
+# 6. Create ADR if architectural
+/dev-adr PROJ-2050
+</code></pre>
+<h3>Generate reports from a past PR</h3>
+<pre><code class="language-bash">/dev-ship --from-pr https://github.com/owner/repo/pull/456
+# → shows Jira and PR reports without creating anything
+</code></pre>
+<h3>Dry-run before deleting a worktree</h3>
+<pre><code class="language-bash">/dev-finish --dry-run
+# → shows what would happen without making changes
+</code></pre>
+</section>
+<section class="section">
+<h2>Integration</h2>
+<p>To use this plugin in a repository:</p>
+<ol>
+<li>Copy <code>.ai/plugins/devflow/</code> into your repo's <code>.ai/plugins/</code> directory.</li>
+<li>Ensure <code>config.md</code> paths match your repo conventions. Defaults:<ul>
+<li>Tasks: <code>.local/tasks/</code></li>
+<li>ADRs: <code>docs/adrs/</code></li>
+</ul>
+</li>
+<li>Your AI tool reads <code>startup.md</code> → discovers <code>plugins/devflow/</code> → reads skills on demand.</li>
+</ol>
+<p>To disable: remove or rename the <code>devflow/</code> folder.  </p>
+</section>
+<section class="section">
+<h2>Design Conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Convention">Branch names</td>
+<td data-label="Example"><code>feature/proj-2145-short-summary</code> or <code>hotfix/proj-2145-fix-crash</code></td>
+</tr>
+<tr>
+<td data-label="Convention">Commit messages</td>
+<td data-label="Example"><code>Fix PR comments #PROJ-2145</code></td>
+</tr>
+<tr>
+<td data-label="Convention">Task folder</td>
+<td data-label="Example"><code>.local/tasks/PROJ-2145/</code></td>
+</tr>
+<tr>
+<td data-label="Convention">ADR files</td>
+<td data-label="Example"><code>docs/adrs/PROJ-2145-short-decision.md</code></td>
+</tr>
+<tr>
+<td data-label="Convention">Checkpoint format</td>
+<td data-label="Example">"Proceed? (yes / no / adjust)" with explicit consequences per option</td>
+</tr>
+<tr>
+<td data-label="Convention">Table columns</td>
+<td data-label="Example"><code>#</code>, <code>St</code> (status), <code>File</code>, <code>Author</code>, <code>Comment</code>, <code>Change</code>/<code>Reply</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+  </main>
+</body>
+</html>

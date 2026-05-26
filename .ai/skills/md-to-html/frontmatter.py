@@ -61,15 +61,17 @@ def parse_frontmatter(md_text: str):
 
 
 def extract_metadata(md_text: str) -> tuple[str, dict]:
-    """Extract title and metadata key-value pairs from the header block.
+    """Extract title and metadata key-value pairs from the first lines of the body.
 
-    Stops at the first HR (*** or ---).
+    Only scans the first 12 lines, stopping early at the first HR (*** or ---).
     """
     lines = md_text.split("\n")
     title = ""
     metadata = {}
 
-    for line in lines:
+    for i, line in enumerate(lines):
+        if i >= 12:
+            break
         stripped = line.strip()
         if re.match(r"^(\*{3,}|-{3,}|_{3,})\s*$", stripped):
             break

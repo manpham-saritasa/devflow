@@ -26,7 +26,13 @@ class PreProcessor:
     def process(self, md_text: str, fallback_stem: str = "") -> tuple[str, str, dict]:
         """Extract title, metadata, and clean body. Returns (body, title, metadata)."""
         body_text, frontmatter = parse_frontmatter(md_text)
-        title, metadata = extract_metadata(body_text)
+        if frontmatter:
+            # YAML frontmatter provides all metadata — skip bold-text extraction
+            title, metadata = "", {}
+        else:
+            # Fallback: extract metadata from **Key:** value patterns (legacy format)
+            title, metadata = extract_metadata(body_text)
+            body_text = self._strip_header_metadata_block(body_text, title, metadata)
         if not title:
             title = fallback_stem.replace("-", " ").title()
         body_text = self._strip_header_metadata_block(body_text, title, metadata)
