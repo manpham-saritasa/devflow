@@ -37,11 +37,6 @@
 
 ## Related areas
 - [Feature / flow / module / integration / component]
-
-## Future reuse guidance
-- Safe to copy: [YES / NO / WITH CARE]
-- Reusable pattern: ...
-- Caveat: ...
 ```
 
 Purpose: Store technical memory from this PR so future engineers and LLMs can safely revise related changes.
@@ -79,13 +74,12 @@ Tone and style:
 - Risks: Include regression risk, correctness risk, rollout risk, hidden assumptions, or known edge cases relevant to future work.
 - Testing: Separate what was actually verified from what was not verified. Do not imply verification that did not happen.
 - Related areas: Name the feature, flow, module, integration, or component area touched. Prefer stable domain terms over file names.
-- Future reuse guidance: Record whether the pattern is safe to reuse later, what exact idea is reusable, and what condition must be checked before reuse.
 
 ## Uncertainty rules
 - If evidence is weak, write: Not clear from PR evidence.
 - If a decision seems implied but not explicit, include it only when the diff and review comments strongly support it.
 - If a risk is possible but not evidenced, omit it.
-- If end-to-end behavior was not verified, say so in Testing and reduce confidence in Future reuse guidance.
+- If end-to-end behavior was not verified, say so in Testing.
 
 ## Omit rules
 - Omit trivial formatting edits, generated preview artifacts, and file rename inventory unless they matter to design, workflow, or future reuse.

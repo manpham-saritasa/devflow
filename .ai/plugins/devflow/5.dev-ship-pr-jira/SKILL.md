@@ -121,7 +121,6 @@ Rules for PR report:
 - Include file paths, method names, architectural decisions, code patterns.
 - Group meaningful changes. Omit trivial refactors unless they support a key decision.
 - Separate verified from not-verified in testing section.
-- Mark reuse patterns with Safe to copy: YES/NO.
 
 ### Step 4: Build Commit Message
 
