@@ -6,17 +6,17 @@
 # [[KEY] — PR #[N]](https://github.com/.../pull/123)
 
 ## Added
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
 - Purpose: ...
 - Details: ...
 
 ## Changed
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
 - Reason: ...
 - Impact: ...
 
 ## Fixed
-** - [Category] - [Item].**[1]
+**[1] - [Category] - [Item].**
 - Root cause: ...
 - Resolution: ...
 

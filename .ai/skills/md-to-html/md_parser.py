@@ -71,6 +71,54 @@ def _is_list_item(stripped: str) -> bool:
     return stripped.startswith(("- ", "* ")) or bool(re.match(r"^\d+\.", stripped))
 
 
+def _fix_nested_fenced_code(text: str) -> str:
+    """Convert fenced code blocks inside list items to indented code blocks.
+
+    Python-Markdown does not render fenced code blocks nested inside list items
+    correctly (the content is lost). This converts them to indented (4-space)
+    code blocks which Python-Markdown handles properly.
+    """
+    lines = text.split("\n")
+    result: list[str] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+
+        # Detect indented fenced code block opener (inside list item)
+        if stripped.startswith("```") and line != stripped:
+            indent = line[: len(line) - len(line.lstrip())]
+            info = stripped[3:].strip()  # language specifier, e.g. "bash"
+
+            # Find matching closing fence with same indentation
+            j = i + 1
+            while j < len(lines):
+                if lines[j].strip() == "```" and lines[j].startswith(indent):
+                    break
+                j += 1
+
+            if j < len(lines):
+                code_lines = lines[i + 1 : j]
+
+                # Add blank line before code block (required for indented code in lists)
+                result.append("")
+                # Python-Markdown sane_lists requires at least 8 spaces for code blocks in lists
+                code_indent = "        "
+                for cl in code_lines:
+                    # Strip existing indent, then add code block indent
+                    result.append(code_indent + cl.lstrip())
+                # Blank line after code block
+                result.append("")
+
+                i = j + 1
+                continue
+
+        result.append(line)
+        i += 1
+
+    return "\n".join(result)
+
+
 def _normalize_sublist_indent(text: str) -> str:
     """Normalize 2-space sublist indentation to 4 spaces under colon-ending list items."""
     lines = text.split("\n")
@@ -147,7 +195,7 @@ def _preserve_newlines(text: str) -> str:
         if in_code_block:
             result.append(line)
             continue
-        # Skip headings, list items, blank lines, table rows, link definitions
+        # Skip headings, list items, blank lines, table rows, link definitions, indented lines (code blocks)
         if (
             not stripped
             or stripped.startswith("#")
@@ -155,6 +203,7 @@ def _preserve_newlines(text: str) -> str:
             or bool(re.match(r"^\d+\.", stripped))
             or stripped.startswith("|")
             or bool(re.match(r"^\[.+\]:", stripped))
+            or line.startswith(" ")  # indented code block or list continuation
         ):
             result.append(line)
             continue
@@ -183,6 +232,7 @@ def _preserve_newlines(text: str) -> str:
 
 def md_body_to_html(text: str) -> str:
     """Convert Markdown body text to HTML using a real Markdown parser."""
+    text = _fix_nested_fenced_code(text)
     text = _preserve_newlines(text)
     text = _insert_blank_before_list(text)
     text = _normalize_sublist_indent(text)

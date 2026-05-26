@@ -67,6 +67,19 @@ Label every issue: `[blocking]` or `[minor]`.
 - **Pass with Changes** — fit acceptable, minor issues remain
 - **Fail** — acceptance criterion fails, plan violation, or blocking issue exists
 
+### Step 5.5: Changelog Gap Check
+
+Before writing the review, compare `git diff` against the latest changelog iteration:
+
+- Identify changes present in the diff but not in `changelog.md`.
+- If small unlogged manual fixes found:
+  - Prompt user: "Found [N] unlogged changes. Describe them and I'll add them to the changelog."
+  - Update the latest changelog iteration: set `**Delivery:** Mixed`, note manual items in `### Summary`.
+  - Continue with the review.
+- If large unlogged changes found (new files, significant logic):
+  - Flag as a review finding: "Significant unlogged changes detected. Consider running `dev-code` to create a proper iteration before review."
+  - Do not auto-append to changelog — the user should plan these properly.
+
 ### Step 6: Write Review
 
 Determine the next review pass number from prior `review.md` (default: 1).
