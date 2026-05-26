@@ -498,7 +498,7 @@ PR status: [PR_STATUS]
 
 Action: [merge PR + delete worktree | delete worktree only | no action (blocked)]
 </code></pre>
-                <p>Stop here. Do not proceed to Steps 5-7.</p>
+                <p>Stop here. Do not proceed to Steps 5-8.</p>
                 <h3>Step 5: Handle PR</h3>
                 <p>Skip this step if <code>--worktree-only</code>.</p>
                 <table>
@@ -601,13 +601,48 @@ Action: [merge PR + delete worktree | delete worktree only | no action (blocked)
                     If branch deletion fails (already deleted by PR merge, or
                     never existed), ignore the error.
                 </p>
-                <h3>Step 7: Report Result</h3>
+                <h3>Step 7: Write Changelog and Update Progress</h3>
+                <p>Skip if <code>--dry-run</code>.</p>
+                <p>
+                    <strong>Write <code>TASK_DIR/changelog.md</code>:</strong>
+                    Append a new iteration recording the finish action. Use the
+                    same iteration-number-as-heading format used by other
+                    skills:
+                </p>
+                <ul>
+                    <li>
+                        <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code>
+                    </li>
+                    <li>
+                        <code
+                            >**Trigger:** dev-finish — PR merged, worktree
+                            cleaned up</code
+                        >
+                    </li>
+                    <li>
+                        Record PR URL, merge status, worktree removal, branch
+                        deletion
+                    </li>
+                    <li>Create the file if it doesn't exist</li>
+                </ul>
+                <p>
+                    <strong>Update <code>TASK_DIR/progress.md</code>:</strong>
+                </p>
+                <ul>
+                    <li>
+                        If exists: prepend status "Finished", PR URL, timestamp
+                    </li>
+                    <li>Else: create new file with status "Finished"</li>
+                </ul>
+                <h3>Step 8: Report Result</h3>
                 <pre><code>✅ dev-finish complete for [KEY]
 
-PR: [PR_URL | skipped | no PR found]
-Worktree removed: [WORKTREE_PATH]
-Branch deleted: [BRANCH_NAME]
-</code></pre>
+                PR: [PR_URL | skipped | no PR found]
+                Worktree removed: [WORKTREE_PATH]
+                Branch deleted: [BRANCH_NAME]
+                Changelog: .local/tasks/[KEY]/changelog.md
+                Progress: .local/tasks/[KEY]/progress.md
+                </code></pre>
                 <p>If <code>WAS_IN_WORKTREE = true</code>, add:</p>
                 <pre><code>⚠️  Your shell is in a deleted directory. Switch to the main repo:
   cd [MAIN_REPO]

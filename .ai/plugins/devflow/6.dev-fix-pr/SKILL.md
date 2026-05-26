@@ -225,7 +225,21 @@ Replies pending user action: [N]
 PR: [PR_URL]
 ```
 
-**Check for more comments?** Fetch the latest unresolved thread count:
+### Step 7: Write Changelog and Update Progress
+
+Skip if `--dry-run`.
+
+**Write `TASK_DIR/changelog.md`:** Append a new iteration summarizing the fixes made this round. Use the same iteration-number-as-heading format:
+- `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`
+- `**Trigger:** PR review fixes`
+- List each file changed and a brief description of the fix
+- Create the file if it doesn't exist
+
+**Update `TASK_DIR/progress.md`:**
+- If exists: prepend status "Fixing", PR URL, timestamp, round number
+- Else: create new file with status "Fixing"
+
+### Step 8: Check for More Comments
 ```bash
 gh api graphql -f query='
 query {
@@ -245,7 +259,10 @@ If any remain: "[N] new unresolved comments found. Continue fixing? (yes / no)"
 - `yes` → loop back to **Step 2**. Skip Step 1 — branch and PR are already known.
 - `no` → "Done for now. Run `dev-fix-pr` again when ready for the next round."
 
-If zero remain: "✅ All comments resolved on this PR." Stop.
+If zero remain: "✅ All comments resolved on this PR."
+- Changelog: `TASK_DIR/changelog.md` updated
+- Progress: `TASK_DIR/progress.md` updated
+- Stop.
 
 ---
 
