@@ -104,9 +104,6 @@ Env: [.env copied | no .env found]
 Switch to worktree first:
   cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
 
-Then open:
-  code .
-
 Then start:
   /devflow [KEY]
 ```
