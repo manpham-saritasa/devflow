@@ -27,7 +27,7 @@ Read from `TASK_DIR` when present:
 - `plan.md` — prior iterations, unresolved work, decisions
 - `review.md` — prior review outcomes, unresolved findings
 - `progress.md` — task timeline, next iteration number
-- `pr-feedback-[N].md` — PR review feedback to address
+- `pr-feedback-[PR_NUMBER].md` — PR review feedback to address (from `dev-pr-feedback`)
 
 If local files are missing, fall back to Jira MCP or user message. Do not fail on missing files.
 
@@ -44,9 +44,10 @@ If local files are missing, fall back to Jira MCP or user message. Do not fail o
 
 ### Step 3: Research Related Tasks
 
-- Collect related task keys from local files, Jira links, ADRs, code comments
-- Read related task folders for patterns, approaches, review findings
-- Extract reusable structure, rejected alternatives, lessons learned
+- Collect related task keys from `task.md` (Related Issues), Jira links, ADRs, code comments, prior plans, prior reviews
+- For each related key, read `TASKS_ROOT/[RELATED_KEY]/` task files when present
+- Extract patterns used, decisions made, file paths touched, constraints, review findings, and delivered behavior
+- From `pr.md` when present: shipped scope, tradeoffs, regressions avoided, follow-up work
 
 ### Step 4: Summarize & Confirm
 
@@ -55,11 +56,15 @@ Output an investigation summary:
 ```
 ## Investigation Summary
 
-**Key files:** ...
-**Patterns observed:** ...
-**ADR constraints:** ...
+**Key files:** [relevant files found]
+**Patterns observed:** [conventions/patterns from codebase + related tasks]
+**ADR constraints:** [must-respect constraints, or "none found"]
+**Related task insights:** [notable decisions/approaches from related tasks]
+**Prior iteration context:** [relevant prior iteration outcomes, or "none"]
 **Repo match:** [yes / no (mismatch risk noted)]
-**Approach:** [1-2 sentence proposal]
+**Open questions:** [unanswered questions — proposed assumptions or ask user]
+**Approach:** [1-2 sentence proposed solution]
+**Impact related tasks:** [current codebase + most relevant related tasks with 0-10 scores and reasons]
 
 Proceed? (yes/no/adjust)
 ```
@@ -89,6 +94,14 @@ Do not write plan.md until user confirms.
 - Order changes by implementation sequence; call out dependencies and parallelism
 - Use exact file paths from codebase investigation — never invent
 - Keep concise and executable by another coding agent
+
+## Progress Writing Rules
+
+- Use `PROGRESS_TEMPLATE` exactly
+- Keep `progress.md` append-only
+- Append one timeline block per iteration: `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`
+- Record: `Trigger`, `Status`, `Summary`, `Files`, `Next Action`, `ADR Suggested`
+- `ADR Suggested` must be `Yes` or `No`. If `Yes`, include short reason but do not create ADR.
 
 ## Pre-Save Checklist
 

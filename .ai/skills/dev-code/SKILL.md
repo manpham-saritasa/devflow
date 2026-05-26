@@ -24,10 +24,13 @@ Read `TASK_DIR/plan.md`. Fallback: check project root. Treat the latest `## Iter
 
 Also read: `task.md`, `raw.md`, `review.md`, `progress.md`, `changelog.md` (if present) for constraints, review findings, and prior state.
 
+If `review.md` exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.
+
 ### Step 2: Read Codebase
 
 - Read all files before editing them. Never modify unread files.
 - Respect repository conventions, architecture, naming, and test patterns.
+- Do not edit prior iteration sections in `plan.md`, `changelog.md`, `review.md`, or `progress.md` except to fix obvious typos with user approval.
 
 ### Step 3: Implement
 
@@ -60,6 +63,16 @@ Append a new iteration to `TASK_DIR/changelog.md` using `CHANGELOG_TEMPLATE`:
 Append/update timeline entry in `TASK_DIR/progress.md` using `PROGRESS_TEMPLATE`:
 - `Trigger`, `Status`, `Summary`, `Files`, `Next Action`, `ADR Suggested`
 - Status after coding: `Implemented`, `In Progress`, `Blocked`, or `Needs Review`
+- `ADR Suggested` must be `Yes` or `No`. If `Yes`, include short reason but do not create ADR.
+
+## ADR Triggers
+
+Set `ADR Suggested = Yes` if any of:
+- New third-party service or external API integrated
+- New library/package introduces new capability or pattern
+- Existing technical approach replaced
+- Database schema changed
+- Auth flow structure changed
 
 ## Stop Conditions
 

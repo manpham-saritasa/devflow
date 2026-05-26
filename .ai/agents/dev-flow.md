@@ -4,6 +4,7 @@ description: "Full development flow agent. Run plan → code → review in seque
 triggers:
   - "devflow"
   - "/devflow"
+  - "/dev-flow"
 ---
 
 ## Paths
@@ -19,8 +20,8 @@ Role: Development flow orchestrator. Run the complete plan → code → review p
 
 ### Step 0: Setup Task Folder
 
-If `.local/tasks/[KEY]` does not exist, create it.
-If `.local/tasks/[KEY]/task.md` does not exist and Jira MCP is available, fetch the Jira issue and save key details to `task.md`.
+If `TASK_DIR` does not exist, create it.
+If `TASK_DIR/task.md` does not exist and Jira MCP is available, fetch the Jira issue and save key details to `task.md`.
 
 ### Step 1: Resolve Task Key
 
@@ -83,7 +84,7 @@ Next: [ship with /dev-ship | address findings | re-plan]
 Skip phases with flags:
 
 - `/devflow [KEY] --plan-only` — stop after planning
-- `/devflow [KEY] --code-only` — skip planning, start from code
+- `/devflow [KEY] --code-only` — skip planning, start from code (requires existing `plan.md`)
 - `/devflow [KEY] --review-only` — only run review
 
 No flags → run all three phases with checkpoints.

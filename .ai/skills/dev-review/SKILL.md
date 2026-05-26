@@ -24,7 +24,7 @@ Read from `TASK_DIR`:
 - `task.md`, `raw.md` — requirements, constraints, acceptance criteria
 - `plan.md` — latest iteration as planned baseline
 - `changelog.md` — latest iteration as claimed summary (not source of truth)
-- `review.md` — prior passes, unresolved findings
+- `review.md` — prior passes, determine next review pass number, track unresolved findings
 - `progress.md` — current state, active iteration
 
 ### Step 2: Identify Changes
@@ -37,6 +37,7 @@ Fallback: `git diff main...HEAD`
 Collect `diff_files[]` from the branch diff.
 Collect `plan_files[]` from the latest plan iteration when explicit file paths are listed.
 Compute `unexpected_files[]` = files in diff but not in plan. Flag them — do not auto-fail if the change is justified and low-risk.
+Review full changed files when context is needed to judge correctness, not just diff hunks.
 
 ### Step 3: Fit Check
 
@@ -68,6 +69,7 @@ Label every issue: `[blocking]` or `[minor]`.
 
 ### Step 6: Write Review
 
+Determine the next review pass number from prior `review.md` (default: 1).
 Append to `TASK_DIR/review.md` using `REVIEW_TEMPLATE`:
 - New review pass for the active iteration
 - Every acceptance criterion in `Acceptance Criteria Review`
@@ -96,9 +98,11 @@ Do not create ADR files — only recommend.
 
 - [ ] Review compared actual code against task context, plan, and changelog?
 - [ ] Repository conventions and architecture respected?
+- [ ] Full files reviewed when context needed, not just diff hunks?
 - [ ] Fit and quality reviewed separately?
 - [ ] Unexpected files flagged?
 - [ ] Blocking vs minor issues distinguished?
+- [ ] Review pass number determined from prior reviews?
 - [ ] Progress.md updated?
 - [ ] Verdict matches findings?
 - [ ] ADR recommended only when appropriate?

@@ -335,7 +335,7 @@ a:hover {
 <li><code>plan.md</code> — prior iterations, unresolved work, decisions</li>
 <li><code>review.md</code> — prior review outcomes, unresolved findings</li>
 <li><code>progress.md</code> — task timeline, next iteration number</li>
-<li><code>pr-feedback-[N].md</code> — PR review feedback to address</li>
+<li><code>pr-feedback-[PR_NUMBER].md</code> — PR review feedback to address (from <code>dev-pr-feedback</code>)</li>
 </ul>
 <p>If local files are missing, fall back to Jira MCP or user message. Do not fail on missing files.</p>
 <h3>Step 2: Investigate Codebase</h3>
@@ -351,19 +351,24 @@ a:hover {
 </ul>
 <h3>Step 3: Research Related Tasks</h3>
 <ul>
-<li>Collect related task keys from local files, Jira links, ADRs, code comments</li>
-<li>Read related task folders for patterns, approaches, review findings</li>
-<li>Extract reusable structure, rejected alternatives, lessons learned</li>
+<li>Collect related task keys from <code>task.md</code> (Related Issues), Jira links, ADRs, code comments, prior plans, prior reviews</li>
+<li>For each related key, read <code>TASKS_ROOT/[RELATED_KEY]/</code> task files when present</li>
+<li>Extract patterns used, decisions made, file paths touched, constraints, review findings, and delivered behavior</li>
+<li>From <code>pr.md</code> when present: shipped scope, tradeoffs, regressions avoided, follow-up work</li>
 </ul>
 <h3>Step 4: Summarize &amp; Confirm</h3>
 <p>Output an investigation summary:</p>
 <pre><code>## Investigation Summary
 
-**Key files:** ...
-**Patterns observed:** ...
-**ADR constraints:** ...
+**Key files:** [relevant files found]
+**Patterns observed:** [conventions/patterns from codebase + related tasks]
+**ADR constraints:** [must-respect constraints, or &quot;none found&quot;]
+**Related task insights:** [notable decisions/approaches from related tasks]
+**Prior iteration context:** [relevant prior iteration outcomes, or &quot;none&quot;]
 **Repo match:** [yes / no (mismatch risk noted)]
-**Approach:** [1-2 sentence proposal]
+**Open questions:** [unanswered questions — proposed assumptions or ask user]
+**Approach:** [1-2 sentence proposed solution]
+**Impact related tasks:** [current codebase + most relevant related tasks with 0-10 scores and reasons]
 
 Proceed? (yes/no/adjust)
 </code></pre>
@@ -393,6 +398,16 @@ Proceed? (yes/no/adjust)
 <li>Order changes by implementation sequence; call out dependencies and parallelism</li>
 <li>Use exact file paths from codebase investigation — never invent</li>
 <li>Keep concise and executable by another coding agent</li>
+</ul>
+</section>
+<section class="section">
+<h2>Progress Writing Rules</h2>
+<ul>
+<li>Use <code>PROGRESS_TEMPLATE</code> exactly</li>
+<li>Keep <code>progress.md</code> append-only</li>
+<li>Append one timeline block per iteration: <code>## Iteration [N] — YYYY-MM-DD HH:MM ±TZ</code></li>
+<li>Record: <code>Trigger</code>, <code>Status</code>, <code>Summary</code>, <code>Files</code>, <code>Next Action</code>, <code>ADR Suggested</code></li>
+<li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include short reason but do not create ADR.</li>
 </ul>
 </section>
 <section class="section">

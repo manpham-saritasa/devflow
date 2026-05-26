@@ -332,7 +332,7 @@ a:hover {
 <li><code>task.md</code>, <code>raw.md</code> — requirements, constraints, acceptance criteria</li>
 <li><code>plan.md</code> — latest iteration as planned baseline</li>
 <li><code>changelog.md</code> — latest iteration as claimed summary (not source of truth)</li>
-<li><code>review.md</code> — prior passes, unresolved findings</li>
+<li><code>review.md</code> — prior passes, determine next review pass number, track unresolved findings</li>
 <li><code>progress.md</code> — current state, active iteration</li>
 </ul>
 <h3>Step 2: Identify Changes</h3>
@@ -341,7 +341,8 @@ a:hover {
 <p>Fallback: <code>git diff main...HEAD</code>  </p>
 <p>Collect <code>diff_files[]</code> from the branch diff.<br>
 Collect <code>plan_files[]</code> from the latest plan iteration when explicit file paths are listed.<br>
-Compute <code>unexpected_files[]</code> = files in diff but not in plan. Flag them — do not auto-fail if the change is justified and low-risk.</p>
+Compute <code>unexpected_files[]</code> = files in diff but not in plan. Flag them — do not auto-fail if the change is justified and low-risk.<br>
+Review full changed files when context is needed to judge correctness, not just diff hunks.</p>
 <h3>Step 3: Fit Check</h3>
 <ul>
 <li>Evaluate every acceptance criterion and planned item</li>
@@ -372,7 +373,8 @@ Compute <code>unexpected_files[]</code> = files in diff but not in plan. Flag th
 <li><strong>Fail</strong> — acceptance criterion fails, plan violation, or blocking issue exists</li>
 </ul>
 <h3>Step 6: Write Review</h3>
-<p>Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p>
+<p>Determine the next review pass number from prior <code>review.md</code> (default: 1).<br>
+Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p>
 <ul>
 <li>New review pass for the active iteration</li>
 <li>Every acceptance criterion in <code>Acceptance Criteria Review</code></li>
@@ -404,9 +406,11 @@ Compute <code>unexpected_files[]</code> = files in diff but not in plan. Flag th
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled/> Review compared actual code against task context, plan, and changelog?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Repository conventions and architecture respected?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Full files reviewed when context needed, not just diff hunks?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Fit and quality reviewed separately?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Unexpected files flagged?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Blocking vs minor issues distinguished?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review pass number determined from prior reviews?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Progress.md updated?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Verdict matches findings?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> ADR recommended only when appropriate?</li>

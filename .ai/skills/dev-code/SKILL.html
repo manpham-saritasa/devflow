@@ -328,11 +328,13 @@ a:hover {
 <p>Check <code>CHANGELOG_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
 <h3>Step 1: Read Plan</h3>
 <p>Read <code>TASK_DIR/plan.md</code>. Fallback: check project root. Treat the latest <code>## Iteration [N]</code> section as the active implementation source. Missing → stop: "Error: plan.md not found."  </p>
-<p>Also read: <code>task.md</code>, <code>raw.md</code>, <code>review.md</code>, <code>progress.md</code>, <code>changelog.md</code> (if present) for constraints, review findings, and prior state.</p>
+<p>Also read: <code>task.md</code>, <code>raw.md</code>, <code>review.md</code>, <code>progress.md</code>, <code>changelog.md</code> (if present) for constraints, review findings, and prior state.  </p>
+<p>If <code>review.md</code> exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.</p>
 <h3>Step 2: Read Codebase</h3>
 <ul>
 <li>Read all files before editing them. Never modify unread files.</li>
 <li>Respect repository conventions, architecture, naming, and test patterns.</li>
+<li>Do not edit prior iteration sections in <code>plan.md</code>, <code>changelog.md</code>, <code>review.md</code>, or <code>progress.md</code> except to fix obvious typos with user approval.</li>
 </ul>
 <h3>Step 3: Implement</h3>
 <p>Work through <code>## Proposed Changes</code> in order. For each change:</p>
@@ -365,6 +367,18 @@ a:hover {
 <ul>
 <li><code>Trigger</code>, <code>Status</code>, <code>Summary</code>, <code>Files</code>, <code>Next Action</code>, <code>ADR Suggested</code></li>
 <li>Status after coding: <code>Implemented</code>, <code>In Progress</code>, <code>Blocked</code>, or <code>Needs Review</code></li>
+<li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include short reason but do not create ADR.</li>
+</ul>
+</section>
+<section class="section">
+<h2>ADR Triggers</h2>
+<p>Set <code>ADR Suggested = Yes</code> if any of:</p>
+<ul>
+<li>New third-party service or external API integrated</li>
+<li>New library/package introduces new capability or pattern</li>
+<li>Existing technical approach replaced</li>
+<li>Database schema changed</li>
+<li>Auth flow structure changed</li>
 </ul>
 </section>
 <section class="section">

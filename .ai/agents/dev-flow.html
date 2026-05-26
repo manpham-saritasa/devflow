@@ -311,7 +311,7 @@ a:hover {
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>"devflow"</div>
     <div class="meta-item"><span class="meta-label">description</span>"Full development flow agent. Run plan → code → review in sequence for a task, with user checkpoints between each phase."</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>devflow, /devflow</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>devflow, /devflow, /dev-flow</div>
   </div>
 </section>
 <section class="section">
@@ -325,8 +325,8 @@ a:hover {
 <section class="section">
 <h2>Workflow</h2>
 <h3>Step 0: Setup Task Folder</h3>
-<p>If <code>.local/tasks/[KEY]</code> does not exist, create it.<br>
-If <code>.local/tasks/[KEY]/task.md</code> does not exist and Jira MCP is available, fetch the Jira issue and save key details to <code>task.md</code>.</p>
+<p>If <code>TASK_DIR</code> does not exist, create it.<br>
+If <code>TASK_DIR/task.md</code> does not exist and Jira MCP is available, fetch the Jira issue and save key details to <code>task.md</code>.</p>
 <h3>Step 1: Resolve Task Key</h3>
 <p>If KEY provided as argument: use it.<br>
 Otherwise: <code>git branch --show-current</code>, extract KEY via regex <code>([A-Z0-9]+-\d+)</code>.<br>
@@ -383,7 +383,7 @@ Next: [ship with /dev-ship | address findings | re-plan]
 <p>Skip phases with flags:</p>
 <ul>
 <li><code>/devflow [KEY] --plan-only</code> — stop after planning</li>
-<li><code>/devflow [KEY] --code-only</code> — skip planning, start from code</li>
+<li><code>/devflow [KEY] --code-only</code> — skip planning, start from code (requires existing <code>plan.md</code>)</li>
 <li><code>/devflow [KEY] --review-only</code> — only run review</li>
 </ul>
 <p>No flags → run all three phases with checkpoints.</p>
