@@ -5,10 +5,10 @@ description: Review implemented code against task context and the latest plan/ch
 
 ## Paths
 
-- DEV_ROOT: `.local`
-- TASK_DIR: `[DEV_ROOT]/tasks/[KEY]`
-- REVIEW_TEMPLATE: `templates/review-template.md`
-- PROGRESS_TEMPLATE: `templates/progress-template.md`
+- TASKS_ROOT: `.local/tasks`
+- TASK_DIR: `[TASKS_ROOT]/[KEY]`
+- REVIEW_TEMPLATE: `.ai/agents/templates/review-template.md`
+- PROGRESS_TEMPLATE: `.ai/agents/templates/progress-template.md`
 
 ---
 

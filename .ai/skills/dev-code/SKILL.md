@@ -5,10 +5,10 @@ description: Read plan.md, implement the planned changes for the latest iteratio
 
 ## Paths
 
-- DEV_ROOT: `.local`
-- TASK_DIR: `[DEV_ROOT]/tasks/[KEY]`
-- CHANGELOG_TEMPLATE: `templates/changelog-template.md`
-- PROGRESS_TEMPLATE: `templates/progress-template.md`
+- TASKS_ROOT: `.local/tasks`
+- TASK_DIR: `[TASKS_ROOT]/[KEY]`
+- CHANGELOG_TEMPLATE: `.ai/agents/templates/changelog-template.md`
+- PROGRESS_TEMPLATE: `.ai/agents/templates/progress-template.md`
 
 ---
 

@@ -17,6 +17,11 @@ Role: Development flow orchestrator. Run the complete plan → code → review p
 
 ## Workflow
 
+### Step 0: Setup Task Folder
+
+If `.local/tasks/[KEY]` does not exist, create it.
+If `.local/tasks/[KEY]/task.md` does not exist and Jira MCP is available, fetch the Jira issue and save key details to `task.md`.
+
 ### Step 1: Resolve Task Key
 
 If KEY provided as argument: use it.

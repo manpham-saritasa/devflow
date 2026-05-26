@@ -5,11 +5,11 @@ description: Create a structured execution plan from task evidence and codebase 
 
 ## Paths
 
-- DEV_ROOT: `.local`
-- TASK_DIR: `[DEV_ROOT]/tasks/[KEY]`
-- ADR_DIR: `[DEV_ROOT]/adr`
-- PLAN_TEMPLATE: `templates/plan-template.md`
-- PROGRESS_TEMPLATE: `templates/progress-template.md`
+- TASKS_ROOT: `.local/tasks`
+- TASK_DIR: `[TASKS_ROOT]/[KEY]`
+- ADR_DIR: `.local/adr`
+- PLAN_TEMPLATE: `.ai/agents/templates/plan-template.md`
+- PROGRESS_TEMPLATE: `.ai/agents/templates/progress-template.md`
 
 ---
 
