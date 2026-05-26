@@ -117,6 +117,27 @@ Save the Jira task summary to `TASK_DIR/task.md` if Jira MCP is available (requi
 
 ### Step 8: Create Worktree
 
+**Pre-flight — fetch latest from base branch:**
+
+Always fetch and pull the base branch before creating the worktree to ensure the worktree starts from the latest source.
+
+Determine the base branch based on flags:
+
+| Flag | Base branch |
+|------|-------------|
+| (none, default) | `develop` |
+| `--hotfix` | `main` |
+| `--force` | current branch (`git branch --show-current`) |
+
+```bash
+git fetch origin [BASE_BRANCH]
+git pull origin [BASE_BRANCH]
+```
+
+If fetch or pull fails: "Failed to fetch/pull `[BASE_BRANCH]`. Check your network connection or remote configuration." Stop.
+
+---
+
 **Pre-flight checks:**
 
 Check the branch name is not already in use:
@@ -140,6 +161,20 @@ Create the worktree:
 ```bash
 git worktree add "../[REPO_NAME]-worktrees/[BRANCH_NAME]" -b [BRANCH_NAME]
 ```
+
+**After worktree creation — copy `.env`:**
+
+Copy the `.env` file from the repo root to the new worktree so the worktree has the same environment configuration:
+
+```bash
+if [ -f ".env" ]; then
+    cp ".env" "../[REPO_NAME]-worktrees/[BRANCH_NAME]/.env"
+fi
+```
+
+If `.env` does not exist in the repo root, skip this step silently (not all projects use a `.env` file).
+
+---
 
 **If worktree creation fails:** report the error. If the task folder was created in Step 7, note it:
 "Worktree creation failed. The task folder `.local/tasks/[KEY]` was already created — you may want to remove it if retrying with a different branch name."
