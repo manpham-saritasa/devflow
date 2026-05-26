@@ -80,18 +80,7 @@ Create the worktree:
 git worktree add ../[REPO_NAME]-worktrees/[BRANCH_NAME] -b [BRANCH_NAME]
 ```
 
-### Step 7: Setup Worktree
-
-```bash
-cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
-```
-
-Copy `.env` from the main repo if it exists:
-```bash
-cp ../../.env .env 2>/dev/null || echo "No .env found to copy"
-```
-
-### Step 8: Report Result
+### Step 7: Report Result
 
 ```
 ✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
@@ -99,7 +88,6 @@ cp ../../.env .env 2>/dev/null || echo "No .env found to copy"
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
-Env: [.env copied | no .env found]
 
 Switch to worktree first:
   cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]

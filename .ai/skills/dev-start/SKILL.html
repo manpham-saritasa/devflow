@@ -392,19 +392,12 @@ Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is avail
 <p>Create the worktree:</p>
 <pre><code class="language-bash">git worktree add ../[REPO_NAME]-worktrees/[BRANCH_NAME] -b [BRANCH_NAME]
 </code></pre>
-<h3>Step 7: Setup Worktree</h3>
-<pre><code class="language-bash">cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
-</code></pre>
-<p>Copy <code>.env</code> from the main repo if it exists:</p>
-<pre><code class="language-bash">cp ../../.env .env 2&gt;/dev/null || echo &quot;No .env found to copy&quot;
-</code></pre>
-<h3>Step 8: Report Result</h3>
+<h3>Step 7: Report Result</h3>
 <pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
 
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
-Env: [.env copied | no .env found]
 
 Switch to worktree first:
   cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
