@@ -101,9 +101,14 @@ Type: [feature | hotfix | force]
 Task: [KEY]
 Env: [.env copied | no .env found]
 
-Open in editor:
-  code ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+Switch to worktree first:
+  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
 
-Or run:
+Then open:
+  code .
+
+Then start:
   /devflow [KEY]
 ```
+
+**Important:** All further work must be done from the worktree folder. Tell the user to `cd` into it first.
