@@ -31,12 +31,9 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 
 | Step | Action |
 |---|---|
-| 1 | Read `rules/communication-rules.md` if it exists and follow the instructions there |
-| 2 | Read `rules/coding-rules.md` if it exists and follow the instructions there |
-| 3 | Read `rules/pr-rules.md` if it exists and follow the instructions there |
-| 4 | Keep all in mind for the whole session |
+| 1 | Read `memory.md` at the repo root and follow it for the whole session |
 
-If session is long, task changes, or context is fuzzy, re-read them.
+If session is long, task changes, or context is fuzzy, re-read it.
 
 ---
 
@@ -73,13 +70,11 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | Priority | Source |
 |---|---|
 | 1 | User instruction |
-| 2 | Chosen agent from `agents/` |
-| 3 | Chosen skill from `skills/` |
-| 4 | `AGENTS.md` rules |
-| 5 | `coding-rules.md` |
-| 6 | `communication-rules.md` |
-| 7 | `pr-rules.md` |
-| 8 | Default AI behavior |
+| 2 | `memory.md` at repo root |
+| 3 | Chosen agent from `agents/` |
+| 4 | Chosen skill from `skills/` |
+| 5 | `AGENTS.md` rules |
+| 6 | Default AI behavior |
 
 ---
 
@@ -90,6 +85,36 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | Missing file | Say it clearly. Do not pretend it exists. |
 | Optional files | Skip gracefully if not present. |
 | Required files | Stop and notify user if `AGENTS.md` is missing. |
+
+---
+
+## .ai folder structure — LLM navigation guide
+
+Use this map to find skills, plugins, agents, and prompts fast.
+
+| Folder | Purpose | How to use |
+|---|---|---|
+| `.ai/agents/` | Agent definitions — each file is one agent with job + limits | Read the file, do the task using its rules |
+| `.ai/skills/` | Reusable skills — each subfolder is one skill | Read the skill file, follow its workflow |
+| `.ai/plugins/` | Plugins — each subfolder is one plugin | Read the plugin file, use its tools |
+| `.ai/prompts/` | Prompt templates — reusable LLM prompts | Read the prompt, fill in variables, execute |
+| `.ai/rules/` | Coding + PR rules | Reference when implementing or fixing PRs |
+| `.ai/copilot/` | GitHub Copilot specific instructions | Loaded by Copilot only |
+
+### Finding the right file
+
+1. **Need a task-specific agent?** → `.ai/agents/` → pick by name
+2. **Need a reusable workflow?** → `.ai/skills/` → pick by name
+3. **Need a plugin tool?** → `.ai/plugins/` → pick by name
+4. **Need a prompt template?** → `.ai/prompts/` → check `index.md` first for description
+5. **Need coding or PR rules?** → `.ai/rules/` → read the matching `.md`
+
+### Index files
+
+When a folder has `index.md`, read it first — it maps names to purposes.
+When a folder has `README.md`, read it for usage instructions.
+
+No index? List the folder and read filenames to decide.
 
 ---
 
