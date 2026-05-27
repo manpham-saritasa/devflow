@@ -157,15 +157,16 @@ If `.env` exists and has all required fields:
 source .env
 curl -s -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
   "https://$JIRA_COMPANY_DOMAIN.atlassian.net/rest/api/3/issue/$KEY" \
-  | jq '{summary: .fields.summary, description: .fields.description, acceptanceCriteria: .fields.customfield_*}' 2>/dev/null || echo "Jira fetch failed"
+  | jq '{summary: .fields.summary, description: .fields.description}' 2>/dev/null || \
+  python -c "import sys,json; d=json.load(sys.stdin); print(json.dumps({'summary': d['fields']['summary'], 'description': d['fields']['description']}, indent=2))" || \
+  echo "Jira fetch failed (no jq or python available)"
 ```
 
 Parse the result:
 - `JIRA_SUMMARY` — task title
 - `JIRA_DESCRIPTION` — task description / requirements
-- `JIRA_ACCEPTANCE_CRITERIA` — acceptance criteria if available
 
-**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` and `JIRA_ACCEPTANCE_CRITERIA` in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.
+**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.
 
 **If Jira fetch fails** (no `.env`, missing credentials, network error): note it and rely on the PR body, branch name, and commit messages for context. The fit check will be less thorough — mention this limitation in the report.
 
@@ -173,7 +174,9 @@ Parse the result:
 
 Analyze the PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across every dimension below. For each issue found, assign:
 
-If `--code-base` was used, also leverage `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]` for deeper analysis against actual project code.
+Additional context sources, depending on flags:
+- `--code-base`: also use `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]`
+- Jira available (Step 4a): also use `JIRA_DESCRIPTION`
 
 **Rule — capture exact file and line for every finding.**
 Every finding in the table below must include the precise source file path and line number from the diff. These exact values will be reused in Step 8 to post review comments. Do not use approximate or remembered values — verify each line number from the `DIFF` output during the review.
@@ -195,8 +198,8 @@ Priority definitions:
 
 #### 5a. Fit Check
 
-If Jira task context was fetched in Step 4a (`JIRA_DESCRIPTION`, `JIRA_ACCEPTANCE_CRITERIA`), use it as the primary source of truth:
-- Does the implementation satisfy every acceptance criterion?
+If Jira task context was fetched in Step 4a (`JIRA_DESCRIPTION`), use it as the primary source of truth:
+- Does the implementation satisfy every requirement in the task description?
 - Are there any requirements in the task that are not addressed in this PR?
 - Does the PR scope match the task description, or is there scope creep / incomplete work?
 
@@ -439,6 +442,7 @@ Tell the user: "The review is pending — go to the PR page to review, edit, and
 ✅ Review complete for [PR_TITLE]
 
 Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
+Verdict: [Changes requested | Approved with suggestions | Approved]
 Report: [TASK_DIR/pr-feedback-[KEY].md]
 
 PR: [PR_URL]

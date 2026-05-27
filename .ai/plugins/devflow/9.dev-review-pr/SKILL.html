@@ -466,19 +466,24 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 <pre><code class="language-bash">source .env
 curl -s -u &quot;$JIRA_EMAIL:$JIRA_API_TOKEN&quot; \
   &quot;https://$JIRA_COMPANY_DOMAIN.atlassian.net/rest/api/3/issue/$KEY&quot; \
-  | jq '{summary: .fields.summary, description: .fields.description, acceptanceCriteria: .fields.customfield_*}' 2&gt;/dev/null || echo &quot;Jira fetch failed&quot;
+  | jq '{summary: .fields.summary, description: .fields.description}' 2&gt;/dev/null || \
+  python -c &quot;import sys,json; d=json.load(sys.stdin); print(json.dumps({'summary': d['fields']['summary'], 'description': d['fields']['description']}, indent=2))&quot; || \
+  echo &quot;Jira fetch failed (no jq or python available)&quot;
 </code></pre>
 <p>Parse the result:</p>
 <ul>
 <li><code>JIRA_SUMMARY</code> — task title</li>
 <li><code>JIRA_DESCRIPTION</code> — task description / requirements</li>
-<li><code>JIRA_ACCEPTANCE_CRITERIA</code> — acceptance criteria if available</li>
 </ul>
-<p><strong>If Jira fetch succeeds:</strong> use <code>JIRA_DESCRIPTION</code> and <code>JIRA_ACCEPTANCE_CRITERIA</code> in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.  </p>
+<p><strong>If Jira fetch succeeds:</strong> use <code>JIRA_DESCRIPTION</code> in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.  </p>
 <p><strong>If Jira fetch fails</strong> (no <code>.env</code>, missing credentials, network error): note it and rely on the PR body, branch name, and commit messages for context. The fit check will be less thorough — mention this limitation in the report.</p>
 <h3>Step 5: Review Across Dimensions</h3>
 <p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:  </p>
-<p>If <code>--code-base</code> was used, also leverage <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for deeper analysis against actual project code.  </p>
+<p>Additional context sources, depending on flags:</p>
+<ul>
+<li><code>--code-base</code>: also use <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code></li>
+<li>Jira available (Step 4a): also use <code>JIRA_DESCRIPTION</code></li>
+</ul>
 <p><strong>Rule — capture exact file and line for every finding.</strong><br>
 Every finding in the table below must include the precise source file path and line number from the diff. These exact values will be reused in Step 8 to post review comments. Do not use approximate or remembered values — verify each line number from the <code>DIFF</code> output during the review.</p>
 <table>
@@ -523,9 +528,9 @@ Every finding in the table below must include the precise source file path and l
 <li><code>Low</code> — style preference, minor consistency, documentation, nitpick</li>
 </ul>
 <h4>5a. Fit Check</h4>
-<p>If Jira task context was fetched in Step 4a (<code>JIRA_DESCRIPTION</code>, <code>JIRA_ACCEPTANCE_CRITERIA</code>), use it as the primary source of truth:</p>
+<p>If Jira task context was fetched in Step 4a (<code>JIRA_DESCRIPTION</code>), use it as the primary source of truth:</p>
 <ul>
-<li>Does the implementation satisfy every acceptance criterion?</li>
+<li>Does the implementation satisfy every requirement in the task description?</li>
 <li>Are there any requirements in the task that are not addressed in this PR?</li>
 <li>Does the PR scope match the task description, or is there scope creep / incomplete work?</li>
 </ul>
@@ -742,6 +747,7 @@ for t in threads:
 <pre><code>✅ Review complete for [PR_TITLE]
 
 Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
+Verdict: [Changes requested | Approved with suggestions | Approved]
 Report: [TASK_DIR/pr-feedback-[KEY].md]
 
 PR: [PR_URL]
