@@ -321,7 +321,7 @@ a:hover {
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>dev-review-pr</div>
     <div class="meta-item"><span class="meta-label">description</span>Review a GitHub PR across multiple quality dimensions. Supports current and past PRs. Provides structured feedback with prioritized issues and a downloadable report.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>review-pr, reviewpr, dev-review-pr</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>review-pr, reviewpr, dev-review-pr, review-pr --code-base, reviewpr --code-base</div>
   </div>
 </section>
 <section class="section">
@@ -330,7 +330,29 @@ a:hover {
 <li><code>/review-pr [URL]</code> — review a specific PR (past or current)</li>
 <li><code>/review-pr</code> or <code>/reviewpr</code> — auto-detect task key from worktree and find the open PR</li>
 <li><code>/reviewpr [URL]</code> — shorthand with URL</li>
+<li><code>/review-pr --code-base</code> or <code>/reviewpr --code-base</code> — review PR against the local codebase too. Fails fast if not on the correct worktree/branch.</li>
 </ul>
+</section>
+<section class="section">
+<h2>Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Fetch and review from PR data only (files, diff, commits, reviews)</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--code-base</code></td>
+<td data-label="Behavior">Also checks local task context, project conventions, and related source files. Fails if HEAD branch doesn't exist locally.</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section class="section">
 <h2>Paths</h2>
@@ -339,7 +361,8 @@ a:hover {
 <section class="section">
 <h2>Workflow</h2>
 <h3>Step 1: Detect PR</h3>
-<p>Parse input for a PR URL (regex: <code>github\.com/([^/]+)/([^/]+)/pull/(\d+)</code>).  </p>
+<p>Parse input for a PR URL (regex: <code>github\.com/([^/]+)/([^/]+)/pull/(\d+)</code>).<br>
+Parse flags: <code>--code-base</code>.  </p>
 <p><strong>If a URL was provided:</strong></p>
 <ul>
 <li>Extract <code>OWNER</code>, <code>REPO</code>, and <code>PR_NUMBER</code> from the URL.</li>
@@ -406,12 +429,35 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <li><code>COMMITS[]</code> — each commit's message, oid, author</li>
 <li><code>DIFF</code> — the full diff text</li>
 </ul>
+<h3>Step 3a: Check Codebase (if <code>--code-base</code>)</h3>
+<p>Skip this step if <code>--code-base</code> flag is not set.  </p>
+<p><strong>Fail fast — verify we're on the right branch:</strong></p>
+<pre><code class="language-bash">git branch --list &quot;[HEAD_BRANCH]&quot;
+</code></pre>
+<p>If no output: "The <code>[HEAD_BRANCH]</code> branch does not exist locally. Switch to the correct worktree first." Stop.  </p>
+<p><strong>Fetch codebase context:</strong>  </p>
+<p>Task context — read requirements and plan if available:</p>
+<pre><code class="language-bash">cat .local/tasks/[KEY]/task.md 2&gt;/dev/null || echo &quot;No task folder found&quot;
+cat .local/tasks/[KEY]/plan.md 2&gt;/dev/null || echo &quot;No plan found&quot;
+</code></pre>
+<p>Project conventions — check for linters and configs:</p>
+<pre><code class="language-bash">ls .editorconfig .phpcs.xml .phpcs.xml.dist .eslintrc* tsconfig.json .rubocop.yml .prettierrc* 2&gt;/dev/null || echo &quot;No project linting configs found&quot;
+</code></pre>
+<p>Related files — for each changed file in <code>FILES[]</code>, list siblings in the same directory:</p>
+<pre><code class="language-bash">for file in [FILES]; do
+  dir=$(dirname &quot;$file&quot;)
+  echo &quot;-- $dir/&quot;
+  ls &quot;$dir/&quot; 2&gt;/dev/null
+done
+</code></pre>
+<p>Store these as <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for use in review dimensions below.</p>
 <h3>Step 4: Extract Task Key</h3>
 <p>If <code>KEY</code> was already extracted from the branch name in Step 1, use it.  </p>
 <p>Otherwise, extract <code>KEY</code> from <code>PR_TITLE</code> or <code>HEAD_BRANCH</code> via regex <code>([A-Z0-9]+-\d+)</code> (case-insensitive).  </p>
 <p>If no <code>KEY</code> found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).</p>
 <h3>Step 5: Review Across Dimensions</h3>
-<p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:</p>
+<p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:  </p>
+<p>If <code>--code-base</code> was used, also leverage <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for deeper analysis against actual project code.</p>
 <table>
 <thead>
 <tr>
@@ -459,7 +505,7 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <li>Does the PR scope match what the branch name or task key suggests?</li>
 <li>Are changes scoped appropriately, or is there scope creep?</li>
 <li>Does <code>PR_BODY</code> reference necessary context (tickets, decisions, trade-offs)?</li>
-<li>Do commit messages follow the convention? (<code>{action} {description} [KEY]</code>)</li>
+<li>Do commit messages follow the convention? (<code>{action} {description} #KEY</code>)</li>
 <li>Are the changes logically grouped into sensible commits?</li>
 </ul>
 <h4>5b. Quality Check</h4>
@@ -593,6 +639,8 @@ PR: [PR_URL]
 <li class="task-list-item"><input type="checkbox" disabled/> PR detected from URL or auto-detected from worktree?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Failed fast when no PR found?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All PR data fetched (files, diff, commits, reviews)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <code>--code-base</code> flag respected — fails fast if branch not local?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Codebase context fetched when <code>--code-base</code> is set?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Task key extracted when possible?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All review dimensions checked?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Issues assigned correct priority?</li>

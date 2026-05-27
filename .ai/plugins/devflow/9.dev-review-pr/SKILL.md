@@ -5,6 +5,8 @@ triggers:
   - "review-pr"
   - "reviewpr"
   - "dev-review-pr"
+  - "review-pr --code-base"
+  - "reviewpr --code-base"
 ---
 
 ## When to Use
@@ -12,6 +14,14 @@ triggers:
 - `/review-pr [URL]` — review a specific PR (past or current)
 - `/review-pr` or `/reviewpr` — auto-detect task key from worktree and find the open PR
 - `/reviewpr [URL]` — shorthand with URL
+- `/review-pr --code-base` or `/reviewpr --code-base` — review PR against the local codebase too. Fails fast if not on the correct worktree/branch.
+
+## Flags
+
+| Flag | Behavior |
+|------|----------|
+| (none) | Fetch and review from PR data only (files, diff, commits, reviews) |
+| `--code-base` | Also checks local task context, project conventions, and related source files. Fails if HEAD branch doesn't exist locally. |
 
 ## Paths
 
@@ -24,6 +34,7 @@ Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables ar
 ### Step 1: Detect PR
 
 Parse input for a PR URL (regex: `github\.com/([^/]+)/([^/]+)/pull/(\d+)`).
+Parse flags: `--code-base`.
 
 **If a URL was provided:**
 - Extract `OWNER`, `REPO`, and `PR_NUMBER` from the URL.
@@ -88,6 +99,40 @@ Parse the results:
 - `COMMITS[]` — each commit's message, oid, author
 - `DIFF` — the full diff text
 
+### Step 3a: Check Codebase (if `--code-base`)
+
+Skip this step if `--code-base` flag is not set.
+
+**Fail fast — verify we're on the right branch:**
+```bash
+git branch --list "[HEAD_BRANCH]"
+```
+If no output: "The `[HEAD_BRANCH]` branch does not exist locally. Switch to the correct worktree first." Stop.
+
+**Fetch codebase context:**
+
+Task context — read requirements and plan if available:
+```bash
+cat .local/tasks/[KEY]/task.md 2>/dev/null || echo "No task folder found"
+cat .local/tasks/[KEY]/plan.md 2>/dev/null || echo "No plan found"
+```
+
+Project conventions — check for linters and configs:
+```bash
+ls .editorconfig .phpcs.xml .phpcs.xml.dist .eslintrc* tsconfig.json .rubocop.yml .prettierrc* 2>/dev/null || echo "No project linting configs found"
+```
+
+Related files — for each changed file in `FILES[]`, list siblings in the same directory:
+```bash
+for file in [FILES]; do
+  dir=$(dirname "$file")
+  echo "-- $dir/"
+  ls "$dir/" 2>/dev/null
+done
+```
+
+Store these as `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]` for use in review dimensions below.
+
 ### Step 4: Extract Task Key
 
 If `KEY` was already extracted from the branch name in Step 1, use it.
@@ -99,6 +144,8 @@ If no `KEY` found: continue without it (the report will not be saved to a task f
 ### Step 5: Review Across Dimensions
 
 Analyze the PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across every dimension below. For each issue found, assign:
+
+If `--code-base` was used, also leverage `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]` for deeper analysis against actual project code.
 
 | Field | Description |
 |-------|-------------|
@@ -265,6 +312,8 @@ PR: [PR_URL]
 - [ ] PR detected from URL or auto-detected from worktree?
 - [ ] Failed fast when no PR found?
 - [ ] All PR data fetched (files, diff, commits, reviews)?
+- [ ] `--code-base` flag respected — fails fast if branch not local?
+- [ ] Codebase context fetched when `--code-base` is set?
 - [ ] Task key extracted when possible?
 - [ ] All review dimensions checked?
 - [ ] Issues assigned correct priority?
