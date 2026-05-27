@@ -460,25 +460,26 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <p>Format: <code>{action} {description} KEY</code> (e.g., <code>Fix PDF landscape scaling KEY</code>)  </p>
 <p>Skip if <code>--from-pr</code> (no commit to build).</p>
 <h3>Step 5: Show Preview</h3>
-<p>Show the preview:</p>
-<pre><code>Commit: {MSG}
-
-## Technical Changelog (.local)
+<p>Show the preview in separate copyable blocks.</p>
+<pre><code class="language-text">Commit: {MSG}
+</code></pre>
+<pre><code class="language-md">## Technical Changelog (.local)
 ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
 ...
-
-## PR Report (GitHub)
+</code></pre>
+<pre><code class="language-md">## PR Report (GitHub)
 ## [KEY] — Title
 ## Goal
 ...
-
-## Jira Report
+</code></pre>
+<pre><code class="language-md">## Jira Report
 ## [KEY] — Task summary
 ## Added
 ...
 </code></pre>
-<p>When <code>--from-pr</code>: omit the <code>Commit</code> and <code>Technical Changelog</code> lines — show only the PR and Jira reports.<br>
-When <code>--no-jira</code>: omit the <code>Jira Report</code> section. Show only the PR report.  </p>
+<p>When <code>--from-pr</code>: omit the <code>Commit</code> and <code>Technical Changelog</code> blocks — show only the PR and Jira blocks.<br>
+When <code>--no-jira</code>: omit the <code>Jira Report</code> block. Show only the PR block.<br>
+Each block should stay separate so the user can copy the PR body or Jira comment directly.  </p>
 <p>If <code>--dry-run</code> or <code>--from-pr</code>: skip to Step 9 (read-only — no PR, no Jira, no writes).  </p>
 <p>If <code>--technical-only</code>: proceed to Step 7 (update progress), then skip to Step 9.  </p>
 <p>If NOT <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>: ask "Ready? Say YES."</p>
@@ -547,37 +548,66 @@ Content-Type: application/json
 <p><strong>Required</strong>: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: <code>[View PR]({PR_URL})</code>). Never omit or move to top.<br>
 <code>{JIRA_BODY}</code> is the output from <code>JIRA_TEMPLATE</code>.</p>
 <h3>Step 9: Success</h3>
+<p>Show the final result in separate blocks so URLs and posted content are easy to copy.  </p>
 <p>If a new PR was created:</p>
-<pre><code>✅ PR: {PR_URL}
-✅ Jira: [KEY] commented
+<pre><code class="language-text">✅ PR: {PR_URL}
 ✅ Progress: .local/tasks/[KEY]/progress.md
+</code></pre>
+<pre><code class="language-md">## PR Body Posted
+[exact PR body that was posted]
+</code></pre>
+<pre><code class="language-md">## Jira Comment Posted
+[exact Jira comment that was posted]
 </code></pre>
 <p>If an existing PR was reused:</p>
-<pre><code>✅ PR reused: {PR_URL}
+<pre><code class="language-text">✅ PR reused: {PR_URL}
 ✅ PR comment added with recent changes summary
-✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
+</code></pre>
+<pre><code class="language-md">## PR Comment Posted
+[exact PR comment that was posted]
+</code></pre>
+<pre><code class="language-md">## Jira Comment Posted
+[exact Jira comment that was posted]
 </code></pre>
 <p>If <code>--from-pr</code>:</p>
-<pre><code>✅ Reports generated from PR: {PR_URL}
+<pre><code class="language-text">✅ Reports generated from PR: {PR_URL}
+</code></pre>
+<pre><code class="language-md">## PR Report
+[exact PR report]
+</code></pre>
+<pre><code class="language-md">## Jira Report
+[exact Jira report]
 </code></pre>
 <p>If <code>--no-jira</code> and a new PR was created:</p>
-<pre><code>✅ PR: {PR_URL}
+<pre><code class="language-text">✅ PR: {PR_URL}
 ✅ Progress: .local/tasks/[KEY]/progress.md
 </code></pre>
+<pre><code class="language-md">## PR Body Posted
+[exact PR body that was posted]
+</code></pre>
 <p>If <code>--no-jira</code> and an existing PR was reused:</p>
-<pre><code>✅ PR reused: {PR_URL}
+<pre><code class="language-text">✅ PR reused: {PR_URL}
 ✅ PR comment added with recent changes summary
 ✅ Progress: .local/tasks/[KEY]/progress.md
 </code></pre>
+<pre><code class="language-md">## PR Comment Posted
+[exact PR comment that was posted]
+</code></pre>
 <p>If <code>--jira-only</code>:</p>
-<pre><code>✅ Jira: [KEY] commented
+<pre><code class="language-text">✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
 </code></pre>
-<p>If <code>--technical-only</code>:</p>
-<pre><code>✅ Progress: .local/tasks/[KEY]/progress.md
+<pre><code class="language-md">## Jira Comment Posted
+[exact Jira comment that was posted]
 </code></pre>
-<p>(Omit skipped steps per flags.)</p>
+<p>If <code>--technical-only</code>:</p>
+<pre><code class="language-text">✅ Progress: .local/tasks/[KEY]/progress.md
+</code></pre>
+<pre><code class="language-md">## Technical Changelog (.local)
+[exact changelog content written]
+</code></pre>
+<p>(Omit skipped blocks per flags.)</p>
 </section>
   </main>
 </body>

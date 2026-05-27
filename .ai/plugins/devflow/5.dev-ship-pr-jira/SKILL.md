@@ -130,28 +130,35 @@ Skip if `--from-pr` (no commit to build).
 
 ### Step 5: Show Preview
 
-Show the preview:
+Show the preview in separate copyable blocks.
 
-```
+```text
 Commit: {MSG}
+```
 
+```md
 ## Technical Changelog (.local)
 ## Iteration [N] — YYYY-MM-DD HH:MM ±TZ
 ...
+```
 
+```md
 ## PR Report (GitHub)
 ## [KEY] — Title
 ## Goal
 ...
+```
 
+```md
 ## Jira Report
 ## [KEY] — Task summary
 ## Added
 ...
 ```
 
-When `--from-pr`: omit the `Commit` and `Technical Changelog` lines — show only the PR and Jira reports.
-When `--no-jira`: omit the `Jira Report` section. Show only the PR report.
+When `--from-pr`: omit the `Commit` and `Technical Changelog` blocks — show only the PR and Jira blocks.
+When `--no-jira`: omit the `Jira Report` block. Show only the PR block.
+Each block should stay separate so the user can copy the PR body or Jira comment directly.
 
 If `--dry-run` or `--from-pr`: skip to Step 9 (read-only — no PR, no Jira, no writes).
 
@@ -240,43 +247,98 @@ Content-Type: application/json
 
 ### Step 9: Success
 
+Show the final result in separate blocks so URLs and posted content are easy to copy.
+
 If a new PR was created:
-```
+```text
 ✅ PR: {PR_URL}
-✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
+```
+
+```md
+## PR Body Posted
+[exact PR body that was posted]
+```
+
+```md
+## Jira Comment Posted
+[exact Jira comment that was posted]
 ```
 
 If an existing PR was reused:
-```
+```text
 ✅ PR reused: {PR_URL}
 ✅ PR comment added with recent changes summary
+✅ Progress: .local/tasks/[KEY]/progress.md
+```
+
+```md
+## PR Comment Posted
+[exact PR comment that was posted]
+```
+
+```md
+## Jira Comment Posted
+[exact Jira comment that was posted]
+```
+
+If `--from-pr`:
+```text
+✅ Reports generated from PR: {PR_URL}
+```
+
+```md
+## PR Report
+[exact PR report]
+```
+
+```md
+## Jira Report
+[exact Jira report]
+```
+
+If `--no-jira` and a new PR was created:
+```text
+✅ PR: {PR_URL}
+✅ Progress: .local/tasks/[KEY]/progress.md
+```
+
+```md
+## PR Body Posted
+[exact PR body that was posted]
+```
+
+If `--no-jira` and an existing PR was reused:
+```text
+✅ PR reused: {PR_URL}
+✅ PR comment added with recent changes summary
+✅ Progress: .local/tasks/[KEY]/progress.md
+```
+
+```md
+## PR Comment Posted
+[exact PR comment that was posted]
+```
+
+If `--jira-only`:
+```text
 ✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 
-If `--from-pr`:
+```md
+## Jira Comment Posted
+[exact Jira comment that was posted]
 ```
-✅ Reports generated from PR: {PR_URL}
-```
-If `--no-jira` and a new PR was created:
-```
-✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-If `--no-jira` and an existing PR was reused:
-```
-✅ PR reused: {PR_URL}
-✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-If `--jira-only`:
-```
-✅ Jira: [KEY] commented
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
+
 If `--technical-only`:
-```
+```text
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
-(Omit skipped steps per flags.)
+
+```md
+## Technical Changelog (.local)
+[exact changelog content written]
+```
+
+(Omit skipped blocks per flags.)
