@@ -42,13 +42,13 @@ For each group:
 
 ```bash
 git add <file1> <file2> ...
-git commit -m "<message> [KEY]"
+git commit -m "<message> #KEY"
 ```
 
-**Message format:** `<action> <description> [KEY]`
-- Examples: `Add dev-commit skill [DEV-9]`, `Fix template paths [DEV-9]`, `Update config for worktree [DEV-9]`
+**Message format:** `<action> <description> #KEY`
+- Examples: `Add dev-commit skill #DEV-9`, `Fix template paths #DEV-9`, `Update config for worktree #DEV-9`
 - Past tense for fixes (`Fixed`, `Updated`), present for new (`Add`, `Create`)
-- Keep short — under 72 characters including `[KEY]`
+- Keep short — under 72 characters including `#KEY`
 
 **Do not use `--squash` or `--amend`.** Each commit is a normal, standalone commit.
 
