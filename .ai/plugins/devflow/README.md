@@ -35,11 +35,12 @@ devflow/
   6.dev-fix-pr/               ← fix PR review comments (multi-round loop)
   7.dev-finish/               ← merge PR + delete worktree + cleanup
   8.dev-adr/                  ← create Architecture Decision Record
+  9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
 ```
 
 ---
 
-## PROs
+## Pros
 
 | Advantage | Detail |
 |-----------|--------|
@@ -50,12 +51,14 @@ devflow/
 | **Checkpoint gating** | Every destructive step has a user checkpoint. Nothing is pushed, merged, or deleted without approval. |
 | **Consistent conventions** | Same commit message format, branch naming, folder structure, and table layouts across all skills. |
 | **Composable** | Use individual skills (`/dev-plan`, `/dev-ship`) or the full orchestrator (`/devflow`). |
+| **Dry-run support** | `dev-start`, `dev-ship`, `dev-fix-pr`, and `dev-finish` support `--dry-run` to preview what would happen with no side effects. |
 | **GraphQL-native** | PR operations use GitHub GraphQL API — no screen scraping, no brittle REST parsing. |
-| **No duplication** | `dev-get-summary` merged into `dev-ship-pr-jira`. Thin wrapper agents eliminated. One source of truth per capability. |
+| **No squash-merge default** | `dev-finish` and `dev-ship-pr-jira` preserve full commit history. Merge strategy is configurable per repository. |
+| **PR review on demand** | `/review-pr` reviews any PR (past or current) with a single URL. No worktree needed. Covers 8 quality dimensions with prioritized findings and a saved report. |
 
 ---
 
-## CONS
+## Cons
 
 | Limitation | Detail |
 |------------|--------|
@@ -63,8 +66,6 @@ devflow/
 | **Jira-dependent** | Assumes Jira task keys (`PROJ-123`) for branch naming, task folders, and PR descriptions. |
 | **Worktree required** | `dev-start` and `dev-finish` assume git worktree workflow. Legacy branch fallback in `dev-fix-pr` only. |
 | **50-thread limit** | GraphQL queries paginate at 50 review threads. Very large PRs may miss threads (pagination not yet implemented). |
-| **Squash-merge only** | `dev-finish` and `dev-ship-pr-jira` default to `--squash`. Custom merge strategies require manual override. |
-| **No dry-run on all skills** | `dev-start`, `dev-ship`, `dev-fix-pr`, and `dev-finish` have `--dry-run`. Planning/coding/reviewing skills rely on checkpoints instead. |
 | **Agent-dependent** | Skills are markdown instructions for AI agents — not executable scripts. Requires an AI tool that reads and follows them. |
 
 ---
@@ -77,12 +78,14 @@ devflow/
 /devflow PROJ-123
 ```
 
-Runs plan → code → review in sequence with checkpoints between phases. Use flags to skip phases:
+Runs plan → code → review in sequence with checkpoints between phases.
+After review passes, use individual skills to continue the lifecycle (see table below).
+Use flags to skip or retry specific phases:
 
 ```
-/devflow PROJ-123 --plan-only
-/devflow PROJ-123 --code-only
-/devflow PROJ-123 --review-only
+/devflow PROJ-123 --plan-only     # re-plan without re-implementing
+/devflow PROJ-123 --code-only      # retry implementation without re-planning
+/devflow PROJ-123 --review-only    # re-run review without re-implementing
 ```
 
 ### Individual skills
@@ -93,10 +96,11 @@ Runs plan → code → review in sequence with checkpoints between phases. Use f
 | `/dev-plan` | Analyze task + codebase, produce `plan.md` + `progress.md`. |
 | `/dev-code` | Read `plan.md`, implement changes, capture manual changes, write `changelog.md` with `Delivery` tracking. |
 | `/dev-review` | Review changes via `git diff`, check changelog for unlogged changes, write `review.md`, issue verdict. |
-| `/dev-ship` or `dev-ship-pr-jira` | Create PR + comment Jira. `--pr-only`, `--jira-only`, `--dry-run`, `--technical-only`, `--from-pr [URL]`. |
+| `/dev-ship` or `/dev-ship-pr-jira` | Create PR + comment Jira. `--pr-only`, `--jira-only`, `--dry-run`, `--technical-only`, `--from-pr [URL]`. |
 | `/dev-fix-pr` or `devfixpr` | List, plan, fix, and resolve PR review comments. Loops for multiple rounds. `--dry-run` available. |
 | `/dev-finish` or `devfinish` | Merge approved PR, delete worktree + branch. `--worktree-only` skips PR. `--dry-run` previews. |
 | `/dev-adr` or `adr` | Create an ADR from completed task evidence. Skips non-architectural tasks. |
+| `/review-pr` or `/reviewpr` | Review a GitHub PR across multiple dimensions (fit, quality, naming, design, performance, security, testing). Provide a URL for any PR or run from a worktree to auto-detect the open PR. Generates a `pr-feedback-[KEY].md` report. |
 
 ---
 
@@ -107,7 +111,7 @@ Runs plan → code → review in sequence with checkpoints between phases. Use f
 ```bash
 # 1. Start a new task
 dev-start PROJ-2050
-cd ../proj-worktrees/feature/proj-2050-login-google
+cd ../proj-worktrees/proj-2050-login-google
 
 # 2. Full pipeline (plan → code → review)
 /devflow PROJ-2050
@@ -125,7 +129,6 @@ cd ../proj-worktrees/feature/proj-2050-login-google
 # 6. Create ADR if architectural
 /dev-adr PROJ-2050
 ```
-
 
 ### Generate reports from a past PR
 
@@ -155,6 +158,13 @@ To use this plugin in a repository:
 
 To disable: remove or rename the `devflow/` folder.
 
+### Recovery
+
+If a phase fails mid-pipeline, re-run the orchestrator with a phase-specific flag:
+- `--plan-only` — retry planning without re-implementing.
+- `--code-only` — retry implementation without re-planning.
+- `--review-only` — re-run the review without re-implementing.
+
 ---
 
 ## Design Conventions
@@ -162,7 +172,7 @@ To disable: remove or rename the `devflow/` folder.
 | Convention | Example |
 |------------|---------|
 | Branch names | `feature/proj-2145-short-summary` or `hotfix/proj-2145-fix-crash` |
-| Commit messages | `Fix PR comments #PROJ-2145` |
+| Commit messages | `Fix PR comments PROJ-2145` |
 | Task folder | `.local/tasks/PROJ-2145/` |
 | ADR files | `docs/adrs/PROJ-2145-short-decision.md` |
 | Checkpoint format | "Proceed? (yes / no / adjust)" with explicit consequences per option |

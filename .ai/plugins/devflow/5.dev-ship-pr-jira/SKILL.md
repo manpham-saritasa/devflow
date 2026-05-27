@@ -124,7 +124,7 @@ Rules for PR report:
 
 ### Step 4: Build Commit Message
 
-Format: `{action} {description} [KEY]` (e.g., `Fix PDF landscape scaling [KEY]`)
+Format: `{action} {description} KEY` (e.g., `Fix PDF landscape scaling KEY`)
 
 Skip if `--from-pr` (no commit to build).
 
@@ -159,13 +159,32 @@ If `--technical-only`: proceed to Step 7 (update progress), then skip to Step 9.
 
 If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Ready? Say YES."
 
-### Step 6: Create PR
+### Step 6: Create or Reuse PR
 
-Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`:
+Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`.
+
+Before creating a PR, check whether an open PR already exists for the current branch.
+
+```bash
+gh pr list --state open --json number,title,url,headRefName,baseRefName
+```
+
+Filter by `headRefName == $(git branch --show-current)`.
+
+- If an open PR already exists for this branch: **fail fast for PR creation**. Do **not** create another PR.
+- Reuse the existing PR URL.
+- Generate a short comment that summarizes changes from the recent commits since the PR branch was last updated.
+- Post that summary to the existing PR with `gh pr comment [PR_NUMBER] --body "[SUMMARY]"`.
+- Continue to Step 7 using the existing PR URL.
+
+If no open PR exists for the current branch:
 ```bash
 git push origin $(git branch --show-current)
-gh pr create --base develop --head $(git branch --show-current) --title "{MSG}" --body "{BODY}"
+gh pr create --base [BASE_BRANCH] --head $(git branch --show-current) --title "{MSG}" --body "{BODY}"
 ```
+
+`[BASE_BRANCH]` must match the repository default branch (for example `main` or `develop`). Do not assume `develop` if the repository uses another default branch.
+
 Capture PR URL. `{PR_BODY}` is the output from `PR_TEMPLATE`.
 
 If `--no-jira`: the PR body uses only the PR report (no Jira report).
@@ -221,8 +240,17 @@ Content-Type: application/json
 
 ### Step 9: Success
 
+If a new PR was created:
 ```
 ✅ PR: {PR_URL}
+✅ Jira: [KEY] commented
+✅ Progress: .local/tasks/[KEY]/progress.md
+```
+
+If an existing PR was reused:
+```
+✅ PR reused: {PR_URL}
+✅ PR comment added with recent changes summary
 ✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
@@ -231,9 +259,15 @@ If `--from-pr`:
 ```
 ✅ Reports generated from PR: {PR_URL}
 ```
-If `--no-jira`:
+If `--no-jira` and a new PR was created:
 ```
 ✅ PR: {PR_URL}
+✅ Progress: .local/tasks/[KEY]/progress.md
+```
+If `--no-jira` and an existing PR was reused:
+```
+✅ PR reused: {PR_URL}
+✅ PR comment added with recent changes summary
 ✅ Progress: .local/tasks/[KEY]/progress.md
 ```
 If `--jira-only`:

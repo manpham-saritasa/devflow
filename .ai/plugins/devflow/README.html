@@ -353,10 +353,11 @@ flowchart TD
   6.dev-fix-pr/               ← fix PR review comments (multi-round loop)
   7.dev-finish/               ← merge PR + delete worktree + cleanup
   8.dev-adr/                  ← create Architecture Decision Record
+  9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
 </code></pre>
 </section>
 <section class="section">
-<h2>PROs</h2>
+<h2>Pros</h2>
 <table>
 <thead>
 <tr>
@@ -394,18 +395,26 @@ flowchart TD
 <td data-label="Detail">Use individual skills (<code>/dev-plan</code>, <code>/dev-ship</code>) or the full orchestrator (<code>/devflow</code>).</td>
 </tr>
 <tr>
+<td data-label="Advantage"><strong>Dry-run support</strong></td>
+<td data-label="Detail"><code>dev-start</code>, <code>dev-ship</code>, <code>dev-fix-pr</code>, and <code>dev-finish</code> support <code>--dry-run</code> to preview what would happen with no side effects.</td>
+</tr>
+<tr>
 <td data-label="Advantage"><strong>GraphQL-native</strong></td>
 <td data-label="Detail">PR operations use GitHub GraphQL API — no screen scraping, no brittle REST parsing.</td>
 </tr>
 <tr>
-<td data-label="Advantage"><strong>No duplication</strong></td>
-<td data-label="Detail"><code>dev-get-summary</code> merged into <code>dev-ship-pr-jira</code>. Thin wrapper agents eliminated. One source of truth per capability.</td>
+<td data-label="Advantage"><strong>No squash-merge default</strong></td>
+<td data-label="Detail"><code>dev-finish</code> and <code>dev-ship-pr-jira</code> preserve full commit history. Merge strategy is configurable per repository.</td>
+</tr>
+<tr>
+<td data-label="Advantage"><strong>PR review on demand</strong></td>
+<td data-label="Detail"><code>/review-pr</code> reviews any PR (past or current) with a single URL. No worktree needed. Covers 8 quality dimensions with prioritized findings and a saved report.</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section class="section">
-<h2>CONS</h2>
+<h2>Cons</h2>
 <table>
 <thead>
 <tr>
@@ -431,14 +440,6 @@ flowchart TD
 <td data-label="Detail">GraphQL queries paginate at 50 review threads. Very large PRs may miss threads (pagination not yet implemented).</td>
 </tr>
 <tr>
-<td data-label="Limitation"><strong>Squash-merge only</strong></td>
-<td data-label="Detail"><code>dev-finish</code> and <code>dev-ship-pr-jira</code> default to <code>--squash</code>. Custom merge strategies require manual override.</td>
-</tr>
-<tr>
-<td data-label="Limitation"><strong>No dry-run on all skills</strong></td>
-<td data-label="Detail"><code>dev-start</code>, <code>dev-ship</code>, <code>dev-fix-pr</code>, and <code>dev-finish</code> have <code>--dry-run</code>. Planning/coding/reviewing skills rely on checkpoints instead.</td>
-</tr>
-<tr>
 <td data-label="Limitation"><strong>Agent-dependent</strong></td>
 <td data-label="Detail">Skills are markdown instructions for AI agents — not executable scripts. Requires an AI tool that reads and follows them.</td>
 </tr>
@@ -450,10 +451,12 @@ flowchart TD
 <h3>Full pipeline (orchestrator)</h3>
 <pre><code>/devflow PROJ-123
 </code></pre>
-<p>Runs plan → code → review in sequence with checkpoints between phases. Use flags to skip phases:</p>
-<pre><code>/devflow PROJ-123 --plan-only
-/devflow PROJ-123 --code-only
-/devflow PROJ-123 --review-only
+<p>Runs plan → code → review in sequence with checkpoints between phases.<br>
+After review passes, use individual skills to continue the lifecycle (see table below).<br>
+Use flags to skip or retry specific phases:</p>
+<pre><code>/devflow PROJ-123 --plan-only     # re-plan without re-implementing
+/devflow PROJ-123 --code-only      # retry implementation without re-planning
+/devflow PROJ-123 --review-only    # re-run review without re-implementing
 </code></pre>
 <h3>Individual skills</h3>
 <table>
@@ -481,7 +484,7 @@ flowchart TD
 <td data-label="What it does">Review changes via <code>git diff</code>, check changelog for unlogged changes, write <code>review.md</code>, issue verdict.</td>
 </tr>
 <tr>
-<td data-label="Trigger"><code>/dev-ship</code> or <code>dev-ship-pr-jira</code></td>
+<td data-label="Trigger"><code>/dev-ship</code> or <code>/dev-ship-pr-jira</code></td>
 <td data-label="What it does">Create PR + comment Jira. <code>--pr-only</code>, <code>--jira-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr [URL]</code>.</td>
 </tr>
 <tr>
@@ -496,6 +499,10 @@ flowchart TD
 <td data-label="Trigger"><code>/dev-adr</code> or <code>adr</code></td>
 <td data-label="What it does">Create an ADR from completed task evidence. Skips non-architectural tasks.</td>
 </tr>
+<tr>
+<td data-label="Trigger"><code>/review-pr</code> or <code>/reviewpr</code></td>
+<td data-label="What it does">Review a GitHub PR across multiple dimensions (fit, quality, naming, design, performance, security, testing). Provide a URL for any PR or run from a worktree to auto-detect the open PR. Generates a <code>pr-feedback-[KEY].md</code> report.</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -504,7 +511,7 @@ flowchart TD
 <h3>Start to finish</h3>
 <pre><code class="language-bash"># 1. Start a new task
 dev-start PROJ-2050
-cd ../proj-worktrees/feature/proj-2050-login-google
+cd ../proj-worktrees/proj-2050-login-google
 
 # 2. Full pipeline (plan → code → review)
 /devflow PROJ-2050
@@ -543,7 +550,14 @@ cd ../proj-worktrees/feature/proj-2050-login-google
 </li>
 <li>Your AI tool reads <code>startup.md</code> → discovers <code>plugins/devflow/</code> → reads skills on demand.</li>
 </ol>
-<p>To disable: remove or rename the <code>devflow/</code> folder.  </p>
+<p>To disable: remove or rename the <code>devflow/</code> folder.</p>
+<h3>Recovery</h3>
+<p>If a phase fails mid-pipeline, re-run the orchestrator with a phase-specific flag:</p>
+<ul>
+<li><code>--plan-only</code> — retry planning without re-implementing.</li>
+<li><code>--code-only</code> — retry implementation without re-planning.</li>
+<li><code>--review-only</code> — re-run the review without re-implementing.</li>
+</ul>
 </section>
 <section class="section">
 <h2>Design Conventions</h2>
@@ -561,7 +575,7 @@ cd ../proj-worktrees/feature/proj-2050-login-google
 </tr>
 <tr>
 <td data-label="Convention">Commit messages</td>
-<td data-label="Example"><code>Fix PR comments #PROJ-2145</code></td>
+<td data-label="Example"><code>Fix PR comments PROJ-2145</code></td>
 </tr>
 <tr>
 <td data-label="Convention">Task folder</td>

@@ -109,8 +109,10 @@ Skip this step if `--worktree-only`.
 
 #### Step 5a: Merge the PR
 
+Use the merge strategy from `config.md` (`MERGE_STRATEGY`, defaults to `--merge` which preserves full commit history):
+
 ```bash
-gh pr merge [PR_NUMBER] --merge --delete-branch
+gh pr merge [PR_NUMBER] [MERGE_STRATEGY] --delete-branch
 ```
 
 If merge fails: report the error and stop. Do not delete the worktree.

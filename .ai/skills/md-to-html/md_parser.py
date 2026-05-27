@@ -36,7 +36,7 @@ def _markdown_module():
         import markdown
     except ImportError as exc:  # pragma: no cover - exercised by runtime, not tests
         raise RuntimeError(
-            "Missing Markdown dependencies. Run: python -m pip install -r .ai/skills/md-to-html/requirements.txt"
+            "Missing Markdown dependencies. Run: python -m pip install -r .ai/skills/md-to-html/requirements.txt (or on Windows: py.exe -m pip install -r .ai/skills/md-to-html/requirements.txt)"
         ) from exc
     return markdown
 

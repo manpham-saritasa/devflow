@@ -24,4 +24,11 @@ Located in `templates/` relative to the plugin root.
 | `PROGRESS_TEMPLATE` | `templates/progress-template.md` |
 | `CHANGELOG_TEMPLATE` | `templates/changelog-template.md` |
 | `REVIEW_TEMPLATE` | `templates/review-template.md` |
-| `ADR_TEMPLATE` | `templates/adr-template.md` |
+
+---
+
+## Merge Strategy
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `MERGE_STRATEGY` | `--merge` | Strategy passed to `gh pr merge`. Options: `--merge` (preserve history), `--rebase`, `--squash`. |

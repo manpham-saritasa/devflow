@@ -457,7 +457,7 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <li>Separate verified from not-verified in testing section.</li>
 </ul>
 <h3>Step 4: Build Commit Message</h3>
-<p>Format: <code>{action} {description} [KEY]</code> (e.g., <code>Fix PDF landscape scaling [KEY]</code>)  </p>
+<p>Format: <code>{action} {description} KEY</code> (e.g., <code>Fix PDF landscape scaling KEY</code>)  </p>
 <p>Skip if <code>--from-pr</code> (no commit to build).</p>
 <h3>Step 5: Show Preview</h3>
 <p>Show the preview:</p>
@@ -482,11 +482,24 @@ When <code>--no-jira</code>: omit the <code>Jira Report</code> section. Show onl
 <p>If <code>--dry-run</code> or <code>--from-pr</code>: skip to Step 9 (read-only — no PR, no Jira, no writes).  </p>
 <p>If <code>--technical-only</code>: proceed to Step 7 (update progress), then skip to Step 9.  </p>
 <p>If NOT <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>: ask "Ready? Say YES."</p>
-<h3>Step 6: Create PR</h3>
-<p>Skip if <code>--jira-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, or <code>--from-pr</code>:</p>
-<pre><code class="language-bash">git push origin $(git branch --show-current)
-gh pr create --base develop --head $(git branch --show-current) --title &quot;{MSG}&quot; --body &quot;{BODY}&quot;
+<h3>Step 6: Create or Reuse PR</h3>
+<p>Skip if <code>--jira-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, or <code>--from-pr</code>.  </p>
+<p>Before creating a PR, check whether an open PR already exists for the current branch.</p>
+<pre><code class="language-bash">gh pr list --state open --json number,title,url,headRefName,baseRefName
 </code></pre>
+<p>Filter by <code>headRefName == $(git branch --show-current)</code>.</p>
+<ul>
+<li>If an open PR already exists for this branch: <strong>fail fast for PR creation</strong>. Do <strong>not</strong> create another PR.</li>
+<li>Reuse the existing PR URL.</li>
+<li>Generate a short comment that summarizes changes from the recent commits since the PR branch was last updated.</li>
+<li>Post that summary to the existing PR with <code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"</code>.</li>
+<li>Continue to Step 7 using the existing PR URL.</li>
+</ul>
+<p>If no open PR exists for the current branch:</p>
+<pre><code class="language-bash">git push origin $(git branch --show-current)
+gh pr create --base [BASE_BRANCH] --head $(git branch --show-current) --title &quot;{MSG}&quot; --body &quot;{BODY}&quot;
+</code></pre>
+<p><code>[BASE_BRANCH]</code> must match the repository default branch (for example <code>main</code> or <code>develop</code>). Do not assume <code>develop</code> if the repository uses another default branch.  </p>
 <p>Capture PR URL. <code>{PR_BODY}</code> is the output from <code>PR_TEMPLATE</code>.  </p>
 <p>If <code>--no-jira</code>: the PR body uses only the PR report (no Jira report).</p>
 <h3>Step 7: Update Progress</h3>
@@ -534,15 +547,27 @@ Content-Type: application/json
 <p><strong>Required</strong>: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: <code>[View PR]({PR_URL})</code>). Never omit or move to top.<br>
 <code>{JIRA_BODY}</code> is the output from <code>JIRA_TEMPLATE</code>.</p>
 <h3>Step 9: Success</h3>
+<p>If a new PR was created:</p>
 <pre><code>✅ PR: {PR_URL}
+✅ Jira: [KEY] commented
+✅ Progress: .local/tasks/[KEY]/progress.md
+</code></pre>
+<p>If an existing PR was reused:</p>
+<pre><code>✅ PR reused: {PR_URL}
+✅ PR comment added with recent changes summary
 ✅ Jira: [KEY] commented
 ✅ Progress: .local/tasks/[KEY]/progress.md
 </code></pre>
 <p>If <code>--from-pr</code>:</p>
 <pre><code>✅ Reports generated from PR: {PR_URL}
 </code></pre>
-<p>If <code>--no-jira</code>:</p>
+<p>If <code>--no-jira</code> and a new PR was created:</p>
 <pre><code>✅ PR: {PR_URL}
+✅ Progress: .local/tasks/[KEY]/progress.md
+</code></pre>
+<p>If <code>--no-jira</code> and an existing PR was reused:</p>
+<pre><code>✅ PR reused: {PR_URL}
+✅ PR comment added with recent changes summary
 ✅ Progress: .local/tasks/[KEY]/progress.md
 </code></pre>
 <p>If <code>--jira-only</code>:</p>

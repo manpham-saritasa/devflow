@@ -406,10 +406,22 @@ Install the parser dependencies first:
 python -m pip install -r .ai/skills/md-to-html/requirements.txt
 ```
 
+If `python` is not available on Windows, use:
+
+```bash
+py.exe -m pip install -r .ai/skills/md-to-html/requirements.txt
+```
+
 Then run the bundled converter script:
 
 ```bash
 python .ai/skills/md-to-html/main.py <input.md> [output.html]
+```
+
+If `python` is not available on Windows, use:
+
+```bash
+py.exe .ai/skills/md-to-html/main.py <input.md> [output.html]
 ```
 
 If `output.html` is omitted, it writes to `<input_stem>.html` alongside the source file.

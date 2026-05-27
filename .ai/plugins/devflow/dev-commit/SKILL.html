@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -327,12 +337,14 @@ If fail: ask user for KEY. Stop if no valid KEY.</p>
 <h3>Step 2: List Changed Files</h3>
 <pre><code class="language-bash">git status --short
 </code></pre>
-<p>Group files by related area:</p>
+<p>Group files by related area and chronologically by when changes were made:</p>
 <ul>
-<li>Files in the same feature area or module → group together</li>
+<li>Files changed together in the same step of the conversation → group together</li>
 <li>Files with the same purpose (e.g. all HTML, all templates, all config) → group together</li>
 <li>Unrelated files → separate commits</li>
 </ul>
+<p><strong>Order the commits by timeline — oldest changes first, newest last.</strong><br>
+This keeps the git history aligned with the actual work sequence.  </p>
 <p><strong>Rules:</strong></p>
 <ul>
 <li>Never commit all files in one giant commit if they span unrelated changes.</li>
@@ -342,13 +354,13 @@ If fail: ask user for KEY. Stop if no valid KEY.</p>
 <h3>Step 3: Commit Each Group</h3>
 <p>For each group:</p>
 <pre><code class="language-bash">git add &lt;file1&gt; &lt;file2&gt; ...
-git commit -m &quot;&lt;message&gt; [KEY]&quot;
+git commit -m &quot;&lt;message&gt; KEY&quot;
 </code></pre>
-<p><strong>Message format:</strong> <code>&lt;action&gt; &lt;description&gt; [KEY]</code></p>
+<p><strong>Message format:</strong> <code>&lt;action&gt; &lt;description&gt; KEY</code></p>
 <ul>
-<li>Examples: <code>Add dev-commit skill [DEV-9]</code>, <code>Fix template paths [DEV-9]</code>, <code>Update config for worktree [DEV-9]</code></li>
+<li>Examples: <code>Add dev-commit skill DEV-9</code>, <code>Fix template paths DEV-9</code>, <code>Update config for worktree DEV-9</code></li>
 <li>Past tense for fixes (<code>Fixed</code>, <code>Updated</code>), present for new (<code>Add</code>, <code>Create</code>)</li>
-<li>Keep short — under 72 characters including <code>[KEY]</code></li>
+<li>Keep short — under 72 characters including <code>KEY</code></li>
 </ul>
 <p><strong>Do not use <code>--squash</code> or <code>--amend</code>.</strong> Each commit is a normal, standalone commit.</p>
 <h3>Step 4: Verify</h3>

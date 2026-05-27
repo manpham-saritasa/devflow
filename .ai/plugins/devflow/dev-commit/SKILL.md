@@ -26,10 +26,13 @@ If fail: ask user for KEY. Stop if no valid KEY.
 git status --short
 ```
 
-Group files by related area:
-- Files in the same feature area or module → group together
+Group files by related area and chronologically by when changes were made:
+- Files changed together in the same step of the conversation → group together
 - Files with the same purpose (e.g. all HTML, all templates, all config) → group together
 - Unrelated files → separate commits
+
+**Order the commits by timeline — oldest changes first, newest last.**
+This keeps the git history aligned with the actual work sequence.
 
 **Rules:**
 - Never commit all files in one giant commit if they span unrelated changes.
@@ -42,13 +45,13 @@ For each group:
 
 ```bash
 git add <file1> <file2> ...
-git commit -m "<message> [KEY]"
+git commit -m "<message> KEY"
 ```
 
-**Message format:** `<action> <description> [KEY]`
-- Examples: `Add dev-commit skill [DEV-9]`, `Fix template paths [DEV-9]`, `Update config for worktree [DEV-9]`
+**Message format:** `<action> <description> KEY`
+- Examples: `Add dev-commit skill DEV-9`, `Fix template paths DEV-9`, `Update config for worktree DEV-9`
 - Past tense for fixes (`Fixed`, `Updated`), present for new (`Add`, `Create`)
-- Keep short — under 72 characters including `[KEY]`
+- Keep short — under 72 characters including `KEY`
 
 **Do not use `--squash` or `--amend`.** Each commit is a normal, standalone commit.
 

@@ -328,8 +328,22 @@ a:hover {
 <h2>Paths</h2>
 <p>Read shared paths from <code>config.md</code>. <code>TASKS_ROOT</code> and <code>TASK_DIR</code> are defined there.</p>
 <ul>
-<li><code>WORKTREE_ROOT</code>: <code>[REPO_NAME]-worktrees</code> — sibling folder to the repo, e.g. <code>../proj-worktrees</code></li>
+<li><code>WORKTREE_ROOT</code>: <code>[REPO_NAME]-worktrees</code> — sibling folder to the repo, e.g. <code>../proj-api-worktrees</code></li>
 </ul>
+<h3>Worktree folder hierarchy</h3>
+<p>When you run <code>dev-start PROJ-2145</code> from the main repo, it creates a sibling worktree folder. The resulting layout looks like this:</p>
+<pre><code>proj-api\                           ← the main repo
+proj-api-worktrees\                 ← all worktrees live here (flat — no type subfolders)
+├── proj-111-adjust-text\           ← worktree 1 (branch: feature/proj-111-...)
+│   ├── .ai\
+│   ├── src\
+│   └── .env
+├── proj-222-login-google\          ← worktree 2 (branch: feature/proj-222-...)
+├── proj-333-update-button\         ← worktree 3 (branch: hotfix/proj-333-...)
+└── proj-444-login-issue\           ← worktree 4 (branch: hotfix/proj-444-...)
+</code></pre>
+<p>The worktree directory uses only the short name (without the type prefix), while the git branch keeps the full <code>type/key-summary</code> format.<br>
+All development happens inside the worktree — the main repo stays clean.  </p>
 </section>
 <section class="section">
 <h2>Flags</h2>
@@ -416,7 +430,9 @@ git rev-list --count HEAD..origin/main
 <p>If behind: "<code>main</code> is behind origin by [N] commits. Pull latest <code>main</code> before creating a hotfix." Stop.  </p>
 <p>Stop if branch requirements not met (except <code>--force</code>, which skips all of Step 3).</p>
 <h3>Step 4: Fetch Task Summary</h3>
-<p>Use Jira MCP to fetch the task summary and build the branch name. Jira MCP requires credentials from <code>.env</code> in the repo root (<code>JIRA_COMPANY_DOMAIN</code>, <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>). If Jira MCP or <code>.env</code> is unavailable, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
+<p>Prefer the shared <code>dev-get</code> skill to fetch Jira task context first. Read <code>.local/tasks/[KEY]/task.md</code> and <code>.local/tasks/[KEY]/raw.md</code> when present.  </p>
+<p>If the task files are missing, run <code>dev-get [KEY]</code> to populate them, then use the saved Jira summary to build the branch name.  </p>
+<p>If <code>dev-get</code> cannot run or task files still do not exist, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
 <h3>Step 5: Build Branch Name</h3>
 <p>Format: <code>[type]/[task-key-lowercase]-[short-summary]</code>  </p>
 <p>Examples:</p>
@@ -430,6 +446,12 @@ git rev-list --count HEAD..origin/main
 <li>Summary: lowercase, words separated by hyphens, max 5-6 words.</li>
 <li>Strip special characters, keep only a-z, 0-9, and hyphens.</li>
 </ul>
+<h3>Step 5a: Compute Short Name</h3>
+<p>Extract the short name from the branch name (strip the type prefix):</p>
+<pre><code class="language-bash">SHORT_NAME=$(basename &quot;[BRANCH_NAME]&quot;)
+</code></pre>
+<p>Example: <code>feature/proj-2145-adjust-text</code> → <code>proj-2145-adjust-text</code>  </p>
+<p>This short name is used for the worktree directory path. The full branch name is kept for git.</p>
 <h3>Step 6: Dry-Run Preview</h3>
 <p>If <code>--dry-run</code>: display what would happen and stop. Do not create anything.</p>
 <pre><code>## Dry-Run Preview
@@ -439,13 +461,13 @@ Type: [feature | hotfix | force]
 Task: [KEY]
 Summary: [short-summary]
 
-Worktree would be created at: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]
 Task folder would be: .local/tasks/[KEY]
 </code></pre>
 <p>Stop here. Do not proceed to Steps 7-9.</p>
 <h3>Step 7: Create Task Folder</h3>
 <p>Create <code>TASK_DIR</code> if it doesn't exist.<br>
-Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is available (requires <code>.env</code> with Jira credentials) and file doesn't exist.</p>
+If <code>TASK_DIR/task.md</code> or <code>TASK_DIR/raw.md</code> is missing, prefer running <code>dev-get [KEY]</code> to populate the task folder before continuing.</p>
 <h3>Step 8: Create Worktree</h3>
 <p><strong>Pre-flight — fetch latest from base branch:</strong>  </p>
 <p>Always fetch and pull the base branch before creating the worktree to ensure the worktree starts from the latest source.  </p>
@@ -489,32 +511,38 @@ git pull origin [BASE_BRANCH]
 <pre><code class="language-bash">mkdir -p &quot;../[REPO_NAME]-worktrees&quot;
 </code></pre>
 <p>Create the worktree:</p>
-<pre><code class="language-bash">git worktree add &quot;../[REPO_NAME]-worktrees/[BRANCH_NAME]&quot; -b [BRANCH_NAME]
+<pre><code class="language-bash">git worktree add &quot;../[REPO_NAME]-worktrees/[SHORT_NAME]&quot; -b [BRANCH_NAME]
 </code></pre>
-<p><strong>After worktree creation — copy <code>.env</code>:</strong>  </p>
+<p><strong>After worktree creation — show full path:</strong>  </p>
+<p>Resolve and display the absolute path so the user can copy it directly:</p>
+<pre><code class="language-bash">FULL_PATH=$(cd &quot;../[REPO_NAME]-worktrees/[SHORT_NAME]&quot; &amp;&amp; pwd)
+echo &quot;Full path: $FULL_PATH&quot;
+</code></pre>
+<p><strong>Copy <code>.env</code>:</strong>  </p>
 <p>Copy the <code>.env</code> file from the repo root to the new worktree so the worktree has the same environment configuration:</p>
 <pre><code class="language-bash">if [ -f &quot;.env&quot; ]; then
-    cp &quot;.env&quot; &quot;../[REPO_NAME]-worktrees/[BRANCH_NAME]/.env&quot;
+    cp &quot;.env&quot; &quot;$FULL_PATH/.env&quot;
 fi
 </code></pre>
 <p>If <code>.env</code> does not exist in the repo root, skip this step silently (not all projects use a <code>.env</code> file).  </p>
 <p><strong>If worktree creation fails:</strong> report the error. If the task folder was created in Step 7, note it:<br>
 "Worktree creation failed. The task folder <code>.local/tasks/[KEY]</code> was already created — you may want to remove it if retrying with a different branch name."</p>
 <h3>Step 9: Report Result</h3>
-<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+<pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[SHORT_NAME]
+   Full path: [resolved absolute path]
 
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
 
 Switch to worktree first:
-  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+  cd ../[REPO_NAME]-worktrees/[SHORT_NAME]
 
 Then start:
   Full flow:  /devflow [KEY]
   Plan only:  /dev-plan [KEY]
 </code></pre>
-<p><strong>Important:</strong> All further work must be done from the worktree folder. Tell the user to <code>cd</code> into it first.</p>
+<p><strong>Important:</strong> All further work must be done from the worktree folder. Always <code>cd ../[REPO_NAME]-worktrees/[SHORT_NAME]</code> before running any dev commands.</p>
 </section>
   </main>
 </body>

@@ -159,7 +159,7 @@ For each approved fix:
    - Single-file fixes → group up to 3 per commit
    - Bulk identical changes (e.g., typos, renames across many files) → one commit, unlimited files
    - For multi-fix commits, list each fix as a bullet in the commit body
-3. **Commit message format**: `Fix PR comments #[KEY]` (extract KEY from branch name: `([A-Z0-9]+-\d+)`, case-insensitive)
+3. **Commit message format**: `Fix PR comments [KEY]` (extract KEY from branch name: `([A-Z0-9]+-\d+)`, case-insensitive)
 4. **Commit locally only.** Do not push until user says so.
 
 ### Step 5: Review Changes (§4)
@@ -272,7 +272,7 @@ This skill supports multiple review rounds without re-invocation:
 
 1. After each push, it checks for new unresolved comments.
 2. If the reviewer added more comments, the skill loops back to Step 2 (listing) with a fresh fetch.
-3. Each round produces its own commit(s) with the same `Fix PR comments #[KEY]` message format.
+3. Each round produces its own commit(s) with the same `Fix PR comments [KEY]` message format.
 4. The loop continues until all threads are resolved or the user chooses to stop.
 
 ---
@@ -282,7 +282,7 @@ This skill supports multiple review rounds without re-invocation:
 | Rule | Detail |
 |------|--------|
 | Show diff before commit | Never commit silently |
-| Commit message | `Fix PR comments #[KEY]` |
+| Commit message | `Fix PR comments [KEY]` |
 | Commit grouping | Multi-file → 1 commit; single-file → max 3 per commit; bulk identical → unlimited |
 | Push control | Never push without user approval |
 | Resolve silently | Use GraphQL mutation, no reply on code-fix threads |

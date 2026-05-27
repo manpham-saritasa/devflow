@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -316,7 +326,7 @@ a:hover {
 </section>
 <section class="section">
 <h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, <code>ADR_DIR</code>, and template variables are defined there.  </p>
+<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and <code>ADR_DIR</code> variables are defined there.  </p>
 </section>
 <section class="section">
 <h2>Decision Triggers</h2>
@@ -359,7 +369,7 @@ gh pr diff [NUMBER] --repo [OWNER]/[REPO]
 </code></pre>
 <p>Also read repository context: <code>AGENTS.md</code>, <code>README.md</code>, <code>docs/</code>, and existing ADRs in <code>ADR_DIR</code>.</p>
 <h3>Step 3: Analyze</h3>
-<p>Check <code>ADR_TEMPLATE</code> exists. Missing → stop: "Error: ADR template not found."  </p>
+<p>Check <code>templates/adr-template.md</code> exists next to this skill. Missing → stop: "Error: ADR template not found."  </p>
 <p>Read existing ADRs in <code>ADR_DIR</code> to:</p>
 <ul>
 <li>Match naming conventions</li>
@@ -382,7 +392,7 @@ gh pr diff [NUMBER] --repo [OWNER]/[REPO]
 <h3>Step 4: Write ADR</h3>
 <p>Write to <code>ADR_DIR/[KEY]-[short-decision-summary].md</code> using kebab-case.</p>
 <ul>
-<li>Use <code>ADR_TEMPLATE</code> exactly — fill every section, replace all placeholders</li>
+<li>Use <code>templates/adr-template.md</code> exactly — fill every section, replace all placeholders</li>
 <li>Default status to <code>Accepted</code> when work is already merged</li>
 <li>Use today's date</li>
 <li>Use concrete repository terms: real services, modules, interfaces, schemas</li>

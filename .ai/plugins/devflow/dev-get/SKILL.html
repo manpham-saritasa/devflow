@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-get</div>
+    <div class="meta-item"><span class="meta-label">description</span>Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md using external templates.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-get, devget, pull task, pull ticket</div>
+  </div>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code> and <code>TASK_DIR</code> variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>When to Use</h2>
+<p>Trigger on:</p>
+<ul>
+<li><code>dev-get ABC-123</code> ← primary command</li>
+<li>Jira URL from <code>https://saritasa.atlassian.net/...</code> + request to import</li>
+</ul>
+</section>
+<section class="section">
+<h2>Workflow</h2>
+<h3>Step 1: Parse Jira Key</h3>
+<ul>
+<li>Word after <code>dev-get</code> or <code>devget</code> = key.</li>
+<li>Else find first match of <code>[A-Z][A-Z0-9_]+-\d+</code> in user text.</li>
+<li>Not found → ask "Give Jira key like ABC-123." Stop.</li>
+</ul>
+<h3>Step 2: Get Cloud ID</h3>
+<ul>
+<li>Call Atlassian resource list.</li>
+<li>Pick entry where <code>url == "https://saritasa.atlassian.net"</code>. Use its <code>id</code>.</li>
+<li>Not found → tell human "Saritasa Atlassian not connected." Stop.</li>
+</ul>
+<h3>Step 3: Fetch Jira Issue</h3>
+<p>Call <code>getJiraIssue</code>:</p>
+<ul>
+<li><code>cloudId</code>: from step 2</li>
+<li><code>issueIdOrKey</code>: key</li>
+<li><code>fields</code>: <code>["summary", "priority", "components", "description", "status", "issuetype", "issuelinks", "comment", "timetracking", "assignee", "reporter", "labels", "fixVersions", "created", "updated", "duedate", "resolution", "resolutiondate", "parent", "subtasks", "attachment"]</code></li>
+<li><code>responseContentFormat</code>: <code>"markdown"</code></li>
+</ul>
+<p>Fail → show real error. Stop.  </p>
+<p>Extract:</p>
+<ul>
+<li><code>summary</code> = <code>fields.summary</code></li>
+<li><code>priority</code> = <code>fields.priority.name</code> or <code>None</code></li>
+<li><code>components</code> = <code>fields.components[].name</code> list or empty array</li>
+<li><code>status</code> = <code>fields.status.name</code> or <code>Unknown</code></li>
+<li><code>issuetype</code> = <code>fields.issuetype.name</code> or <code>Unknown</code></li>
+<li><code>description</code> = <code>fields.description</code> (markdown) or <code>_(no description)_</code></li>
+<li><code>estimated</code> = <code>fields.timetracking.originalEstimate</code> or <code>None</code></li>
+<li><code>spent</code> = <code>fields.timetracking.timeSpent</code> or <code>None</code></li>
+<li><code>assignee</code> = <code>fields.assignee.displayName</code> or <code>Unassigned</code></li>
+<li><code>reporter</code> = <code>fields.reporter.displayName</code> or <code>Unknown</code></li>
+<li><code>labels</code> = <code>fields.labels[]</code> or empty array</li>
+<li><code>fixVersions</code> = <code>fields.fixVersions[].name</code> list or empty array</li>
+<li><code>created</code> = <code>fields.created</code> or <code>Unknown</code></li>
+<li><code>updated</code> = <code>fields.updated</code> or <code>Unknown</code></li>
+<li><code>dueDate</code> = <code>fields.duedate</code> or <code>None</code></li>
+<li><code>resolution</code> = <code>fields.resolution.name</code> or <code>Unresolved</code></li>
+<li><code>resolutionDate</code> = <code>fields.resolutiondate</code> or <code>None</code></li>
+<li><code>parent</code> = <code>fields.parent.key</code> plus summary when available, else <code>None</code></li>
+<li><code>subtasks</code> = <code>fields.subtasks[]</code> — extract key + summary; empty array if none</li>
+<li><code>attachments</code> = <code>fields.attachment[]</code> — extract filename and content URL; empty array if none</li>
+<li><code>issuelinks</code> = <code>fields.issuelinks[]</code> — extract related key plus summary, status, and link direction/type when available; empty array if none</li>
+<li><code>comments</code> = <code>fields.comment.comments[]</code> — extract <code>.author.displayName</code>, <code>.created</code> (ISO date), <code>.body</code> (markdown); empty array if none</li>
+<li><code>epic</code> = best effort from parent / issue hierarchy if exposed, else <code>None</code></li>
+<li><code>sprint</code> = sprint name if exposed in fields, else <code>None</code></li>
+</ul>
+<h3>Step 4: Check Existing Files</h3>
+<p>Check:</p>
+<ul>
+<li><code>[TASK_DIR]/task.md</code></li>
+<li><code>[TASK_DIR]/raw.md</code></li>
+</ul>
+<p>One/both exist → tell human which. Ask "Overwrite [KEY] task files? (yes/no)". No → stop.</p>
+<h3>Step 5: Ensure Folder</h3>
+<p>Create <code>[TASK_DIR]/</code> if not exists. All paths relative to repo root.</p>
+<h3>Step 6: Write task.md</h3>
+<ul>
+<li>Read template from <code>templates/task-template.md</code> next to this SKILL.</li>
+<li>Fill the template section by section. Do not leave placeholder text behind.</li>
+<li>Write to <code>[TASK_DIR]/task.md</code>.</li>
+</ul>
+<p>Template mapping:</p>
+<ul>
+<li><code>[Ticket ID]</code> → Jira key</li>
+<li><code>[Ticket Title]</code> → summary</li>
+<li><code>## Overview</code> → 1-3 plain-language sentences based on summary + description. Focus on user/system outcome, not implementation detail.</li>
+<li><code>## Requirements</code> → 2-4 concrete bullets from description, acceptance criteria, triggers, and business rules visible in Jira.</li>
+<li><code>## Triggers</code> → trigger location, trigger action, trigger data/state if Jira gives them. If no triggers are visible, use a single bullet: <code>- None identified</code>.</li>
+<li><code>## Acceptance Criteria</code> → checkbox bullets from explicit Jira acceptance criteria when present. Merge direct acceptance clues from description/comments here first. If Jira has no explicit section, derive 2-3 testable checkbox bullets from the description.</li>
+<li><code>## Constraints</code> → only include real or clearly implied constraints. If none are visible, keep one bullet: <code>- None identified</code>.</li>
+<li><code>## Affected Modules</code> → best-effort module or area names from components, feature names, screens, or described workflow. If unclear, use higher-level bullets such as UI area, service area, or domain area.</li>
+<li><code>## Related Historical Tasks</code> → related linked issues with key and short reason/title. If none, keep one bullet: <code>- None identified</code>.</li>
+<li><code>## Open Questions</code> → only include meaningful questions that need answers before implementation. If only 1-2 are meaningful, omit the unused Q/A pairs.</li>
+<li><code>## Technical Notes</code> → extra technical context, risk areas, inferred persistence/sync concerns, validation concerns, edge cases, and technical signals from Jira/components/comments/attachments.</li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Infer carefully, never invent facts.</li>
+<li>Replace instructional placeholder text like <code>[Requirement 1 ...]</code> and <code>[Criterion 1 ...]</code> with real content.</li>
+<li>Remove optional guidance lines that do not apply.</li>
+<li>If Jira does not provide enough detail for a section, use <code>None identified</code> or a short fill-manually note instead of fake specifics.</li>
+</ul>
+<h3>Step 7: Write raw.md</h3>
+<ul>
+<li>Read template from <code>templates/raw-template.md</code> next to this SKILL.</li>
+<li>Fill every placeholder the template expects.</li>
+<li>Write to <code>[TASK_DIR]/raw.md</code>.</li>
+</ul>
+<p>Template mapping:</p>
+<ul>
+<li><code>[KEY]</code> → Jira key</li>
+<li><code>[TITLE]</code> → summary</li>
+<li><code>[STATUS]</code> → status</li>
+<li><code>[ISSUETYPE]</code> → issue type</li>
+<li><code>[PRIORITY]</code> → priority</li>
+<li><code>[ESTIMATED]</code> → original estimate or <code>None</code></li>
+<li><code>[SPENT]</code> → time spent or <code>None</code></li>
+<li><code>[ASSIGNEE]</code> → assignee display name or <code>Unassigned</code></li>
+<li><code>[REPORTER]</code> → reporter display name or <code>Unknown</code></li>
+<li><code>[COMPONENTS]</code> → components joined by <code>,</code> or <code>None</code></li>
+<li><code>[LABELS]</code> → labels joined by <code>,</code> or <code>None</code></li>
+<li><code>[FIX_VERSIONS]</code> → fix versions joined by <code>,</code> or <code>None</code></li>
+<li><code>[CREATED]</code> → created timestamp</li>
+<li><code>[UPDATED]</code> → updated timestamp</li>
+<li><code>[DUE_DATE]</code> → due date or <code>None</code></li>
+<li><code>[RESOLUTION]</code> → resolution or <code>Unresolved</code></li>
+<li><code>[RESOLUTION_DATE]</code> → resolution date or <code>None</code></li>
+<li><code>[URL]</code> → Jira browse URL</li>
+<li><code>[EPIC]</code> → epic summary/key when available, else <code>None</code></li>
+<li><code>[SPRINT]</code> → sprint name when available, else <code>None</code></li>
+<li>
+<p><code>[PARENT]</code> → parent key + summary when available, else <code>None</code></p>
+</li>
+<li>
+<p><code>[SUBTASKS]</code> → bullet list of <code>KEY — Summary</code>, or <code>- None</code></p>
+</li>
+<li><code>[RELATED_TASKS]</code> → bullet list of related linked issues with short context, or <code>- None</code></li>
+<li><code>[ATTACHMENTS]</code> → bullet list of attachment filename + URL, or <code>- None</code></li>
+<li><code>[DESCRIPTION]</code> → full Jira description verbatim markdown, or <code>_(no description)_</code></li>
+<li><code>[COMMENTS]</code> → each comment rendered as:<pre><code>**Author Name** — YYYY-MM-DD
+&gt; comment body (verbatim markdown)
+</code></pre>
+</li>
+</ul>
+<p>Separate comments with blank lines. No comments → <code>_(no comments)_</code>.</p>
+<p>Rules:</p>
+<ul>
+<li>Keep <code>raw.md</code> source-heavy. Do not summarize away useful Jira metadata.</li>
+<li>Do not put inferred technical signals or derived acceptance clues in <code>raw.md</code>; keep those in <code>task.md</code>.</li>
+<li>Fill every placeholder; do not leave tokens behind.</li>
+<li>Use <code>None</code>, <code>Unresolved</code>, <code>Unassigned</code>, or <code>- None</code> instead of blank sections where needed.</li>
+</ul>
+<h3>Step 8: Report</h3>
+<p>Short summary after done:</p>
+<ul>
+<li>Files written: relative paths for <code>task.md</code> and <code>raw.md</code></li>
+<li>Also show full absolute paths for both files so the user can copy and open them easily</li>
+<li>Remind: raw.md = full Jira source</li>
+</ul>
+</section>
+<section class="section">
+<h2>Self-Check</h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Jira key parsed from command or user text?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Atlassian cloudId found for the target site?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Jira issue fetched with all fields needed by both templates?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Existing files checked before overwriting?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <code>[TASK_DIR]</code> folder created?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> task.md written to match the current task template sections and placeholders?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> raw.md written to match the current raw template placeholders?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No template placeholder tokens or instructional sample text left behind?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Relative and absolute file paths shown in the result?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> User reminded that raw.md is the full Jira source?</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

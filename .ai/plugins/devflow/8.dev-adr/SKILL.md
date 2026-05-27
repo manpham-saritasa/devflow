@@ -9,7 +9,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. All `TASKS_ROOT`, `TASK_DIR`, `ADR_DIR`, and template variables are defined there.
+Read shared paths from `config.md`. All `TASKS_ROOT`, `TASK_DIR`, and `ADR_DIR` variables are defined there.
 
 ---
 
@@ -61,7 +61,7 @@ Also read repository context: `AGENTS.md`, `README.md`, `docs/`, and existing AD
 
 ### Step 3: Analyze
 
-Check `ADR_TEMPLATE` exists. Missing → stop: "Error: ADR template not found."
+Check `templates/adr-template.md` exists next to this skill. Missing → stop: "Error: ADR template not found."
 
 Read existing ADRs in `ADR_DIR` to:
 - Match naming conventions
@@ -83,7 +83,7 @@ Read existing ADRs in `ADR_DIR` to:
 
 Write to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case.
 
-- Use `ADR_TEMPLATE` exactly — fill every section, replace all placeholders
+- Use `templates/adr-template.md` exactly — fill every section, replace all placeholders
 - Default status to `Accepted` when work is already merged
 - Use today's date
 - Use concrete repository terms: real services, modules, interfaces, schemas
