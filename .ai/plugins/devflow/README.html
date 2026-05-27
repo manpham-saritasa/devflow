@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -355,6 +355,111 @@ flowchart TD
   8.dev-adr/                  ← create Architecture Decision Record
   9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
 </code></pre>
+</section>
+<section class="section">
+<h2>Skills</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Skill</th>
+<th>Benefits</th>
+<th>Example</th>
+<th style="text-align: center;">Non-worktree?</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="#">1</td>
+<td data-label="Skill"><code>dev-start</code></td>
+<td data-label="Benefits">Isolated workspace, auto branch + worktree</td>
+<td data-label="Example"><code>dev-start PROJ-123</code></td>
+<td style="text-align: center;">❌</td>
+<td data-label="Note">Requires git worktree support</td>
+</tr>
+<tr>
+<td data-label="#">2</td>
+<td data-label="Skill"><code>dev-plan</code></td>
+<td data-label="Benefits">Structured plan from task evidence + codebase</td>
+<td data-label="Example"><code>/dev-plan PROJ-123</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Works on any branch</td>
+</tr>
+<tr>
+<td data-label="#">3</td>
+<td data-label="Skill"><code>dev-code</code></td>
+<td data-label="Benefits">Reads plan, implements, writes changelog</td>
+<td data-label="Example"><code>/dev-code</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Works on any branch</td>
+</tr>
+<tr>
+<td data-label="#">4</td>
+<td data-label="Skill"><code>dev-review</code></td>
+<td data-label="Benefits">Review against plan + changelog, verdict</td>
+<td data-label="Example"><code>/dev-review</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Works on any branch</td>
+</tr>
+<tr>
+<td data-label="#">5</td>
+<td data-label="Skill"><code>dev-ship-pr-jira</code></td>
+<td data-label="Benefits">PR + Jira comment + reports</td>
+<td data-label="Example"><code>/dev-ship</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note"><code>--pr-only</code>, <code>--jira-only</code>, <code>--dry-run</code></td>
+</tr>
+<tr>
+<td data-label="#">6</td>
+<td data-label="Skill"><code>dev-fix-pr</code></td>
+<td data-label="Benefits">Fix PR comments, multi-round loop</td>
+<td data-label="Example"><code>/dev-fix-pr</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Legacy branch fallback available</td>
+</tr>
+<tr>
+<td data-label="#">7</td>
+<td data-label="Skill"><code>dev-finish</code></td>
+<td data-label="Benefits">Merge PR + delete worktree + cleanup</td>
+<td data-label="Example"><code>/dev-finish</code></td>
+<td style="text-align: center;">❌</td>
+<td data-label="Note">Requires git worktree support</td>
+</tr>
+<tr>
+<td data-label="#">8</td>
+<td data-label="Skill"><code>dev-adr</code></td>
+<td data-label="Benefits">Architecture Decision Record from evidence</td>
+<td data-label="Example"><code>/dev-adr PROJ-123</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Skips non-architectural tasks</td>
+</tr>
+<tr>
+<td data-label="#">9</td>
+<td data-label="Skill"><code>dev-commit</code></td>
+<td data-label="Benefits">Stage + commit in related groups</td>
+<td data-label="Example"><code>/dev-commit</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Runs standalone or during dev-code</td>
+</tr>
+<tr>
+<td data-label="#">10</td>
+<td data-label="Skill"><code>dev-get</code></td>
+<td data-label="Benefits">Pull Jira issue into task folder</td>
+<td data-label="Example"><code>/dev-get PROJ-123</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Writes raw.md + task.md from templates</td>
+</tr>
+<tr>
+<td data-label="#">11</td>
+<td data-label="Skill"><code>dev-review-pr</code></td>
+<td data-label="Benefits">Review any PR across 8 quality dimensions</td>
+<td data-label="Example"><code>/review-pr [URL]</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">No worktree needed, works on any PR</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section class="section">
 <h2>Pros</h2>
