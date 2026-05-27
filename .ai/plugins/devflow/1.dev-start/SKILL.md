@@ -10,7 +10,26 @@ triggers:
 
 Read shared paths from `config.md`. `TASKS_ROOT` and `TASK_DIR` are defined there.
 
-- `WORKTREE_ROOT`: `[REPO_NAME]-worktrees` — sibling folder to the repo, e.g. `../proj-worktrees`
+- `WORKTREE_ROOT`: `[REPO_NAME]-worktrees` — sibling folder to the repo, e.g. `../proj-api-worktrees`
+
+### Worktree folder hierarchy
+
+When you run `dev-start PROJ-2145` from the main repo, it creates a sibling worktree folder. The resulting layout looks like this:
+
+```
+proj-api\							← the main repo
+proj-api-worktrees\					← all worktrees live here (flat — no type subfolders)
+├── proj-111-adjust-text\			← worktree 1 (branch: feature/proj-111-...)
+│   ├── .ai\
+│   ├── src\
+│   └── .env
+├── proj-222-login-google\			← worktree 2 (branch: feature/proj-222-...)
+├── proj-333-update-button\			← worktree 3 (branch: hotfix/proj-333-...)
+└── proj-444-login-issue\			← worktree 4 (branch: hotfix/proj-444-...)
+```
+
+The worktree directory uses only the short name (without the type prefix), while the git branch keeps the full `type/key-summary` format.
+All development happens inside the worktree — the main repo stays clean.
 
 ---
 
@@ -92,6 +111,17 @@ Rules:
 - Summary: lowercase, words separated by hyphens, max 5-6 words.
 - Strip special characters, keep only a-z, 0-9, and hyphens.
 
+### Step 5a: Compute Short Name
+
+Extract the short name from the branch name (strip the type prefix):
+```bash
+SHORT_NAME=$(basename "[BRANCH_NAME]")
+```
+
+Example: `feature/proj-2145-adjust-text` → `proj-2145-adjust-text`
+
+This short name is used for the worktree directory path. The full branch name is kept for git.
+
 ### Step 6: Dry-Run Preview
 
 If `--dry-run`: display what would happen and stop. Do not create anything.
@@ -104,7 +134,7 @@ Type: [feature | hotfix | force]
 Task: [KEY]
 Summary: [short-summary]
 
-Worktree would be created at: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]
 Task folder would be: .local/tasks/[KEY]
 ```
 
@@ -159,16 +189,24 @@ mkdir -p "../[REPO_NAME]-worktrees"
 
 Create the worktree:
 ```bash
-git worktree add "../[REPO_NAME]-worktrees/[BRANCH_NAME]" -b [BRANCH_NAME]
+git worktree add "../[REPO_NAME]-worktrees/[SHORT_NAME]" -b [BRANCH_NAME]
 ```
 
-**After worktree creation — copy `.env`:**
+**After worktree creation — show full path:**
+
+Resolve and display the absolute path so the user can copy it directly:
+```bash
+FULL_PATH=$(cd "../[REPO_NAME]-worktrees/[SHORT_NAME]" && pwd)
+echo "Full path: $FULL_PATH"
+```
+
+**Copy `.env`:**
 
 Copy the `.env` file from the repo root to the new worktree so the worktree has the same environment configuration:
 
 ```bash
 if [ -f ".env" ]; then
-    cp ".env" "../[REPO_NAME]-worktrees/[BRANCH_NAME]/.env"
+    cp ".env" "$FULL_PATH/.env"
 fi
 ```
 
@@ -182,18 +220,19 @@ If `.env` does not exist in the repo root, skip this step silently (not all proj
 ### Step 9: Report Result
 
 ```
-✅ Worktree ready: ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+✅ Worktree ready: ../[REPO_NAME]-worktrees/[SHORT_NAME]
+   Full path: [resolved absolute path]
 
 Branch: [BRANCH_NAME]
 Type: [feature | hotfix | force]
 Task: [KEY]
 
 Switch to worktree first:
-  cd ../[REPO_NAME]-worktrees/[BRANCH_NAME]
+  cd ../[REPO_NAME]-worktrees/[SHORT_NAME]
 
 Then start:
   Full flow:  /devflow [KEY]
   Plan only:  /dev-plan [KEY]
 ```
 
-**Important:** All further work must be done from the worktree folder. Tell the user to `cd` into it first.
+**Important:** All further work must be done from the worktree folder. Always `cd ../[REPO_NAME]-worktrees/[SHORT_NAME]` before running any dev commands.
