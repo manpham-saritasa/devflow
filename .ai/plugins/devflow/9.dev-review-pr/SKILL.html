@@ -624,7 +624,67 @@ Files changed: [count] | +[additions] -[deletions] | [N] commits
 <p>If no <code>KEY</code> was found, display the report content in the chat instead and inform the user:</p>
 <pre><code>No task key detected. Report displayed above — save manually if needed.
 </code></pre>
-<h3>Step 8: Success Output</h3>
+<h3>Step 8: Post Pending Review on PR (Optional)</h3>
+<p>After the report is generated, ask the user: "Post these findings as a pending review on the PR? (yes / no)"  </p>
+<p>If <code>no</code>: skip to Step 9.  </p>
+<p>If <code>yes</code>: post each finding as a comment thread in a single pending (unsubmitted) review.  </p>
+<p><strong>Step 8a: Get PR Node ID</strong>  </p>
+<p>Fetch the GraphQL node ID of the pull request:</p>
+<pre><code class="language-bash">PR_NODE_ID=$(gh api graphql -f query='
+query {
+  repository(owner: &quot;[OWNER]&quot;, name: &quot;[REPO]&quot;) {
+    pullRequest(number: [PR_NUMBER]) {
+      id
+    }
+  }
+}' --jq '.data.repository.pullRequest.id')
+</code></pre>
+<p><strong>Step 8b: Build Comments Array</strong>  </p>
+<p>For each finding in the review table, build a comment thread object:</p>
+<ul>
+<li><code>path</code> — the <code>Checked File</code> path</li>
+<li><code>line</code> — the <code>Checked Line</code> number</li>
+<li><code>body</code> — <code>**[Priority] [Review Category]** Issue Summary\n\n**Suggested:** Suggested Solution</code></li>
+</ul>
+<p>Only include findings that have a specific file and line number (skip report-level findings like "No tests" which span all files).  </p>
+<p>Format as a JSON array:</p>
+<pre><code class="language-json">[
+  {
+    &quot;path&quot;: &quot;src/Example.cs&quot;,
+    &quot;body&quot;: &quot;**[Medium] Fit Check** Commit message missing # prefix\n\n**Suggested:** Add `#` prefix to match convention&quot;,
+    &quot;position&quot;: 42
+  },
+  ...
+]
+</code></pre>
+<p>Use <code>position</code> (diff line number, not absolute file line) when available. If line is a range (e.g. <code>27-34</code>), use the start line. If line is <code>—</code>, skip that finding (it's report-level, not file-level).  </p>
+<p><strong>Step 8c: Create the pending review</strong>  </p>
+<p>Post a review with all comments but <strong>no <code>event</code> field</strong> — this keeps it in PENDING state (not submitted):</p>
+<pre><code class="language-bash">gh api graphql -f query='
+mutation($prId: ID!, $body: String!, $comments: [DraftPullRequestReviewComment]!) {
+  addPullRequestReview(input: {
+    pullRequestId: $prId
+    body: $body
+    comments: $comments
+  }) {
+    pullRequestReview {
+      id
+      state
+    }
+  }
+}' \
+-f prId=&quot;$PR_NODE_ID&quot; \
+-f body=&quot;Automated review from dev-review-pr skill. The user will review and submit.&quot; \
+--field comments='[COMMENTS_ARRAY]'
+</code></pre>
+<p><strong>Step 8d: Confirm</strong></p>
+<pre><code>✅ Pending review created on PR #[PR_NUMBER]
+   Review ID: [review_id]
+   State: PENDING
+   PR: [PR_URL]
+</code></pre>
+<p>Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."</p>
+<h3>Step 9: Success Output</h3>
 <pre><code>✅ Review complete for [PR_TITLE]
 
 Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
@@ -647,6 +707,8 @@ PR: [PR_URL]
 <li class="task-list-item"><input type="checkbox" disabled/> Review table sorted by priority?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Feedback report written to task folder (when key available)?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Verdict reflects issue severity?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> User asked about posting pending review?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Pending review created with comments when user agreed (no <code>event</code> field)?</li>
 </ul>
 </section>
   </main>

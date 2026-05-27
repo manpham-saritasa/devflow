@@ -294,7 +294,86 @@ If no `KEY` was found, display the report content in the chat instead and inform
 No task key detected. Report displayed above — save manually if needed.
 ```
 
-### Step 8: Success Output
+### Step 8: Post Pending Review on PR (Optional)
+
+After the report is generated, ask the user: "Post these findings as a pending review on the PR? (yes / no)"
+
+If `no`: skip to Step 9.
+
+If `yes`: post each finding as a comment thread in a single pending (unsubmitted) review.
+
+**Step 8a: Get PR Node ID**
+
+Fetch the GraphQL node ID of the pull request:
+```bash
+PR_NODE_ID=$(gh api graphql -f query='
+query {
+  repository(owner: "[OWNER]", name: "[REPO]") {
+    pullRequest(number: [PR_NUMBER]) {
+      id
+    }
+  }
+}' --jq '.data.repository.pullRequest.id')
+```
+
+**Step 8b: Build Comments Array**
+
+For each finding in the review table, build a comment thread object:
+- `path` — the `Checked File` path
+- `line` — the `Checked Line` number
+- `body` — `**[Priority] [Review Category]** Issue Summary\n\n**Suggested:** Suggested Solution`
+
+Only include findings that have a specific file and line number (skip report-level findings like "No tests" which span all files).
+
+Format as a JSON array:
+```json
+[
+  {
+    "path": "src/Example.cs",
+    "body": "**[Medium] Fit Check** Commit message missing # prefix\n\n**Suggested:** Add `#` prefix to match convention",
+    "position": 42
+  },
+  ...
+]
+```
+
+Use `position` (diff line number, not absolute file line) when available. If line is a range (e.g. `27-34`), use the start line. If line is `—`, skip that finding (it's report-level, not file-level).
+
+**Step 8c: Create the pending review**
+
+Post a review with all comments but **no `event` field** — this keeps it in PENDING state (not submitted):
+
+```bash
+gh api graphql -f query='
+mutation($prId: ID!, $body: String!, $comments: [DraftPullRequestReviewComment]!) {
+  addPullRequestReview(input: {
+    pullRequestId: $prId
+    body: $body
+    comments: $comments
+  }) {
+    pullRequestReview {
+      id
+      state
+    }
+  }
+}' \
+-f prId="$PR_NODE_ID" \
+-f body="Automated review from dev-review-pr skill. The user will review and submit." \
+--field comments='[COMMENTS_ARRAY]'
+```
+
+**Step 8d: Confirm**
+
+```
+✅ Pending review created on PR #[PR_NUMBER]
+   Review ID: [review_id]
+   State: PENDING
+   PR: [PR_URL]
+```
+
+Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."
+
+### Step 9: Success Output
 
 ```
 ✅ Review complete for [PR_TITLE]
@@ -320,3 +399,5 @@ PR: [PR_URL]
 - [ ] Review table sorted by priority?
 - [ ] Feedback report written to task folder (when key available)?
 - [ ] Verdict reflects issue severity?
+- [ ] User asked about posting pending review?
+- [ ] Pending review created with comments when user agreed (no `event` field)?
