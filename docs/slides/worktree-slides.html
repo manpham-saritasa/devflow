@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gitflow + Worktrees — Quy trình song song, an toàn hơn cho dev và AI coding</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Gitflow + Worktrees — Quy trình song song, an toàn hơn cho dev và AI coding</h1>
+</section>
+<section class="section">
+<h2>Gitflow recap</h2>
+<ul>
+<li><code>main</code>: lịch sử release chính thức.</li>
+<li><code>develop</code>: branch tích hợp feature.</li>
+<li><code>feature/*</code>: tạo từ <code>develop</code>, merge lại khi xong.</li>
+<li><code>release/*</code> và <code>hotfix/*</code>: tách riêng giai đoạn chuẩn bị release và sửa lỗi khẩn.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Worktree recap</h2>
+<ul>
+<li>Một repo Git → nhiều working tree, mỗi cái gắn một branch.</li>
+<li>Mỗi worktree có bộ file riêng → tách task local rất sạch.</li>
+<li>Phù hợp cho feature song song, review branch người khác, AI coding đa session.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Gitflow và worktree bổ sung cho nhau</h2>
+<table>
+<thead>
+<tr>
+<th>Chủ đề</th>
+<th>Gitflow</th>
+<th>Worktree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Chủ đề">Mục tiêu</td>
+<td data-label="Gitflow">Quản lý vòng đời branch và release</td>
+<td data-label="Worktree">Quản lý nhiều workspace local cùng lúc</td>
+</tr>
+<tr>
+<td data-label="Chủ đề">Đơn vị</td>
+<td data-label="Gitflow"><code>feature/*</code>, <code>release/*</code>, <code>hotfix/*</code></td>
+<td data-label="Worktree">Một thư mục local cho mỗi branch</td>
+</tr>
+<tr>
+<td data-label="Chủ đề">Giá trị chính</td>
+<td data-label="Gitflow">Kỷ luật branch của team</td>
+<td data-label="Worktree">Giảm context switching</td>
+</tr>
+<tr>
+<td data-label="Chủ đề">Với AI</td>
+<td data-label="Gitflow">Branch/PR rõ ràng</td>
+<td data-label="Worktree">Cô lập từng agent hoặc từng task</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Quy ước đặt tên</h2>
+<ul>
+<li>Branch: <code>feature/ABC-123-login</code>, <code>hotfix/ABC-999-null-check</code></li>
+<li>Worktree folder: <code>ABC-123-login</code>, <code>ABC-999-null-check</code></li>
+<li>Không thêm tên project vào folder worktree — repo path đã đủ ngữ cảnh.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Bắt đầu task theo cách mới</h2>
+<p>Tạo branch trên origin trước, rồi mới tạo worktree:</p>
+<pre><code>cd ~/projects/myapp
+git checkout develop &amp;&amp; git pull --ff-only
+git checkout -b feature/ABC-123-login
+git push -u origin feature/ABC-123-login
+git worktree add ../ABC-123-login feature/ABC-123-login
+cd ../ABC-123-login
+</code></pre>
+<p>Lý do: branch lên origin ngay → backup cloud + cộng tác sớm. Worktree sau → workspace riêng.  </p>
+</section>
+<section class="section">
+<h2>Vì sao phải tạo branch trên origin ngay</h2>
+<ul>
+<li>Code có bản sao trên cloud, không chỉ nằm local.</li>
+<li>Team lead, reviewer, CI nhìn thấy branch sớm.</li>
+<li>Publish sớm khác merge sớm — chỉ là backup và theo dõi tiến độ.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Cấu trúc thư mục</h2>
+<pre><code>proj-api/                          ← repo chính (giữ sạch)
+proj-api-worktrees/                ← tất cả worktrees (phẳng)
+├── proj-111-adjust-text/          ← nhánh feature/proj-111-...
+│   ├── .ai/
+│   ├── src/
+│   └── .env
+├── proj-222-login-google/         ← nhánh feature/proj-222-...
+├── proj-333-update-button/        ← nhánh hotfix/proj-333-...
+└── proj-444-login-issue/          ← nhánh hotfix/proj-444-...
+</code></pre>
+<ul>
+<li>Folder worktree: short name, không prefix.</li>
+<li>Git branch: format đầy đủ <code>type/key-summary</code>.</li>
+<li>Main repo luôn sạch — mọi thao tác trong worktree.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Workflow hằng ngày</h2>
+<ul>
+<li>Repo chính giữ ở <code>develop</code> làm mốc ổn định.</li>
+<li>Mỗi task: một branch origin + một worktree local.</li>
+<li>Code, test, diff, commit, push đều trong worktree tương ứng.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Review thay đổi</h2>
+<p>Review trong chính worktree của task — không cần chuyển branch:</p>
+<pre><code>git status
+git diff
+git add .
+git commit -m &quot;ABC-123: implement login&quot;
+git push
+</code></pre>
+</section>
+<section class="section">
+<h2>Review branch của người khác</h2>
+<p>Dùng worktree riêng — không ảnh hưởng task đang làm:</p>
+<pre><code>cd ~/projects/myapp
+git fetch origin
+git worktree add ../ABC-456-review origin/feature/ABC-456-api-cleanup
+cd ../ABC-456-review
+</code></pre>
+<p>Build, test, fix trên branch review mà workspace hiện tại vẫn nguyên.  </p>
+</section>
+<section class="section">
+<h2>Hotfix scenario</h2>
+<p>Xử lý lỗi production trong khi vẫn giữ feature đang làm:</p>
+<pre><code>cd ~/projects/myapp
+git checkout main &amp;&amp; git pull --ff-only
+git checkout -b hotfix/ABC-999-null-check
+git push -u origin hotfix/ABC-999-null-check
+git worktree add ../ABC-999-null-check hotfix/ABC-999-null-check
+cd ../ABC-999-null-check
+</code></pre>
+</section>
+<section class="section">
+<h2>Vì sao phù hợp với AI workflow</h2>
+<ul>
+<li>Mỗi agent/task: branch riêng + workspace riêng → tránh ghi đè.</li>
+<li>Branch lên origin sớm → output AI được backup hằng ngày.</li>
+<li>Review, rollback, theo dõi tiến độ AI rõ ràng hơn.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Sơ đồ workflow AI</h2>
+<p>Con người điều phối → tạo branch + worktree → agent thực thi → commit + push hằng ngày → review từng branch → merge vào develop</p>
+<ul>
+<li>Người điều phối: xác định scope, chia task rõ ràng.</li>
+<li>Agent 1 (API/Backend): branch <code>feature/ABC-123-api</code>, worktree <code>../ABC-123-api</code></li>
+<li>Agent 2 (UI/Frontend): branch <code>feature/ABC-456-ui</code>, worktree <code>../ABC-456-ui</code></li>
+<li>Agent 3 (Tests/Refactor): branch <code>feature/ABC-789-tests</code>, worktree <code>../ABC-789-tests</code></li>
+<li>Mỗi agent commit nhỏ + push hằng ngày.</li>
+<li>Review từng branch độc lập bằng <code>git diff</code> + test.</li>
+<li>Merge từng branch một vào <code>develop</code>.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Chạy nhiều AI agents song song</h2>
+<pre><code>cd ~/projects/myapp
+git checkout develop &amp;&amp; git pull --ff-only
+
+git checkout -b feature/ABC-123-api
+git push -u origin feature/ABC-123-api
+git worktree add ../ABC-123-api feature/ABC-123-api
+
+git checkout develop
+git checkout -b feature/ABC-456-ui
+git push -u origin feature/ABC-456-ui
+git worktree add ../ABC-456-ui feature/ABC-456-ui
+</code></pre>
+<ul>
+<li>Mỗi agent: branch riêng, worktree riêng, push định kỳ.</li>
+<li>Chia theo boundary: backend, UI, tests → giảm overlap file.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Quy trình khi chạy nhiều AI agents</h2>
+<ol>
+<li>Chốt scope và acceptance criteria trước.</li>
+<li>Tạo branch trên origin ngay cho từng task.</li>
+<li>Tạo worktree riêng cho từng agent.</li>
+<li>Commit nhỏ và push hằng ngày để backup.</li>
+<li>Review từng branch rồi merge từng cái một.</li>
+</ol>
+</section>
+<section class="section">
+<h2>Test API và UI ở 2 worktree riêng?</h2>
+<ul>
+<li>Unit test / test độc lập → test trong từng worktree.</li>
+<li>Integration test → cần branch tích hợp tạm:</li>
+</ul>
+<pre><code>cd ~/projects/myapp
+git worktree add ../ABC-900-integration -b integration/ABC-900 develop
+cd ../ABC-900-integration
+git merge feature/ABC-123-api
+git merge feature/ABC-456-ui
+# chạy integration test full-stack ở đây
+</code></pre>
+</section>
+<section class="section">
+<h2>Team rules</h2>
+<ul>
+<li>Mỗi task: tạo branch trên <code>origin</code> ngay khi bắt đầu.</li>
+<li>Mỗi task: một worktree riêng local.</li>
+<li>Commit nhỏ, push hằng ngày để backup cloud.</li>
+<li>Không sửa trực tiếp trên <code>main</code> hoặc <code>develop</code>.</li>
+<li>Mọi branch phải review trước khi merge.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Cleanup</h2>
+<pre><code>cd ~/projects/myapp
+git worktree list
+git worktree remove ../ABC-123-login
+git branch -d feature/ABC-123-login
+</code></pre>
+<ul>
+<li>Sau merge: remove worktree, xóa local branch.</li>
+<li>Giữ remote branch thêm thời gian ngắn nếu cần audit.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Kết luận</h2>
+<ul>
+<li>Gitflow → kỷ luật branch và release.</li>
+<li>Worktree → làm việc local song song hiệu quả.</li>
+<li>Branch trên origin ngay + push hằng ngày → code an toàn, tiến độ quan sát được.</li>
+<li>Kết hợp cả ba → giảm rủi ro, review dễ hơn, dùng AI có kiểm soát.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

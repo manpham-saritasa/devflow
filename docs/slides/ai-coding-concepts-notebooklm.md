@@ -1,15 +1,19 @@
 # AI Coding Concepts for Local Dev
 
-## Slide 1 — Title
-- AI Coding Concepts for Local Dev.
-- Prompts, rules, skills, agents, tools, context, and memory.
+Prompts, rules, skills, agents, tools, context, and memory.
 
-## Slide 2 — Why this matters
+---
+
+## Why this matters
+
 - Same repo, different AI setups, different results.
 - Shared setup makes output more consistent.
 - Goal: less guesswork, better team workflow.
 
-## Slide 3 — Big picture
+---
+
+## Big picture
+
 - Prompt tells the AI what to do.
 - Context gives the AI what it can see now.
 - Memory keeps what should survive later.
@@ -18,69 +22,90 @@
 - Plugins automate real actions.
 - Agent combines them into execution.
 
-## Slide 4 — LLM concept
+---
+
+## LLM concept
+
 - LLM = language model that predicts the next tokens.
 - Good at drafting, explaining, transforming, and summarizing.
 - Not a source of truth.
 - Must be checked with real files, tests, and outputs.
 
-## Slide 5 — Tokens and context
+---
+
+## Tokens and context
+
 - Token = chunk of text, not exactly a word.
 - Context window = how much the model can use now.
 - Prompt, files, tool output, chat history all consume context.
 - Bigger context helps, but too much noise hurts.
 
-## Slide 6 — Session concept
+---
+
+## Session concept
+
 - Session = the current working conversation.
 - It includes prompts, replies, tool calls, and temporary state.
 - Session is larger than the context sent on one turn.
 - Session is often temporary.
 
-## Slide 7 — Diagram
-```mermaid
-flowchart TD
-    INPUT["Prompt + Files + Rules + Memory + Tool Output"]:::accent0
-    INPUT --> TOKENS["Tokens"]:::accent1
-    TOKENS --> CONTEXT["Current Context Window"]:::accent2
-    CONTEXT --> LLM:::accent3
-    LLM --> RESPONSE["Response + Tool Actions + New State"]:::accent4
-    RESPONSE --> SESSION["Working Session"]:::accent5
-```
+---
+
+## How it flows
+
+Prompt + files + rules + memory + tool output → Tokens → Context window → LLM → Response + actions → Working session
+
 - Session is the workspace.
 - Context is the slice sent now.
 
-## Slide 8 — Session limits
+---
+
+## Session limits
+
 - Session may be lost next time.
 - Long sessions get noisy.
 - Important decisions can disappear in chat.
 - Write key state to repo files.
 
-## Slide 9 — Memory concept
+---
+
+## Memory concept
+
 - Memory = stored information reused later.
 - Short-term memory = current session and context.
 - Long-term memory = external storage around the model.
 - Common team pattern: Markdown memory files.
 
-## Slide 10 — File-based memory
+---
+
+## File-based memory
+
 - Pros: simple, visible, versioned, cross-tool.
-- Pros: easy for humans and LLMs to read.
-- Cons: can get stale, noisy, duplicated.
-- Cons: large files reduce relevance.
+- Cons: can get stale, noisy, duplicated, large files reduce relevance.
 - Keep memory small and curated.
 
-## Slide 11 — Context rot
+---
+
+## Context rot
+
 - Quality drops when context gets too long or noisy.
 - Model may forget earlier constraints.
 - More context is not always better.
 - Use fresh sessions and task-focused context.
 
-## Slide 12 — Hallucinations
+---
+
+## Hallucinations
+
 - AI can invent files, APIs, facts, or behavior.
 - Confident tone does not mean correct output.
 - Hallucinations increase with vague or noisy context.
 - Verify with code, tests, grep, and build output.
 
-## Slide 13 — Other failure modes
+---
+
+## Other failure modes
+
 - Omission: skips an important step or requirement.
 - Instruction drift: starts right, then ignores earlier constraints.
 - Overconfidence: sounds certain when it should be uncertain.
@@ -88,30 +113,26 @@ flowchart TD
 - Goal drift: starts solving a different problem.
 - False completion: says done before the real task is complete.
 
-## Slide 14 — Prompt concept
+---
+
+## Prompt concept
+
 - Prompt = instruction package for this task.
 - Can include goal, context, constraints, format, examples.
 - Good prompts reduce ambiguity.
 - Structure matters more than length.
 
-## Slide 15 — Prompt usage example
+---
+
+## Prompt usage example
+
 - Bug fix: describe symptom, file, expected behavior, ask for minimal change + test.
 - Refactor: state goal, files in scope, keep behavior, list tests to keep passing.
 
+---
 
-## Slide 16 — Big prompt example
-```text
-Create a cinematic hero image for an internal engineering presentation.
-Subject: senior engineer, 3 monitors, code, Git graph, AI panel.
-Style: modern editorial, detailed, professional.
-Scene: night office, blue-teal glow, practical desk setup.
-Composition: 16:9, subject left, empty space right for title.
-Constraints: no logo, no broken hands, no extra fingers.
-Intent: trustworthy, practical, team presentation cover.
-```
-- Big prompt is fine when every section adds signal.
+## Prompt - PROS & CONS
 
-## Slide 17 — Prompt - PROS & CONS
 | PROS | CONS |
 |---|---|
 | Fastest way to steer output | Vague prompt, vague result |
@@ -119,18 +140,26 @@ Intent: trustworthy, practical, team presentation cover.
 | Can encode structure and format | Hard to debug when huge |
 | Works across tools | Easy to forget constraints over time |
 
-## Slide 18 — Skill concept
+---
+
+## Skill concept
+
 - Skill = reusable workflow for a repeated job.
 - Can include instructions, examples, scripts, references.
 - Good for review, refactor, bug fix, docs, test generation.
 - Load only when relevant.
 
-## Slide 19 — Skill usage example
+---
+
+## Skill usage example
+
 - Have a /review-skill for PR review, used on every PR.
 - Have a /refactor-skill for legacy cleanup tasks.
 
+---
 
-## Slide 20 — Skill - PROS & CONS
+## Skill - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Reusable | Overlap causes confusion |
@@ -140,7 +169,7 @@ Intent: trustworthy, practical, team presentation cover.
 
 ---
 
-## Slide 21 — Prompt vs Skill comparison
+## Prompt vs Skill comparison
 
 | Aspect | Prompt | Skill |
 |---|---|---|
@@ -154,34 +183,35 @@ Intent: trustworthy, practical, team presentation cover.
 | Uses local scripts or assets | No | Yes — can reference scripts, templates, images |
 | Best for | One-off asks, quick steer | Repeated workflows (review, refactor, docs) |
 
-## Slide 22 — When to use prompt vs skill
+---
 
-- Use a prompt when:
-  - Task is one-off.
-  - Instruction is short.
-  - No reuse expected.
-- Use a skill when:
-  - Task repeats across sessions.
-  - Workflow has multiple steps.
-  - Team needs consistency.
-  - Worth the maintenance cost.
+## When to use prompt vs skill
+
+- Use prompt when: task is one-off, instruction is short, no reuse expected.
+- Use skill when: task repeats, workflow has multiple steps, team needs consistency, worth maintenance cost.
 
 ---
 
-## Slide 23 — Plugin concept
+## Plugin concept
+
 - Plugin = packaged tool that the AI can invoke to perform real actions.
 - Runs scripts, calls APIs, modifies files, executes commands.
 - More powerful than a skill — has side effects beyond text.
 - Lives in the repo as a folder with instructions, scripts, and config.
-- The harness loads plugins and exposes their tools to the AI.
 
-## Slide 24 — Plugin usage example
+---
+
+## Plugin usage example
+
 - `devflow` plugin: commit code, push branches, create PRs, resolve comments.
 - `md-to-html` plugin: convert Markdown to styled HTML with one command.
 - `db-migration` plugin: generate, validate, and apply database migrations.
 - `deploy-check` plugin: run pre-deploy checks and report readiness.
 
-## Slide 25 — Plugin - PROS & CONS
+---
+
+## Plugin - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Automates real dev workflows | Higher risk — can mutate, push, deploy |
@@ -191,7 +221,7 @@ Intent: trustworthy, practical, team presentation cover.
 
 ---
 
-## Slide 26 — Skill vs Plugin comparison
+## Skill vs Plugin comparison
 
 | Aspect | Skill | Plugin |
 |---|---|---|
@@ -204,31 +234,33 @@ Intent: trustworthy, practical, team presentation cover.
 | Uses local scripts or assets | Can reference them | Can execute them directly |
 | Best for | Consistent process, team know-how | Automating real dev actions |
 
-## Slide 27 — When to use skill vs plugin
+---
 
-- Use a skill when:
-  - You need a repeatable guide.
-  - No code execution needed.
-  - Safe to share as markdown.
-- Use a plugin when:
-  - You need to run scripts or tools.
-  - Workflow has side effects (commit, deploy).
-  - Worth the added complexity and risk.
+## When to use skill vs plugin
+
+- Use skill when: you need a repeatable guide, no code execution needed, safe to share as markdown.
+- Use plugin when: you need to run scripts or tools, workflow has side effects (commit, deploy), worth added complexity.
 
 ---
 
-## Slide 28 — Rule concept
+## Rule concept
+
 - Rule = instruction that should apply across many tasks.
 - Covers safety, coding style, architecture, review limits.
 - Rules reduce repeated prompting.
 - Rules define what AI must always do or avoid.
 
-## Slide 29 — Rule usage example
+---
+
+## Rule usage example
+
 - CLAUDE.md: always run tests before saying task is done.
 - AGENTS.md: never change public APIs without explicit request.
 
+---
 
-## Slide 30 — Rule - PROS & CONS
+## Rule - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Consistency | Too many become noise |
@@ -238,21 +270,27 @@ Intent: trustworthy, practical, team presentation cover.
 
 ---
 
-## Slide 31 — Sub-agent concept
+## Sub-agent concept
+
 - Sub-agent = AI worker spawned by the main agent for a subtask.
 - Has its own context window — does not see the main conversation.
 - Receives a concrete, self-contained task from the main agent.
 - Returns only its final message back.
 - Main agent delegates, coordinates, and synthesizes results.
 
-## Slide 32 — Sub-agent usage example
+---
+
+## Sub-agent usage example
+
 - Parallel: spawn 3 sub-agents to research APIs, review docs, and scan code at the same time.
 - Isolation: give one sub-agent a risky refactor so it cannot touch other files.
 - Review: ask a sub-agent to review your diff as a fresh pair of eyes.
 - Heavy work: let a sub-agent run tests or builds while you continue planning.
 
+---
 
-## Slide 33 — Sub-agent - PROS & CONS
+## Sub-agent - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Parallel — multiple subtasks at once | Setup cost — good subtasks take care |
@@ -263,7 +301,7 @@ Intent: trustworthy, practical, team presentation cover.
 
 ---
 
-## Slide 34 — AI agent native support comparison
+## AI agent native support comparison
 
 | Concept | Claude Code | GitHub Copilot | Codex CLI | Zed AI | Cursor |
 |---|---|---|---|---|---|
@@ -273,31 +311,40 @@ Intent: trustworthy, practical, team presentation cover.
 | **Plugin** | ✅ MCP servers | ❌ No MCP yet | ⚠️ Tool calling | ✅ MCP support | ⚠️ Limited |
 | **Sub-agent** | ✅ `spawn_agent` | ⚠️ Agent mode only | ❌ Not available | ✅ `spawn_agent` | ❌ Not available |
 
-## Slide 35 — Native support notes
+---
+
+## Native support notes
 
 - All agents support prompts — that is table stakes.
-- Rule support varies by filename: `CLAUDE.md`, `AGENTS.md`, `.cursor/rules`, `.github/instructions`.
+- Rule support varies by filename: CLAUDE.md, AGENTS.md, .cursor/rules.
 - Skills are most fragmented — each agent uses a different file format.
 - MCP is the emerging standard for plugins — Claude Code and Zed lead here.
 - Sub-agent support is the newest frontier — only Claude Code and Zed have it today.
-- Cross-agent portability needs a shared format (like `AGENTS.md` + MCP).
+- Cross-agent portability needs a shared format (like AGENTS.md + MCP).
 
 ---
 
-## Slide 36 — Orchestration concept
+## Orchestration concept
+
 - Orchestration = running multiple AI agents or sub-agents on one machine.
 - One main agent spawns and coordinates many sub-agents in parallel or sequence.
 - Each sub-agent works on a disjoint slice — no overlapping file writes.
 - The orchestrator merges results, resolves conflicts, and decides next steps.
 - Think of it like a tech lead delegating to multiple devs at once.
 
-## Slide 37 — Orchestration usage example
+---
+
+## Orchestration usage example
+
 - Feature build: agent A does data model, agent B does API, agent C does UI — all in parallel.
 - Bug hunt: spawn 5 sub-agents to search 5 modules for root cause simultaneously.
 - Code review: one sub-agent checks security, another checks style, another checks tests.
 - Migration: parallel agents handle different tables or services with isolated write scopes.
 
-## Slide 38 — Orchestration - PROS & CONS
+---
+
+## Orchestration - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Massive speed-up — 10 min → 2 min | Hard to set up — decomposition is a skill |
@@ -308,49 +355,38 @@ Intent: trustworthy, practical, team presentation cover.
 
 ---
 
-## Slide 39 — MCP concept
+## MCP concept
+
 - MCP = Model Context Protocol.
 - Standard way for AI to connect to external tools and data.
 - Like a USB-C for AI integrations — one protocol, many devices.
 - Client (AI host) ↔ MCP Server ↔ External system.
-- Replaces custom per-tool integrations with one open standard.
 
-## Slide 40 — MCP architecture
-```mermaid
-flowchart TD
-    HOST["AI Host<br/>Claude, Copilot, Zed, ..."]:::accent0
-    HOST --> CLIENT["MCP Client"]:::accent1
-    CLIENT --> PROTOCOL["MCP Protocol<br/>(JSON-RPC)"]:::accent2
-    PROTOCOL --> SERVER["MCP Server"]:::accent3
-    SERVER --> FILESYSTEM["File System"]:::accent4
-    SERVER --> GIT["Git Repo"]:::accent5
-    SERVER --> JIRA["JIRA"]:::accent6
-    SERVER --> GITHUB["GitHub PR"]:::accent0
-    SERVER --> API["API Service"]:::accent7
-```
-- Host asks → Server acts → Result returns.
+---
+
+## MCP architecture
+
+AI Host → MCP Client → MCP Protocol (JSON-RPC) → MCP Server → File System / Git Repo / API Service
+
+- Host asks, server acts, result returns.
 - Server runs locally or remote.
 - One server can expose multiple tools.
 
-## Slide 41 — MCP usage + Tool definition
+---
+
+## MCP usage + Tool definition
+
 - File system server: read, write, search files with permission control.
 - Git server: list branches, view diffs, create commits.
 - Database server: run read-only queries, inspect schema.
 - API server: fetch issues, PRs, docs from external services.
-- Each tool is defined as JSON Schema — the AI reads it to decide when and how to call:
+- Each tool is defined as JSON Schema — the AI reads it to decide when and how to call.
+- Example: `read_file` tool with `path` (string) and `start_line` (integer) parameters.
 
-```json
-{
-  "name": "read_file",
-  "description": "Read a file. Use when you need to inspect code.",
-  "parameters": {
-    "path": { "type": "string", "description": "Relative path" },
-    "start_line": { "type": "integer", "description": "Optional start" }
-  }
-}
-```
+---
 
-## Slide 42 — MCP - PROS & CONS
+## MCP - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | One standard instead of N integrations | Still early — spec and ecosystem evolving |
@@ -361,21 +397,28 @@ flowchart TD
 
 ---
 
-## Slide 43 — Guardrails concept
+## Guardrails concept
+
 - Guardrails = safety rules that control what the AI can and cannot do.
 - Approval gates: ask user before running destructive commands.
 - Scope limits: restrict file access, network domains, or tool categories.
 - Hard stops: certain actions always require explicit confirmation.
 - Without guardrails, autonomous agents are too risky for production.
 
-## Slide 44 — Guardrails usage example
+---
+
+## Guardrails usage example
+
 - File writes outside the workspace → block or require approval.
 - Git push / force push → always ask for confirmation.
 - Dropping tables or running migrations → hard stop, user must approve.
 - External API calls → allowlist domains, block by default.
-- Shell commands with `rm -rf` or `sudo` → deny automatically.
+- Shell commands with rm -rf or sudo → deny automatically.
 
-## Slide 45 — Guardrails - PROS & CONS
+---
+
+## Guardrails - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Prevents catastrophic mistakes | Too strict = agent cannot do its job |
@@ -385,20 +428,27 @@ flowchart TD
 
 ---
 
-## Slide 46 — Observability concept
+## Observability concept
+
 - Observability = knowing what the agent did, when, and why.
 - Logs: every tool call, its input, output, and duration.
 - Traces: full agent run from task start to completion.
 - Metrics: success rate, token usage, cost, latency, error count.
 - Without observability, debugging a failed agent run is guesswork.
 
-## Slide 47 — Observability usage example
-- Log every tool call: `[tool:read_file] path=src/main.rs duration=120ms`.
-- Trace the full run: `task=fix-bug → plan → read 3 files → edit 2 files → run tests → done`.
+---
+
+## Observability usage example
+
+- Log every tool call: read_file path=src/main.rs duration=120ms.
+- Trace the full run: fix-bug → plan → read 3 files → edit 2 files → run tests → done.
 - Metrics dashboard: tokens consumed, cost per task, error rate per tool.
 - Alert: "agent made 10 tool calls but produced 0 file edits — possible loop."
 
-## Slide 48 — Observability - PROS & CONS
+---
+
+## Observability - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Debug agent failures fast | Logging adds latency and storage cost |
@@ -408,21 +458,28 @@ flowchart TD
 
 ---
 
-## Slide 49 — Error recovery concept
+## Error recovery concept
+
 - Error recovery = what happens when a tool call fails or returns garbage.
 - Retry with backoff for transient failures (network, rate limits).
 - Fallback to alternative tool or strategy when primary fails.
 - Escalate to user when automatic recovery is impossible.
 - Dead letter: log the failure and continue with partial results.
 
-## Slide 50 — Error recovery usage example
+---
+
+## Error recovery usage example
+
 - File read fails with ENOENT → agent asks user for correct path.
 - API rate limit → exponential backoff, retry 3 times, then escalate.
 - Test run times out → agent reports partial results, asks to re-run.
 - Tool returns malformed JSON → agent retries with stricter prompt.
 - Shell command exits non-zero → agent reads stderr, adjusts, retries once.
 
-## Slide 51 — Error recovery - PROS & CONS
+---
+
+## Error recovery - PROS & CONS
+
 | PROS | CONS |
 |---|---|
 | Agents survive real-world failures | Retry storms amplify load |
@@ -432,42 +489,18 @@ flowchart TD
 
 ---
 
-## Slide 52 — Wiring diagram
-```mermaid
-flowchart TD
-    TASK["User Task"]:::accent0 --> HARNESS["Harness Engine"]:::accent1
+## Wiring diagram
 
-    HARNESS --> GUARD["Guardrails"]:::accent2
-    HARNESS --> ORCH["Orchestrator"]:::accent3
-    HARNESS --> OBS["Observability"]:::accent4
+User Task → Harness Engine
 
-    ORCH --> SUB_A["Sub-agent A"]:::accent5
-    ORCH --> SUB_B["Sub-agent B"]:::accent5
+The Harness Engine has three core systems:
+- **Guardrails** — approval gates, scope limits, hard stops
+- **Orchestrator** — spawns and coordinates sub-agents
+- **Observability** — logs, traces, metrics
 
-    SUB_A --> PROMPT_A["Prompt"]
-    SUB_A --> SKILL_A["Skill"]
-    SUB_B --> PROMPT_B["Prompt"]
-    SUB_B --> SKILL_B["Skill"]
+Each sub-agent follows this pipeline:
+- Prompt / Skill → MCP → Tool Defs → Error Recovery
 
-    PROMPT_A --> MCP_A["MCP"]
-    SKILL_A --> MCP_A
-    PROMPT_B --> MCP_B["MCP"]
-    SKILL_B --> MCP_B
+Everything flows through **Memory / Rules** as persistent constraints, then produces the final **Output**.
 
-    MCP_A --> TOOL_A["Tool Defs"]
-    MCP_B --> TOOL_B["Tool Defs"]
-
-    TOOL_A --> ERR_A["Error Recovery"]
-    TOOL_B --> ERR_B["Error Recovery"]
-
-    GUARD --> MEM["Memory / Rules"]:::accent7
-    ERR_A --> MEM
-    ERR_B --> MEM
-    OBS --> MEM
-
-    MEM --> OUT["Output"]:::accent0
-```
-- Harness: outer shell — guard, observe, route, recover.
-- Agent: inner worker — plan, use tools, produce results.
-- Everything runs through MCP for tool access.
-- Memory and rules surround everything as persistent constraints.
+Key principle: Harness is the outer shell (guard, observe, route, recover). Agent is the inner worker (plan, use tools, produce results). MCP connects everything to real tools. Memory and rules surround everything.

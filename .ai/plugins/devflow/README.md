@@ -40,6 +40,24 @@ devflow/
 
 ---
 
+## Skills
+
+| # | Skill | Benefits | Example | Non-worktree? | Note |
+|---|-------|----------|---------|:---:|---|
+| 1 | `dev-start` | Isolated workspace, auto branch + worktree | `dev-start PROJ-123` | ❌ | Requires git worktree support |
+| 2 | `dev-plan` | Structured plan from task evidence + codebase | `/dev-plan PROJ-123` | ✅ | Works on any branch |
+| 3 | `dev-code` | Reads plan, implements, writes changelog | `/dev-code` | ✅ | Works on any branch |
+| 4 | `dev-review` | Review against plan + changelog, verdict | `/dev-review` | ✅ | Works on any branch |
+| 5 | `dev-ship-pr-jira` | PR + Jira comment + reports | `/dev-ship` | ✅ | `--pr-only`, `--jira-only`, `--dry-run` |
+| 6 | `dev-fix-pr` | Fix PR comments, multi-round loop | `/dev-fix-pr` | ✅ | Legacy branch fallback available |
+| 7 | `dev-finish` | Merge PR + delete worktree + cleanup | `/dev-finish` | ❌ | Requires git worktree support |
+| 8 | `dev-adr` | Architecture Decision Record from evidence | `/dev-adr PROJ-123` | ✅ | Skips non-architectural tasks |
+| 9 | `dev-commit` | Stage + commit in related groups | `/dev-commit` | ✅ | Runs standalone or during dev-code |
+| 10 | `dev-get` | Pull Jira issue into task folder | `/dev-get PROJ-123` | ✅ | Writes raw.md + task.md from templates |
+| 11 | `dev-review-pr` | Review any PR across 8 quality dimensions | `/review-pr [URL]` | ✅ | No worktree needed, works on any PR |
+
+---
+
 ## Pros
 
 | Advantage | Detail |

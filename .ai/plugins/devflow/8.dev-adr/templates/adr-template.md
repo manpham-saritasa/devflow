@@ -134,21 +134,7 @@
 
 ***
 
-## 9. Open Questions
-[Summary or explanation about the Open Questions.]
-
-- **Q1:** [Question that still needs an answer.]
-  **A1:** [Try to prefill a suggestion or options to choose.]
-
-- **Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
-  **A2:** [Try to prefill a suggestion or options to choose.]
-
-- **Q3:** [Question that may change the final plan.]  
-  **A3:** [Try to prefill a suggestion or options to choose.]
-
-***
-
-## 10. Supporting Evidence
+## 9. Supporting Evidence
 
 - **Task evidence:** 
 	[List of tasks' details, Jira comments, or user request that support this ADR.]
@@ -157,9 +143,19 @@
 - **Related ADRs / prior tasks:** 
 	[List of relevant prior decisions, or `None`.]
 
+### External references:
+	[List of external sources (Microsoft Learn, official docs, etc.) with clickable links that support the decision.]
+
 ***
 
-## 11. Future Review Guidance
+## 10. Open Questions
+[Summary or explanation about the Open Questions.]
 
-- Future changes in this area should [follow rule / keep invariant / re-check condition].
-- Revisit this ADR if [specific trigger, threshold, cost finding, strategy change, or new technical finding].
+**Q1:** [Question that still needs an answer.]
+**A1:** [Try to prefill a suggestion or options to choose.]
+
+**Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
+**A2:** [Try to prefill a suggestion or options to choose.]
+
+**Q3:** [Question that may change the final plan.]  
+**A3:** [Try to prefill a suggestion or options to choose.]
