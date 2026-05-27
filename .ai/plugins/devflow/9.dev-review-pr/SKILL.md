@@ -133,26 +133,18 @@ If no `KEY` found: continue without it. Show the review table, but do not save a
 
 ### Step 4a: Fetch Task Context (Jira)
 
-If `KEY` was found, try to fetch Jira task context for fit check. This needs Jira credentials in repo-root `.env`:
+If `KEY` was found, prefer the shared `dev-get` skill for Jira task context.
 
-```
-JIRA_COMPANY_DOMAIN=your-company
-JIRA_PROJECT_KEY=PROJ
-JIRA_EMAIL=user@example.com
-JIRA_API_TOKEN=your-token-here
-```
+Flow:
+- First read `.local/tasks/[KEY]/task.md` and `.local/tasks/[KEY]/raw.md` when present.
+- If they are missing or stale, run `dev-get [KEY]` to refresh the local Jira task files.
+- After `dev-get`, extract at least:
+  - `JIRA_SUMMARY` from the saved task files
+  - `JIRA_DESCRIPTION` / requirements from the saved task files
 
-If `.env` exists and has all required fields:
-- Read Jira credentials from `.env` safely.
-- Fetch the Jira issue JSON for `[KEY]` from the Atlassian issue API.
-- Extract at least:
-  - `JIRA_SUMMARY` — task title
-  - `JIRA_DESCRIPTION` — task description / requirements
-- If structured parsing tools are unavailable, note that Jira fetch could not be parsed cleanly.
+**If `dev-get` succeeds:** use the saved Jira task content as the main fit-check source.
 
-**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` as the main fit-check source.
-
-**If Jira fetch fails** (no `.env`, missing credentials, network error): note it and rely on PR body, branch name, and commit messages. Mention this limit in the report.
+**If `dev-get` fails** (missing credentials, network error, Jira unavailable): note it and rely on the PR body, branch name, commit messages, and any existing local task files. Mention this limit in the report.
 
 ### Step 5: Review Across Dimensions
 

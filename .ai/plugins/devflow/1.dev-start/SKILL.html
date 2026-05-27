@@ -430,7 +430,9 @@ git rev-list --count HEAD..origin/main
 <p>If behind: "<code>main</code> is behind origin by [N] commits. Pull latest <code>main</code> before creating a hotfix." Stop.  </p>
 <p>Stop if branch requirements not met (except <code>--force</code>, which skips all of Step 3).</p>
 <h3>Step 4: Fetch Task Summary</h3>
-<p>Use Jira MCP to fetch the task summary and build the branch name. Jira MCP requires credentials from <code>.env</code> in the repo root (<code>JIRA_COMPANY_DOMAIN</code>, <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>). If Jira MCP or <code>.env</code> is unavailable, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
+<p>Prefer the shared <code>dev-get</code> skill to fetch Jira task context first. Read <code>.local/tasks/[KEY]/task.md</code> and <code>.local/tasks/[KEY]/raw.md</code> when present.  </p>
+<p>If the task files are missing, run <code>dev-get [KEY]</code> to populate them, then use the saved Jira summary to build the branch name.  </p>
+<p>If <code>dev-get</code> cannot run or task files still do not exist, ask user: "Short summary for branch name? (e.g. <code>login-with-google</code>)"</p>
 <h3>Step 5: Build Branch Name</h3>
 <p>Format: <code>[type]/[task-key-lowercase]-[short-summary]</code>  </p>
 <p>Examples:</p>
@@ -465,7 +467,7 @@ Task folder would be: .local/tasks/[KEY]
 <p>Stop here. Do not proceed to Steps 7-9.</p>
 <h3>Step 7: Create Task Folder</h3>
 <p>Create <code>TASK_DIR</code> if it doesn't exist.<br>
-Save the Jira task summary to <code>TASK_DIR/task.md</code> if Jira MCP is available (requires <code>.env</code> with Jira credentials) and file doesn't exist.</p>
+If <code>TASK_DIR/task.md</code> or <code>TASK_DIR/raw.md</code> is missing, prefer running <code>dev-get [KEY]</code> to populate the task folder before continuing.</p>
 <h3>Step 8: Create Worktree</h3>
 <p><strong>Pre-flight — fetch latest from base branch:</strong>  </p>
 <p>Always fetch and pull the base branch before creating the worktree to ensure the worktree starts from the latest source.  </p>

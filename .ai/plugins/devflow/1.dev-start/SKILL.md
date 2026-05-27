@@ -96,7 +96,11 @@ Stop if branch requirements not met (except `--force`, which skips all of Step 3
 
 ### Step 4: Fetch Task Summary
 
-Use Jira MCP to fetch the task summary and build the branch name. Jira MCP requires credentials from `.env` in the repo root (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If Jira MCP or `.env` is unavailable, ask user: "Short summary for branch name? (e.g. `login-with-google`)"
+Prefer the shared `dev-get` skill to fetch Jira task context first. Read `.local/tasks/[KEY]/task.md` and `.local/tasks/[KEY]/raw.md` when present.
+
+If the task files are missing, run `dev-get [KEY]` to populate them, then use the saved Jira summary to build the branch name.
+
+If `dev-get` cannot run or task files still do not exist, ask user: "Short summary for branch name? (e.g. `login-with-google`)"
 
 ### Step 5: Build Branch Name
 
@@ -143,7 +147,7 @@ Stop here. Do not proceed to Steps 7-9.
 ### Step 7: Create Task Folder
 
 Create `TASK_DIR` if it doesn't exist.
-Save the Jira task summary to `TASK_DIR/task.md` if Jira MCP is available (requires `.env` with Jira credentials) and file doesn't exist.
+If `TASK_DIR/task.md` or `TASK_DIR/raw.md` is missing, prefer running `dev-get [KEY]` to populate the task folder before continuing.
 
 ### Step 8: Create Worktree
 

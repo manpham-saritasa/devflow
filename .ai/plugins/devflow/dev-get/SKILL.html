@@ -355,20 +355,36 @@ a:hover {
 <ul>
 <li><code>cloudId</code>: from step 2</li>
 <li><code>issueIdOrKey</code>: key</li>
-<li><code>fields</code>: <code>["summary", "priority", "components", "description", "status", "issuetype", "issuelinks", "comment"]</code></li>
+<li><code>fields</code>: <code>["summary", "priority", "components", "description", "status", "issuetype", "issuelinks", "comment", "timetracking", "assignee", "reporter", "labels", "fixVersions", "created", "updated", "duedate", "resolution", "resolutiondate", "parent", "subtasks", "attachment"]</code></li>
 <li><code>responseContentFormat</code>: <code>"markdown"</code></li>
 </ul>
 <p>Fail → show real error. Stop.  </p>
 <p>Extract:</p>
 <ul>
 <li><code>summary</code> = <code>fields.summary</code></li>
-<li><code>priority</code> = <code>fields.priority.name</code> or null</li>
-<li><code>components</code> = <code>fields.components[].name</code> list</li>
-<li><code>status</code> = <code>fields.status.name</code> or null</li>
-<li><code>issuetype</code> = <code>fields.issuetype.name</code> or null</li>
-<li><code>description</code> = <code>fields.description</code> (markdown) or null</li>
-<li><code>issuelinks</code> = <code>fields.issuelinks[]</code> — extract <code>.outwardIssue.key</code> and <code>.inwardIssue.key</code> from each entry (skip nulls)</li>
-<li><code>comments</code> = <code>fields.comment.comments[]</code> — extract <code>.author.displayName</code>, <code>.created</code> (ISO date), <code>.body</code> (markdown) from each entry; empty array if none</li>
+<li><code>priority</code> = <code>fields.priority.name</code> or <code>None</code></li>
+<li><code>components</code> = <code>fields.components[].name</code> list or empty array</li>
+<li><code>status</code> = <code>fields.status.name</code> or <code>Unknown</code></li>
+<li><code>issuetype</code> = <code>fields.issuetype.name</code> or <code>Unknown</code></li>
+<li><code>description</code> = <code>fields.description</code> (markdown) or <code>_(no description)_</code></li>
+<li><code>estimated</code> = <code>fields.timetracking.originalEstimate</code> or <code>None</code></li>
+<li><code>spent</code> = <code>fields.timetracking.timeSpent</code> or <code>None</code></li>
+<li><code>assignee</code> = <code>fields.assignee.displayName</code> or <code>Unassigned</code></li>
+<li><code>reporter</code> = <code>fields.reporter.displayName</code> or <code>Unknown</code></li>
+<li><code>labels</code> = <code>fields.labels[]</code> or empty array</li>
+<li><code>fixVersions</code> = <code>fields.fixVersions[].name</code> list or empty array</li>
+<li><code>created</code> = <code>fields.created</code> or <code>Unknown</code></li>
+<li><code>updated</code> = <code>fields.updated</code> or <code>Unknown</code></li>
+<li><code>dueDate</code> = <code>fields.duedate</code> or <code>None</code></li>
+<li><code>resolution</code> = <code>fields.resolution.name</code> or <code>Unresolved</code></li>
+<li><code>resolutionDate</code> = <code>fields.resolutiondate</code> or <code>None</code></li>
+<li><code>parent</code> = <code>fields.parent.key</code> plus summary when available, else <code>None</code></li>
+<li><code>subtasks</code> = <code>fields.subtasks[]</code> — extract key + summary; empty array if none</li>
+<li><code>attachments</code> = <code>fields.attachment[]</code> — extract filename and content URL; empty array if none</li>
+<li><code>issuelinks</code> = <code>fields.issuelinks[]</code> — extract related key plus summary, status, and link direction/type when available; empty array if none</li>
+<li><code>comments</code> = <code>fields.comment.comments[]</code> — extract <code>.author.displayName</code>, <code>.created</code> (ISO date), <code>.body</code> (markdown); empty array if none</li>
+<li><code>epic</code> = best effort from parent / issue hierarchy if exposed, else <code>None</code></li>
+<li><code>sprint</code> = sprint name if exposed in fields, else <code>None</code></li>
 </ul>
 <h3>Step 4: Check Existing Files</h3>
 <p>Check:</p>
@@ -382,50 +398,80 @@ a:hover {
 <h3>Step 6: Write task.md</h3>
 <ul>
 <li>Read template from <code>templates/task-template.md</code> next to this SKILL.</li>
-<li>Replace placeholders. Write to <code>[TASK_DIR]/task.md</code>.</li>
+<li>Fill the template section by section. Do not leave placeholder text behind.</li>
+<li>Write to <code>[TASK_DIR]/task.md</code>.</li>
 </ul>
-<p>Placeholders:</p>
+<p>Template mapping:</p>
 <ul>
-<li><code>[TASK_KEY]</code> — Jira key</li>
-<li><code>[TASK_TITLE]</code> — summary</li>
-<li><code>[PRIORITY]</code> — priority or <code>None</code></li>
-<li><code>[COMPONENT]</code> — components joined by <code>,</code> or <code>None</code></li>
-<li><code>[RELATED_ISSUES]</code> — render as:<pre><code>## Related Issues
-
-- KEY — summary _(link type, status)_
-- KEY — summary _(link type, status)_
-</code></pre>
-</li>
+<li><code>[Ticket ID]</code> → Jira key</li>
+<li><code>[Ticket Title]</code> → summary</li>
+<li><code>## Overview</code> → 1-3 plain-language sentences based on summary + description. Focus on user/system outcome, not implementation detail.</li>
+<li><code>## Requirements</code> → 2-4 concrete bullets from description, acceptance criteria, triggers, and business rules visible in Jira.</li>
+<li><code>## Triggers</code> → trigger location, trigger action, trigger data/state if Jira gives them. If no triggers are visible, use a single bullet: <code>- None identified</code>.</li>
+<li><code>## Acceptance Criteria</code> → checkbox bullets from explicit Jira acceptance criteria when present. Merge direct acceptance clues from description/comments here first. If Jira has no explicit section, derive 2-3 testable checkbox bullets from the description.</li>
+<li><code>## Constraints</code> → only include real or clearly implied constraints. If none are visible, keep one bullet: <code>- None identified</code>.</li>
+<li><code>## Affected Modules</code> → best-effort module or area names from components, feature names, screens, or described workflow. If unclear, use higher-level bullets such as UI area, service area, or domain area.</li>
+<li><code>## Related Historical Tasks</code> → related linked issues with key and short reason/title. If none, keep one bullet: <code>- None identified</code>.</li>
+<li><code>## Open Questions</code> → only include meaningful questions that need answers before implementation. If only 1-2 are meaningful, omit the unused Q/A pairs.</li>
+<li><code>## Technical Notes</code> → extra technical context, risk areas, inferred persistence/sync concerns, validation concerns, edge cases, and technical signals from Jira/components/comments/attachments.</li>
 </ul>
-<p>Omit entire section (including heading) if no related tasks.</p>
-<p>Free-text sections — infer from Jira description:  </p>
-<p><strong>Objective</strong> — one sentence. Outcome for user/system, not implementation detail.  </p>
-<p><strong>Constraints</strong> — 2-3 bullets. Pull from: related tickets, tech stack signals, business/deployment rules. Gap → <code>[Constraint - not clear from ticket, fill manually]</code>.  </p>
-<p><strong>Acceptance Criteria</strong> — use "Acceptance criteria" section in description if exists. Else derive 2-3 testable outcomes from problem. Each needs ≥1 happy-path + ≥1 edge/error test case.  </p>
-<p><strong>Open Questions</strong> — 2-3 questions on scope, edge cases, related tickets, unknowns. Leave answers blank.  </p>
-<p>Rule: infer, never invent. Truly no info → <code>[Not enough info in ticket - fill manually]</code>.</p>
+<p>Rules:</p>
+<ul>
+<li>Infer carefully, never invent facts.</li>
+<li>Replace instructional placeholder text like <code>[Requirement 1 ...]</code> and <code>[Criterion 1 ...]</code> with real content.</li>
+<li>Remove optional guidance lines that do not apply.</li>
+<li>If Jira does not provide enough detail for a section, use <code>None identified</code> or a short fill-manually note instead of fake specifics.</li>
+</ul>
 <h3>Step 7: Write raw.md</h3>
 <ul>
 <li>Read template from <code>templates/raw-template.md</code> next to this SKILL.</li>
-<li>Replace placeholders. Write to <code>[TASK_DIR]/raw.md</code>.</li>
+<li>Fill every placeholder the template expects.</li>
+<li>Write to <code>[TASK_DIR]/raw.md</code>.</li>
 </ul>
-<p>Placeholders:</p>
+<p>Template mapping:</p>
 <ul>
-<li><code>[KEY]</code> — Jira key</li>
-<li><code>[TITLE]</code> — summary</li>
-<li><code>[STATUS]</code> — status or <code>Unknown</code></li>
-<li><code>[ISSUETYPE]</code> — issuetype or <code>Unknown</code></li>
-<li><code>[PRIORITY]</code> — priority or <code>None</code></li>
-<li><code>[COMPONENTS]</code> — components joined by <code>,</code> or <code>None</code></li>
-<li><code>[RELATED_ISSUES]</code> — same format as task.md: render as <code>## Related Issues</code> section with one bullet per linked issue. Omit entire section if no related tasks.</li>
-<li><code>[DESCRIPTION]</code> — full Jira description verbatim markdown, or <code>_(no description)_</code></li>
-<li><code>[COMMENTS]</code> — each comment rendered as:<pre><code>**Author Name** — YYYY-MM-DD
+<li><code>[KEY]</code> → Jira key</li>
+<li><code>[TITLE]</code> → summary</li>
+<li><code>[STATUS]</code> → status</li>
+<li><code>[ISSUETYPE]</code> → issue type</li>
+<li><code>[PRIORITY]</code> → priority</li>
+<li><code>[ESTIMATED]</code> → original estimate or <code>None</code></li>
+<li><code>[SPENT]</code> → time spent or <code>None</code></li>
+<li><code>[ASSIGNEE]</code> → assignee display name or <code>Unassigned</code></li>
+<li><code>[REPORTER]</code> → reporter display name or <code>Unknown</code></li>
+<li><code>[COMPONENTS]</code> → components joined by <code>,</code> or <code>None</code></li>
+<li><code>[LABELS]</code> → labels joined by <code>,</code> or <code>None</code></li>
+<li><code>[FIX_VERSIONS]</code> → fix versions joined by <code>,</code> or <code>None</code></li>
+<li><code>[CREATED]</code> → created timestamp</li>
+<li><code>[UPDATED]</code> → updated timestamp</li>
+<li><code>[DUE_DATE]</code> → due date or <code>None</code></li>
+<li><code>[RESOLUTION]</code> → resolution or <code>Unresolved</code></li>
+<li><code>[RESOLUTION_DATE]</code> → resolution date or <code>None</code></li>
+<li><code>[URL]</code> → Jira browse URL</li>
+<li><code>[EPIC]</code> → epic summary/key when available, else <code>None</code></li>
+<li><code>[SPRINT]</code> → sprint name when available, else <code>None</code></li>
+<li>
+<p><code>[PARENT]</code> → parent key + summary when available, else <code>None</code></p>
+</li>
+<li>
+<p><code>[SUBTASKS]</code> → bullet list of <code>KEY — Summary</code>, or <code>- None</code></p>
+</li>
+<li><code>[RELATED_TASKS]</code> → bullet list of related linked issues with short context, or <code>- None</code></li>
+<li><code>[ATTACHMENTS]</code> → bullet list of attachment filename + URL, or <code>- None</code></li>
+<li><code>[DESCRIPTION]</code> → full Jira description verbatim markdown, or <code>_(no description)_</code></li>
+<li><code>[COMMENTS]</code> → each comment rendered as:<pre><code>**Author Name** — YYYY-MM-DD
 &gt; comment body (verbatim markdown)
 </code></pre>
 </li>
 </ul>
-<p>Multiple comments separated by blank line. No comments → <code>_(no comments)_</code>.</p>
-<p>Never summarize description or comments. Dump verbatim.</p>
+<p>Separate comments with blank lines. No comments → <code>_(no comments)_</code>.</p>
+<p>Rules:</p>
+<ul>
+<li>Keep <code>raw.md</code> source-heavy. Do not summarize away useful Jira metadata.</li>
+<li>Do not put inferred technical signals or derived acceptance clues in <code>raw.md</code>; keep those in <code>task.md</code>.</li>
+<li>Fill every placeholder; do not leave tokens behind.</li>
+<li>Use <code>None</code>, <code>Unresolved</code>, <code>Unassigned</code>, or <code>- None</code> instead of blank sections where needed.</li>
+</ul>
 <h3>Step 8: Report</h3>
 <p>Short summary after done:</p>
 <ul>
@@ -439,11 +485,12 @@ a:hover {
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled/> Jira key parsed from command or user text?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Atlassian cloudId found for the target site?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Jira issue fetched with all required fields?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Jira issue fetched with all fields needed by both templates?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Existing files checked before overwriting?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> <code>[TASK_DIR]</code> folder created?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> task.md written with all placeholders replaced?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> raw.md written with verbatim description and comments?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> task.md written to match the current task template sections and placeholders?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> raw.md written to match the current raw template placeholders?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No template placeholder tokens or instructional sample text left behind?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Relative and absolute file paths shown in the result?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> User reminded that raw.md is the full Jira source?</li>
 </ul>

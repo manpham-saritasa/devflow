@@ -460,25 +460,19 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <p>Otherwise, extract <code>KEY</code> from <code>PR_TITLE</code> or <code>HEAD_BRANCH</code> via regex <code>([A-Z0-9]+-\d+)</code> (case-insensitive).  </p>
 <p>If no <code>KEY</code> found: continue without it. Show the review table, but do not save a task-folder report.</p>
 <h3>Step 4a: Fetch Task Context (Jira)</h3>
-<p>If <code>KEY</code> was found, try to fetch Jira task context for fit check. This needs Jira credentials in repo-root <code>.env</code>:</p>
-<pre><code>JIRA_COMPANY_DOMAIN=your-company
-JIRA_PROJECT_KEY=PROJ
-JIRA_EMAIL=user@example.com
-JIRA_API_TOKEN=your-token-here
-</code></pre>
-<p>If <code>.env</code> exists and has all required fields:</p>
+<p>If <code>KEY</code> was found, prefer the shared <code>dev-get</code> skill for Jira task context.  </p>
+<p>Flow:</p>
 <ul>
-<li>Read Jira credentials from <code>.env</code> safely.</li>
-<li>Fetch the Jira issue JSON for <code>[KEY]</code> from the Atlassian issue API.</li>
-<li>Extract at least:<ul>
-<li><code>JIRA_SUMMARY</code> — task title</li>
-<li><code>JIRA_DESCRIPTION</code> — task description / requirements</li>
+<li>First read <code>.local/tasks/[KEY]/task.md</code> and <code>.local/tasks/[KEY]/raw.md</code> when present.</li>
+<li>If they are missing or stale, run <code>dev-get [KEY]</code> to refresh the local Jira task files.</li>
+<li>After <code>dev-get</code>, extract at least:<ul>
+<li><code>JIRA_SUMMARY</code> from the saved task files</li>
+<li><code>JIRA_DESCRIPTION</code> / requirements from the saved task files</li>
 </ul>
 </li>
-<li>If structured parsing tools are unavailable, note that Jira fetch could not be parsed cleanly.</li>
 </ul>
-<p><strong>If Jira fetch succeeds:</strong> use <code>JIRA_DESCRIPTION</code> as the main fit-check source.  </p>
-<p><strong>If Jira fetch fails</strong> (no <code>.env</code>, missing credentials, network error): note it and rely on PR body, branch name, and commit messages. Mention this limit in the report.</p>
+<p><strong>If <code>dev-get</code> succeeds:</strong> use the saved Jira task content as the main fit-check source.  </p>
+<p><strong>If <code>dev-get</code> fails</strong> (missing credentials, network error, Jira unavailable): note it and rely on the PR body, branch name, commit messages, and any existing local task files. Mention this limit in the report.</p>
 <h3>Step 5: Review Across Dimensions</h3>
 <p>Analyze PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across each dimension below.  </p>
 <p>Extra context sources:</p>
