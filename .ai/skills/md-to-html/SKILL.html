@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -718,8 +728,14 @@ a:hover { text-decoration: underline; }
 <p>Install the parser dependencies first:</p>
 <pre><code class="language-bash">python -m pip install -r .ai/skills/md-to-html/requirements.txt
 </code></pre>
+<p>If <code>python</code> is not available on Windows, use:</p>
+<pre><code class="language-bash">py.exe -m pip install -r .ai/skills/md-to-html/requirements.txt
+</code></pre>
 <p>Then run the bundled converter script:</p>
 <pre><code class="language-bash">python .ai/skills/md-to-html/main.py &lt;input.md&gt; [output.html]
+</code></pre>
+<p>If <code>python</code> is not available on Windows, use:</p>
+<pre><code class="language-bash">py.exe .ai/skills/md-to-html/main.py &lt;input.md&gt; [output.html]
 </code></pre>
 <p>If <code>output.html</code> is omitted, it writes to <code>&lt;input_stem&gt;.html</code> alongside the source file.  </p>
 <p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code>&lt;br&gt;</code>/<code>&lt;hr&gt;</code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&amp;A <code>block-card</code> grids.</p>
