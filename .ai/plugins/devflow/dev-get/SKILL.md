@@ -125,7 +125,8 @@ Never summarize description or comments. Dump verbatim.
 ### Step 8: Report
 
 Short summary after done:
-- Files written: task.md + raw.md paths
+- Files written: relative paths for `task.md` and `raw.md`
+- Also show full absolute paths for both files so the user can copy and open them easily
 - Remind: raw.md = full Jira source
 
 ---
@@ -139,4 +140,5 @@ Short summary after done:
 - [ ] `[TASK_DIR]` folder created?
 - [ ] task.md written with all placeholders replaced?
 - [ ] raw.md written with verbatim description and comments?
+- [ ] Relative and absolute file paths shown in the result?
 - [ ] User reminded that raw.md is the full Jira source?
