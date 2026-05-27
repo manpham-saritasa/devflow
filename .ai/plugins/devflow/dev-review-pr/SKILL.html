@@ -429,6 +429,11 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <li><code>COMMITS[]</code> — each commit's message, oid, author</li>
 <li><code>DIFF</code> — the full diff text</li>
 </ul>
+<p><strong>Fetch all existing review comments</strong> (must run before Step 8 to detect duplicates):</p>
+<pre><code class="language-bash">gh api repos/[OWNER]/[REPO]/pulls/[PR_NUMBER]/comments --jq '.[] | {id, path, line, body, user: .user.login, created_at}'
+</code></pre>
+<p>Store as <code>EXISTING_COMMENTS[]</code> — each entry has <code>id</code>, <code>path</code>, <code>line</code>, <code>body</code>, <code>user</code>, <code>created_at</code>.<br>
+These are the inline review comments already posted on the PR diff (by Copilot, other reviewers, or prior runs of this skill).</p>
 <h3>Step 3a: Check Codebase (if <code>--code-base</code>)</h3>
 <p>Skip this step if <code>--code-base</code> flag is not set.  </p>
 <p><strong>Fail fast — verify local branch context:</strong></p>
@@ -690,8 +695,25 @@ mutation($prId: ID!, $body: String!) {
  -f prId=&quot;$PR_NODE_ID&quot; \
  -f body=&quot;Automated review from dev-review-pr skill. The user will review and submit.&quot;)
 </code></pre>
-<p><strong>Step 8c: Add Comment Threads</strong>  </p>
-<p>For each finding with a specific file and line number, add a thread to the review.  </p>
+<p><strong>Step 8c: Deduplicate Against Existing Comments</strong>  </p>
+<p>Before posting, compare each finding against <code>EXISTING_COMMENTS[]</code> (fetched in Step 3). A finding is a <strong>duplicate</strong> when ALL of the following match:</p>
+<ul>
+<li><code>path</code> matches exactly (same file path)</li>
+<li><code>line</code> matches or overlaps (if finding line is a range, any overlap counts)</li>
+<li>The comment <code>body</code> addresses the same issue (similar topic, same file+line location)</li>
+</ul>
+<p>For each finding:</p>
+<ul>
+<li>If a match is found, mark it as <code>DUPLICATE</code> and note the existing comment author and link.</li>
+<li>Otherwise, mark it as <code>NEW</code> — eligible for posting.</li>
+</ul>
+<p>Track the results:</p>
+<ul>
+<li><code>DUPLICATE_FINDINGS[]</code> — findings already covered by existing comments</li>
+<li><code>NEW_FINDINGS[]</code> — findings to post as new threads</li>
+</ul>
+<p><strong>Step 8d: Add Comment Threads (NEW findings only)</strong>  </p>
+<p>For each <code>NEW</code> finding with a specific file and line number, add a thread to the review.  </p>
 <p><strong>Do not re-derive file paths or line numbers.</strong> Read them from the <code>## Findings</code> table in the feedback report or the Step 6 review table.  </p>
 <p>Before posting a thread:</p>
 <ul>
@@ -729,8 +751,14 @@ mutation($prId: ID!, $body: String!) {
    State: PENDING
    PR: [PR_URL]
    Threads posted: [POSTED_COUNT]/[INTENDED_COUNT]
+   Duplicates skipped: [DUPLICATE_COUNT] (already covered by existing comments)
 </code></pre>
-<p>Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."</p>
+<p>If duplicates were skipped, list them:</p>
+<pre><code>⏭️ Skipped [DUPLICATE_COUNT] duplicate finding(s) — already covered by existing comments:
+   - [file:line] — [Issue Summary] (existing comment by @[user])
+   ...
+</code></pre>
+<p>Tell t</p>he user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."</p>
 <h3>Step 9: Success Output</h3>
 <pre><code>✅ Review complete for [PR_TITLE]
 
@@ -738,7 +766,7 @@ Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
 Verdict: [Changes requested | Approved with suggestions | Approved]
 Report: [TASK_DIR/pr-feedback-[KEY].md]
 Context limits: [none | Jira unavailable, fit check based on PR metadata only | key not found, report not saved to task folder | PR data may be truncated]
-Pending review: [not posted | posted [POSTED_COUNT]/[INTENDED_COUNT] threads]
+Pending review: [not posted | posted [POSTED_COUNT]/[INTENDED_COUNT] threads, [DUPLICATE_COUNT] duplicates skipped]
 
 PR: [PR_URL]
 </code></pre>
@@ -748,7 +776,10 @@ PR: [PR_URL]
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled/> PR detected from URL or auto-detected from worktree?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Failed fast when no PR found?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> All PR data fetched (files, diff, commits, reviews)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All PR data fetched (files, diff, commits, reviews, existing review comments)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Existing review comments fetched via <code>gh api .../comments</code>?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Findings deduplicated against existing comments before posting?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Duplicate findings reported to user with existing comment author?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> <code>--code-base</code> flag respected — fails fast if branch not local?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Codebase context fetched when <code>--code-base</code> is set?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Task key extracted when possible?</li>

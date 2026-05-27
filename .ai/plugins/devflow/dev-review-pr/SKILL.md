@@ -97,6 +97,15 @@ Parse the results:
 - `COMMITS[]` — each commit's message, oid, author
 - `DIFF` — the full diff text
 
+**Fetch all existing review comments** (must run before Step 8 to detect duplicates):
+
+```bash
+gh api /repos/[OWNER]/[REPO]/pulls/[PR_NUMBER]/comments --jq '.[] | {id, path, line, body, user: .user.login, created_at}'
+```
+
+Store as `EXISTING_COMMENTS[]` — each entry has `id`, `path`, `line`, `body`, `user`, `created_at`.
+These are the inline review comments already posted on the PR diff (by Copilot, other reviewers, or prior runs of this skill).
+
 ### Step 3a: Check Codebase (if `--code-base`)
 
 Skip this step if `--code-base` flag is not set.
@@ -356,9 +365,25 @@ mutation($prId: ID!, $body: String!) {
  -f body="Automated review from dev-review-pr skill. The user will review and submit.")
 ```
 
-**Step 8c: Add Comment Threads**
+**Step 8c: Deduplicate Against Existing Comments**
 
-For each finding with a specific file and line number, add a thread to the review.
+Before posting, compare each finding against `EXISTING_COMMENTS[]` (fetched in Step 3). A finding is a **duplicate** when ALL of the following match:
+
+- `path` matches exactly (same file path)
+- `line` matches or overlaps (if finding line is a range, any overlap counts)
+- The comment `body` addresses the same issue (similar topic, same file+line location)
+
+For each finding:
+- If a match is found, mark it as `DUPLICATE` and note the existing comment author and link.
+- Otherwise, mark it as `NEW` — eligible for posting.
+
+Track the results:
+- `DUPLICATE_FINDINGS[]` — findings already covered by existing comments
+- `NEW_FINDINGS[]` — findings to post as new threads
+
+**Step 8d: Add Comment Threads (NEW findings only)**
+
+For each `NEW` finding with a specific file and line number, add a thread to the review.
 
 **Do not re-derive file paths or line numbers.** Read them from the `## Findings` table in the feedback report or the Step 6 review table.
 
@@ -402,6 +427,14 @@ Do not claim full posting success unless every intended thread was created.
    State: PENDING
    PR: [PR_URL]
    Threads posted: [POSTED_COUNT]/[INTENDED_COUNT]
+   Duplicates skipped: [DUPLICATE_COUNT] (already covered by existing comments)
+```
+
+If duplicates were skipped, list them:
+```
+⏭️ Skipped [DUPLICATE_COUNT] duplicate finding(s) — already covered by existing comments:
+   - [file:line] — [Issue Summary] (existing comment by @[user])
+   ...
 ```
 
 Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."
@@ -415,7 +448,7 @@ Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
 Verdict: [Changes requested | Approved with suggestions | Approved]
 Report: [TASK_DIR/pr-feedback-[KEY].md]
 Context limits: [none | Jira unavailable, fit check based on PR metadata only | key not found, report not saved to task folder | PR data may be truncated]
-Pending review: [not posted | posted [POSTED_COUNT]/[INTENDED_COUNT] threads]
+Pending review: [not posted | posted [POSTED_COUNT]/[INTENDED_COUNT] threads, [DUPLICATE_COUNT] duplicates skipped]
 
 PR: [PR_URL]
 ```
@@ -426,7 +459,10 @@ PR: [PR_URL]
 
 - [ ] PR detected from URL or auto-detected from worktree?
 - [ ] Failed fast when no PR found?
-- [ ] All PR data fetched (files, diff, commits, reviews)?
+- [ ] All PR data fetched (files, diff, commits, reviews, existing review comments)?
+- [ ] Existing review comments fetched via `gh api .../comments`?
+- [ ] Findings deduplicated against existing comments before posting?
+- [ ] Duplicate findings reported to user with existing comment author?
 - [ ] `--code-base` flag respected — fails fast if branch not local?
 - [ ] Codebase context fetched when `--code-base` is set?
 - [ ] Task key extracted when possible?
