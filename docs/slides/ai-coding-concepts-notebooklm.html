@@ -312,8 +312,7 @@ a:hover {
 }
 
   </style>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+
 </head>
 <body>
   <main class="page">
@@ -321,22 +320,10 @@ a:hover {
   <h1>AI Coding Concepts for Local Dev</h1>
 </section>
 <section class="section">
-<h2>Slide 1 — Title</h2>
-<ul>
-<li>AI Coding Concepts for Local Dev.</li>
-<li>Prompts, rules, skills, agents, tools, context, and memory.</li>
-</ul>
+<p>Prompts, rules, skills, agents, tools, context, and memory.</p>
 </section>
 <section class="section">
-<h2>Slide 2 — Why this matters</h2>
-<ul>
-<li>Same repo, different AI setups, different results.</li>
-<li>Shared setup makes output more consistent.</li>
-<li>Goal: less guesswork, better team workflow.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Slide 3 — Big picture</h2>
+<h2>Big picture</h2>
 <ul>
 <li>Prompt tells the AI what to do.</li>
 <li>Context gives the AI what it can see now.</li>
@@ -348,7 +335,7 @@ a:hover {
 </ul>
 </section>
 <section class="section">
-<h2>Slide 4 — LLM concept</h2>
+<h2>LLM concept</h2>
 <ul>
 <li>LLM = language model that predicts the next tokens.</li>
 <li>Good at drafting, explaining, transforming, and summarizing.</li>
@@ -357,7 +344,7 @@ a:hover {
 </ul>
 </section>
 <section class="section">
-<h2>Slide 5 — Tokens and context</h2>
+<h2>Tokens and context</h2>
 <ul>
 <li>Token = chunk of text, not exactly a word.</li>
 <li>Context window = how much the model can use now.</li>
@@ -366,7 +353,7 @@ a:hover {
 </ul>
 </section>
 <section class="section">
-<h2>Slide 6 — Session concept</h2>
+<h2>Session concept</h2>
 <ul>
 <li>Session = the current working conversation.</li>
 <li>It includes prompts, replies, tool calls, and temporary state.</li>
@@ -375,23 +362,15 @@ a:hover {
 </ul>
 </section>
 <section class="section">
-<h2>Slide 7 — Diagram</h2>
-<pre class="mermaid">
-flowchart TD
-    INPUT["Prompt + Files + Rules + Memory + Tool Output"]:::accent0
-    INPUT --> TOKENS["Tokens"]:::accent1
-    TOKENS --> CONTEXT["Current Context Window"]:::accent2
-    CONTEXT --> LLM:::accent3
-    LLM --> RESPONSE["Response + Tool Actions + New State"]:::accent4
-    RESPONSE --> SESSION["Working Session"]:::accent5
-</pre>
+<h2>How it flows</h2>
+<p>Prompt + files + rules + memory + tool output → Tokens → Context window → LLM → Response + actions → Working session</p>
 <ul>
 <li>Session is the workspace.</li>
 <li>Context is the slice sent now.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 8 — Session limits</h2>
+<h2>Session limits</h2>
 <ul>
 <li>Session may be lost next time.</li>
 <li>Long sessions get noisy.</li>
@@ -400,7 +379,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 9 — Memory concept</h2>
+<h2>Memory concept</h2>
 <ul>
 <li>Memory = stored information reused later.</li>
 <li>Short-term memory = current session and context.</li>
@@ -409,17 +388,15 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 10 — File-based memory</h2>
+<h2>File-based memory</h2>
 <ul>
 <li>Pros: simple, visible, versioned, cross-tool.</li>
-<li>Pros: easy for humans and LLMs to read.</li>
-<li>Cons: can get stale, noisy, duplicated.</li>
-<li>Cons: large files reduce relevance.</li>
+<li>Cons: can get stale, noisy, duplicated, large files reduce relevance.</li>
 <li>Keep memory small and curated.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 11 — Context rot</h2>
+<h2>Context rot</h2>
 <ul>
 <li>Quality drops when context gets too long or noisy.</li>
 <li>Model may forget earlier constraints.</li>
@@ -428,7 +405,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 12 — Hallucinations</h2>
+<h2>Hallucinations</h2>
 <ul>
 <li>AI can invent files, APIs, facts, or behavior.</li>
 <li>Confident tone does not mean correct output.</li>
@@ -437,7 +414,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 13 — Other failure modes</h2>
+<h2>Other failure modes</h2>
 <ul>
 <li>Omission: skips an important step or requirement.</li>
 <li>Instruction drift: starts right, then ignores earlier constraints.</li>
@@ -448,7 +425,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 14 — Prompt concept</h2>
+<h2>Prompt concept</h2>
 <ul>
 <li>Prompt = instruction package for this task.</li>
 <li>Can include goal, context, constraints, format, examples.</li>
@@ -457,28 +434,14 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 15 — Prompt usage example</h2>
+<h2>Prompt usage example</h2>
 <ul>
 <li>Bug fix: describe symptom, file, expected behavior, ask for minimal change + test.</li>
 <li>Refactor: state goal, files in scope, keep behavior, list tests to keep passing.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 16 — Big prompt example</h2>
-<pre><code class="language-text">Create a cinematic hero image for an internal engineering presentation.
-Subject: senior engineer, 3 monitors, code, Git graph, AI panel.
-Style: modern editorial, detailed, professional.
-Scene: night office, blue-teal glow, practical desk setup.
-Composition: 16:9, subject left, empty space right for title.
-Constraints: no logo, no broken hands, no extra fingers.
-Intent: trustworthy, practical, team presentation cover.
-</code></pre>
-<ul>
-<li>Big prompt is fine when every section adds signal.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Slide 17 — Prompt - PROS &amp; CONS</h2>
+<h2>Prompt - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -507,7 +470,7 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 18 — Skill concept</h2>
+<h2>Skill concept</h2>
 <ul>
 <li>Skill = reusable workflow for a repeated job.</li>
 <li>Can include instructions, examples, scripts, references.</li>
@@ -516,14 +479,14 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 19 — Skill usage example</h2>
+<h2>Skill usage example</h2>
 <ul>
 <li>Have a /review-skill for PR review, used on every PR.</li>
 <li>Have a /refactor-skill for legacy cleanup tasks.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 20 — Skill - PROS &amp; CONS</h2>
+<h2>Skill - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -552,7 +515,7 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 21 — Prompt vs Skill comparison</h2>
+<h2>Prompt vs Skill comparison</h2>
 <table>
 <thead>
 <tr>
@@ -611,35 +574,23 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 22 — When to use prompt vs skill</h2>
+<h2>When to use prompt vs skill</h2>
 <ul>
-<li>Use a prompt when:<ul>
-<li>Task is one-off.</li>
-<li>Instruction is short.</li>
-<li>No reuse expected.</li>
-</ul>
-</li>
-<li>Use a skill when:<ul>
-<li>Task repeats across sessions.</li>
-<li>Workflow has multiple steps.</li>
-<li>Team needs consistency.</li>
-<li>Worth the maintenance cost.</li>
-</ul>
-</li>
+<li>Use prompt when: task is one-off, instruction is short, no reuse expected.</li>
+<li>Use skill when: task repeats, workflow has multiple steps, team needs consistency, worth maintenance cost.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 23 — Plugin concept</h2>
+<h2>Plugin concept</h2>
 <ul>
 <li>Plugin = packaged tool that the AI can invoke to perform real actions.</li>
 <li>Runs scripts, calls APIs, modifies files, executes commands.</li>
 <li>More powerful than a skill — has side effects beyond text.</li>
 <li>Lives in the repo as a folder with instructions, scripts, and config.</li>
-<li>The harness loads plugins and exposes their tools to the AI.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 24 — Plugin usage example</h2>
+<h2>Plugin usage example</h2>
 <ul>
 <li><code>devflow</code> plugin: commit code, push branches, create PRs, resolve comments.</li>
 <li><code>md-to-html</code> plugin: convert Markdown to styled HTML with one command.</li>
@@ -648,7 +599,7 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 25 — Plugin - PROS &amp; CONS</h2>
+<h2>Plugin - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -677,7 +628,7 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 26 — Skill vs Plugin comparison</h2>
+<h2>Skill vs Plugin comparison</h2>
 <table>
 <thead>
 <tr>
@@ -731,24 +682,14 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 27 — When to use skill vs plugin</h2>
+<h2>When to use skill vs plugin</h2>
 <ul>
-<li>Use a skill when:<ul>
-<li>You need a repeatable guide.</li>
-<li>No code execution needed.</li>
-<li>Safe to share as markdown.</li>
-</ul>
-</li>
-<li>Use a plugin when:<ul>
-<li>You need to run scripts or tools.</li>
-<li>Workflow has side effects (commit, deploy).</li>
-<li>Worth the added complexity and risk.</li>
-</ul>
-</li>
+<li>Use skill when: you need a repeatable guide, no code execution needed, safe to share as markdown.</li>
+<li>Use plugin when: you need to run scripts or tools, workflow has side effects (commit, deploy), worth added complexity.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 28 — Rule concept</h2>
+<h2>Rule concept</h2>
 <ul>
 <li>Rule = instruction that should apply across many tasks.</li>
 <li>Covers safety, coding style, architecture, review limits.</li>
@@ -757,14 +698,14 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 29 — Rule usage example</h2>
+<h2>Rule usage example</h2>
 <ul>
 <li>CLAUDE.md: always run tests before saying task is done.</li>
 <li>AGENTS.md: never change public APIs without explicit request.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 30 — Rule - PROS &amp; CONS</h2>
+<h2>Rule - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -793,7 +734,7 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 31 — Sub-agent concept</h2>
+<h2>Sub-agent concept</h2>
 <ul>
 <li>Sub-agent = AI worker spawned by the main agent for a subtask.</li>
 <li>Has its own context window — does not see the main conversation.</li>
@@ -803,7 +744,7 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 32 — Sub-agent usage example</h2>
+<h2>Sub-agent usage example</h2>
 <ul>
 <li>Parallel: spawn 3 sub-agents to research APIs, review docs, and scan code at the same time.</li>
 <li>Isolation: give one sub-agent a risky refactor so it cannot touch other files.</li>
@@ -812,7 +753,7 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 33 — Sub-agent - PROS &amp; CONS</h2>
+<h2>Sub-agent - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -845,7 +786,7 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 34 — AI agent native support comparison</h2>
+<h2>AI agent native support comparison</h2>
 <table>
 <thead>
 <tr>
@@ -902,18 +843,18 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 35 — Native support notes</h2>
+<h2>Native support notes</h2>
 <ul>
 <li>All agents support prompts — that is table stakes.</li>
-<li>Rule support varies by filename: <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.cursor/rules</code>, <code>.github/instructions</code>.</li>
+<li>Rule support varies by filename: CLAUDE.md, AGENTS.md, .cursor/rules.</li>
 <li>Skills are most fragmented — each agent uses a different file format.</li>
 <li>MCP is the emerging standard for plugins — Claude Code and Zed lead here.</li>
 <li>Sub-agent support is the newest frontier — only Claude Code and Zed have it today.</li>
-<li>Cross-agent portability needs a shared format (like <code>AGENTS.md</code> + MCP).</li>
+<li>Cross-agent portability needs a shared format (like AGENTS.md + MCP).</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 36 — Orchestration concept</h2>
+<h2>Orchestration concept</h2>
 <ul>
 <li>Orchestration = running multiple AI agents or sub-agents on one machine.</li>
 <li>One main agent spawns and coordinates many sub-agents in parallel or sequence.</li>
@@ -923,7 +864,7 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 37 — Orchestration usage example</h2>
+<h2>Orchestration usage example</h2>
 <ul>
 <li>Feature build: agent A does data model, agent B does API, agent C does UI — all in parallel.</li>
 <li>Bug hunt: spawn 5 sub-agents to search 5 modules for root cause simultaneously.</li>
@@ -932,7 +873,7 @@ Intent: trustworthy, practical, team presentation cover.
 </ul>
 </section>
 <section class="section">
-<h2>Slide 38 — Orchestration - PROS &amp; CONS</h2>
+<h2>Orchestration - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -965,56 +906,36 @@ Intent: trustworthy, practical, team presentation cover.
 </table>
 </section>
 <section class="section">
-<h2>Slide 39 — MCP concept</h2>
+<h2>MCP concept</h2>
 <ul>
 <li>MCP = Model Context Protocol.</li>
 <li>Standard way for AI to connect to external tools and data.</li>
 <li>Like a USB-C for AI integrations — one protocol, many devices.</li>
 <li>Client (AI host) ↔ MCP Server ↔ External system.</li>
-<li>Replaces custom per-tool integrations with one open standard.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 40 — MCP architecture</h2>
-<pre class="mermaid">
-flowchart TD
-    HOST["AI Host<br/>Claude, Copilot, Zed, ..."]:::accent0
-    HOST --> CLIENT["MCP Client"]:::accent1
-    CLIENT --> PROTOCOL["MCP Protocol<br/>(JSON-RPC)"]:::accent2
-    PROTOCOL --> SERVER["MCP Server"]:::accent3
-    SERVER --> FILESYSTEM["File System"]:::accent4
-    SERVER --> GIT["Git Repo"]:::accent5
-    SERVER --> JIRA["JIRA"]:::accent6
-    SERVER --> GITHUB["GitHub PR"]:::accent0
-    SERVER --> API["API Service"]:::accent7
-</pre>
+<h2>MCP architecture</h2>
+<p>AI Host → MCP Client → MCP Protocol (JSON-RPC) → MCP Server → File System / Git Repo / API Service</p>
 <ul>
-<li>Host asks → Server acts → Result returns.</li>
+<li>Host asks, server acts, result returns.</li>
 <li>Server runs locally or remote.</li>
 <li>One server can expose multiple tools.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 41 — MCP usage + Tool definition</h2>
+<h2>MCP usage + Tool definition</h2>
 <ul>
 <li>File system server: read, write, search files with permission control.</li>
 <li>Git server: list branches, view diffs, create commits.</li>
 <li>Database server: run read-only queries, inspect schema.</li>
 <li>API server: fetch issues, PRs, docs from external services.</li>
-<li>Each tool is defined as JSON Schema — the AI reads it to decide when and how to call:</li>
+<li>Each tool is defined as JSON Schema — the AI reads it to decide when and how to call.</li>
+<li>Example: <code>read_file</code> tool with <code>path</code> (string) and <code>start_line</code> (integer) parameters.</li>
 </ul>
-<pre><code class="language-json">{
-  &quot;name&quot;: &quot;read_file&quot;,
-  &quot;description&quot;: &quot;Read a file. Use when you need to inspect code.&quot;,
-  &quot;parameters&quot;: {
-    &quot;path&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Relative path&quot; },
-    &quot;start_line&quot;: { &quot;type&quot;: &quot;integer&quot;, &quot;description&quot;: &quot;Optional start&quot; }
-  }
-}
-</code></pre>
 </section>
 <section class="section">
-<h2>Slide 42 — MCP - PROS &amp; CONS</h2>
+<h2>MCP - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -1047,7 +968,7 @@ flowchart TD
 </table>
 </section>
 <section class="section">
-<h2>Slide 43 — Guardrails concept</h2>
+<h2>Guardrails concept</h2>
 <ul>
 <li>Guardrails = safety rules that control what the AI can and cannot do.</li>
 <li>Approval gates: ask user before running destructive commands.</li>
@@ -1057,17 +978,17 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 44 — Guardrails usage example</h2>
+<h2>Guardrails usage example</h2>
 <ul>
 <li>File writes outside the workspace → block or require approval.</li>
 <li>Git push / force push → always ask for confirmation.</li>
 <li>Dropping tables or running migrations → hard stop, user must approve.</li>
 <li>External API calls → allowlist domains, block by default.</li>
-<li>Shell commands with <code>rm -rf</code> or <code>sudo</code> → deny automatically.</li>
+<li>Shell commands with rm -rf or sudo → deny automatically.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 45 — Guardrails - PROS &amp; CONS</h2>
+<h2>Guardrails - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -1096,7 +1017,7 @@ flowchart TD
 </table>
 </section>
 <section class="section">
-<h2>Slide 46 — Observability concept</h2>
+<h2>Observability concept</h2>
 <ul>
 <li>Observability = knowing what the agent did, when, and why.</li>
 <li>Logs: every tool call, its input, output, and duration.</li>
@@ -1106,16 +1027,16 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 47 — Observability usage example</h2>
+<h2>Observability usage example</h2>
 <ul>
-<li>Log every tool call: <code>[tool:read_file] path=src/main.rs duration=120ms</code>.</li>
-<li>Trace the full run: <code>task=fix-bug → plan → read 3 files → edit 2 files → run tests → done</code>.</li>
+<li>Log every tool call: read_file path=src/main.rs duration=120ms.</li>
+<li>Trace the full run: fix-bug → plan → read 3 files → edit 2 files → run tests → done.</li>
 <li>Metrics dashboard: tokens consumed, cost per task, error rate per tool.</li>
 <li>Alert: "agent made 10 tool calls but produced 0 file edits — possible loop."</li>
 </ul>
 </section>
 <section class="section">
-<h2>Slide 48 — Observability - PROS &amp; CONS</h2>
+<h2>Observability - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -1144,7 +1065,7 @@ flowchart TD
 </table>
 </section>
 <section class="section">
-<h2>Slide 49 — Error recovery concept</h2>
+<h2>Error recovery concept</h2>
 <ul>
 <li>Error recovery = what happens when a tool call fails or returns garbage.</li>
 <li>Retry with backoff for transient failures (network, rate limits).</li>
@@ -1154,7 +1075,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 50 — Error recovery usage example</h2>
+<h2>Error recovery usage example</h2>
 <ul>
 <li>File read fails with ENOENT → agent asks user for correct path.</li>
 <li>API rate limit → exponential backoff, retry 3 times, then escalate.</li>
@@ -1164,7 +1085,7 @@ flowchart TD
 </ul>
 </section>
 <section class="section">
-<h2>Slide 51 — Error recovery - PROS &amp; CONS</h2>
+<h2>Error recovery - PROS &amp; CONS</h2>
 <table>
 <thead>
 <tr>
@@ -1193,46 +1114,48 @@ flowchart TD
 </table>
 </section>
 <section class="section">
-<h2>Slide 52 — Wiring diagram</h2>
-<pre class="mermaid">
-flowchart TD
-    TASK["User Task"]:::accent0 --> HARNESS["Harness Engine"]:::accent1
-
-    HARNESS --> GUARD["Guardrails"]:::accent2
-    HARNESS --> ORCH["Orchestrator"]:::accent3
-    HARNESS --> OBS["Observability"]:::accent4
-
-    ORCH --> SUB_A["Sub-agent A"]:::accent5
-    ORCH --> SUB_B["Sub-agent B"]:::accent5
-
-    SUB_A --> PROMPT_A["Prompt"]
-    SUB_A --> SKILL_A["Skill"]
-    SUB_B --> PROMPT_B["Prompt"]
-    SUB_B --> SKILL_B["Skill"]
-
-    PROMPT_A --> MCP_A["MCP"]
-    SKILL_A --> MCP_A
-    PROMPT_B --> MCP_B["MCP"]
-    SKILL_B --> MCP_B
-
-    MCP_A --> TOOL_A["Tool Defs"]
-    MCP_B --> TOOL_B["Tool Defs"]
-
-    TOOL_A --> ERR_A["Error Recovery"]
-    TOOL_B --> ERR_B["Error Recovery"]
-
-    GUARD --> MEM["Memory / Rules"]:::accent7
-    ERR_A --> MEM
-    ERR_B --> MEM
-    OBS --> MEM
-
-    MEM --> OUT["Output"]:::accent0
-</pre>
+<h2>Wiring diagram</h2>
+<p>User Task → Harness Engine  </p>
+<p>The Harness Engine has three core systems:</p>
 <ul>
-<li>Harness: outer shell — guard, observe, route, recover.</li>
-<li>Agent: inner worker — plan, use tools, produce results.</li>
-<li>Everything runs through MCP for tool access.</li>
-<li>Memory and rules surround everything as persistent constraints.</li>
+<li><strong>Guardrails</strong> — approval gates, scope limits, hard stops</li>
+<li><strong>Orchestrator</strong> — spawns and coordinates sub-agents</li>
+<li><strong>Observability</strong> — logs, traces, metrics</li>
+</ul>
+<p>Each sub-agent follows this pipeline:</p>
+<ul>
+<li>Prompt / Skill → MCP → Tool Defs → Error Recovery</li>
+</ul>
+<p>Everything flows through <strong>Memory / Rules</strong> as persistent constraints, then produces the final <strong>Output</strong>.  </p>
+<p>Key principle: Harness is the outer shell (guard, observe, route, recover). Agent is the inner worker (plan, use tools, produce results). MCP connects everything to real tools. Memory and rules surround everything.  </p>
+</section>
+<section class="section">
+<h2>Local repo setup</h2>
+<ul>
+<li>AGENTS.md for shared agent guidance.</li>
+<li>CLAUDE.md for Claude-specific onboarding.</li>
+<li>.ai/memory.md for persistent project memory.</li>
+<li>.ai/agents/ for task agents or skills.</li>
+<li>Keep root files short.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Team workflow</h2>
+<ul>
+<li>Start with clear task prompt.</li>
+<li>Load only needed context.</li>
+<li>Use shared rules and memory.</li>
+<li>Run tools for evidence.</li>
+<li>Review diffs and tests before merge.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Team policy</h2>
+<ul>
+<li>One source of truth for rules.</li>
+<li>Small prompts, small memory, small skills.</li>
+<li>Store durable knowledge in files, not chat only.</li>
+<li>Every AI change is review-required.</li>
 </ul>
 </section>
   </main>

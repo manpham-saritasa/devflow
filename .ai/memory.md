@@ -24,6 +24,7 @@
   - structured
   - natural professional tone
   - complete sentences
+- When I say "cush" it means that "commit and push all to origin".
 
 ## 2. Creating markdown files or text documents
 - Big `##` section come, put `---` first.

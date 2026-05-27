@@ -31,7 +31,7 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 
 | Step | Action |
 |---|---|
-| 1 | Read `memory.md` at the repo root and follow it for the whole session |
+| 1 | Read `memory.md` at the .ai folder and follow it for the whole session |
 
 If session is long, task changes, or context is fuzzy, re-read it.
 
@@ -70,7 +70,7 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | Priority | Source |
 |---|---|
 | 1 | User instruction |
-| 2 | `memory.md` at repo root |
+| 2 | `memory.md` at .ai folder |
 | 3 | Chosen agent from `agents/` |
 | 4 | Chosen skill from `skills/` |
 | 5 | `AGENTS.md` rules |
