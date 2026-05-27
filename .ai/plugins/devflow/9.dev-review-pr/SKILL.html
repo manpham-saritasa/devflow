@@ -639,45 +639,68 @@ query {
   }
 }' --jq '.data.repository.pullRequest.id')
 </code></pre>
-<p><strong>Step 8b: Build Comments Array</strong>  </p>
-<p>For each finding in the review table, build a comment thread object:</p>
-<ul>
-<li><code>path</code> — the <code>Checked File</code> path</li>
-<li><code>line</code> — the <code>Checked Line</code> number</li>
-<li><code>body</code> — <code>**[Priority] [Review Category]** Issue Summary\n\n**Suggested:** Suggested Solution</code></li>
-</ul>
-<p>Only include findings that have a specific file and line number (skip report-level findings like "No tests" which span all files).  </p>
-<p>Format as a JSON array:</p>
-<pre><code class="language-json">[
-  {
-    &quot;path&quot;: &quot;src/Example.cs&quot;,
-    &quot;body&quot;: &quot;**[Medium] Fit Check** Commit message missing # prefix\n\n**Suggested:** Add `#` prefix to match convention&quot;,
-    &quot;position&quot;: 42
-  },
-  ...
-]
-</code></pre>
-<p>Use <code>position</code> (diff line number, not absolute file line) when available. If line is a range (e.g. <code>27-34</code>), use the start line. If line is <code>—</code>, skip that finding (it's report-level, not file-level).  </p>
-<p><strong>Step 8c: Create the pending review</strong>  </p>
-<p>Post a review with all comments but <strong>no <code>event</code> field</strong> — this keeps it in PENDING state (not submitted):</p>
-<pre><code class="language-bash">gh api graphql -f query='
-mutation($prId: ID!, $body: String!, $comments: [DraftPullRequestReviewComment]!) {
+<p><strong>Step 8b: Create the Review (body only)</strong>  </p>
+<p>Create an empty pending review with just a body. <strong>Do not include <code>event</code></strong> — this keeps it in PENDING state:</p>
+<pre><code class="language-bash">REVIEW_ID=$(gh api graphql --jq '.data.addPullRequestReview.pullRequestReview.id' \
+  -f query='
+mutation($prId: ID!, $body: String!) {
   addPullRequestReview(input: {
     pullRequestId: $prId
     body: $body
-    comments: $comments
   }) {
-    pullRequestReview {
-      id
-      state
-    }
+    pullRequestReview { id state }
   }
 }' \
--f prId=&quot;$PR_NODE_ID&quot; \
--f body=&quot;Automated review from dev-review-pr skill. The user will review and submit.&quot; \
---field comments='[COMMENTS_ARRAY]'
+ -f prId=&quot;$PR_NODE_ID&quot; \
+ -f body=&quot;Automated review from dev-review-pr skill. The user will review and submit.&quot;)
 </code></pre>
-<p><strong>Step 8d: Confirm</strong></p>
+<p><strong>Step 8c: Add Comment Threads</strong>  </p>
+<p>For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:</p>
+<pre><code class="language-python">import json, subprocess
+
+threads = [
+    {
+        &quot;path&quot;: &quot;src/Example.cs&quot;,
+        &quot;line&quot;: 42,
+        &quot;body&quot;: &quot;**[Medium] Fit Check** Issue summary\n\n**Suggested:** Suggested solution&quot;
+    },
+]
+
+query = '''mutation($prId: ID!, $reviewId: ID!, $path: String!, $line: Int!, $body: String!) {
+  addPullRequestReviewThread(input: {
+    pullRequestId: $prId
+    pullRequestReviewId: $reviewId
+    path: $path
+    line: $line
+    side: RIGHT
+    body: $body
+  }) { thread { id } }
+}'''
+
+for t in threads:
+    payload = {
+        'query': query,
+        'variables': {
+            'prId': '[PR_NODE_ID]',
+            'reviewId': '[REVIEW_ID]',
+            'path': t['path'],
+            'line': t['line'],
+            'body': t['body']
+        }
+    }
+    result = subprocess.run(
+        ['gh', 'api', 'graphql', '--input', '-'],
+        input=json.dumps(payload), capture_output=True, text=True
+    )
+</code></pre>
+<p>Rules for threads:</p>
+<ul>
+<li><code>path</code> — the Checked File path from the findings table</li>
+<li><code>line</code> — the Checked Line number in the source file (not diff position). If line is a range (e.g. <code>27-34</code>), use the start line.</li>
+<li><code>side</code> — always <code>RIGHT</code> (the new version of the file)</li>
+<li><code>body</code> — <code>**[Priority] Review Category** Issue Summary\n\n**Suggested:** Suggested Solution</code></li>
+<li>Only include findings with a specific file and line number. Skip report-level findings (line is <code>—</code>).</li>
+</ul>
 <pre><code>✅ Pending review created on PR #[PR_NUMBER]
    Review ID: [review_id]
    State: PENDING
@@ -708,7 +731,9 @@ PR: [PR_URL]
 <li class="task-list-item"><input type="checkbox" disabled/> Feedback report written to task folder (when key available)?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Verdict reflects issue severity?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> User asked about posting pending review?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Pending review created with comments when user agreed (no <code>event</code> field)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Pending review created with no <code>event</code> field?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Threads added via <code>addPullRequestReviewThread</code> with <code>path</code>, <code>line</code>, <code>side: RIGHT</code>?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Report-level findings (line = <code>—</code>) skipped from comments?</li>
 </ul>
 </section>
   </main>

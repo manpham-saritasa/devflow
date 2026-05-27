@@ -316,53 +316,73 @@ query {
 }' --jq '.data.repository.pullRequest.id')
 ```
 
-**Step 8b: Build Comments Array**
+**Step 8b: Create the Review (body only)**
 
-For each finding in the review table, build a comment thread object:
-- `path` — the `Checked File` path
-- `line` — the `Checked Line` number
-- `body` — `**[Priority] [Review Category]** Issue Summary\n\n**Suggested:** Suggested Solution`
-
-Only include findings that have a specific file and line number (skip report-level findings like "No tests" which span all files).
-
-Format as a JSON array:
-```json
-[
-  {
-    "path": "src/Example.cs",
-    "body": "**[Medium] Fit Check** Commit message missing # prefix\n\n**Suggested:** Add `#` prefix to match convention",
-    "position": 42
-  },
-  ...
-]
-```
-
-Use `position` (diff line number, not absolute file line) when available. If line is a range (e.g. `27-34`), use the start line. If line is `—`, skip that finding (it's report-level, not file-level).
-
-**Step 8c: Create the pending review**
-
-Post a review with all comments but **no `event` field** — this keeps it in PENDING state (not submitted):
-
+Create an empty pending review with just a body. **Do not include `event`** — this keeps it in PENDING state:
 ```bash
-gh api graphql -f query='
-mutation($prId: ID!, $body: String!, $comments: [DraftPullRequestReviewComment]!) {
+REVIEW_ID=$(gh api graphql --jq '.data.addPullRequestReview.pullRequestReview.id' \
+  -f query='
+mutation($prId: ID!, $body: String!) {
   addPullRequestReview(input: {
     pullRequestId: $prId
     body: $body
-    comments: $comments
   }) {
-    pullRequestReview {
-      id
-      state
-    }
+    pullRequestReview { id state }
   }
 }' \
--f prId="$PR_NODE_ID" \
--f body="Automated review from dev-review-pr skill. The user will review and submit." \
---field comments='[COMMENTS_ARRAY]'
+ -f prId="$PR_NODE_ID" \
+ -f body="Automated review from dev-review-pr skill. The user will review and submit.")
 ```
 
-**Step 8d: Confirm**
+**Step 8c: Add Comment Threads**
+
+For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:
+
+```python
+import json, subprocess
+
+threads = [
+    {
+        "path": "src/Example.cs",
+        "line": 42,
+        "body": "**[Medium] Fit Check** Issue summary\n\n**Suggested:** Suggested solution"
+    },
+]
+
+query = '''mutation($prId: ID!, $reviewId: ID!, $path: String!, $line: Int!, $body: String!) {
+  addPullRequestReviewThread(input: {
+    pullRequestId: $prId
+    pullRequestReviewId: $reviewId
+    path: $path
+    line: $line
+    side: RIGHT
+    body: $body
+  }) { thread { id } }
+}'''
+
+for t in threads:
+    payload = {
+        'query': query,
+        'variables': {
+            'prId': '[PR_NODE_ID]',
+            'reviewId': '[REVIEW_ID]',
+            'path': t['path'],
+            'line': t['line'],
+            'body': t['body']
+        }
+    }
+    result = subprocess.run(
+        ['gh', 'api', 'graphql', '--input', '-'],
+        input=json.dumps(payload), capture_output=True, text=True
+    )
+```
+
+Rules for threads:
+- `path` — the Checked File path from the findings table
+- `line` — the Checked Line number in the source file (not diff position). If line is a range (e.g. `27-34`), use the start line.
+- `side` — always `RIGHT` (the new version of the file)
+- `body` — `**[Priority] Review Category** Issue Summary\n\n**Suggested:** Suggested Solution`
+- Only include findings with a specific file and line number. Skip report-level findings (line is `—`).
 
 ```
 ✅ Pending review created on PR #[PR_NUMBER]
@@ -400,4 +420,6 @@ PR: [PR_URL]
 - [ ] Feedback report written to task folder (when key available)?
 - [ ] Verdict reflects issue severity?
 - [ ] User asked about posting pending review?
-- [ ] Pending review created with comments when user agreed (no `event` field)?
+- [ ] Pending review created with no `event` field?
+- [ ] Threads added via `addPullRequestReviewThread` with `path`, `line`, `side: RIGHT`?
+- [ ] Report-level findings (line = `—`) skipped from comments?
