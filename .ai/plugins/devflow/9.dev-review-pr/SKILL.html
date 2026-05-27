@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>dev-review-pr</div>
+    <div class="meta-item"><span class="meta-label">description</span>Review a GitHub PR across multiple quality dimensions. Supports current and past PRs. Provides structured feedback with prioritized issues and a downloadable report.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>review-pr, reviewpr, dev-review-pr</div>
+  </div>
+</section>
+<section class="section">
+<h2>When to Use</h2>
+<ul>
+<li><code>/review-pr [URL]</code> — review a specific PR (past or current)</li>
+<li><code>/review-pr</code> or <code>/reviewpr</code> — auto-detect task key from worktree and find the open PR</li>
+<li><code>/reviewpr [URL]</code> — shorthand with URL</li>
+</ul>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code> and <code>TASK_DIR</code> variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>Workflow</h2>
+<h3>Step 1: Detect PR</h3>
+<p>Parse input for a PR URL (regex: <code>github\.com/([^/]+)/([^/]+)/pull/(\d+)</code>).  </p>
+<p><strong>If a URL was provided:</strong></p>
+<ul>
+<li>Extract <code>OWNER</code>, <code>REPO</code>, and <code>PR_NUMBER</code> from the URL.</li>
+<li>Skip worktree detection — proceed directly to Step 2.</li>
+</ul>
+<p><strong>If no URL was provided — auto-detect from worktree:</strong></p>
+<pre><code class="language-bash">git worktree list
+</code></pre>
+<p>If the current directory (<code>pwd</code>) appears in the output and the branch is not <code>main</code> or <code>develop</code>:</p>
+<ul>
+<li><code>BRANCH_NAME</code> — the branch name in brackets</li>
+<li>Extract <code>KEY</code> via regex <code>([A-Z0-9]+-\d+)</code> from <code>BRANCH_NAME</code> (case-insensitive).</li>
+<li>Continue to PR lookup below.</li>
+</ul>
+<p><strong>Legacy fallback — not in a worktree, on a regular branch:</strong></p>
+<pre><code class="language-bash">git branch --show-current
+</code></pre>
+<p>If the current branch is not <code>main</code> or <code>develop</code>, use it as <code>BRANCH_NAME</code> and extract <code>KEY</code>.  </p>
+<p><strong>If neither path yields a branch:</strong> stop — "Not on a feature/hotfix branch and not in a worktree. Provide a PR URL or switch to your task branch first."  </p>
+<p><strong>Find the open PR for this branch:</strong></p>
+<pre><code class="language-bash">gh pr list --head &quot;[BRANCH_NAME]&quot; --state open --json number,title,url
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Result">No open PR</td>
+<td data-label="Action">"No open PR found for branch <code>[BRANCH_NAME]</code>." Stop.</td>
+</tr>
+<tr>
+<td data-label="Result">Single PR</td>
+<td data-label="Action">Save <code>PR_NUMBER</code>, <code>PR_URL</code>. Continue.</td>
+</tr>
+<tr>
+<td data-label="Result">Multiple PRs</td>
+<td data-label="Action">Show all and ask user to pick one.</td>
+</tr>
+</tbody>
+</table>
+<p>Extract <code>OWNER</code> and <code>REPO</code> from the PR URL.</p>
+<h3>Step 2: Fail Fast — No PR</h3>
+<p>If no PR was found (no URL provided and no open PR detected), stop:</p>
+<pre><code>❌ No PR found. Provide a PR URL or ensure an open PR exists for the current branch.
+Usage: /review-pr https://github.com/owner/repo/pull/123
+</code></pre>
+<h3>Step 3: Fetch Full PR Data</h3>
+<p>Fetch the PR metadata and all associated data in parallel:</p>
+<pre><code class="language-bash"># PR metadata
+gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,body,headRefName,baseRefName,state,mergeable,reviews,additions,deletions,files,commits
+
+# PR diff
+gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
+</code></pre>
+<p>Parse the results:</p>
+<ul>
+<li><code>PR_TITLE</code>, <code>PR_BODY</code>, <code>HEAD_BRANCH</code>, <code>BASE_BRANCH</code>, <code>PR_STATE</code>, <code>MERGEABLE</code></li>
+<li><code>REVIEWS[]</code> — each review's author, state (APPROVED/CHANGES_REQUESTED/COMMENTED), body</li>
+<li><code>FILES[]</code> — each file's path, status (added/modified/deleted), additions, deletions</li>
+<li><code>COMMITS[]</code> — each commit's message, oid, author</li>
+<li><code>DIFF</code> — the full diff text</li>
+</ul>
+<h3>Step 4: Extract Task Key</h3>
+<p>If <code>KEY</code> was already extracted from the branch name in Step 1, use it.  </p>
+<p>Otherwise, extract <code>KEY</code> from <code>PR_TITLE</code> or <code>HEAD_BRANCH</code> via regex <code>([A-Z0-9]+-\d+)</code> (case-insensitive).  </p>
+<p>If no <code>KEY</code> found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).</p>
+<h3>Step 5: Review Across Dimensions</h3>
+<p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Field"><strong>Priority</strong></td>
+<td data-label="Description"><code>Critical</code>, <code>High</code>, <code>Medium</code>, <code>Low</code></td>
+</tr>
+<tr>
+<td data-label="Field"><strong>Review Category</strong></td>
+<td data-label="Description">The dimension the issue falls under</td>
+</tr>
+<tr>
+<td data-label="Field"><strong>Checked File</strong></td>
+<td data-label="Description">The file path where the issue was found</td>
+</tr>
+<tr>
+<td data-label="Field"><strong>Checked Line</strong></td>
+<td data-label="Description">Line number(s) relevant to the issue</td>
+</tr>
+<tr>
+<td data-label="Field"><strong>Issue Summary</strong></td>
+<td data-label="Description">Concise description of what is wrong</td>
+</tr>
+<tr>
+<td data-label="Field"><strong>Suggested Solution</strong></td>
+<td data-label="Description">Actionable recommendation to fix it</td>
+</tr>
+</tbody>
+</table>
+<p>Priority definitions:</p>
+<ul>
+<li><code>Critical</code> — security vulnerability, data loss, broken invariant, crash</li>
+<li><code>High</code> — correctness bug, performance bottleneck, pattern violation, missing validation</li>
+<li><code>Medium</code> — readability, naming, minor duplication, missing edge case</li>
+<li><code>Low</code> — style preference, minor consistency, documentation, nitpick</li>
+</ul>
+<h4>5a. Fit Check</h4>
+<ul>
+<li>Does the PR title and description clearly explain what and why?</li>
+<li>Does the PR scope match what the branch name or task key suggests?</li>
+<li>Are changes scoped appropriately, or is there scope creep?</li>
+<li>Does <code>PR_BODY</code> reference necessary context (tickets, decisions, trade-offs)?</li>
+<li>Do commit messages follow the convention? (<code>{action} {description} [KEY]</code>)</li>
+<li>Are the changes logically grouped into sensible commits?</li>
+</ul>
+<h4>5b. Quality Check</h4>
+<ul>
+<li>Readability: are variable/function/class names clear and self-documenting?</li>
+<li>Complexity: are there overly long functions, deep nesting, or convoluted logic?</li>
+<li>Duplication: is the same logic duplicated instead of reused?</li>
+<li>Magic values: are there hardcoded strings/numbers that should be constants?</li>
+<li>Comments: are complex sections explained, or are there noisy/stale comments?</li>
+<li>Error handling: are errors caught, logged, and handled gracefully?</li>
+<li>Boundary/edge cases: are null values, empty collections, and invalid inputs handled?</li>
+</ul>
+<h4>5c. Naming Convention Check</h4>
+<ul>
+<li>Do names follow the project's established conventions (casing, prefixes, suffixes)?</li>
+<li>Are abbreviations used consistently and meaningfully?</li>
+<li>Do test names describe the scenario and expected outcome?</li>
+<li>Do database migrations, config keys, and environment variables follow naming patterns?</li>
+</ul>
+<h4>5d. Design Pattern Check</h4>
+<ul>
+<li>Does the code follow established project patterns (repository, service, controller layers)?</li>
+<li>Are SOLID principles respected? (Single responsibility, Open/closed, etc.)</li>
+<li>Are abstractions appropriate, or is there over-engineering / under-engineering?</li>
+<li>Are new dependencies justified, or could existing ones be reused?</li>
+<li>Is the change consistent with the surrounding architecture?</li>
+</ul>
+<h4>5e. Performance Check</h4>
+<ul>
+<li>N+1 queries: are database queries made in loops?</li>
+<li>Repeated work: is the same computation done multiple times unnecessarily?</li>
+<li>Data volume: are large payloads fetched/processed when only a subset is needed?</li>
+<li>Caching: are expensive operations cached where appropriate?</li>
+<li>Resource cleanup: are streams, connections, and file handles properly disposed?</li>
+</ul>
+<h4>5f. Security Check</h4>
+<ul>
+<li>Input validation: is untrusted input validated, sanitized, or escaped?</li>
+<li>Injection: are raw inputs concatenated into SQL, HTML, shell commands, or URLs?</li>
+<li>Auth/authz: are protected endpoints/resources properly gated?</li>
+<li>Secrets: are credentials, tokens, or keys hardcoded or exposed in logs/output?</li>
+<li>Data exposure: is sensitive data (PII, tokens) returned in responses or logged?</li>
+<li>CSRF/XSS: are cross-site protections in place for web endpoints?</li>
+</ul>
+<h4>5g. Testing Check</h4>
+<ul>
+<li>Are new changes covered by tests?</li>
+<li>Do tests verify behavior, not implementation details?</li>
+<li>Are edge cases and error paths tested, or only the happy path?</li>
+<li>Are test names descriptive of the scenario?</li>
+<li>Are test assertions meaningful (not tautologies)?</li>
+</ul>
+<h4>5h. Changelog / Documentation Check</h4>
+<ul>
+<li>If a <code>changelog.md</code> exists in the task folder, does the diff match it?</li>
+<li>Are new public APIs, config options, or env vars documented?</li>
+<li>Are architectural decisions explained in the PR body or linked ADR?</li>
+</ul>
+<h3>Step 6: Present Review Table</h3>
+<p>Display all findings as a table sorted by Priority (Critical → Low):</p>
+<pre><code>## PR Review — [PR_TITLE]
+
+PR: [PR_URL]
+Branch: [HEAD_BRANCH] → [BASE_BRANCH]
+Files changed: [count] | +[additions] -[deletions] | [N] commits
+
+| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|----------|----------------|-------------|-------------|---------------|-------------------|
+| Critical | Security | `src/login.php` | 42 | SQL injection via raw user input in query | Use parameterized query or ORM |
+| High | Performance | `src/report.php` | 88-95 | N+1 query inside loop fetching user data | Eager-load users with JOIN |
+| Medium | Naming Convention | `src/utils.php` | 12 | Abbreviation `calcAmt` instead of `calculateAmount` | Rename to `calculateAmount` |
+| Low | Quality | `README.md` | 1 | Missing section for new env var | Add `NEW_FEATURE_FLAG` to env docs |
+</code></pre>
+<p>If no issues found:</p>
+<pre><code>✅ No issues found in this PR.
+
+| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|----------|----------------|-------------|-------------|---------------|-------------------|
+| — | — | — | — | All checks passed | — |
+</code></pre>
+<h3>Step 7: Write Feedback Report</h3>
+<p>If <code>KEY</code> was extracted, write the report to <code>TASK_DIR/pr-feedback-[KEY].md</code>.  </p>
+<p>Ensure the <code>TASK_DIR</code> exists:</p>
+<pre><code class="language-bash">mkdir -p &quot;[TASK_DIR]&quot;
+</code></pre>
+<p>Report format:</p>
+<pre><code class="language-markdown"># PR Feedback — [KEY]
+
+**PR:** [PR_TITLE]
+**URL:** [PR_URL]
+**Branch:** [HEAD_BRANCH] → [BASE_BRANCH]
+**Reviewed:** YYYY-MM-DD HH:MM ±TZ
+
+## Summary
+
+- Files changed: [N] (+[additions] -[deletions])
+- Commits: [N]
+- Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
+
+## Findings
+
+| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|----------|----------------|-------------|-------------|---------------|-------------------|
+| ... | ... | ... | ... | ... | ... |
+
+## Verdict
+
+- **Changes requested** — one or more Critical or High priority issues found
+- **Approved with suggestions** — only Medium/Low issues found
+- **Approved** — no issues found
+
+## Notes
+
+[Any additional context, strengths observed, or recommendations for future work.]
+</code></pre>
+<p>If no <code>KEY</code> was found, display the report content in the chat instead and inform the user:</p>
+<pre><code>No task key detected. Report displayed above — save manually if needed.
+</code></pre>
+<h3>Step 8: Success Output</h3>
+<pre><code>✅ Review complete for [PR_TITLE]
+
+Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
+Report: [TASK_DIR/pr-feedback-[KEY].md]
+
+PR: [PR_URL]
+</code></pre>
+</section>
+<section class="section">
+<h2>Self-Check</h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> PR detected from URL or auto-detected from worktree?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Failed fast when no PR found?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All PR data fetched (files, diff, commits, reviews)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Task key extracted when possible?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All review dimensions checked?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Issues assigned correct priority?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review table sorted by priority?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Feedback report written to task folder (when key available)?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verdict reflects issue severity?</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>
