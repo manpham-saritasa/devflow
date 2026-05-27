@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -339,9 +349,24 @@ a:hover {
 <td data-label="Variable"><code>REVIEW_TEMPLATE</code></td>
 <td data-label="File"><code>templates/review-template.md</code></td>
 </tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Merge Strategy</h2>
+<table>
+<thead>
 <tr>
-<td data-label="Variable"><code>ADR_TEMPLATE</code></td>
-<td data-label="File"><code>templates/adr-template.md</code></td>
+<th>Variable</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Variable"><code>MERGE_STRATEGY</code></td>
+<td data-label="Value"><code>--merge</code></td>
+<td data-label="Description">Strategy passed to <code>gh pr merge</code>. Options: <code>--merge</code> (preserve history), <code>--rebase</code>, <code>--squash</code>.</td>
 </tr>
 </tbody>
 </table>

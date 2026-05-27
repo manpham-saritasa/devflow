@@ -24,7 +24,6 @@ Located in `templates/` relative to the plugin root.
 | `PROGRESS_TEMPLATE` | `templates/progress-template.md` |
 | `CHANGELOG_TEMPLATE` | `templates/changelog-template.md` |
 | `REVIEW_TEMPLATE` | `templates/review-template.md` |
-| `ADR_TEMPLATE` | `templates/adr-template.md` |
 
 ---
 
