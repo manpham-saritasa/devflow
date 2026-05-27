@@ -26,10 +26,13 @@ If fail: ask user for KEY. Stop if no valid KEY.
 git status --short
 ```
 
-Group files by related area:
-- Files in the same feature area or module → group together
+Group files by related area and chronologically by when changes were made:
+- Files changed together in the same step of the conversation → group together
 - Files with the same purpose (e.g. all HTML, all templates, all config) → group together
 - Unrelated files → separate commits
+
+**Order the commits by timeline — oldest changes first, newest last.**
+This keeps the git history aligned with the actual work sequence.
 
 **Rules:**
 - Never commit all files in one giant commit if they span unrelated changes.
