@@ -172,7 +172,7 @@ If a phase fails mid-pipeline, re-run the orchestrator with a phase-specific fla
 | Convention | Example |
 |------------|---------|
 | Branch names | `feature/proj-2145-short-summary` or `hotfix/proj-2145-fix-crash` |
-| Commit messages | `Fix PR comments #PROJ-2145` |
+| Commit messages | `Fix PR comments PROJ-2145` |
 | Task folder | `.local/tasks/PROJ-2145/` |
 | ADR files | `docs/adrs/PROJ-2145-short-decision.md` |
 | Checkpoint format | "Proceed? (yes / no / adjust)" with explicit consequences per option |

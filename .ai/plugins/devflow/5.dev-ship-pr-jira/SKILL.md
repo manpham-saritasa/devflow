@@ -124,7 +124,7 @@ Rules for PR report:
 
 ### Step 4: Build Commit Message
 
-Format: `{action} {description} #KEY` (e.g., `Fix PDF landscape scaling #KEY`)
+Format: `{action} {description} KEY` (e.g., `Fix PDF landscape scaling KEY`)
 
 Skip if `--from-pr` (no commit to build).
 

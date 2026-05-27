@@ -197,7 +197,7 @@ Regardless of Jira availability:
 - Does `PR_BODY` reference necessary context (tickets, decisions, trade-offs)?
 
 PR hygiene:
-- Do commit messages follow the convention? (`{action} {description} #KEY`)
+- Do commit messages follow the convention? (`{action} {description} KEY`)
 - Are the changes logically grouped into sensible commits?
 
 #### 5b. Quality Check
