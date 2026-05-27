@@ -134,7 +134,20 @@
 
 ***
 
-## 9. Open Questions
+## 9. Supporting Evidence
+
+- **Task evidence:** 
+	[List of tasks' details, Jira comments, or user request that support this ADR.]
+- **PR evidence:** 
+	[List of PRs details that support this ADR.]	
+- **Related ADRs / prior tasks:** 
+	[List of relevant prior decisions, or `None`.]
+- **External references:**
+	[List of external sources (Microsoft Learn, official docs, etc.) with clickable links that support the decision.]
+
+***
+
+## 10. Open Questions
 [Summary or explanation about the Open Questions.]
 
 - **Q1:** [Question that still needs an answer.]
@@ -145,21 +158,3 @@
 
 - **Q3:** [Question that may change the final plan.]  
   **A3:** [Try to prefill a suggestion or options to choose.]
-
-***
-
-## 10. Supporting Evidence
-
-- **Task evidence:** 
-	[List of tasks' details, Jira comments, or user request that support this ADR.]
-- **PR evidence:** 
-	[List of PRs details that support this ADR.]	
-- **Related ADRs / prior tasks:** 
-	[List of relevant prior decisions, or `None`.]
-
-***
-
-## 11. Future Review Guidance
-
-- Future changes in this area should [follow rule / keep invariant / re-check condition].
-- Revisit this ADR if [specific trigger, threshold, cost finding, strategy change, or new technical finding].

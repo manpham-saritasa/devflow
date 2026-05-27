@@ -89,7 +89,7 @@ Write to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case.
 - Use concrete repository terms: real services, modules, interfaces, schemas
 - Never invent technical details not supported by evidence
 
-**Section 10 — Supporting Evidence** must use clickable markdown links:
+**Section 9 — Supporting Evidence** must use clickable markdown links:
 
 ```
 - **Jira:** [KEY](https://[domain].atlassian.net/browse/KEY) — short summary.
@@ -121,7 +121,7 @@ Before finalizing, verify:
 - [ ] ADR reflects the decision actually implemented?
 - [ ] Used the repository ADR template exactly?
 - [ ] All placeholders replaced with real summaries?
-- [ ] Section 10 has clickable markdown links for Jira and all relevant PRs?
+- [ ] Section 9 has clickable markdown links for Jira and all relevant PRs?
 - [ ] No ADR created when no architectural decision exists?
 - [ ] Filename matches `[KEY]-[short-decision-summary].md` in kebab-case?
 - [ ] Existing ADRs checked for duplicates?

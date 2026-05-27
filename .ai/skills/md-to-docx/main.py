@@ -44,7 +44,7 @@ class Converter:
             markdown_text,
             extensions=["tables", "fenced_code", "sane_lists", "nl2br"],
         )
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(html, "lxml")
 
         doc = Document()
         section = doc.sections[0]
@@ -116,6 +116,40 @@ class Converter:
         run.font.size = Pt(10)
         self._set_run_color(run, color_key, bold=bold)
 
+    def _add_hyperlink(
+        self, paragraph, url: str, text: str, font_size: int = 11
+    ) -> None:
+        part = paragraph.part
+        r_id = part.relate_to(
+            url,
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+            is_external=True,
+        )
+        hyperlink = OxmlElement("w:hyperlink")
+        hyperlink.set(qn("r:id"), r_id)
+        r = OxmlElement("w:r")
+        rPr = OxmlElement("w:rPr")
+        c = OxmlElement("w:color")
+        c.set(qn("w:val"), PALETTE["accent"])
+        rPr.append(c)
+        u = OxmlElement("w:u")
+        u.set(qn("w:val"), "single")
+        rPr.append(u)
+        rFonts = OxmlElement("w:rFonts")
+        rFonts.set(qn("w:ascii"), "Segoe UI")
+        rFonts.set(qn("w:hAnsi"), "Segoe UI")
+        rPr.append(rFonts)
+        sz = OxmlElement("w:sz")
+        sz.set(qn("w:val"), str(font_size * 2))
+        rPr.append(sz)
+        r.append(rPr)
+        t = OxmlElement("w:t")
+        t.set(qn("xml:space"), "preserve")
+        t.text = text
+        r.append(t)
+        hyperlink.append(r)
+        paragraph._p.append(hyperlink)
+
     def _extract_text(self, node: Tag) -> str:
         return " ".join(node.stripped_strings)
 
@@ -132,10 +166,14 @@ class Converter:
         if isinstance(node, NavigableString):
             text = str(node)
             if text:
-                run = paragraph.add_run(text)
-                run.font.name = "Segoe UI"
-                run.font.size = Pt(11)
-                self._set_run_color(run, "text")
+                # Skip newline-only strings between inline elements inside <p>
+                stripped = text.replace("\n", "").replace("\r", "")
+                if stripped:
+                    run = paragraph.add_run(text)
+                    run.font.name = "Segoe UI"
+                    run.font.size = Pt(11)
+                    self._set_run_color(run, "text")
+                # else: pure newline between tags — skip, don't add anything
             return
 
         if not isinstance(node, Tag):
@@ -154,14 +192,20 @@ class Converter:
             return
 
         if name == "a":
-            run = paragraph.add_run(node.get_text())
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(11)
-            self._set_run_color(run, "accent")
-            run.underline = True
+            href = node.get("href", "")
+            text = node.get_text()
+            if href:
+                self._add_hyperlink(paragraph, href, text)
+            else:
+                run = paragraph.add_run(text)
+                run.font.name = "Segoe UI"
+                run.font.size = Pt(11)
+                self._set_run_color(run, "accent")
+                run.underline = True
             return
 
-        for child in node.children:
+        children = list(node.children)
+        for child in children:
             self._append_inline_content(paragraph, child)
 
     def _populate_cell(self, cell, node: Tag, *, is_header: bool) -> None:
@@ -200,11 +244,22 @@ class Converter:
 
     def _add_list(self, doc: Document, node: Tag, style: str) -> None:
         for li in node.find_all("li", recursive=False):
-            paragraph = doc.add_paragraph(self._extract_text(li), style=style)
-            for run in paragraph.runs:
-                run.font.name = "Segoe UI"
-                run.font.size = Pt(11)
-                run.font.color.rgb = RGBColor.from_string(PALETTE["text"])
+            self._add_list_item(doc, li, style)
+
+    def _add_list_item(self, doc: Document, li: Tag, style: str) -> None:
+        paragraph = doc.add_paragraph(style=style)
+        self._set_paragraph_spacing(paragraph, after=6)
+        for child in li.children:
+            if isinstance(child, NavigableString) and not str(child).strip():
+                continue
+            if isinstance(child, Tag) and child.name in ("ul", "ol"):
+                # Nested list — process as separate list items
+                nested_style = "List Bullet 2" if style == "List Bullet" else style
+                if nested_style not in [s.name for s in doc.styles]:
+                    nested_style = style
+                self._add_list(doc, child, nested_style)
+                continue
+            self._append_inline_content(paragraph, child)
 
     def _set_table_column_widths(self, table, col_count: int) -> None:
         if col_count == 2:
@@ -294,7 +349,8 @@ class Converter:
         elif name == "p":
             paragraph = doc.add_paragraph()
             self._set_paragraph_spacing(paragraph, after=6)
-            for child in node.children:
+            children = list(node.children)
+            for child in children:
                 self._append_inline_content(paragraph, child)
         elif name == "ul":
             self._add_list(doc, node, "List Bullet")
@@ -326,7 +382,8 @@ class Converter:
                 run.font.size = Pt(10)
                 self._set_run_color(run, "code_text")
         else:
-            for child in node.children:
+            children = list(node.children)
+            for child in children:
                 self._add_block(doc, child)
 
 
