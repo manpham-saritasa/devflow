@@ -1,12 +1,10 @@
 ---
 name: dev-review-pr
-description: Review a GitHub PR across multiple quality dimensions. Supports current and past PRs. Provides structured feedback with prioritized issues and a downloadable report.
+description: Review a GitHub PR across key quality checks. Supports current and past PRs. Outputs prioritized findings and a saved report.
 triggers:
   - "review-pr"
   - "reviewpr"
   - "dev-review-pr"
-  - "review-pr --code-base"
-  - "reviewpr --code-base"
 ---
 
 ## When to Use
@@ -14,18 +12,18 @@ triggers:
 - `/review-pr [URL]` — review a specific PR (past or current)
 - `/review-pr` or `/reviewpr` — auto-detect task key from worktree and find the open PR
 - `/reviewpr [URL]` — shorthand with URL
-- `/review-pr --code-base` or `/reviewpr --code-base` — review PR against the local codebase too. Fails fast if not on the correct worktree/branch.
+- `/review-pr --code-base` or `/reviewpr --code-base` — also check the local codebase. Fail fast if not on the correct worktree/branch.
 
 ## Flags
 
 | Flag | Behavior |
 |------|----------|
 | (none) | Fetch and review from PR data only (files, diff, commits, reviews) |
-| `--code-base` | Also checks local task context, project conventions, and related source files. Fails if HEAD branch doesn't exist locally. |
+| `--code-base` | Also check local task context, project conventions, and related source files. Fail if HEAD branch does not exist locally. |
 
 ## Paths
 
-Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables are defined there.
+Read shared paths from `config.md`.
 
 ---
 
@@ -82,7 +80,7 @@ Usage: /review-pr https://github.com/owner/repo/pull/123
 
 ### Step 3: Fetch Full PR Data
 
-Fetch the PR metadata and all associated data in parallel:
+Fetch core PR data. If any result looks truncated, note that in the review:
 
 ```bash
 # PR metadata
@@ -103,35 +101,27 @@ Parse the results:
 
 Skip this step if `--code-base` flag is not set.
 
-**Fail fast — verify we're on the right branch:**
-```bash
-git branch --list "[HEAD_BRANCH]"
-```
-If no output: "The `[HEAD_BRANCH]` branch does not exist locally. Switch to the correct worktree first." Stop.
+**Fail fast — verify local branch context:**
+- Check that `[HEAD_BRANCH]` exists locally.
+- Prefer running from the matching worktree or branch.
+- If the branch is missing locally: stop — "The `[HEAD_BRANCH]` branch does not exist locally. Switch to the correct worktree first."
 
 **Fetch codebase context:**
 
-Task context — read requirements and plan if available:
-```bash
-cat .local/tasks/[KEY]/task.md 2>/dev/null || echo "No task folder found"
-cat .local/tasks/[KEY]/plan.md 2>/dev/null || echo "No plan found"
-```
+Task context:
+- Read `.local/tasks/[KEY]/task.md` if it exists.
+- Read `.local/tasks/[KEY]/plan.md` if it exists.
+- If task files are missing, note that and continue.
 
-Project conventions — check for linters and configs:
-```bash
-ls .editorconfig .phpcs.xml .phpcs.xml.dist .eslintrc* tsconfig.json .rubocop.yml .prettierrc* 2>/dev/null || echo "No project linting configs found"
-```
+Project conventions:
+- Inspect common project config files if present, for example lint, format, type-check, or style config.
+- Note which config files were found.
 
-Related files — for each changed file in `FILES[]`, list siblings in the same directory:
-```bash
-for file in [FILES]; do
-  dir=$(dirname "$file")
-  echo "-- $dir/"
-  ls "$dir/" 2>/dev/null
-done
-```
+Related files:
+- For each changed file in `FILES[]`, inspect nearby files in the same directory when useful.
+- Use this only to understand local patterns, naming, and architecture.
 
-Store these as `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]` for use in review dimensions below.
+Store as `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]`.
 
 ### Step 4: Extract Task Key
 
@@ -139,47 +129,44 @@ If `KEY` was already extracted from the branch name in Step 1, use it.
 
 Otherwise, extract `KEY` from `PR_TITLE` or `HEAD_BRANCH` via regex `([A-Z0-9]+-\d+)` (case-insensitive).
 
-If no `KEY` found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).
+If no `KEY` found: continue without it. Show the review table, but do not save a task-folder report.
 
 ### Step 4a: Fetch Task Context (Jira)
 
-If `KEY` was found, attempt to fetch the Jira task description for fit check context. This requires `.env` in the repo root with Jira credentials:
+If `KEY` was found, try to fetch Jira task context for fit check. This needs Jira credentials in repo-root `.env`:
 
 ```
-JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=RMASUP
-JIRA_EMAIL=john.doe@saritasa.com
-JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+JIRA_COMPANY_DOMAIN=your-company
+JIRA_PROJECT_KEY=PROJ
+JIRA_EMAIL=user@example.com
+JIRA_API_TOKEN=your-token-here
 ```
 
 If `.env` exists and has all required fields:
-```bash
-source .env
-curl -s -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
-  "https://$JIRA_COMPANY_DOMAIN.atlassian.net/rest/api/3/issue/$KEY" \
-  | jq '{summary: .fields.summary, description: .fields.description}' 2>/dev/null || \
-  python -c "import sys,json; d=json.load(sys.stdin); print(json.dumps({'summary': d['fields']['summary'], 'description': d['fields']['description']}, indent=2))" || \
-  echo "Jira fetch failed (no jq or python available)"
-```
+- Read Jira credentials from `.env` safely.
+- Fetch the Jira issue JSON for `[KEY]` from the Atlassian issue API.
+- Extract at least:
+  - `JIRA_SUMMARY` — task title
+  - `JIRA_DESCRIPTION` — task description / requirements
+- If structured parsing tools are unavailable, note that Jira fetch could not be parsed cleanly.
 
-Parse the result:
-- `JIRA_SUMMARY` — task title
-- `JIRA_DESCRIPTION` — task description / requirements
+**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` as the main fit-check source.
 
-**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.
-
-**If Jira fetch fails** (no `.env`, missing credentials, network error): note it and rely on the PR body, branch name, and commit messages for context. The fit check will be less thorough — mention this limitation in the report.
+**If Jira fetch fails** (no `.env`, missing credentials, network error): note it and rely on PR body, branch name, and commit messages. Mention this limit in the report.
 
 ### Step 5: Review Across Dimensions
 
-Analyze the PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across every dimension below. For each issue found, assign:
+Analyze PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across each dimension below.
 
-Additional context sources, depending on flags:
+Extra context sources:
 - `--code-base`: also use `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]`
 - Jira available (Step 4a): also use `JIRA_DESCRIPTION`
 
 **Rule — capture exact file and line for every finding.**
-Every finding in the table below must include the precise source file path and line number from the diff. These exact values will be reused in Step 8 to post review comments. Do not use approximate or remembered values — verify each line number from the `DIFF` output during the review.
+Every finding in the table below must include the exact source file path and line number from the diff. Reuse these exact values in Step 8. Do not guess. Verify each line from `DIFF`.
+
+Only create inline findings for RIGHT-side added or modified diff lines.
+If a finding has no valid inline review location, keep it in the report and review table, but do not post it as a PR thread in Step 8.
 
 | Field | Description |
 |-------|-------------|
@@ -208,6 +195,8 @@ Regardless of Jira availability:
 - Does the PR scope match what the branch name or task key suggests?
 - Are changes scoped appropriately, or is there scope creep?
 - Does `PR_BODY` reference necessary context (tickets, decisions, trade-offs)?
+
+PR hygiene:
 - Do commit messages follow the convention? (`{action} {description} #KEY`)
 - Are the changes logically grouped into sensible commits?
 
@@ -262,7 +251,7 @@ Regardless of Jira availability:
 
 ### Step 6: Present Review Table
 
-Display all findings as a table sorted by Priority (Critical → Low):
+Show all findings in a table sorted by Priority (Critical → Low):
 
 ```
 ## PR Review — [PR_TITLE]
@@ -297,7 +286,7 @@ Ensure the `TASK_DIR` exists:
 mkdir -p "[TASK_DIR]"
 ```
 
-Report format — the `## Findings` table preserves the exact file paths and line numbers from Step 5 for reuse in Step 8:
+Report format — keep exact file paths and line numbers from Step 5 for reuse in Step 8:
 
 ```markdown
 # PR Feedback — [KEY]
@@ -330,7 +319,7 @@ Report format — the `## Findings` table preserves the exact file paths and lin
 [Any additional context, strengths observed, or recommendations for future work.]
 ```
 
-If no `KEY` was found, display the report content in the chat instead and inform the user:
+If no `KEY` was found, show the report in chat and tell the user:
 ```
 No task key detected. Report displayed above — save manually if needed.
 ```
@@ -341,7 +330,7 @@ After the report is generated, ask the user: "Post these findings as a pending r
 
 If `no`: skip to Step 9.
 
-If `yes`: post each finding as a comment thread in a single pending (unsubmitted) review.
+If `yes`: post each finding as a comment thread in one pending review.
 
 **Step 8a: Get PR Node ID**
 
@@ -359,7 +348,7 @@ query {
 
 **Step 8b: Create the Review (body only)**
 
-Create an empty pending review with just a body. **Do not include `event`** — this keeps it in PENDING state:
+Create an empty pending review with only a body. **Do not include `event`** — this keeps it PENDING:
 ```bash
 REVIEW_ID=$(gh api graphql --jq '.data.addPullRequestReview.pullRequestReview.id' \
   -f query='
@@ -377,22 +366,20 @@ mutation($prId: ID!, $body: String!) {
 
 **Step 8c: Add Comment Threads**
 
-For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:
+For each finding with a specific file and line number, add a thread to the review.
 
-**Do not re-derive file paths or line numbers.** Read them directly from the `## Findings` table in the feedback report or the review table shown in Step 6. The values were verified against the diff in Step 5.
+**Do not re-derive file paths or line numbers.** Read them from the `## Findings` table in the feedback report or the Step 6 review table.
 
-```python
-import json, subprocess
+Before posting a thread:
+- Confirm the finding maps to a valid RIGHT-side inline review location.
+- Build the GraphQL variables safely using a structured JSON payload.
+- Prefer a scripting tool or API client that can send nested JSON reliably.
+- Do not hand-build complex JSON strings if that risks escaping errors.
 
-threads = [
-    {
-        "path": "src/Example.cs",
-        "line": 42,
-        "body": "**[Medium] Fit Check** Issue summary\n\n**Suggested:** Suggested solution"
-    },
-]
+GraphQL mutation shape:
 
-query = '''mutation($prId: ID!, $reviewId: ID!, $path: String!, $line: Int!, $body: String!) {
+```graphql
+mutation($prId: ID!, $reviewId: ID!, $path: String!, $line: Int!, $body: String!) {
   addPullRequestReviewThread(input: {
     pullRequestId: $prId
     pullRequestReviewId: $reviewId
@@ -401,37 +388,28 @@ query = '''mutation($prId: ID!, $reviewId: ID!, $path: String!, $line: Int!, $bo
     side: RIGHT
     body: $body
   }) { thread { id } }
-}'''
-
-for t in threads:
-    payload = {
-        'query': query,
-        'variables': {
-            'prId': '[PR_NODE_ID]',
-            'reviewId': '[REVIEW_ID]',
-            'path': t['path'],
-            'line': t['line'],
-            'body': t['body']
-        }
-    }
-    result = subprocess.run(
-        ['gh', 'api', 'graphql', '--input', '-'],
-        input=json.dumps(payload), capture_output=True, text=True
-    )
+}
 ```
 
 Rules for threads:
 - `path` — the Checked File path from the findings table
-- `line` — the Checked Line number in the source file (not diff position). If line is a range (e.g. `27-34`), use the start line.
-- `side` — always `RIGHT` (the new version of the file)
+- `line` — the Checked Line number in the source file, not diff position. If line is a range (for example `27-34`), use the start line.
+- `side` — always `RIGHT`
 - `body` — `**[Priority] Review Category** Issue Summary\n\n**Suggested:** Suggested Solution`
-- Only include findings with a specific file and line number. Skip report-level findings (line is `—`).
+- Only include findings with a specific file and line number.
+- Only include findings whose line is visible on the RIGHT side of the PR diff as an added or modified line.
+- Skip report-level findings (line is `—`) and any finding whose inline location cannot be confirmed.
+
+If posting a thread fails, do not retry blindly. Record the failed finding, attempted `path` and `line`, and the API error. Continue with the remaining findings when safe, then report partial success.
+
+Do not claim full posting success unless every intended thread was created.
 
 ```
 ✅ Pending review created on PR #[PR_NUMBER]
    Review ID: [review_id]
    State: PENDING
    PR: [PR_URL]
+   Threads posted: [POSTED_COUNT]/[INTENDED_COUNT]
 ```
 
 Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."
@@ -444,6 +422,8 @@ Tell the user: "The review is pending — go to the PR page to review, edit, and
 Issues found: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
 Verdict: [Changes requested | Approved with suggestions | Approved]
 Report: [TASK_DIR/pr-feedback-[KEY].md]
+Context limits: [none | Jira unavailable, fit check based on PR metadata only | key not found, report not saved to task folder | PR data may be truncated]
+Pending review: [not posted | posted [POSTED_COUNT]/[INTENDED_COUNT] threads]
 
 PR: [PR_URL]
 ```
@@ -468,4 +448,6 @@ PR: [PR_URL]
 - [ ] User asked about posting pending review?
 - [ ] Pending review created with no `event` field?
 - [ ] Threads added via `addPullRequestReviewThread` with `path`, `line`, `side: RIGHT`?
-- [ ] Report-level findings (line = `—`) skipped from comments?
+- [ ] Only RIGHT-side added/modified diff lines used for inline comments?
+- [ ] Report-level findings (line = `—`) and unconfirmed inline locations skipped from comments?
+- [ ] Partial thread-post failures reported accurately?
