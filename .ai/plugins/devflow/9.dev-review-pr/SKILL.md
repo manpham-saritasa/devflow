@@ -147,6 +147,9 @@ Analyze the PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR
 
 If `--code-base` was used, also leverage `TASK_CONTEXT`, `PROJECT_CONFIGS`, and `RELATED_FILES[]` for deeper analysis against actual project code.
 
+**Rule — capture exact file and line for every finding.**
+Every finding in the table below must include the precise source file path and line number from the diff. These exact values will be reused in Step 8 to post review comments. Do not use approximate or remembered values — verify each line number from the `DIFF` output during the review.
+
 | Field | Description |
 |-------|-------------|
 | **Priority** | `Critical`, `High`, `Medium`, `Low` |
@@ -256,7 +259,7 @@ Ensure the `TASK_DIR` exists:
 mkdir -p "[TASK_DIR]"
 ```
 
-Report format:
+Report format — the `## Findings` table preserves the exact file paths and line numbers from Step 5 for reuse in Step 8:
 
 ```markdown
 # PR Feedback — [KEY]
@@ -337,6 +340,8 @@ mutation($prId: ID!, $body: String!) {
 **Step 8c: Add Comment Threads**
 
 For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:
+
+**Do not re-derive file paths or line numbers.** Read them directly from the `## Findings` table in the feedback report or the review table shown in Step 6. The values were verified against the diff in Step 5.
 
 ```python
 import json, subprocess

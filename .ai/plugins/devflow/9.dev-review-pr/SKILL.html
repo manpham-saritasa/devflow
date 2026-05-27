@@ -457,7 +457,9 @@ done
 <p>If no <code>KEY</code> found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).</p>
 <h3>Step 5: Review Across Dimensions</h3>
 <p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:  </p>
-<p>If <code>--code-base</code> was used, also leverage <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for deeper analysis against actual project code.</p>
+<p>If <code>--code-base</code> was used, also leverage <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for deeper analysis against actual project code.  </p>
+<p><strong>Rule — capture exact file and line for every finding.</strong><br>
+Every finding in the table below must include the precise source file path and line number from the diff. These exact values will be reused in Step 8 to post review comments. Do not use approximate or remembered values — verify each line number from the <code>DIFF</code> output during the review.</p>
 <table>
 <thead>
 <tr>
@@ -591,7 +593,7 @@ Files changed: [count] | +[additions] -[deletions] | [N] commits
 <p>Ensure the <code>TASK_DIR</code> exists:</p>
 <pre><code class="language-bash">mkdir -p &quot;[TASK_DIR]&quot;
 </code></pre>
-<p>Report format:</p>
+<p>Report format — the <code>## Findings</code> table preserves the exact file paths and line numbers from Step 5 for reuse in Step 8:</p>
 <pre><code class="language-markdown"># PR Feedback — [KEY]
 
 **PR:** [PR_TITLE]
@@ -655,7 +657,8 @@ mutation($prId: ID!, $body: String!) {
  -f body=&quot;Automated review from dev-review-pr skill. The user will review and submit.&quot;)
 </code></pre>
 <p><strong>Step 8c: Add Comment Threads</strong>  </p>
-<p>For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:</p>
+<p>For each finding that has a specific file and line number, add a thread to the review. Use Python to build the JSON payload since bash has trouble with complex nested JSON:  </p>
+<p><strong>Do not re-derive file paths or line numbers.</strong> Read them directly from the <code>## Findings</code> table in the feedback report or the review table shown in Step 6. The values were verified against the diff in Step 5.</p>
 <pre><code class="language-python">import json, subprocess
 
 threads = [
