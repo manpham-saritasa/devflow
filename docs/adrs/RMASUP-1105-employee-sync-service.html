@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -602,12 +612,18 @@ a:hover {
 <li><a target="_blank" href="https://github.com/saritasa-nest/rma-authentication/pull/781">PR #781</a> — fix for mail nickname retrieval.</li>
 </ul>
 </li>
-<li><strong>Plan evidence:</strong>
-    None — no local plan file available.</li>
-<li><strong>Review evidence:</strong>
-    PR #749 reviewed and approved with corrections for employee field handling.</li>
-<li><strong>Related ADRs / prior tasks:</strong>
-    None — first Azure AD integration ADR in this repository.</li>
+<li>
+<p><strong>Plan evidence:</strong>
+    None — no local plan file available.</p>
+</li>
+<li>
+<p><strong>Review evidence:</strong>
+    PR #749 reviewed and approved with corrections for employee field handling.</p>
+</li>
+<li>
+<p><strong>Related ADRs / prior tasks:</strong>
+    None — first Azure AD integration ADR in this repository.</p>
+</li>
 </ul>
 </section>
 <section class="section">

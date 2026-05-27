@@ -584,30 +584,6 @@ a:hover {
 </tbody>
 </table>
 </section>
-<section class="section">
-<h2>9. Open Questions</h2>
-<div class="block-grid">
-<div class="block-card"><p class="q"><strong>Q1:</strong> Who will handle the Azure setup steps needed for the migration assessment?</p><p class="a"><strong>A1:</strong> Either Saritasa gets the required Azure access, or the client team runs the setup and shares the assessment output.</p></div>
-<div class="block-card"><p class="q"><strong>Q2:</strong> Should this recommendation be framed only around GEO migration, or as the first step toward a future shared GEO and RMA environment?</p><p class="a"><strong>A2:</strong> Preferred framing is GEO first, with a future shared environment kept as the expected direction but not treated as a final committed scope yet.</p></div>
-<div class="block-card"><p class="q"><strong>Q3:</strong> Is the client comfortable keeping the SSRS engine on a small VM in the short term while the databases move first?</p><p class="a"><strong>A3:</strong> Current recommendation is yes, because it keeps the heavy SQL workload on Managed Instance while isolating the smaller SSRS engine as a separate workstream.</p></div>
-</div>
-</section>
-<section class="section">
-<h2>10. Supporting Evidence</h2>
-<ul>
-<li><strong>Task evidence:</strong> The Jira task asks for setup guidelines and best practices for the new SQL server, with GEO moving first and RMA likely moving later to reduce the cost and effort of managing two servers at the same time.</li>
-<li><strong>Plan evidence:</strong> Comments recommend Azure SQL Managed Instance over Azure SQL Database or staying on a VM because of better SQL Server compatibility, SSRS catalog support, removal of Windows Server overhead, and built-in high availability and backups.</li>
-<li><strong>Review evidence:</strong> Comments state that a migration assessment should reveal compatibility blockers, affected objects, SKU recommendation, and cost estimates. They also note that Azure access is needed to run the assessment, and that some procedures depend on local Windows disk.</li>
-<li><strong>Related ADRs / prior tasks:</strong> <code>None</code>.</li>
-</ul>
-</section>
-<section class="section">
-<h2>11. Review Guidance</h2>
-<ul>
-<li>Future changes in this area should keep the managed-platform direction unless assessment results or business limits show a clear blocker.</li>
-<li>Revisit this ADR if the assessment shows major incompatibility, if cost is not acceptable, if Azure access cannot be obtained, if a full component list changes the migration shape, or if SSRS requirements force a different design.</li>
-</ul>
-</section>
   </main>
 </body>
 </html>
