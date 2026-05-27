@@ -141,6 +141,34 @@ Otherwise, extract `KEY` from `PR_TITLE` or `HEAD_BRANCH` via regex `([A-Z0-9]+-
 
 If no `KEY` found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).
 
+### Step 4a: Fetch Task Context (Jira)
+
+If `KEY` was found, attempt to fetch the Jira task description for fit check context. This requires `.env` in the repo root with Jira credentials:
+
+```
+JIRA_COMPANY_DOMAIN=saritasa
+JIRA_PROJECT_KEY=RMASUP
+JIRA_EMAIL=john.doe@saritasa.com
+JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+```
+
+If `.env` exists and has all required fields:
+```bash
+source .env
+curl -s -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+  "https://$JIRA_COMPANY_DOMAIN.atlassian.net/rest/api/3/issue/$KEY" \
+  | jq '{summary: .fields.summary, description: .fields.description, acceptanceCriteria: .fields.customfield_*}' 2>/dev/null || echo "Jira fetch failed"
+```
+
+Parse the result:
+- `JIRA_SUMMARY` — task title
+- `JIRA_DESCRIPTION` — task description / requirements
+- `JIRA_ACCEPTANCE_CRITERIA` — acceptance criteria if available
+
+**If Jira fetch succeeds:** use `JIRA_DESCRIPTION` and `JIRA_ACCEPTANCE_CRITERIA` in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.
+
+**If Jira fetch fails** (no `.env`, missing credentials, network error): note it and rely on the PR body, branch name, and commit messages for context. The fit check will be less thorough — mention this limitation in the report.
+
 ### Step 5: Review Across Dimensions
 
 Analyze the PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across every dimension below. For each issue found, assign:
@@ -166,6 +194,13 @@ Priority definitions:
 - `Low` — style preference, minor consistency, documentation, nitpick
 
 #### 5a. Fit Check
+
+If Jira task context was fetched in Step 4a (`JIRA_DESCRIPTION`, `JIRA_ACCEPTANCE_CRITERIA`), use it as the primary source of truth:
+- Does the implementation satisfy every acceptance criterion?
+- Are there any requirements in the task that are not addressed in this PR?
+- Does the PR scope match the task description, or is there scope creep / incomplete work?
+
+Regardless of Jira availability:
 - Does the PR title and description clearly explain what and why?
 - Does the PR scope match what the branch name or task key suggests?
 - Are changes scoped appropriately, or is there scope creep?
@@ -419,6 +454,8 @@ PR: [PR_URL]
 - [ ] `--code-base` flag respected — fails fast if branch not local?
 - [ ] Codebase context fetched when `--code-base` is set?
 - [ ] Task key extracted when possible?
+- [ ] Jira task context fetched when `.env` available?
+- [ ] Fit check uses Jira requirements when available, or notes limitation when not?
 - [ ] All review dimensions checked?
 - [ ] Issues assigned correct priority?
 - [ ] Review table sorted by priority?

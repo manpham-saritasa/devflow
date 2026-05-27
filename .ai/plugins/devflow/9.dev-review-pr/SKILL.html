@@ -455,6 +455,27 @@ done
 <p>If <code>KEY</code> was already extracted from the branch name in Step 1, use it.  </p>
 <p>Otherwise, extract <code>KEY</code> from <code>PR_TITLE</code> or <code>HEAD_BRANCH</code> via regex <code>([A-Z0-9]+-\d+)</code> (case-insensitive).  </p>
 <p>If no <code>KEY</code> found: continue without it (the report will not be saved to a task folder, but the table review will still be shown).</p>
+<h3>Step 4a: Fetch Task Context (Jira)</h3>
+<p>If <code>KEY</code> was found, attempt to fetch the Jira task description for fit check context. This requires <code>.env</code> in the repo root with Jira credentials:</p>
+<pre><code>JIRA_COMPANY_DOMAIN=saritasa
+JIRA_PROJECT_KEY=RMASUP
+JIRA_EMAIL=john.doe@saritasa.com
+JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+</code></pre>
+<p>If <code>.env</code> exists and has all required fields:</p>
+<pre><code class="language-bash">source .env
+curl -s -u &quot;$JIRA_EMAIL:$JIRA_API_TOKEN&quot; \
+  &quot;https://$JIRA_COMPANY_DOMAIN.atlassian.net/rest/api/3/issue/$KEY&quot; \
+  | jq '{summary: .fields.summary, description: .fields.description, acceptanceCriteria: .fields.customfield_*}' 2&gt;/dev/null || echo &quot;Jira fetch failed&quot;
+</code></pre>
+<p>Parse the result:</p>
+<ul>
+<li><code>JIRA_SUMMARY</code> — task title</li>
+<li><code>JIRA_DESCRIPTION</code> — task description / requirements</li>
+<li><code>JIRA_ACCEPTANCE_CRITERIA</code> — acceptance criteria if available</li>
+</ul>
+<p><strong>If Jira fetch succeeds:</strong> use <code>JIRA_DESCRIPTION</code> and <code>JIRA_ACCEPTANCE_CRITERIA</code> in the Fit Check (Step 5a) to verify the PR changes match the actual task requirements.  </p>
+<p><strong>If Jira fetch fails</strong> (no <code>.env</code>, missing credentials, network error): note it and rely on the PR body, branch name, and commit messages for context. The fit check will be less thorough — mention this limitation in the report.</p>
 <h3>Step 5: Review Across Dimensions</h3>
 <p>Analyze the PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across every dimension below. For each issue found, assign:  </p>
 <p>If <code>--code-base</code> was used, also leverage <code>TASK_CONTEXT</code>, <code>PROJECT_CONFIGS</code>, and <code>RELATED_FILES[]</code> for deeper analysis against actual project code.  </p>
@@ -502,6 +523,13 @@ Every finding in the table below must include the precise source file path and l
 <li><code>Low</code> — style preference, minor consistency, documentation, nitpick</li>
 </ul>
 <h4>5a. Fit Check</h4>
+<p>If Jira task context was fetched in Step 4a (<code>JIRA_DESCRIPTION</code>, <code>JIRA_ACCEPTANCE_CRITERIA</code>), use it as the primary source of truth:</p>
+<ul>
+<li>Does the implementation satisfy every acceptance criterion?</li>
+<li>Are there any requirements in the task that are not addressed in this PR?</li>
+<li>Does the PR scope match the task description, or is there scope creep / incomplete work?</li>
+</ul>
+<p>Regardless of Jira availability:</p>
 <ul>
 <li>Does the PR title and description clearly explain what and why?</li>
 <li>Does the PR scope match what the branch name or task key suggests?</li>
@@ -728,6 +756,8 @@ PR: [PR_URL]
 <li class="task-list-item"><input type="checkbox" disabled/> <code>--code-base</code> flag respected — fails fast if branch not local?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Codebase context fetched when <code>--code-base</code> is set?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Task key extracted when possible?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Jira task context fetched when <code>.env</code> available?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fit check uses Jira requirements when available, or notes limitation when not?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All review dimensions checked?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Issues assigned correct priority?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Review table sorted by priority?</li>
