@@ -89,15 +89,16 @@ Write to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case.
 - Use concrete repository terms: real services, modules, interfaces, schemas
 - Never invent technical details not supported by evidence
 
-**Section 9 — Supporting Evidence** must use clickable markdown links:
+**Section 9 — Supporting Evidence** — omit sub-items that have no content:
 
 ```
-- **Jira:** [KEY](https://[domain].atlassian.net/browse/KEY) — short summary.
-- **PR evidence:**
-    - [PR #N](https://github.com/owner/repo/pull/N) — description.
-- **Task files:** list files actually used.
-- **Related ADRs:** [ADR-001](docs/adrs/adr-001.md) — related decision, or `None`.
+- **Task evidence:** [omit this line if no task evidence]
+- **PR evidence:** [omit this line if no PRs]
+- **Related ADRs / prior tasks:** [omit this line if none, or write `None`]
+- **External references:** [omit this line if no external sources]
 ```
+
+**Section 10 — Open Questions** — omit the entire section if there are no open questions.
 
 ### Step 5: Report Result
 
@@ -121,7 +122,8 @@ Before finalizing, verify:
 - [ ] ADR reflects the decision actually implemented?
 - [ ] Used the repository ADR template exactly?
 - [ ] All placeholders replaced with real summaries?
-- [ ] Section 9 has clickable markdown links for Jira and all relevant PRs?
+- [ ] Section 9 has clickable markdown links for Jira and all relevant PRs? Empty sub-items omitted?
+- [ ] Section 10 omitted if no open questions?
 - [ ] No ADR created when no architectural decision exists?
 - [ ] Filename matches `[KEY]-[short-decision-summary].md` in kebab-case?
 - [ ] Existing ADRs checked for duplicates?

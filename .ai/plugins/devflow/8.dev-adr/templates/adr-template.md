@@ -142,7 +142,8 @@
 	[List of PRs details that support this ADR.]	
 - **Related ADRs / prior tasks:** 
 	[List of relevant prior decisions, or `None`.]
-- **External references:**
+
+### External references:
 	[List of external sources (Microsoft Learn, official docs, etc.) with clickable links that support the decision.]
 
 ***
@@ -150,11 +151,11 @@
 ## 10. Open Questions
 [Summary or explanation about the Open Questions.]
 
-- **Q1:** [Question that still needs an answer.]
-  **A1:** [Try to prefill a suggestion or options to choose.]
+**Q1:** [Question that still needs an answer.]
+**A1:** [Try to prefill a suggestion or options to choose.]
 
-- **Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
-  **A2:** [Try to prefill a suggestion or options to choose.]
+**Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
+**A2:** [Try to prefill a suggestion or options to choose.]
 
-- **Q3:** [Question that may change the final plan.]  
-  **A3:** [Try to prefill a suggestion or options to choose.]
+**Q3:** [Question that may change the final plan.]  
+**A3:** [Try to prefill a suggestion or options to choose.]

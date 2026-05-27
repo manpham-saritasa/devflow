@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -1201,35 +1201,6 @@ flowchart TD
 <li>Agent: inner worker — plan, use tools, produce results.</li>
 <li>Everything runs through MCP for tool access.</li>
 <li>Memory and rules surround everything as persistent constraints.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Slide 63 — Local repo setup</h2>
-<ul>
-<li><code>AGENTS.md</code> for shared agent guidance.</li>
-<li><code>CLAUDE.md</code> for Claude-specific onboarding.</li>
-<li><code>.ai/memory.md</code> for persistent project memory.</li>
-<li><code>.ai/agents/</code> for task agents or skills.</li>
-<li>Keep root files short.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Slide 64 — Team workflow</h2>
-<ul>
-<li>Start with clear task prompt.</li>
-<li>Load only needed context.</li>
-<li>Use shared rules and memory.</li>
-<li>Run tools for evidence.</li>
-<li>Review diffs and tests before merge.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Slide 65 — Team policy</h2>
-<ul>
-<li>One source of truth for rules.</li>
-<li>Small prompts, small memory, small skills.</li>
-<li>Store durable knowledge in files, not chat only.</li>
-<li>Every AI change is review-required.</li>
 </ul>
 </section>
   </main>
