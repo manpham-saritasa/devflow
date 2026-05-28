@@ -320,7 +320,7 @@ a:hover {
   <h1>Skill</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>dev-start</div>
-    <div class="meta-item"><span class="meta-label">description</span>Start a gitflow worktree for a Jira task. Creates a feature or hotfix branch in a sibling worktree folder, ready for development.</div>
+    <div class="meta-item"><span class="meta-label">description</span>Start a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Creates feature, hotfix, or release branches.</div>
     <div class="meta-item"><span class="meta-label">triggers</span>dev-start, devstart</div>
   </div>
 </section>
@@ -364,8 +364,16 @@ All development happens inside the worktree — the main repo stays clean.  </p>
 <td data-label="Behavior">Hotfix branch from <code>main</code></td>
 </tr>
 <tr>
+<td data-label="Flag"><code>--release</code></td>
+<td data-label="Behavior">Release branch from <code>develop</code></td>
+</tr>
+<tr>
 <td data-label="Flag"><code>--force</code></td>
 <td data-label="Behavior">Branch from current branch, skip branch-state validation</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--gitflow</code></td>
+<td data-label="Behavior">Legacy gitflow mode — branch in main clone instead of worktree</td>
 </tr>
 <tr>
 <td data-label="Flag"><code>--dry-run</code></td>
@@ -379,18 +387,47 @@ All development happens inside the worktree — the main repo stays clean.  </p>
 <h3>Step 1: Parse Input</h3>
 <ul>
 <li>Extract <code>KEY</code> from user input (regex: <code>([A-Z0-9]+-\d+)</code>).</li>
-<li>Parse flags: <code>--hotfix</code>, <code>--force</code>, <code>--dry-run</code>.</li>
+<li>Parse flags: <code>--hotfix</code>, <code>--release</code>, <code>--force</code>, <code>--gitflow</code>, <code>--dry-run</code>.</li>
 <li>If no KEY: ask user for a Jira task key. Stop if none provided.</li>
 </ul>
-<h3>Step 2: Check for Existing Worktree</h3>
-<p>Determine the repo name:</p>
+<h3>Step 1a: Detect Mode</h3>
+<p>If <code>--gitflow</code> flag is set: use <code>legacy</code> mode.  </p>
+<p>Otherwise, auto-detect:</p>
+<pre><code class="language-bash">git worktree list | wc -l
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Worktrees</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Worktrees">≥ 2</td>
+<td data-label="Mode"><code>worktree</code> — one or more sibling worktrees already exist</td>
+</tr>
+<tr>
+<td data-label="Worktrees">= 1</td>
+<td data-label="Mode"><code>legacy</code> — only the main clone, use branches directly</td>
+</tr>
+</tbody>
+</table>
+<h3>Step 2: Check for Existing Branch</h3>
+<p><strong>Worktree mode:</strong><br>
+Determine the repo name:</p>
 <pre><code class="language-bash">basename $(git rev-parse --show-toplevel)
 </code></pre>
 <p>Check if a worktree for this task already exists (match on the task key):</p>
 <pre><code class="language-bash">find &quot;../[REPO_NAME]-worktrees&quot; -maxdepth 1 -type d -name &quot;*[KEY]*&quot; 2&gt;/dev/null
 </code></pre>
 <p>If a match is found: "A worktree for <code>[KEY]</code> already exists: <code>[MATCHED_PATH]</code>. Switch to it instead: <code>cd [MATCHED_PATH]</code>". Stop.  </p>
-<p>Skip this step if <code>--dry-run</code>.</p>
+<p>Skip this step if <code>--dry-run</code>.  </p>
+<p><strong>Legacy mode:</strong><br>
+Check if a local branch for this task already exists:</p>
+<pre><code class="language-bash">git branch --list &quot;*[KEY]*&quot;
+</code></pre>
+<p>If a match is found: "A branch for <code>[KEY]</code> already exists: <code>[MATCHED_BRANCH]</code>. Switch to it: <code>git checkout [MATCHED_BRANCH]</code>". Stop.</p>
 <h3>Step 3: Validate Branch State</h3>
 <p>Run <code>git branch --show-current</code>.</p>
 <table>
@@ -405,12 +442,17 @@ All development happens inside the worktree — the main repo stays clean.  </p>
 <tr>
 <td data-label="Flag">(none, default)</td>
 <td data-label="Required branch"><code>develop</code></td>
-<td data-label="Alert if not on this branch">"You are not on <code>develop</code>. Feature branches should be created from <code>develop</code>. Switch to <code>develop</code> first or use <code>--force</code> to branch from current."</td>
+<td data-label="Alert if not on this branch">"Feature branches must start from <code>develop</code>. Switch to <code>develop</code> first or use <code>--force</code> to branch from current."</td>
 </tr>
 <tr>
 <td data-label="Flag"><code>--hotfix</code></td>
 <td data-label="Required branch"><code>main</code></td>
-<td data-label="Alert if not on this branch">"You are not on <code>main</code>. Hotfix branches should be created from <code>main</code>. Switch to <code>main</code> first."</td>
+<td data-label="Alert if not on this branch">"Hotfix branches must start from <code>main</code>. Switch to <code>main</code> first."</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--release</code></td>
+<td data-label="Required branch"><code>develop</code></td>
+<td data-label="Alert if not on this branch">"Release branches must start from <code>develop</code>. Switch to <code>develop</code> first or use <code>--force</code>."</td>
 </tr>
 <tr>
 <td data-label="Flag"><code>--force</code></td>
@@ -439,6 +481,7 @@ git rev-list --count HEAD..origin/main
 <ul>
 <li>Feature: <code>feature/proj-2145-adjust-pdf-text-spacing</code></li>
 <li>Hotfix: <code>hotfix/proj-2145-fix-login-crash</code></li>
+<li>Release: <code>release/proj-2145-version-2-1-0</code></li>
 </ul>
 <p>Rules:</p>
 <ul>
@@ -447,28 +490,30 @@ git rev-list --count HEAD..origin/main
 <li>Strip special characters, keep only a-z, 0-9, and hyphens.</li>
 </ul>
 <h3>Step 5a: Compute Short Name</h3>
-<p>Extract the short name from the branch name (strip the type prefix):</p>
+<p><strong>Worktree mode only.</strong> Extract the short name from the branch name (strip the type prefix):</p>
 <pre><code class="language-bash">SHORT_NAME=$(basename &quot;[BRANCH_NAME]&quot;)
 </code></pre>
 <p>Example: <code>feature/proj-2145-adjust-text</code> → <code>proj-2145-adjust-text</code>  </p>
-<p>This short name is used for the worktree directory path. The full branch name is kept for git.</p>
+<p>This short name is used for the worktree directory path. The full branch name is kept for git.  </p>
+<p><strong>Legacy mode:</strong> skip this step — no worktree folder needed.</p>
 <h3>Step 6: Dry-Run Preview</h3>
 <p>If <code>--dry-run</code>: display what would happen and stop. Do not create anything.</p>
 <pre><code>## Dry-Run Preview
 
+Mode: [worktree | legacy]
 Branch: [BRANCH_NAME]
-Type: [feature | hotfix | force]
+Type: [feature | hotfix | release | force]
 Task: [KEY]
 Summary: [short-summary]
-
-Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]
+[Worktree mode: Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]]
+[Legacy mode: Branch would be created in main repo]
 Task folder would be: .local/tasks/[KEY]
 </code></pre>
 <p>Stop here. Do not proceed to Steps 7-9.</p>
 <h3>Step 7: Create Task Folder</h3>
 <p>Create <code>TASK_DIR</code> if it doesn't exist.<br>
 If <code>TASK_DIR/task.md</code> or <code>TASK_DIR/raw.md</code> is missing, prefer running <code>dev-get [KEY]</code> to populate the task folder before continuing.</p>
-<h3>Step 8: Create Worktree</h3>
+<h3>Step 8: Create Branch</h3>
 <p><strong>Pre-flight — fetch latest from base branch:</strong>  </p>
 <p>Always fetch and pull the base branch before creating the worktree to ensure the worktree starts from the latest source.  </p>
 <p>Determine the base branch based on flags:</p>
@@ -489,6 +534,10 @@ If <code>TASK_DIR/task.md</code> or <code>TASK_DIR/raw.md</code> is missing, pre
 <td data-label="Base branch"><code>main</code></td>
 </tr>
 <tr>
+<td data-label="Flag"><code>--release</code></td>
+<td data-label="Base branch"><code>develop</code></td>
+</tr>
+<tr>
 <td data-label="Flag"><code>--force</code></td>
 <td data-label="Base branch">current branch (<code>git branch --show-current</code>)</td>
 </tr>
@@ -503,6 +552,7 @@ git pull origin [BASE_BRANCH]
 <pre><code class="language-bash">git branch --list &quot;[BRANCH_NAME]&quot;
 </code></pre>
 <p>If the branch exists: "Branch <code>[BRANCH_NAME]</code> already exists. Choose a different summary or delete the old branch." Stop.  </p>
+<p><strong>Worktree mode:</strong>  </p>
 <p>Verify the parent directory is writable:</p>
 <pre><code class="language-bash">test -w &quot;..&quot; &amp;&amp; echo &quot;WRITABLE&quot; || echo &quot;NOT_WRITABLE&quot;
 </code></pre>
@@ -525,14 +575,19 @@ echo &quot;Full path: $FULL_PATH&quot;
 fi
 </code></pre>
 <p>If <code>.env</code> does not exist in the repo root, skip this step silently (not all projects use a <code>.env</code> file).  </p>
-<p><strong>If worktree creation fails:</strong> report the error. If the task folder was created in Step 7, note it:<br>
-"Worktree creation failed. The task folder <code>.local/tasks/[KEY]</code> was already created — you may want to remove it if retrying with a different branch name."</p>
+<p>If worktree creation fails: report the error and note the task folder was already created.  </p>
+<p><strong>Legacy mode:</strong>  </p>
+<p>Create the branch directly in the main clone:</p>
+<pre><code class="language-bash">git checkout -b [BRANCH_NAME]
+</code></pre>
+<p>If branch creation fails: report the error and note the task folder was already created.</p>
 <h3>Step 9: Report Result</h3>
+<p><strong>Worktree mode:</strong></p>
 <pre><code>✅ Worktree ready: ../[REPO_NAME]-worktrees/[SHORT_NAME]
    Full path: [resolved absolute path]
 
 Branch: [BRANCH_NAME]
-Type: [feature | hotfix | force]
+Type: [feature | hotfix | release | force]
 Task: [KEY]
 
 Switch to worktree first:
@@ -542,7 +597,17 @@ Then start:
   Full flow:  /devflow [KEY]
   Plan only:  /dev-plan [KEY]
 </code></pre>
-<p><strong>Important:</strong> All further work must be done from the worktree folder. Always <code>cd ../[REPO_NAME]-worktrees/[SHORT_NAME]</code> before running any dev commands.</p>
+<p><strong>Important:</strong> All further work must be done from the worktree folder. Always <code>cd ../[REPO_NAME]-worktrees/[SHORT_NAME]</code> before running any dev commands.  </p>
+<p><strong>Legacy mode:</strong></p>
+<pre><code>✅ Branch ready: [BRANCH_NAME]
+
+Type: [feature | hotfix | release | force]
+Task: [KEY]
+
+You are already on the branch. Start:
+  Full flow:  /devflow [KEY]
+  Plan only:  /dev-plan [KEY]
+</code></pre>
 </section>
   </main>
 </body>

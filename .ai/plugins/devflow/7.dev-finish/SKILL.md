@@ -1,6 +1,6 @@
 ---
 name: dev-finish
-description: Finish a gitflow worktree for a Jira task. Merges the PR, deletes the worktree, and cleans up the local branch.
+description: Finish a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.
 triggers:
   - "dev-finish"
   - "devfinish"
@@ -16,8 +16,9 @@ Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables ar
 
 | Flag | Behavior |
 |------|----------|
-| (none) | Merge PR if approved, then delete worktree and branch |
-| `--worktree-only` | Delete worktree and branch only, skip PR merge |
+| (none) | Merge PR if approved, then delete worktree/branch |
+| `--worktree-only` | Delete worktree/branch only, skip PR merge |
+| `--gitflow` | Legacy gitflow mode — branch in main clone, skip worktree cleanup |
 | `--dry-run` | Preview what would happen without making changes (read-only) |
 
 ---
@@ -27,10 +28,26 @@ Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables ar
 ### Step 1: Parse Input
 
 - Extract `KEY` from user input (regex: `([A-Z0-9]+-\d+)`, case-insensitive).
-- Parse flags: `--worktree-only`, `--dry-run`.
+- Parse flags: `--worktree-only`, `--gitflow`, `--dry-run`.
 - If no KEY: detect from the current directory (see Step 2).
 
-### Step 2: Find the Worktree
+### Step 1a: Detect Mode
+
+If `--gitflow` flag is set: use `legacy` mode.
+
+Otherwise, auto-detect:
+```bash
+git worktree list | wc -l
+```
+
+| Worktrees | Mode |
+|-----------|------|
+| ≥ 2 | `worktree` — one or more sibling worktrees already exist |
+| = 1 | `legacy` — only the main clone, use branches directly |
+
+### Step 2: Find the Branch
+
+**Worktree mode:**
 
 List all worktrees:
 ```bash
@@ -58,6 +75,21 @@ Extract from the matching line:
 
 **If multiple matches:** show all and ask user to pick one.
 
+**Legacy mode:**
+
+List all local branches:
+```bash
+git branch --list "*[KEY]*"
+```
+
+If no match: "No branch found for `[KEY]`. Provide a KEY: `dev-finish [KEY]`". Stop.
+
+If multiple matches: show all and ask user to pick one.
+
+Extract:
+- `BRANCH_NAME` — the matched branch name
+- `MAIN_REPO` — the current repo root (`git rev-parse --show-toplevel`)
+
 ### Step 3: Check PR Status (Read-Only)
 
 Find the open PR for this branch (`gh pr` works from any directory):
@@ -82,15 +114,16 @@ If `--dry-run`: display what would happen and stop.
 ```
 ## Dry-Run Preview
 
+Mode: [worktree | legacy]
 Task: [KEY]
-Worktree: [WORKTREE_PATH]
+[Worktree mode: Worktree: [WORKTREE_PATH]]
 Branch: [BRANCH_NAME]
 Main repo: [MAIN_REPO]
 
 PR: [PR_URL | no PR found]
 PR status: [PR_STATUS]
 
-Action: [merge PR + delete worktree | delete worktree only | no action (blocked)]
+Action: [merge PR + delete worktree | merge PR + delete branch | delete worktree only | delete branch only | no action (blocked)]
 ```
 
 Stop here. Do not proceed to Steps 5-7.
@@ -121,7 +154,9 @@ If merge fails: report the error and stop. Do not delete the worktree.
 ✅ PR merged: [PR_URL]
 ```
 
-### Step 6: Delete Worktree
+### Step 6: Cleanup
+
+**Worktree mode:**
 
 Check if the current working directory is inside the worktree:
 ```bash
@@ -145,8 +180,26 @@ git -C "[MAIN_REPO]" branch -D "[BRANCH_NAME]" 2>/dev/null
 ```
 If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.
 
+**Legacy mode:**
+
+Switch to base branch first so you are not on the branch being deleted:
+```bash
+git checkout [BASE_BRANCH]
+```
+
+Where `BASE_BRANCH`:
+| PR base | `main` or `develop` from `gh pr view` |
+| No PR | `develop` (default) |
+
+Delete the local branch:
+```bash
+git branch -D "[BRANCH_NAME]" 2>/dev/null
+```
+If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.
+
 ### Step 7: Report Result
 
+**Worktree mode:**
 ```
 ✅ dev-finish complete for [KEY]
 
@@ -161,11 +214,20 @@ If `WAS_IN_WORKTREE = true`, add:
   cd [MAIN_REPO]
 ```
 
+**Legacy mode:**
+```
+✅ dev-finish complete for [KEY]
+
+PR: [PR_URL | skipped | no PR found]
+Branch deleted: [BRANCH_NAME]
+Switched to: [BASE_BRANCH]
+```
+
 ---
 
 ## Edge Cases
 
-- **Worktree not found:** fail fast with a clear message.
+- **Branch/worktree not found:** fail fast with a clear message.
 - **KEY not extractable from branch name:** stop and ask user to provide KEY explicitly.
 - **No `main` worktree:** fall back to `develop` for `MAIN_REPO`. If neither exists, use the first worktree listed.
 - **`gh` CLI not installed:** stop and tell user to install it (`gh auth login`).
@@ -175,3 +237,4 @@ If `WAS_IN_WORKTREE = true`, add:
 - **Merge fails:** stop, keep worktree intact, show error.
 - **Multiple worktrees matching KEY:** let user choose.
 - **Running from the worktree itself:** detect via `pwd`, warn the user their shell is in a deleted directory and show the `cd` command to escape.
+- **Task folder is kept:** `.local/tasks/[KEY]/` is intentionally preserved after finish. It contains plan, changelog, review, and PR feedback reports — useful as a snapshot of completed work.

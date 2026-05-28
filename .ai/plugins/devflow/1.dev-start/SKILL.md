@@ -1,6 +1,6 @@
 ---
 name: dev-start
-description: Start a gitflow worktree for a Jira task. Creates a feature or hotfix branch in a sibling worktree folder, ready for development.
+description: Start a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Creates feature, hotfix, or release branches.
 triggers:
   - "dev-start"
   - "devstart"
@@ -39,7 +39,9 @@ All development happens inside the worktree — the main repo stays clean.
 |------|----------|
 | (none) | Feature branch from `develop` |
 | `--hotfix` | Hotfix branch from `main` |
+| `--release` | Release branch from `develop` |
 | `--force` | Branch from current branch, skip branch-state validation |
+| `--gitflow` | Legacy gitflow mode — branch in main clone instead of worktree |
 | `--dry-run` | Validate and preview without creating worktree or task folder |
 
 ---
@@ -49,11 +51,26 @@ All development happens inside the worktree — the main repo stays clean.
 ### Step 1: Parse Input
 
 - Extract `KEY` from user input (regex: `([A-Z0-9]+-\d+)`).
-- Parse flags: `--hotfix`, `--force`, `--dry-run`.
+- Parse flags: `--hotfix`, `--release`, `--force`, `--gitflow`, `--dry-run`.
 - If no KEY: ask user for a Jira task key. Stop if none provided.
 
-### Step 2: Check for Existing Worktree
+### Step 1a: Detect Mode
 
+If `--gitflow` flag is set: use `legacy` mode.
+
+Otherwise, auto-detect:
+```bash
+git worktree list | wc -l
+```
+
+| Worktrees | Mode |
+|-----------|------|
+| ≥ 2 | `worktree` — one or more sibling worktrees already exist |
+| = 1 | `legacy` — only the main clone, use branches directly |
+
+### Step 2: Check for Existing Branch
+
+**Worktree mode:**
 Determine the repo name:
 ```bash
 basename $(git rev-parse --show-toplevel)
@@ -68,14 +85,23 @@ If a match is found: "A worktree for `[KEY]` already exists: `[MATCHED_PATH]`. S
 
 Skip this step if `--dry-run`.
 
+**Legacy mode:**
+Check if a local branch for this task already exists:
+```bash
+git branch --list "*[KEY]*"
+```
+
+If a match is found: "A branch for `[KEY]` already exists: `[MATCHED_BRANCH]`. Switch to it: `git checkout [MATCHED_BRANCH]`". Stop.
+
 ### Step 3: Validate Branch State
 
 Run `git branch --show-current`.
 
 | Flag | Required branch | Alert if not on this branch |
 |------|----------------|----------------------------|
-| (none, default) | `develop` | "You are not on `develop`. Feature branches should be created from `develop`. Switch to `develop` first or use `--force` to branch from current." |
-| `--hotfix` | `main` | "You are not on `main`. Hotfix branches should be created from `main`. Switch to `main` first." |
+| (none, default) | `develop` | "Feature branches must start from `develop`. Switch to `develop` first or use `--force` to branch from current." |
+| `--hotfix` | `main` | "Hotfix branches must start from `main`. Switch to `main` first." |
+| `--release` | `develop` | "Release branches must start from `develop`. Switch to `develop` first or use `--force`." |
 | `--force` | any | No alert. Branch from current. |
 
 **For `--hotfix`:** also check for uncommitted changes and that `main` is up to date:
@@ -109,6 +135,7 @@ Format: `[type]/[task-key-lowercase]-[short-summary]`
 Examples:
 - Feature: `feature/proj-2145-adjust-pdf-text-spacing`
 - Hotfix: `hotfix/proj-2145-fix-login-crash`
+- Release: `release/proj-2145-version-2-1-0`
 
 Rules:
 - Task key: lowercase, no spaces.
@@ -117,7 +144,7 @@ Rules:
 
 ### Step 5a: Compute Short Name
 
-Extract the short name from the branch name (strip the type prefix):
+**Worktree mode only.** Extract the short name from the branch name (strip the type prefix):
 ```bash
 SHORT_NAME=$(basename "[BRANCH_NAME]")
 ```
@@ -126,6 +153,8 @@ Example: `feature/proj-2145-adjust-text` → `proj-2145-adjust-text`
 
 This short name is used for the worktree directory path. The full branch name is kept for git.
 
+**Legacy mode:** skip this step — no worktree folder needed.
+
 ### Step 6: Dry-Run Preview
 
 If `--dry-run`: display what would happen and stop. Do not create anything.
@@ -133,12 +162,13 @@ If `--dry-run`: display what would happen and stop. Do not create anything.
 ```
 ## Dry-Run Preview
 
+Mode: [worktree | legacy]
 Branch: [BRANCH_NAME]
-Type: [feature | hotfix | force]
+Type: [feature | hotfix | release | force]
 Task: [KEY]
 Summary: [short-summary]
-
-Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]
+[Worktree mode: Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]]
+[Legacy mode: Branch would be created in main repo]
 Task folder would be: .local/tasks/[KEY]
 ```
 
@@ -149,7 +179,7 @@ Stop here. Do not proceed to Steps 7-9.
 Create `TASK_DIR` if it doesn't exist.
 If `TASK_DIR/task.md` or `TASK_DIR/raw.md` is missing, prefer running `dev-get [KEY]` to populate the task folder before continuing.
 
-### Step 8: Create Worktree
+### Step 8: Create Branch
 
 **Pre-flight — fetch latest from base branch:**
 
@@ -161,6 +191,7 @@ Determine the base branch based on flags:
 |------|-------------|
 | (none, default) | `develop` |
 | `--hotfix` | `main` |
+| `--release` | `develop` |
 | `--force` | current branch (`git branch --show-current`) |
 
 ```bash
@@ -179,6 +210,8 @@ Check the branch name is not already in use:
 git branch --list "[BRANCH_NAME]"
 ```
 If the branch exists: "Branch `[BRANCH_NAME]` already exists. Choose a different summary or delete the old branch." Stop.
+
+**Worktree mode:**
 
 Verify the parent directory is writable:
 ```bash
@@ -216,19 +249,26 @@ fi
 
 If `.env` does not exist in the repo root, skip this step silently (not all projects use a `.env` file).
 
----
+If worktree creation fails: report the error and note the task folder was already created.
 
-**If worktree creation fails:** report the error. If the task folder was created in Step 7, note it:
-"Worktree creation failed. The task folder `.local/tasks/[KEY]` was already created — you may want to remove it if retrying with a different branch name."
+**Legacy mode:**
+
+Create the branch directly in the main clone:
+```bash
+git checkout -b [BRANCH_NAME]
+```
+
+If branch creation fails: report the error and note the task folder was already created.
 
 ### Step 9: Report Result
 
+**Worktree mode:**
 ```
 ✅ Worktree ready: ../[REPO_NAME]-worktrees/[SHORT_NAME]
    Full path: [resolved absolute path]
 
 Branch: [BRANCH_NAME]
-Type: [feature | hotfix | force]
+Type: [feature | hotfix | release | force]
 Task: [KEY]
 
 Switch to worktree first:
@@ -240,3 +280,15 @@ Then start:
 ```
 
 **Important:** All further work must be done from the worktree folder. Always `cd ../[REPO_NAME]-worktrees/[SHORT_NAME]` before running any dev commands.
+
+**Legacy mode:**
+```
+✅ Branch ready: [BRANCH_NAME]
+
+Type: [feature | hotfix | release | force]
+Task: [KEY]
+
+You are already on the branch. Start:
+  Full flow:  /devflow [KEY]
+  Plan only:  /dev-plan [KEY]
+```

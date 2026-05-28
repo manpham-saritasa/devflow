@@ -44,13 +44,13 @@ devflow/
 
 | # | Skill | Benefits | Example | Non-worktree? | Note |
 |---|-------|----------|---------|:---:|---|
-| 1 | `dev-start` | Isolated workspace, auto branch + worktree | `dev-start PROJ-123` | ❌ | Requires git worktree support |
+| 1 | `dev-start` | Isolated workspace or gitflow branch, auto branch | `dev-start PROJ-123` | ✅ | `--gitflow` for legacy mode, `--release` for release branches |
 | 2 | `dev-plan` | Structured plan from task evidence + codebase | `/dev-plan PROJ-123` | ✅ | Works on any branch |
 | 3 | `dev-code` | Reads plan, implements, writes changelog | `/dev-code` | ✅ | Works on any branch |
 | 4 | `dev-review` | Review against plan + changelog, verdict | `/dev-review` | ✅ | Works on any branch |
 | 5 | `dev-ship-pr-jira` | PR + Jira comment + reports | `/dev-ship` | ✅ | `--pr-only`, `--jira-only`, `--dry-run` |
 | 6 | `dev-fix-pr` | Fix PR comments, multi-round loop | `/dev-fix-pr` | ✅ | Legacy branch fallback available |
-| 7 | `dev-finish` | Merge PR + delete worktree + cleanup | `/dev-finish` | ❌ | Requires git worktree support |
+| 7 | `dev-finish` | Merge PR + delete branch/worktree + cleanup | `/dev-finish` | ✅ | `--gitflow` for legacy mode |
 | 8 | `dev-adr` | Architecture Decision Record from evidence | `/dev-adr PROJ-123` | ✅ | Skips non-architectural tasks |
 | 9 | `dev-commit` | Stage + commit in related groups | `/dev-commit` | ✅ | Runs standalone or during dev-code |
 | 10 | `dev-get` | Pull Jira issue into task folder | `/dev-get PROJ-123` | ✅ | Writes raw.md + task.md from templates |
@@ -82,7 +82,7 @@ devflow/
 |------------|--------|
 | **GitHub-only** | Uses `gh` CLI and GitHub GraphQL API. No GitLab/Bitbucket support. |
 | **Jira-dependent** | Assumes Jira task keys (`PROJ-123`) for branch naming, task folders, and PR descriptions. |
-| **Worktree required** | `dev-start` and `dev-finish` assume git worktree workflow. Legacy branch fallback in `dev-fix-pr` only. |
+| **Worktree required** | `dev-start` and `dev-finish` support both worktree and legacy gitflow modes. Auto-detection picks the right mode. `--gitflow` flag forces legacy mode when needed. |
 | **50-thread limit** | GraphQL queries paginate at 50 review threads. Very large PRs may miss threads (pagination not yet implemented). |
 | **Agent-dependent** | Skills are markdown instructions for AI agents — not executable scripts. Requires an AI tool that reads and follows them. |
 
@@ -110,13 +110,13 @@ Use flags to skip or retry specific phases:
 
 | Trigger | What it does |
 |---------|-------------|
-| `/dev-start` or `devstart` | Create a worktree from a Jira key. Fetches latest base branch, copies `.env` to worktree. `--hotfix` branches from `main`, `--force` from current, `--dry-run` previews. |
+| `/dev-start` or `devstart` | Create a branch from a Jira key. Auto-detects worktree vs legacy gitflow mode. `--gitflow` forces legacy. `--release` creates release branch from `develop`. `--hotfix` from `main`, `--force` from current, `--dry-run` previews. |
 | `/dev-plan` | Analyze task + codebase, produce `plan.md` + `progress.md`. |
 | `/dev-code` | Read `plan.md`, implement changes, capture manual changes, write `changelog.md` with `Delivery` tracking. |
 | `/dev-review` | Review changes via `git diff`, check changelog for unlogged changes, write `review.md`, issue verdict. |
 | `/dev-ship` or `/dev-ship-pr-jira` | Create PR + comment Jira. `--pr-only`, `--jira-only`, `--dry-run`, `--technical-only`, `--from-pr [URL]`. |
 | `/dev-fix-pr` or `devfixpr` | List, plan, fix, and resolve PR review comments. Loops for multiple rounds. `--dry-run` available. |
-| `/dev-finish` or `devfinish` | Merge approved PR, delete worktree + branch. `--worktree-only` skips PR. `--dry-run` previews. |
+| `/dev-finish` or `devfinish` | Merge approved PR, delete branch/worktree + cleanup. Auto-detects worktree vs legacy. `--gitflow` forces legacy mode. `--worktree-only` skips PR. `--dry-run` previews. |
 | `/dev-adr` or `adr` | Create an ADR from completed task evidence. Skips non-architectural tasks. |
 | `/review-pr` or `/reviewpr` | Review a GitHub PR across multiple dimensions (fit, quality, naming, design, performance, security, testing). Provide a URL for any PR or run from a worktree to auto-detect the open PR. Generates a `pr-feedback-[KEY].md` report. |
 
@@ -127,9 +127,16 @@ Use flags to skip or retry specific phases:
 ### Start to finish
 
 ```bash
-# 1. Start a new task
+# 1. Start a new task (worktree mode)
 dev-start PROJ-2050
-cd ../proj-worktrees/proj-2050-login-google
+cd ../proj-api-worktrees/proj-2050-login-google
+
+# 1b. Or start in legacy gitflow mode (branch in main clone)
+dev-start PROJ-2050 --gitflow
+
+# 1c. Or create a release branch
+dev-start PROJ-3000 --release
+cd ../proj-api-worktrees/proj-3000-version-2-1-0
 
 # 2. Full pipeline (plan → code → review)
 /devflow PROJ-2050
@@ -143,6 +150,9 @@ cd ../proj-worktrees/proj-2050-login-google
 
 # 5. PR approved — merge and clean up
 /dev-finish
+
+# 5b. Or finish in legacy gitflow mode
+/dev-finish --gitflow
 
 # 6. Create ADR if architectural
 /dev-adr PROJ-2050
@@ -189,7 +199,7 @@ If a phase fails mid-pipeline, re-run the orchestrator with a phase-specific fla
 
 | Convention | Example |
 |------------|---------|
-| Branch names | `feature/proj-2145-short-summary` or `hotfix/proj-2145-fix-crash` |
+| Branch names | `feature/proj-2145-short-summary`, `hotfix/proj-2145-fix-crash`, `release/proj-3000-version-2-1-0` |
 | Commit messages | `Fix PR comments PROJ-2145` |
 | Task folder | `.local/tasks/PROJ-2145/` |
 | ADR files | `docs/adrs/PROJ-2145-short-decision.md` |
