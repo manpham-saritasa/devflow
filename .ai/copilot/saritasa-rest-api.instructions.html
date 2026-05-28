@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>REST API Guidelines (Saritasa)</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,102 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>REST API Guidelines (Saritasa)</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
-<ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
-</ul>
+<p>Follow these API design standards for generating or reviewing endpoints.</p>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
+<h2>1. General &amp; HTTP Verbs</h2>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li><strong>Format</strong>: JSON (<code>application/json</code>). Use <strong>lowerCamelCase</strong> for fields (<code>userName</code>).</li>
+<li><strong>Security</strong>: SHA-256 (or better) with salt for passwords.</li>
+<li><code>GET</code>: Retrieve data. No state changes. Cachable.</li>
+<li><code>POST</code>: Create entity / perform action.</li>
+<li><code>PUT</code>: Update entity. ID belongs in URL.</li>
+<li><code>DELETE</code>: Delete entity. ID belongs in URL.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<h2>2. Response Codes</h2>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li><code>200</code> OK</li>
+<li><code>400</code> Bad Request (Validation/business logic errors)</li>
+<li><code>401</code> Unauthorized (Not authenticated)</li>
+<li><code>403</code> Forbidden (Authenticated, lacks permission)</li>
+<li><code>404</code> Not Found</li>
+<li><code>500</code> Server Error</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+</section>
+<section class="section">
+<h2>3. Success Responses</h2>
+<p><strong>Single Entity:</strong></p>
+<pre><code class="language-json">{ &quot;id&quot;: 10, &quot;firstName&quot;: &quot;Ivan&quot; }
+</code></pre>
+<p><strong>Lists (Must support filtering/pagination/sorting):</strong><br>
+Params: <code>offset</code>, <code>limit</code>, <code>page</code>, <code>pageSize</code>, <code>orderBy</code> (<code>name:asc</code>).  </p>
+<p><em>Offset pagination:</em></p>
+<pre><code class="language-json">{
+  &quot;metadata&quot;: { &quot;offset&quot;: 100, &quot;limit&quot;: 2, &quot;totalCount&quot;: 2054 },
+  &quot;items&quot;: [ { &quot;id&quot;: 654, &quot;name&quot;: &quot;test 1&quot; } ]
+}
+</code></pre>
+<p><em>Page pagination:</em></p>
+<pre><code class="language-json">{
+  &quot;metadata&quot;: { &quot;page&quot;: 4, &quot;totalPages&quot;: 4, &quot;totalCount&quot;: 18, &quot;pageSize&quot;: 5, &quot;isFirstPage&quot;: false, &quot;isLastPage&quot;: true },
+  &quot;items&quot;: [ ]
+}
+</code></pre>
+</section>
+<section class="section">
+<h2>4. Error Responses</h2>
+<p>All errors must follow this structure. <code>debug</code> must be <code>null</code>/omitted in production.</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Validation&quot;,
+  &quot;code&quot;: &quot;10&quot;,
+  &quot;title&quot;: &quot;There are validation errors in your request.&quot;,
+  &quot;status&quot;: 400,
+  &quot;errors&quot;: [
+    { &quot;field&quot;: &quot;address.city&quot;, &quot;messages&quot;: [&quot;The field is required.&quot;] }
+  ],
+  &quot;debug&quot;: { &quot;stacktrace&quot;: &quot;...&quot; }
+}
+</code></pre>
+</section>
+<section class="section">
+<h2>5. Authentication (JWT)</h2>
+<p>Endpoints:</p>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li><code>POST /api/auth</code> (Login, returns <code>token</code> and <code>expiresIn</code>)</li>
+<li><code>PUT /api/auth</code> (Refresh)</li>
+<li><code>GET /api/auth</code> (Get current user)</li>
+<li><code>DELETE /api/auth</code> (Logout)</li>
+<li><code>POST /api/auth/forgot-password</code></li>
+<li><code>POST /api/auth/reset-password</code></li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+<p><strong>Rules:</strong></p>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li>Send JWT in <code>Authorization</code> header.</li>
+<li>Default lifetime: 2 hours. Refresh window: 2 weeks.</li>
+<li>Forgot Password: Always return <code>200 OK</code> to prevent enumeration.</li>
+<li>Reset Password: Needs <code>email</code>, <code>token</code>, <code>newPassword</code> in body.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+</section>
+<section class="section">
+<h2>6. Health Checks</h2>
+<p>Provide two endpoints:</p>
+<ul>
+<li><code>GET /liveness</code>: Kubernetes probe. Checks if process is alive (no external dependencies).</li>
+<li><code>GET /health</code>: Full system check for monitoring. Status code dictates health (<code>200</code> OK, <code>500</code> Error, <code>503</code> Dependency down). JSON is informational.</li>
+</ul>
+<p><em>Response:</em></p>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;Healthy&quot;,
+  &quot;results&quot;: [
+    { &quot;name&quot;: &quot;ping&quot;, &quot;status&quot;: &quot;Healthy&quot;, &quot;description&quot;: null }
+  ]
+}
+</code></pre>
 </section>
   </main>
 </body>

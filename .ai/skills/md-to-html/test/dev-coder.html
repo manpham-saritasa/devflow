@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -164,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -177,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -192,12 +199,46 @@ td code {
     padding: 2px 6px;
     border-radius: 9px;
 }
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
 .block-card {
     border: 1px solid var(--border);
     background: #fbfcfd;
     border-radius: 9px;
     padding: 14px 16px;
     overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
 }
 .block-grid {
     display: grid;
@@ -344,13 +385,15 @@ a:hover {
 <h2>Output to User</h2>
 <ul>
 <li>After each major item and at the end, summarize clearly for the user.</li>
-<li>The final summary should include:</li>
+<li>The final summary should include:<ul>
 <li>What changed, grouped by logical feature area.</li>
 <li>What was verified, including tests, checks, and commands run.</li>
 <li>What was not verified, with reasons.</li>
 <li>Remaining assumptions, risks, or follow-ups, or <code>None</code>.</li>
 <li>Evidence or uncertainty that should be kept in mind.</li>
 <li>Whether the work fully, partially, or did not yet satisfy the active iteration.</li>
+</ul>
+</li>
 </ul>
 </section>
 <section class="section">
@@ -387,13 +430,15 @@ a:hover {
 <ul>
 <li>Use <code>PROGRESS_TEMPLATE</code> exactly.</li>
 <li>Keep <code>progress.md</code> append-only except when updating the current iteration entry after implementation within the same active cycle.</li>
-<li>For the active iteration, record at minimum:</li>
+<li>For the active iteration, record at minimum:<ul>
 <li><code>Trigger</code></li>
 <li><code>Status</code></li>
 <li><code>Summary</code></li>
 <li><code>Files</code></li>
 <li><code>Next Action</code></li>
 <li><code>ADR Suggested</code></li>
+</ul>
+</li>
 <li><code>Status</code> after coding should normally be one of: <code>Planned</code>, <code>In Progress</code>, <code>Implemented</code>, <code>Blocked</code>, or <code>Needs Review</code>.</li>
 <li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include a short reason, but do not create the ADR.</li>
 <li>Keep entries brief and operational.</li>

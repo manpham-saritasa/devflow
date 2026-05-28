@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -164,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -177,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -192,12 +199,46 @@ td code {
     padding: 2px 6px;
     border-radius: 9px;
 }
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
 .block-card {
     border: 1px solid var(--border);
     background: #fbfcfd;
     border-radius: 9px;
     padding: 14px 16px;
     overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
 }
 .block-grid {
     display: grid;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Get Changelog</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,110 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Get Changelog</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<p>Generate changelog content for the current local branch using all available branch-related context.  </p>
+<p>Primary goal:</p>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Produce concise changelog content that can be pasted into a Jira comment or GitHub PR comment.</li>
+<li>Reflect what was actually implemented on this branch, not just what was planned in the Jira ticket.</li>
 </ul>
-</section>
-<section class="section">
-<h2>Notes for Future Iterations</h2>
+<p>Use all available inputs if present:</p>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li>User input or manual notes.</li>
+<li>Jira key, title, description, comments, acceptance criteria, linked tasks.</li>
+<li>Current branch name.</li>
+<li>PR title and PR description draft.</li>
+<li>Local commit messages.</li>
+<li>Changed files.</li>
+<li>Git diff or staged diff.</li>
+<li>Added or updated tests.</li>
+<li>Screenshots or short implementation notes.</li>
 </ul>
-</section>
-<section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<p>How to interpret sources:</p>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Use Jira and user input to understand business intent.</li>
+<li>Use the local diff, commit history, and changed files to determine what was actually changed.</li>
+<li>Use file names, symbols, selectors, routes, configuration changes, and test changes to identify scope, affected platform, and bug causes.</li>
+<li>If Jira says one thing but the diff shows a narrower implementation, describe the narrower shipped change.</li>
+<li>If the branch contains multiple distinct outcomes, split them into multiple items.</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+<p>Filtering rules:</p>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li>Include only meaningful user-visible or support-relevant changes.</li>
+<li>Exclude pure refactors, renames, formatting, comments, dead-code cleanup, dependency bumps, and test-only changes unless they changed visible behavior or explain a fix.</li>
+<li>Do not copy commit messages verbatim unless they are already clear, user-facing, and accurate.</li>
+<li>Do not mention files, classes, methods, or PR mechanics in the main bullet unless that detail is necessary for clarity.</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+<p>Classification rules:</p>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li>Added = new capabilities, new flows, new UI elements, new rules, new support behavior.</li>
+<li>Changed = updates to existing behavior, UI, wording, logic, workflow, restrictions, or calculations.</li>
+<li>Fixed = corrected bugs, broken states, incorrect calculations, layout issues, inconsistent behavior, crashes, or regressions.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+<p>Writing rules:</p>
+<ul>
+<li>Use the exact headings: Added, Changed, Fixed.</li>
+<li>Number items as [1], [2], [3].</li>
+<li>Keep each main line short, specific, and outcome-focused.</li>
+<li>Main lines should describe the delivered outcome in plain language.</li>
+<li>Sub-bullets should add non-redundant context only.</li>
+<li>Write in past tense.</li>
+<li>Preserve exact product, feature, screen, and platform names if known.</li>
+<li>Omit empty sections.</li>
+<li>Omit optional lines when they are not useful.</li>
+<li>Do not include QA steps, regression risk, testing checklist, deployment notes, or reviewer instructions.</li>
+<li>Do not overclaim. If the branch only partially implements the Jira task, describe only what is supported by the branch.</li>
+</ul>
+<p>Field rules:</p>
+<ul>
+<li>Added</li>
+<li>Purpose: why the new item was introduced.</li>
+<li>
+<p>Details: optional scope or useful context.</p>
+</li>
+<li>
+<p>Changed</p>
+</li>
+<li>Reason: why the existing behavior was updated.</li>
+<li>
+<p>Impact: optional resulting effect.</p>
+</li>
+<li>
+<p>Fixed</p>
+</li>
+<li>Root cause: why the bug happened, based on branch evidence and Jira context.</li>
+<li>Resolution: what was changed to fix it, based on the implementation.</li>
+</ul>
+<p>Output format:</p>
+<pre><code class="language-md">#Changelog for [JIRA TASK ID] — [Task summary]
+
+## Added
+**[1] - Added [item].**
+
+  - Purpose: ...
+  - Details: ...   // optional
+
+## Changed
+**[1] - Changed [item].**
+
+  - Reason: ...
+  - Impact: ...   // optional
+
+## Fixed
+**[1] - Fixed [item].**
+
+  - Root cause: ...
+  - Resolution: ...
+</code></pre>
+<p>Final checks:</p>
+<ul>
+<li>Every item is supported by branch evidence or Jira context.</li>
+<li>Main lines are readable in a Jira or PR comment.</li>
+<li>Sub-bullets add information instead of repeating the main line.</li>
+<li>The result is concise, accurate, and ready to paste.</li>
+</ul>
 </section>
   </main>
 </body>

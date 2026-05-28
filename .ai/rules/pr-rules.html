@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -181,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -195,6 +198,13 @@ td code {
     background: #eef3f7;
     padding: 2px 6px;
     border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
 }
 .block-card {
     border: 1px solid var(--border);
@@ -308,11 +318,6 @@ a:hover {
   <main class="page">
 <section class="header">
   <h1>Github PR fixing rules</h1>
-  <div class="meta">
-    <div class="meta-item"><span class="meta-label">Overlap rule</span>If a comment led to both a code change and a reply, use the code change status (🔧 Fixed or ✅ Resolved). Code change supersedes reply.</div>
-    <div class="meta-item"><span class="meta-label">Kept rule</span>If a human has already replied to the thread with a decision to defer or keep (e.g., "Keep it for now"), mark it as 🔒 Kept — not 🔴 Open.</div>
-    <div class="meta-item"><span class="meta-label">How to resolve</span>Use the GraphQL <code>resolveReviewThread</code> mutation.</div>
-  </div>
 </section>
 <section class="section">
 <div class="blockquotes">

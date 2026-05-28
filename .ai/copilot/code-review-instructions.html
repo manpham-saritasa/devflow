@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Code Review Instructions</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,74 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Code Review Instructions</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<h2>Role &amp; Priorities</h2>
+<p>Review changes as a maintainer.<br>
+Priorities: (1) Safety/Security, (2) Correctness, (3) Reuse, (4) Scope, (5) Style.</p>
+</section>
+<section class="section">
+<h2>Core Review Behavior</h2>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Read changes in context. Do not guess; ask if behavior, scope, or risk is unclear.</li>
+<li>Prioritize bugs, security risks, broken contracts, and duplicated business logic.</li>
+<li>Be concise. Reference exact code. Group repeated issues.</li>
+<li>Say what is wrong, why it breaks rules, and what to do instead.</li>
+<li>Ignore minor style nitpicks unless they violate repository guidelines.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
+<h2>Hard Stops (MUST BLOCK PR)</h2>
+<p>Block approval immediately for:</p>
+<ol>
+<li>Bugs breaking correctness or data integrity.</li>
+<li>Security holes (unvalidated input, hardcoded secrets, missing <code>[Authorize]</code> checks).</li>
+<li>Business logic duplicated 3+ times instead of using a shared abstraction.</li>
+<li>Destructive/irreversible changes without explicit confirmation.</li>
+</ol>
+</section>
+<section class="section">
+<h2>Correctness &amp; Quality</h2>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li>Identify logic bugs, unsafe assumptions, and missing edge cases.</li>
+<li>Flag dead code, unused parameters, hidden side effects, and over-engineering.</li>
+<li>Ensure error handling is explicit (no silent failures).</li>
+<li>Avoid premature optimization, but flag heavy operations on hot paths.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<h2>Reuse vs. Duplication</h2>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Flag duplicated business logic or repeated patterns. </li>
+<li>If the same rule/validation appears 2+ times, demand extraction to one authoritative implementation.</li>
+<li><em>Example:</em> ✅ Extract <code>ValidateEmail()</code> to a utility. ❌ Copy the same regex into 3 controllers.</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+</section>
+<section class="section">
+<h2>Architecture &amp; Design</h2>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li>Respect existing boundaries and separation of concerns.</li>
+<li>Flag tight coupling and unclear contracts. </li>
+<li>Prefer composition over duplication.</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+</section>
+<section class="section">
+<h2>Security &amp; Reliability</h2>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li>Flag unvalidated input reaching sensitive operations (SQL, shells).</li>
+<li>Check authorization, data safety, and failure recovery.</li>
+<li>Call out patterns that may cause inconsistent state.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+</section>
+<section class="section">
+<h2>Testing &amp; Documentation</h2>
+<ul>
+<li>Ensure new behavior, bug fixes, and extracted shared logic have relevant tests.</li>
+<li>Flag fragile tests that depend heavily on implementation details.</li>
+<li>Demand clearer code over explanatory comments for confusing logic.</li>
+<li>Call out outdated or misleading comments.</li>
+</ul>
 </section>
   </main>
 </body>

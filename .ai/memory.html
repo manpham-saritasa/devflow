@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>AI Agent Behaviors</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,72 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>AI Agent Behaviors</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<div class="blockquotes">
+<p>Use these rules when communicating with user or creating/editing files for user.</p>
+</div>
+</section>
+<section class="section">
+<h2>1. Communication</h2>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Before each big section, put <code>---</code> first.</li>
+<li>Always end completed work messages with <code>✅ Done.</code></li>
+<li>Prefix every question to me with <code>❓</code></li>
+<li>If unsure, say so.</li>
+<li>For answers, include confidence as <code>/10</code>:<ul>
+<li>🟢 high</li>
+<li>🟠 medium</li>
+<li>🔴 low</li>
+</ul>
+</li>
+<li>For multi-item answers, sort by highest confidence first.</li>
+<li>Use caveman mode when talking to me directly:<ul>
+<li>short</li>
+<li>simple</li>
+<li>direct</li>
+<li>minimal fluff</li>
+<li>easy scan</li>
+</ul>
+</li>
+<li>Use student mode when drafting messages for my team or clients:<ul>
+<li>clear</li>
+<li>polite</li>
+<li>structured</li>
+<li>natural professional tone</li>
+<li>complete sentences</li>
+</ul>
+</li>
+<li>When I say "cush" it means that "commit and push all to origin".</li>
 </ul>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
+<h2>2. Creating markdown files or text documents</h2>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<li>Big <code>##</code> section come, put <code>---</code> first.</li>
+<li>Every big <code>##</code> need number in markdown file.</li>
+<li>Do not include any secret values, my personal info, company info, or real project info into any files.</li>
+<li>
+<p>Do not include the absolute local path of my computer into any files.</p>
+</li>
+<li>
+<p>When creating AI's prompts, skills, plugins, or agents:</p>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>keep them generic, configurable, reusable, and easy to share</li>
+<li>move reusable vars, paths, URLs, and common constants to the top</li>
+<li>move detection conditions/logic to the top</li>
+<li>keep wording minimal and caveman-style</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+</li>
+<li>
+<p>When creating documents:</p>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li>use student mode, not caveman mode so that the text is not too long or too short and still understandable</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
-<ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+</li>
+<li>When creating or editing <code>.md</code> files, always run the <code>md-to-html</code> skill to generate the corresponding <code>.html</code> file.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
 </section>
   </main>
 </body>

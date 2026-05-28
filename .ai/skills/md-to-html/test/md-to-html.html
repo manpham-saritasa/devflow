@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill: md-to-html</title>
+  <title>Md To Html</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -164,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -177,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -192,12 +199,46 @@ td code {
     padding: 2px 6px;
     border-radius: 9px;
 }
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
 .block-card {
     border: 1px solid var(--border);
     background: #fbfcfd;
     border-radius: 9px;
     padding: 14px 16px;
     overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
 }
 .block-grid {
     display: grid;
@@ -276,8 +317,7 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <div class="eyebrow">Skill</div>
-  <h1>md-to-html</h1>
+  <h1>Md To Html</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>md-to-html</div>
     <div class="meta-item"><span class="meta-label">description</span>Convert Markdown files into polished standalone HTML files using a clean card-based layout, embedded CSS, responsive tables, and readable document styling.</div>
@@ -285,19 +325,26 @@ a:hover {
   </div>
 </section>
 <section class="section">
+<h1>Skill: md-to-html</h1>
+</section>
+<section class="section">
 <h2>Purpose</h2>
-<p>Use this skill when the user wants to:
-- Convert a Markdown file into an HTML file.
-- Turn notes, reports, specs, proposals, plans, or documentation into a shareable HTML page.
-- Reuse the same visual style across multiple Markdown-based documents.
-- Produce a readable HTML document instead of plain Markdown.</p>
-<p>This skill is specifically for:
-- Documentation pages.
-- Reports.
-- Technical notes.
-- Project plans.
-- Internal writeups.
-- Client-facing or team-facing documents.</p>
+<p>Use this skill when the user wants to:</p>
+<ul>
+<li>Convert a Markdown file into an HTML file.</li>
+<li>Turn notes, reports, specs, proposals, plans, or documentation into a shareable HTML page.</li>
+<li>Reuse the same visual style across multiple Markdown-based documents.</li>
+<li>Produce a readable HTML document instead of plain Markdown.</li>
+</ul>
+<p>This skill is specifically for:</p>
+<ul>
+<li>Documentation pages.</li>
+<li>Reports.</li>
+<li>Technical notes.</li>
+<li>Project plans.</li>
+<li>Internal writeups.</li>
+<li>Client-facing or team-facing documents.</li>
+</ul>
 </section>
 <section class="section">
 <h2>Output rules</h2>
@@ -376,18 +423,20 @@ a:hover {
 <li>Lists inside tables should render with real HTML lists.</li>
 </ul>
 <h3>Colors</h3>
-<p>Use this approved palette by default:
-- Page background: <code>#f6f7f9</code>
-- Primary surface: <code>#ffffff</code>
-- Secondary surface: <code>#f1f4f8</code>
-- Main text: <code>#1f2937</code>
-- Muted text: <code>#5b6574</code>
-- Border: <code>#d9e0e7</code>
-- Accent: <code>#0f766e</code>
-- Accent soft: <code>#e6f4f1</code>
-- Warning: <code>#9a3412</code>
-- Shadow: <code>0 10px 30px rgba(15, 23, 42, 0.08)</code>
-- Base radius: <code>14px</code></p>
+<p>Use this approved palette by default:</p>
+<ul>
+<li>Page background: <code>#f6f7f9</code></li>
+<li>Primary surface: <code>#ffffff</code></li>
+<li>Secondary surface: <code>#f1f4f8</code></li>
+<li>Main text: <code>#1f2937</code></li>
+<li>Muted text: <code>#5b6574</code></li>
+<li>Border: <code>#d9e0e7</code></li>
+<li>Accent: <code>#0f766e</code></li>
+<li>Accent soft: <code>#e6f4f1</code></li>
+<li>Warning: <code>#9a3412</code></li>
+<li>Shadow: <code>0 10px 30px rgba(15, 23, 42, 0.08)</code></li>
+<li>Base radius: <code>14px</code></li>
+</ul>
 </section>
 <section class="section">
 <h2>Approved CSS theme</h2>
@@ -411,6 +460,7 @@ a:hover {
   --table-even-row: #f8fafc;
   --table-border: #e5e7eb;
 }
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -634,16 +684,18 @@ a:hover { text-decoration: underline; }
 <p>Run the bundled converter script:</p>
 <pre><code class="language-bash">python .ai/skills/md-to-html/main.py &lt;input.md&gt; [output.html]
 </code></pre>
-<p>If <code>output.html</code> is omitted, it writes to <code>&lt;input_stem&gt;.html</code> alongside the source file.</p>
+<p>If <code>output.html</code> is omitted, it writes to <code>&lt;input_stem&gt;.html</code> alongside the source file.  </p>
 <p>The script handles everything in one pass: Markdown parsing, card-based layout, metadata extraction, heading normalization, <code>&lt;br&gt;</code>/<code>&lt;hr&gt;</code> stripping, bullet-list-in-table-cells, <code>data-label</code> attributes for responsive tables, and Q&amp;A <code>block-card</code> grids.</p>
 </section>
 <section class="section">
 <h2>File naming</h2>
-<p>Use descriptive lowercase hyphenated filenames, for example:
-- <code>project-plan.html</code>
-- <code>technical-notes.html</code>
-- <code>migration-report.html</code>
-- <code>converted-document.html</code></p>
+<p>Use descriptive lowercase hyphenated filenames, for example:</p>
+<ul>
+<li><code>project-plan.html</code></li>
+<li><code>technical-notes.html</code></li>
+<li><code>migration-report.html</code></li>
+<li><code>converted-document.html</code></li>
+</ul>
 </section>
   </main>
 </body>

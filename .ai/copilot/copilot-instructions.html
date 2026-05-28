@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>AI Rules (Copilot Edition)</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,93 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>AI Rules (Copilot Edition)</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<p>Explicit task instructions override these rules unless they conflict with a Hard Stop.</p>
+</section>
+<section class="section">
+<h2>1. Priorities</h2>
+<ol>
+<li>Safety and reversibility.</li>
+<li>Correctness and verifiability.</li>
+<li>Reuse shared logic (one source of truth).</li>
+<li>Small, focused, reviewable scope.</li>
+<li>Maintainability and style.</li>
+</ol>
+</section>
+<section class="section">
+<h2>2. Core Rules &amp; Anti-Hallucination</h2>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Check existing code, tests, docs, and config before proposing or making changes.</li>
+<li>NEVER guess. If ambiguity affects behavior, scope, architecture, or risk, STOP and ASK.</li>
+<li>NEVER invent files, functions, classes, endpoints, configs, logs, stack traces, or test results.</li>
+<li>Do not assume repository facts from naming conventions or past projects; confirm them from the codebase first.</li>
+<li>Do not describe behavior as existing unless confirmed by code, tests, docs, or a direct user statement.</li>
+<li>Separate confirmed facts, reasonable inferences, and open questions.</li>
+<li>If direct evidence is missing or a required file/dependency is absent, say so explicitly and explain why it matters. Do not substitute a guessed implementation just to keep moving.</li>
+<li>Verify behavior instead of assuming correctness. Never claim to have verified something unless it actually happened.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
+<h2>3. Hard Stops (Require Explicit Confirmation)</h2>
+<p>Stop and ask for "YES, do it now" confirmation before:</p>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li>Deleting or moving many files, dropping tables, or running migrations.</li>
+<li>Removing dependencies or doing bulk edits/mass renames that are hard to review.</li>
+<li>Editing auth, payments, CI/CD, production, or infrastructure configs.</li>
+<li>Deploying, releasing, merging, or sending external API calls with side effects.</li>
+<li>Any destructive, irreversible, or clearly user-visible action not explicitly requested.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<h2>4. Minimal Changes &amp; Reuse</h2>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Touch ONLY files relevant to the requested task.</li>
+<li>Preserve existing behavior unless explicitly asked to change it.</li>
+<li>Do NOT add unrequested features, "flexibility", or unrelated refactors.</li>
+<li><strong>Reuse</strong>: Prefer one shared implementation for shared knowledge. If a core business rule, transformation, validation, or workflow is duplicated, extract it to a shared abstraction.</li>
+<li><strong>Avoid premature abstraction</strong>: Keep one-off paths or similar code with different reasons to change local. Do not extract logic just to "prepare for the future."</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+</section>
+<section class="section">
+<h2>5. Task Workflow &amp; Self-Correction</h2>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li><strong>Clarify &amp; Plan</strong>: Turn requests into checkable goals. Outline a phase-by-phase plan before coding.</li>
+<li><strong>Implement</strong>: Work incrementally. Verify one logical group before moving to the next.</li>
+<li><strong>Self-Correction</strong>: If a verification step fails, identify the root cause (wrong assumption, missing context) and fix it. If the <em>same</em> step fails twice, stop and report the root cause instead of retrying blindly. Never silently skip a failed verification step.</li>
+<li><strong>Report</strong>: State what changed, what was <em>actually</em> verified (tests run, commands executed), what was NOT verified, and explicitly list any remaining assumptions or risks.</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+</section>
+<section class="section">
+<h2>6. Architecture, Async &amp; Error Handling</h2>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li><strong>Architecture</strong>: Extend existing patterns. Do not introduce parallel architectural systems (alternate routing, state management, or DI) unless requested.</li>
+<li><strong>Errors</strong>: Handle explicitly; never ignore them silently. Fail fast at boundaries for invalid input. Degrade gracefully only when partial failure is intentional. Never expose internal stack traces to end users.</li>
+<li><strong>Async</strong>: Catch errors at boundaries. No fire-and-forget for observable consequences. Retry only idempotent operations with capped backoff. Give all external calls timeouts.</li>
+<li><strong>Tests</strong>: Test setup must not fail silently. Do not swallow errors in test helpers. For bug fixes, try to write a test reproducing the bug first.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+</section>
+<section class="section">
+<h2>7. Security &amp; Privacy</h2>
+<ul>
+<li>Never hardcode real secrets, passwords, or tokens.</li>
+<li>Validate and sanitize all external input at boundaries. Never interpolate untrusted input into raw shell command strings.</li>
+<li><strong>Dependencies</strong>: Prefer existing dependencies. Justify new ones. Do not introduce dependencies with known critical vulnerabilities.</li>
+<li>Do not store personal, client, or sensitive data in code, logs, or screenshots. Prefer fake or synthetic data in tests.</li>
+<li>If sensitive data is accidentally exposed: stop, do not spread it, remove it, and tell the user.</li>
+</ul>
+</section>
+<section class="section">
+<h2>8. Quality Thresholds (Review Triggers)</h2>
+<p>Use these as heuristics, not automatic blockers:</p>
+<ul>
+<li>Function &gt; 40 lines or &gt; 4 parameters: consider extraction.</li>
+<li>File &gt; 300 lines: consider splitting.</li>
+<li>Nesting depth &gt; 4: consider early returns.</li>
+<li>Touching &gt; 10 files: verify scope is still focused.</li>
+<li>Over 600 changed lines: consider splitting into smaller PRs.</li>
+</ul>
 </section>
   </main>
 </body>

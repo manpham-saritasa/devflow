@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -398,14 +398,14 @@ gh pr diff [NUMBER] --repo [OWNER]/[REPO]
 <li>Use concrete repository terms: real services, modules, interfaces, schemas</li>
 <li>Never invent technical details not supported by evidence</li>
 </ul>
-<p><strong>Section 10 — Supporting Evidence</strong> must use clickable markdown links:</p>
+<p><strong>Section 9 — Supporting Evidence</strong> — omit sub-items that have no content:</p>
 <pre><code>
-- **Jira:** [KEY](https://[domain].atlassian.net/browse/KEY) — short summary.
-- **PR evidence:**
-    - [PR #N](https://github.com/owner/repo/pull/N) — description.
-- **Task files:** list files actually used.
-- **Related ADRs:** [ADR-001](docs/adrs/adr-001.md) — related decision, or `None`.
+- **Task evidence:** [omit this line if no task evidence]
+- **PR evidence:** [omit this line if no PRs]
+- **Related ADRs / prior tasks:** [omit this line if none, or write `None`]
+- **External references:** [omit this line if no external sources]
 </code></pre>
+<p><strong>Section 10 — Open Questions</strong> — omit the entire section if there are no open questions.</p>
 <h3>Step 5: Report Result</h3>
 <pre><code>✅ ADR created: docs/adrs/[KEY]-[summary].md
 
@@ -427,7 +427,8 @@ Tradeoffs:
 <li class="task-list-item"><input type="checkbox" disabled/> ADR reflects the decision actually implemented?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Used the repository ADR template exactly?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All placeholders replaced with real summaries?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Section 10 has clickable markdown links for Jira and all relevant PRs?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Section 9 has clickable markdown links for Jira and all relevant PRs? Empty sub-items omitted?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Section 10 omitted if no open questions?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> No ADR created when no architectural decision exists?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Filename matches <code>[KEY]-[short-decision-summary].md</code> in kebab-case?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Existing ADRs checked for duplicates?</li>

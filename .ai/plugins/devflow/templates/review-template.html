@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Task Review</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,7 +317,7 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Task Review</h1>
 </section>
 <section class="section">
 <h2>Task Context</h2>
@@ -325,47 +325,97 @@ a:hover {
 <li>ID: [JIRA-KEY or task identifier]</li>
 <li>Title: [Task title]</li>
 <li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Review objective: [what this review file covers across the task lifetime]</li>
+</ul>
+</section>
+<section class="section">
+<h2>Stable Review Criteria</h2>
+<ul>
+<li>Fit criteria:<ul>
+<li>Meets task requirements and acceptance criteria.</li>
+<li>Matches active plan iteration intent and scope.</li>
+<li>Respects constraints and do-not-modify boundaries.</li>
+</ul>
+</li>
+<li>Quality criteria:<ul>
+<li>Correctness, maintainability, test adequacy, safety, and consistency with repository patterns.</li>
+</ul>
+</li>
+<li>Severity model:<ul>
+<li><code>[blocking]</code> = broken requirement, serious regression risk, security flaw, crash/data-loss risk, or critical invariant violation.</li>
+<li><code>[minor]</code> = non-blocking maintainability, consistency, readability, or verification issue.</li>
+</ul>
+</li>
 </ul>
 </section>
 <section class="section">
 <h2>Notes for Future Iterations</h2>
 <ul>
 <li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li>Append new review passes below. Do not delete prior passes.</li>
+<li>First review pass usually follows the Jira-driven first iteration; later passes may review work triggered by PR comments, reviewer findings, or direct user instructions.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<h2>Review Pass [N] — YYYY-MM-DD HH:MM ±TZ</h2>
+<p><strong>Iteration:</strong> [matching iteration number]<br>
+<strong>Trigger:</strong> [planned review | PR comments | review follow-up | user request | bug fix validation | other]<br>
+<strong>Verdict:</strong> [Pass | Pass with Changes | Fail]</p>
+<h3>Fit Check</h3>
+<p><strong>Acceptance Criteria Review</strong></p>
+<ol>
+<li>[AC or requirement] — [Pass | Partial | Fail] — [evidence]</li>
+<li>[AC or requirement] — [Pass | Partial | Fail] — [evidence]</li>
+</ol>
+<p><strong>Plan Coverage Review</strong></p>
+<ol>
+<li>[Proposed Change title or planned item] — [Pass | Partial | Fail] — [evidence]</li>
+<li>[Proposed Change title or planned item] — [Pass | Partial | Fail] — [evidence]</li>
+</ol>
+<p><strong>Scope Review</strong></p>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Unexpected files changed: [list or <code>None</code>]</li>
+<li>Scope drift: [details or <code>None</code>]</li>
+<li>Constraints / do-not-modify respected: [Yes/No + notes]</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+<p><strong>Fit Issues</strong></p>
+<ol>
+<li>[Issue or <code>None</code>.]</li>
+</ol>
+<h3>Quality Check</h3>
+<ol>
+<li>[[blocking] or [minor]] [Category] — [file:path or area]
+   - Details: [what is wrong and why it matters]
+   - Suggested fix: [specific next action]</li>
+<li>[[blocking] or [minor]] [Category] — [file:path or area]
+   - Details: [what is wrong and why it matters]
+   - Suggested fix: [specific next action]</li>
+</ol>
+<h3>Test &amp; Verification Review</h3>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li>Reviewer checks run: [commands, tests, manual review steps]</li>
+<li>Coverage assessment: [adequate / gaps]</li>
+<li>Verification gaps or regression risk: [details or <code>None</code>]</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+<h3>Changelog Review</h3>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li>Matches implementation: [Yes/No + notes]</li>
+<li>Missing or misleading entries: [details or <code>None</code>]</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+<h3>Previous Issues Status</h3>
+<ul>
+<li>[Resolved / Still open / Deferred / Not applicable]</li>
+</ul>
+<h3>ADR Suggestion</h3>
+<ul>
+<li>Suggested: [Yes/No]</li>
+<li>Reason: [short reason or <code>None</code>]</li>
+</ul>
+<h3>Final Recommendation</h3>
+<ul>
+<li>[Approve | Approve with Changes | Reject]</li>
+<li>[Required next steps or <code>None</code>]</li>
+</ul>
 </section>
   </main>
 </body>

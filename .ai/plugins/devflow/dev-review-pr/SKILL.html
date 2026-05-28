@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -430,7 +430,7 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <li><code>DIFF</code> — the full diff text</li>
 </ul>
 <p><strong>Fetch all existing review comments</strong> (must run before Step 8 to detect duplicates):</p>
-<pre><code class="language-bash">gh api repos/[OWNER]/[REPO]/pulls/[PR_NUMBER]/comments --jq '.[] | {id, path, line, body, user: .user.login, created_at}'
+<pre><code class="language-bash">gh api /repos/[OWNER]/[REPO]/pulls/[PR_NUMBER]/comments --jq '.[] | {id, path, line, body, user: .user.login, created_at}'
 </code></pre>
 <p>Store as <code>EXISTING_COMMENTS[]</code> — each entry has <code>id</code>, <code>path</code>, <code>line</code>, <code>body</code>, <code>user</code>, <code>created_at</code>.<br>
 These are the inline review comments already posted on the PR diff (by Copilot, other reviewers, or prior runs of this skill).</p>
@@ -755,10 +755,11 @@ mutation($prId: ID!, $body: String!) {
 </code></pre>
 <p>If duplicates were skipped, list them:</p>
 <pre><code>⏭️ Skipped [DUPLICATE_COUNT] duplicate finding(s) — already covered by existing comments:
+
    - [file:line] — [Issue Summary] (existing comment by @[user])
    ...
 </code></pre>
-<p>Tell t</p>he user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."</p>
+<p>Tell the user: "The review is pending — go to the PR page to review, edit, and submit the comments yourself."</p>
 <h3>Step 9: Success Output</h3>
 <pre><code>✅ Review complete for [PR_TITLE]
 

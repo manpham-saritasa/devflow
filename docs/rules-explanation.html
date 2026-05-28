@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Rules Explained — A User-Friendly Guide</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI Rules Explained — A User-Friendly Guide</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">Purpose</span>This document explains the AI coding rules in this repository in plain, accessible language. Each section below describes <em>what the rule means</em>, <em>why it exists</em>, and <em>how it helps you</em> as a developer working with AI coding assistants.</div>
+  </div>
+</section>
+<section class="section">
+<h2>1. How Rules Are Prioritized</h2>
+<p>When two rules conflict, the AI applies them in this order. Think of it as a safety-first decision ladder.</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Rule</th>
+<th>What It Means in Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Priority">1</td>
+<td data-label="Rule">Safety and reversibility</td>
+<td data-label="What It Means in Practice">The AI will never make a change it cannot undo or that could break something without asking you first.</td>
+</tr>
+<tr>
+<td data-label="Priority">2</td>
+<td data-label="Rule">Correctness and verifiability</td>
+<td data-label="What It Means in Practice">The AI checks before acting — it reads your code, runs tests, and verifies changes instead of guessing.</td>
+</tr>
+<tr>
+<td data-label="Priority">3</td>
+<td data-label="Rule">Reuse shared logic</td>
+<td data-label="What It Means in Practice">If the same logic already exists somewhere, the AI reuses it instead of copying it into a new place.</td>
+</tr>
+<tr>
+<td data-label="Priority">4</td>
+<td data-label="Rule">Small and reviewable scope</td>
+<td data-label="What It Means in Practice">Changes stay focused on your requested task. The AI won't sneak in unrelated refactors.</td>
+</tr>
+<tr>
+<td data-label="Priority">5</td>
+<td data-label="Rule">Maintainability and style</td>
+<td data-label="What It Means in Practice">Code stays clean and consistent with your project's existing style and conventions.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> You can trust that safety always wins over convenience, and that the AI will defer to you when it is unsure.  </p>
+</section>
+<section class="section">
+<h2>2. Core Rules — How the AI Behaves</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>What It Means</th>
+<th>Benefit to You</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Investigate before changing</td>
+<td data-label="What It Means">The AI reads your codebase, tests, docs, and config before making any edits.</td>
+<td data-label="Benefit to You">Fewer wrong assumptions; changes fit your project the first time.</td>
+</tr>
+<tr>
+<td data-label="Rule">Follow existing patterns</td>
+<td data-label="What It Means">The AI matches your project's architecture, naming, test style, and tech stack.</td>
+<td data-label="Benefit to You">New code looks like it belongs. No jarring style shifts.</td>
+</tr>
+<tr>
+<td data-label="Rule">Prefer the safest and smallest change</td>
+<td data-label="What It Means">The AI picks the most reversible, minimal fix that actually solves the problem.</td>
+<td data-label="Benefit to You">Lower risk of side effects; easier to review and approve.</td>
+</tr>
+<tr>
+<td data-label="Rule">Verify, don't assume</td>
+<td data-label="What It Means">The AI runs code or checks output before claiming something works.</td>
+<td data-label="Benefit to You">You get honest status updates, not false confidence.</td>
+</tr>
+<tr>
+<td data-label="Rule">State assumptions clearly</td>
+<td data-label="What It Means">When the AI must guess, it tells you what it assumed and why.</td>
+<td data-label="Benefit to You">You know exactly where the AI is uncertain and can correct it.</td>
+</tr>
+<tr>
+<td data-label="Rule">Stop and ask when ambiguous</td>
+<td data-label="What It Means">If a request is vague enough to affect architecture, risk, or scope, the AI stops and asks for clarification.</td>
+<td data-label="Benefit to You">Prevents the AI from "solving the wrong problem" creatively.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> You stay in control. The AI is a careful partner, not a reckless autopilot.  </p>
+</section>
+<section class="section">
+<h2>3. Anti-Hallucination Rules — No Making Things Up</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>What It Means</th>
+<th>Benefit to You</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Never claim to have done something it hasn't</td>
+<td data-label="What It Means">The AI won't say "I ran the tests" unless it actually ran them.</td>
+<td data-label="Benefit to You">You can trust status reports.</td>
+</tr>
+<tr>
+<td data-label="Rule">Never invent code, files, or results</td>
+<td data-label="What It Means">No imaginary functions, endpoints, tables, configs, logs, or stack traces.</td>
+<td data-label="Benefit to You">You won't waste time chasing phantom bugs or fake artifacts.</td>
+</tr>
+<tr>
+<td data-label="Rule">Confirm facts from the actual codebase</td>
+<td data-label="What It Means">Even if it "feels right" from the filename, the AI checks the real code first.</td>
+<td data-label="Benefit to You">Decisions are based on reality, not assumptions.</td>
+</tr>
+<tr>
+<td data-label="Rule">Separate facts, inferences, and unknowns</td>
+<td data-label="What It Means">The AI labels what it knows vs. what it suspects vs. what it cannot confirm.</td>
+<td data-label="Benefit to You">You can calibrate how much to trust each statement.</td>
+</tr>
+<tr>
+<td data-label="Rule">Say when evidence is missing</td>
+<td data-label="What It Means">If the AI can't access a required file or value, it tells you explicitly.</td>
+<td data-label="Benefit to You">You know what information is still needed.</td>
+</tr>
+<tr>
+<td data-label="Rule">Don't guess an implementation just to keep going</td>
+<td data-label="What It Means">The AI stops rather than filling in blanks with made-up code.</td>
+<td data-label="Benefit to You">No time wasted cleaning up fictional code later.</td>
+</tr>
+<tr>
+<td data-label="Rule">Present multiple explanations as possibilities</td>
+<td data-label="What It Means">When more than one interpretation fits, the AI lists them instead of picking one arbitrarily.</td>
+<td data-label="Benefit to You">You make the call, not the AI.</td>
+</tr>
+<tr>
+<td data-label="Rule">Sensitive claims require direct evidence</td>
+<td data-label="What It Means">Claims about security, payments, data loss, or production behavior must be backed by real evidence.</td>
+<td data-label="Benefit to You">You won't get false alarms or dangerous misinformation.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> You get honest, evidence-based answers. When the AI does not know something, it will tell you plainly — no bluffing.  </p>
+</section>
+<section class="section">
+<h2>4. Reuse Over Duplication — One Source of Truth</h2>
+<table>
+<thead>
+<tr>
+<th>Guideline</th>
+<th>When to Apply</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Guideline">Extract shared logic into a common function</td>
+<td data-label="When to Apply">Same rule appears in 2+ places (or clearly will).</td>
+<td data-label="Example"><code>ValidateEmail()</code> used in three controllers → extract to a shared helper.</td>
+</tr>
+<tr>
+<td data-label="Guideline">Avoid speculative abstractions</td>
+<td data-label="When to Apply">Logic only runs in one place — no clear need for reuse.</td>
+<td data-label="Example">Don't build a generic <code>ValidationEngine</code> when you have one validator.</td>
+</tr>
+<tr>
+<td data-label="Guideline">Name by domain intent</td>
+<td data-label="When to Apply">Abstractions should say <em>what</em> they do, not <em>how</em>.</td>
+<td data-label="Example">Good: <code>CalculateTax()</code> — Bad: <code>GenericProcessor()</code></td>
+</tr>
+<tr>
+<td data-label="Guideline">Put shared logic in the correct layer</td>
+<td data-label="When to Apply">Keep domain logic in domain, UI logic in UI, infrastructure in infra.</td>
+<td data-label="Example">A business rule lives in the domain layer, not the controller.</td>
+</tr>
+<tr>
+<td data-label="Guideline">Keep refactors and behavior changes separate</td>
+<td data-label="When to Apply">Change behavior in one commit, clean up in another.</td>
+<td data-label="Example">Easier to review and revert independently.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Good candidates for extraction:</strong></p>
+<ul>
+<li>Domain rules and validations</li>
+<li>Mapping and formatting logic</li>
+<li>Cross-cutting workflows (retry, auth checks, logging)</li>
+<li>Reusable UI components</li>
+</ul>
+<p><strong>Bad candidates for premature abstraction:</strong></p>
+<ul>
+<li>One-off code paths</li>
+<li>Similar-looking code with different reasons to change</li>
+<li>Overly clever helpers that hide simple logic</li>
+</ul>
+<p><strong>Benefit:</strong> Your codebase grows with intent. Related logic stays together; unrelated logic stays apart. No fragile abstraction pyramids.  </p>
+</section>
+<section class="section">
+<h2>5. Minimal and Surgical Changes — Just What You Asked For</h2>
+<table>
+<thead>
+<tr>
+<th>The AI Will...</th>
+<th>The AI Will Not...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="The AI Will...">Touch only files relevant to the task</td>
+<td data-label="The AI Will Not...">Add unrequested features or "future flexibility"</td>
+</tr>
+<tr>
+<td data-label="The AI Will...">Preserve existing behavior</td>
+<td data-label="The AI Will Not...">Refactor unrelated code</td>
+</tr>
+<tr>
+<td data-label="The AI Will...">Clean up only what your change made dead</td>
+<td data-label="The AI Will Not...">Reformat whole files without need</td>
+</tr>
+<tr>
+<td data-label="The AI Will...">Keep diffs small and reviewable</td>
+<td data-label="The AI Will Not...">Rewrite working code because of personal style preference</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tradeoff rule:</strong> When choosing between a tiny local patch and a small shared abstraction, prefer the shared abstraction only if it prevents real duplication of a core rule. Otherwise, keep it local.  </p>
+<p><strong>Benefit:</strong> PRs stay small, focused, and easy to review. You won't be surprised by a 50-file diff when you asked for a one-line fix.  </p>
+</section>
+<section class="section">
+<h2>6. Change Constraints — Guardrails for Quality</h2>
+<h3>6.1 Architecture</h3>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Constraint">Extend existing patterns; don't introduce new ones</td>
+<td data-label="Why It Matters">Keeps your tech stack unified and learnable.</td>
+</tr>
+<tr>
+<td data-label="Constraint">No parallel systems</td>
+<td data-label="Why It Matters">Avoids having two ways to do the same thing (two state managers, two routing systems, etc.).</td>
+</tr>
+</tbody>
+</table>
+<h3>6.2 Error Handling</h3>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Constraint">Handle errors explicitly</td>
+<td data-label="Why It Matters">No silent failures that turn into mysterious bugs later.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Fail fast at boundaries</td>
+<td data-label="Why It Matters">Catch bad input early — easier to debug.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Degrade gracefully when intentional</td>
+<td data-label="Why It Matters">When partial failure is expected (e.g., a non-critical API call), handle it cleanly.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Actionable error messages</td>
+<td data-label="Why It Matters">Users and developers know <em>what went wrong</em> and <em>what to do next</em>.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Never expose internals</td>
+<td data-label="Why It Matters">No stack traces or system paths shown to end users.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Log enough context</td>
+<td data-label="Why It Matters">Debugging later is possible without reproducing the exact scenario.</td>
+</tr>
+</tbody>
+</table>
+<h3>6.3 Async Rules</h3>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Constraint">Catch async errors at boundaries</td>
+<td data-label="Why It Matters">Unhandled promise rejections can crash or silently fail.</td>
+</tr>
+<tr>
+<td data-label="Constraint">No fire-and-forget when failure matters</td>
+<td data-label="Why It Matters">If the result matters, wait for it and handle the outcome.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Retry only idempotent operations</td>
+<td data-label="Why It Matters">Don't accidentally double-charge or double-create.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Capped exponential backoff with jitter</td>
+<td data-label="Why It Matters">Retries won't overwhelm the downstream system.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Every external call must have a timeout</td>
+<td data-label="Why It Matters">No infinite hangs waiting for a dead service.</td>
+</tr>
+</tbody>
+</table>
+<h3>6.4 Testing</h3>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Constraint">Test setup must not fail silently</td>
+<td data-label="Why It Matters">A broken test that passes is worse than no test at all.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Let assertions propagate naturally</td>
+<td data-label="Why It Matters">Don't catch and suppress assertion errors.</td>
+</tr>
+<tr>
+<td data-label="Constraint">Don't swallow errors in test helpers</td>
+<td data-label="Why It Matters">If a helper fails, the test should fail, not hide the problem.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> These constraints act as automatic guardrails. The AI won't accidentally introduce fragile error handling, blocking async calls, or silent test failures.  </p>
+</section>
+<section class="section">
+<h2>7. Hard Stops — When the AI Must Ask Before Acting</h2>
+<p>The AI will <strong>always</strong> stop and ask for explicit confirmation before doing any of these:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Category"><strong>Destructive file changes</strong></td>
+<td data-label="Examples">Deleting or moving many files; bulk edits or mass renames</td>
+</tr>
+<tr>
+<td data-label="Category"><strong>Database changes</strong></td>
+<td data-label="Examples">Dropping tables, running migrations, changing schema</td>
+</tr>
+<tr>
+<td data-label="Category"><strong>Dependency changes</strong></td>
+<td data-label="Examples">Removing dependencies</td>
+</tr>
+<tr>
+<td data-label="Category"><strong>Sensitive config</strong></td>
+<td data-label="Examples">Editing authentication, authorization, payment, production, CI/CD, infrastructure config</td>
+</tr>
+<tr>
+<td data-label="Category"><strong>Releases</strong></td>
+<td data-label="Examples">Deploying, releasing, tagging, pushing, merging</td>
+</tr>
+<tr>
+<td data-label="Category"><strong>External side effects</strong></td>
+<td data-label="Examples">Sending real emails, messages, or API calls with real effects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important rule:</strong> A past mention is not confirmation — you must re-confirm in the current message. If unsure, the AI treats the action as requiring confirmation.  </p>
+<p><strong>Benefit:</strong> No "oops" moments. Destructive and sensitive operations always require a deliberate "yes" from you first.  </p>
+</section>
+<section class="section">
+<h2>8. Auto-Stop and Self-Correction</h2>
+<p>When the AI detects that something is wrong:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Step">1</td>
+<td data-label="Action">Stop immediately. Don't continue to the next step.</td>
+</tr>
+<tr>
+<td data-label="Step">2</td>
+<td data-label="Action">Identify the root cause — wrong assumption, missing context, or implementation error.</td>
+</tr>
+<tr>
+<td data-label="Step">3</td>
+<td data-label="Action">If fixable within the task scope, correct and re-verify.</td>
+</tr>
+<tr>
+<td data-label="Step">4</td>
+<td data-label="Action">If the same step fails twice, stop and report to you. Don't retry endlessly.</td>
+</tr>
+<tr>
+<td data-label="Step">5</td>
+<td data-label="Action">If it needs a scope change, stop and explain what is needed.</td>
+</tr>
+<tr>
+<td data-label="Step">6</td>
+<td data-label="Action">Never silently skip a failed verification step.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What this looks like in practice:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>AI Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Scenario">Test fails</td>
+<td data-label="AI Behavior">Identify cause → fix → re-run → pass → continue.</td>
+</tr>
+<tr>
+<td data-label="Scenario">Test fails twice</td>
+<td data-label="AI Behavior">Stop → report root cause and blocker to you.</td>
+</tr>
+<tr>
+<td data-label="Scenario">Test fails</td>
+<td data-label="AI Behavior"><strong>Not:</strong> Assume it's a pre-existing issue and ignore it.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> The AI won't stubbornly retry a broken approach or quietly skip failing checks. It surfaces problems quickly so you can address them.  </p>
+</section>
+<section class="section">
+<h2>9. Security — Built-In Safety Rules</h2>
+<h3>9.1 Secrets and Credentials</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Never hardcode real secrets</td>
+<td data-label="Why It Matters">Prevents accidental leaks to version control.</td>
+</tr>
+<tr>
+<td data-label="Rule">Use environment variables or a secrets manager</td>
+<td data-label="Why It Matters">Secrets stay out of source code.</td>
+</tr>
+<tr>
+<td data-label="Rule">Use fake values in tests</td>
+<td data-label="Why It Matters">No real credentials exposed in test fixtures.</td>
+</tr>
+<tr>
+<td data-label="Rule">If a secret is committed, rotate it and remove from history</td>
+<td data-label="Why It Matters">Damage control when something slips through.</td>
+</tr>
+</tbody>
+</table>
+<h3>9.2 Input Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Validate all external input at boundaries</td>
+<td data-label="Why It Matters">Protects against malformed or malicious input.</td>
+</tr>
+<tr>
+<td data-label="Rule">Prefer allowlists over denylists</td>
+<td data-label="Why It Matters">Safer to say "only these are allowed" vs. "everything except these is allowed."</td>
+</tr>
+<tr>
+<td data-label="Rule">External input includes: file paths, CLI args, HTTP input, network responses, subprocess output, env vars</td>
+<td data-label="Why It Matters">Comprehensive coverage at every entry point.</td>
+</tr>
+</tbody>
+</table>
+<h3>9.3 Command Execution</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Never interpolate untrusted input into shell command strings</td>
+<td data-label="Why It Matters">Prevents command injection attacks.</td>
+</tr>
+<tr>
+<td data-label="Rule">Pass arguments as arrays or structured arguments</td>
+<td data-label="Why It Matters">Safer than building command strings manually.</td>
+</tr>
+<tr>
+<td data-label="Rule">Validate file paths and arguments before subprocess execution</td>
+<td data-label="Why It Matters">Catches malicious paths before they reach the OS.</td>
+</tr>
+</tbody>
+</table>
+<h3>9.4 Dependencies</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Prefer existing dependencies</td>
+<td data-label="Why It Matters">Keeps the dependency tree small and auditable.</td>
+</tr>
+<tr>
+<td data-label="Rule">Add new dependencies only when clearly justified</td>
+<td data-label="Why It Matters">Each new dependency is a maintenance and security commitment.</td>
+</tr>
+<tr>
+<td data-label="Rule">Document why a new dependency is needed</td>
+<td data-label="Why It Matters">Future maintainers understand the choice.</td>
+</tr>
+<tr>
+<td data-label="Rule">No dependencies with known critical vulnerabilities</td>
+<td data-label="Why It Matters">Keeps your supply chain clean.</td>
+</tr>
+<tr>
+<td data-label="Rule">Document frozen dependencies with reason and review date</td>
+<td data-label="Why It Matters">Intentional freezes won't be mistaken for neglect.</td>
+</tr>
+</tbody>
+</table>
+<h3>9.5 Secure by Default</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">New features ship in the safest sensible configuration</td>
+<td data-label="Why It Matters">Secure out of the box, not an afterthought.</td>
+</tr>
+<tr>
+<td data-label="Rule">Loosen only when needed and documented</td>
+<td data-label="Why It Matters">Every relaxation is intentional and recorded.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benefit:</strong> The AI follows security best practices by default. It won't accidentally introduce secrets, unsafe input handling, command injection, or vulnerable dependencies.  </p>
+</section>
+<section class="section">
+<h2>10. Privacy and Sensitive Data</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Never store personal, client, or confidential data in source code, logs, config, tests, comments, docs, or examples</td>
+<td data-label="Why It Matters">Prevents accidental exposure of real data.</td>
+</tr>
+<tr>
+<td data-label="Rule">Use fake or synthetic data in tests and examples</td>
+<td data-label="Why It Matters">Safe by default; no real data at risk.</td>
+</tr>
+<tr>
+<td data-label="Rule">Prefer IDs, masked values, or tokens over raw sensitive values</td>
+<td data-label="Why It Matters">Minimizes what can be exposed.</td>
+</tr>
+<tr>
+<td data-label="Rule">Minimal collection, storage, and retention</td>
+<td data-label="Why It Matters">Only keep what is actually needed.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>If sensitive data is accidentally exposed:</strong></p>
+<ol>
+<li>Stop immediately.</li>
+<li>Don't spread it further.</li>
+<li>Remove it from the change.</li>
+<li>Report what was exposed and where.</li>
+<li>Recommend cleanup and rotation.</li>
+</ol>
+<p><strong>Benefit:</strong> Your real data stays safe. The AI won't accidentally commit your API keys, client emails, or production database credentials into the repo.  </p>
+</section>
+<section class="section">
+<h2>11. Quality Thresholds — Review Triggers, Not Blockers</h2>
+<p>These are heuristics to flag potentially problematic code — they are not hard stops. Think of them as "hey, take a closer look" signals.</p>
+<h3>11.1 Code Size</h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Trigger">Function or method too long</td>
+<td data-label="Threshold">&gt; 40 lines</td>
+</tr>
+<tr>
+<td data-label="Trigger">File too long</td>
+<td data-label="Threshold">&gt; 300 lines</td>
+</tr>
+<tr>
+<td data-label="Trigger">Too many function parameters</td>
+<td data-label="Threshold">&gt; 4 parameters</td>
+</tr>
+<tr>
+<td data-label="Trigger">Nesting too deep</td>
+<td data-label="Threshold">&gt; 4 levels</td>
+</tr>
+<tr>
+<td data-label="Trigger">Long call chains</td>
+<td data-label="Threshold">&gt; 3 chained calls</td>
+</tr>
+</tbody>
+</table>
+<h3>11.2 Complexity</h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Trigger">High cyclomatic or cognitive complexity</td>
+<td data-label="Threshold">Call it out; consider simplification.</td>
+</tr>
+<tr>
+<td data-label="Trigger">Deep inheritance beyond project norms</td>
+<td data-label="Threshold">Prefer composition over deep inheritance.</td>
+</tr>
+</tbody>
+</table>
+<h3>11.3 Change Size</h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Trigger">Too many touched files</td>
+<td data-label="Threshold">&gt; 10 files — verify scope is still focused.</td>
+</tr>
+<tr>
+<td data-label="Trigger">Large diff</td>
+<td data-label="Threshold">~600 changed lines or ~30 files — consider splitting.</td>
+</tr>
+<tr>
+<td data-label="Trigger">New dependency added</td>
+<td data-label="Threshold">Justify it explicitly.</td>
+</tr>
+<tr>
+<td data-label="Trigger">Duplicated business logic</td>
+<td data-label="Threshold">Prefer shared abstraction.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exception:</strong> Generated, vendored, or config-only code usually doesn't need these thresholds enforced.  </p>
+<p><strong>Benefit:</strong> You get proactive feedback when code is getting unwieldy, but you — not the AI — make the final call on whether to refactor.  </p>
+</section>
+<section class="section">
+<h2>12. Confidence and Uncertainty — Honesty Signals</h2>
+<p>The AI labels significant claims with a confidence score so you know how much to trust each statement.</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Score</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tag">🟢</td>
+<td data-label="Score">9–10/10</td>
+<td data-label="Meaning">Very high confidence — clear evidence, strong pattern match, explicit code context.</td>
+</tr>
+<tr>
+<td data-label="Tag">🟢</td>
+<td data-label="Score">7–8/10</td>
+<td data-label="Meaning">High confidence — likely correct based on context and common patterns.</td>
+</tr>
+<tr>
+<td data-label="Tag">🟡</td>
+<td data-label="Score">5–6/10</td>
+<td data-label="Meaning">Medium confidence — reasonable, but depends on broader context or requirements.</td>
+</tr>
+<tr>
+<td data-label="Tag">🟠</td>
+<td data-label="Score">3–4/10</td>
+<td data-label="Meaning">Low confidence — possible but speculative.</td>
+</tr>
+<tr>
+<td data-label="Tag">🔴</td>
+<td data-label="Score">1–2/10</td>
+<td data-label="Meaning">Very low confidence — weak signal, caution only.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key rules:</strong></p>
+<ul>
+<li>Guesses are never presented as facts.</li>
+<li>When confidence is below 7/10, the AI tells you what missing information would raise it.</li>
+<li>When confidence cannot be determined, the AI defaults low and asks for clarification.</li>
+<li>Low-confidence assertions that matter are replaced with clarifying questions.</li>
+</ul>
+<p><strong>Benefit:</strong> You never have to wonder "is the AI sure about this?" — the confidence tag tells you at a glance, and low-confidence claims include what is needed to raise them.</p>
+</section>
+  </main>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Rovo Prompt for Jira Task Specification</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,94 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Rovo Prompt for Jira Task Specification</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<p>You are an AI assistant working inside Jira. Your goal is to transform a single Jira issue into a concise, implementation-ready task specification in Markdown, and to incorporate context from related past work items.  </p>
+<p>First, gather and read:</p>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>The full raw content of the current Jira issue, including:<ul>
+<li>Title / Summary</li>
+<li>Description</li>
+<li>Comments and discussion</li>
+<li>Issue type</li>
+<li>Priority</li>
+<li>Component(s)</li>
+<li>Environment</li>
+<li>Acceptance criteria (if any)</li>
+<li>Links to related issues</li>
+</ul>
+</li>
+<li>Any clearly related historical Jira issues from the same project (for example: issues linked to this one, issues with similar summaries, epics or stories in the same area, or issues sharing components/labels). Use these only as context; do not override the current ticket’s intent.</li>
+</ul>
+<p>Your job:</p>
+<ol>
+<li>Read ALL of the current issue’s content carefully, then skim the related historical issues to understand prior decisions, patterns, and constraints.</li>
+<li>Extract only information that is directly useful for implementation of THIS ticket.</li>
+<li>When relevant, use the historical issues to:<ul>
+<li>Identify previously agreed patterns, constraints, or modules.</li>
+<li>Populate the <code>Related Historical Tasks</code> section with the most relevant past issues and a short reason for the relationship.</li>
+</ul>
+</li>
+<li>Produce a <code>task.md</code> file in the EXACT format below.</li>
+</ol>
+<p>Important rules:</p>
+<ul>
+<li>Do NOT invent requirements that are not implied by the current Jira issue or clearly supported by its related historical issues.</li>
+<li>If something is unclear in the current issue, turn it into a question under <code>## Open Questions</code> instead of guessing, even if historical issues hint at possible answers.</li>
+<li>Constraints should be explicit and concrete (e.g. specific performance, compatibility, or integration rules), not generic fluff.</li>
+<li>Requirements and acceptance criteria must be testable and specific.</li>
+<li>Affected Modules can be approximate, but should use best-effort guesses informed by components, file paths, or historical issues.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
-<ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
-<ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
-</ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
-<ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
-</ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
-<ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
-</ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+<h2>Output format (STRICT)</h2>
+<pre><code class="language-md"># [Ticket ID]: [Ticket Title]
+
+## Overview
+[1–3 sentences summarizing the feature/fix in plain language. Focus on what changes for users or systems, not implementation details.]
+
+## Requirements
+- [Requirement 1: concrete behavior or rule derived from the current Jira issue]
+- [Requirement 2]
+- [Requirement 3, optional]
+
+## Acceptance Criteria
+- [ ] [Criterion 1: testable outcome, can be verified by QA]
+- [ ] [Criterion 2]
+- [ ] [Criterion 3, optional]
+
+## Constraints
+- [Constraint 1 (technical / business / deployment / compatibility), or remove this line if none are stated or implied]
+- [Constraint 2, optional]
+
+## Affected Modules
+- [Best-guess module/class/service names, based on Jira components, paths, description, and patterns from related historical issues]
+- [If unclear, describe at a higher level, e.g. &quot;Checkout API&quot;, &quot;Auth middleware&quot;]
+
+## Related Historical Tasks
+- [ISSUE-KEY-1]: [Short title or reason why it is related (e.g. &quot;Defined existing validation rules for this form&quot;)]
+- [ISSUE-KEY-2]: [Short title]
+
+(If there are no clearly related tasks, omit this section or leave a single bullet: &quot;- None identified&quot;.)
+
+## Open Questions
+
+Q1: &lt;Question 1 that must be answered before implementation starts&gt;  
+A1: 
+
+Q2: &lt;Question 2&gt;  
+A2: 
+
+Q3: &lt;Question 3&gt;  
+A3: 
+
+(If you only see 1–2 meaningful questions, only write Q1/A1 or Q1/A1/Q2/A2 and omit the rest.)
+
+## Technical Notes
+[Any additional technical context discovered from the current Jira issue, its comments, and the related historical issues.
+This can include data model hints, external dependencies, risk areas, or suggested edge cases to consider.]
+</code></pre>
 </section>
   </main>
 </body>

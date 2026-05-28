@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Session Tracking Rule</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,29 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Session Tracking Rule</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
-<ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<p>Every 10 minutes during a working session:</p>
+<ol>
+<li><strong>Save session state</strong> to <code>../../sessions/[session ID].md</code> with:<ul>
+<li>Summary of what was done</li>
+<li>List of files changed</li>
+<li>Key decisions made</li>
 </ul>
-</section>
-<section class="section">
-<h2>Notes for Future Iterations</h2>
-<ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
-</ul>
-</section>
-<section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
-<ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
-</ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
-<ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
-</ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
-<ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
-</ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
+</li>
+</ol>
+<p>Example from a worktree:</p>
+<pre><code>    D:\devflow-worktrees\feature\key-11-enhance-more\
+    └── ..\..\sessions\
+    ├── 2026-05-27.md
+    └── corrections.md
+</code></pre>
+<p>Resolves to: <code>D:\devflow-worktrees\sessions\</code></p>
+<ol start="2">
+<li><strong>Extract key corrections</strong> and append them to <code>../../sessions/corrections.md</code> so the AI can read them on next startup.</li>
+</ol>
+<p>The session folder (<code>../../sessions</code>) lives outside any single worktree so it persists across all feature branches.</p>
 </section>
   </main>
 </body>

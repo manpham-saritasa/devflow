@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -164,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -177,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -192,12 +199,46 @@ td code {
     padding: 2px 6px;
     border-radius: 9px;
 }
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
 .block-card {
     border: 1px solid var(--border);
     background: #fbfcfd;
     border-radius: 9px;
     padding: 14px 16px;
     overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
 }
 .block-grid {
     display: grid;
@@ -372,13 +413,15 @@ a:hover {
 <ul>
 <li>Use <code>PROGRESS_TEMPLATE</code> exactly.</li>
 <li>Keep <code>progress.md</code> append-only except when updating the current iteration entry during the same active cycle.</li>
-<li>For the active iteration, record or update at minimum:</li>
+<li>For the active iteration, record or update at minimum:<ul>
 <li><code>Trigger</code></li>
 <li><code>Status</code></li>
 <li><code>Summary</code></li>
 <li><code>Files</code></li>
 <li><code>Next Action</code></li>
 <li><code>ADR Suggested</code></li>
+</ul>
+</li>
 <li><code>Status</code> after review should normally be one of: <code>Needs Review</code>, <code>Approved</code>, <code>Approved with Changes</code>, <code>Rejected</code>, or <code>Blocked</code>.</li>
 <li><code>ADR Suggested</code> must be <code>Yes</code> or <code>No</code>. If <code>Yes</code>, include a short reason, but do not create the ADR.</li>
 </ul>
@@ -387,12 +430,14 @@ a:hover {
 <h2>ADR (Architecture Decision Records) Recommendation</h2>
 <ul>
 <li>Do not create ADR files.</li>
-<li>Set <code>ADR Suggested = Yes</code> if any of the following is true:</li>
+<li>Set <code>ADR Suggested = Yes</code> if any of the following is true:<ul>
 <li>A new third-party service or external API is integrated for the first time.</li>
 <li>A new package or library introduces a new capability or architectural pattern.</li>
 <li>An existing technical approach is explicitly replaced with a different one for the same concern.</li>
 <li>The database schema changes.</li>
 <li>The auth flow structure changes.</li>
+</ul>
+</li>
 <li>Set <code>ADR Suggested = No</code> if all changes are limited to UI styling, copy, tests, or config-only value adjustments.</li>
 <li>If <code>ADR Suggested = Yes</code>, give a short reason in both <code>review.md</code> and <code>progress.md</code>, but leave ADR creation to the user or another dedicated skill.</li>
 </ul>

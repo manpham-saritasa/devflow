@@ -119,6 +119,10 @@ ul.clean {
     margin: 0;
     padding-left: 20px;
 }
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
 ul.clean li {
     margin: 6px 0;
 }
@@ -164,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -177,7 +181,10 @@ code {
         "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
         monospace;
 }
-pre code {
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
     color: inherit;
     background: transparent;
     padding: 0;
@@ -192,12 +199,46 @@ td code {
     padding: 2px 6px;
     border-radius: 9px;
 }
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
 .block-card {
     border: 1px solid var(--border);
     background: #fbfcfd;
     border-radius: 9px;
     padding: 14px 16px;
     overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
 }
 .block-grid {
     display: grid;
@@ -320,15 +361,19 @@ a:hover {
 </section>
 <section class="section">
 <h2>Decision Triggers</h2>
-<p>Create an ADR when one or more of these is true:
-- A new third-party service or external API was introduced.
-- A new library or package introduced a new capability or architectural pattern.
-- An existing technical approach was replaced with a different one for the same concern.
-- A database schema or persistence strategy changed.
-- An auth flow, permission boundary, or trust boundary changed.
-- A significant module boundary, integration contract, background processing flow, or deployment-relevant technical decision changed.</p>
-<p>If none apply:
-- Stop and report: "No ADR needed based on the completed task evidence."</p>
+<p>Create an ADR when one or more of these is true:</p>
+<ul>
+<li>A new third-party service or external API was introduced.</li>
+<li>A new library or package introduced a new capability or architectural pattern.</li>
+<li>An existing technical approach was replaced with a different one for the same concern.</li>
+<li>A database schema or persistence strategy changed.</li>
+<li>An auth flow, permission boundary, or trust boundary changed.</li>
+<li>A significant module boundary, integration contract, background processing flow, or deployment-relevant technical decision changed.</li>
+</ul>
+<p>If none apply:</p>
+<ul>
+<li>Stop and report: "No ADR needed based on the completed task evidence."</li>
+</ul>
 </section>
 <section class="section">
 <h2>Analysis Rules</h2>
@@ -356,15 +401,23 @@ a:hover {
 </section>
 <section class="section">
 <h2>Output to User</h2>
-<p>Use this format:</p>
-<p><strong>ADR created</strong>
-- State the ADR file path and the decision title.</p>
-<p><strong>Decision captured</strong>
-- Summarize the architectural decision in 1-2 bullets.</p>
-<p><strong>Evidence used</strong>
-- List the key task files and repository evidence used.</p>
-<p><strong>Notable tradeoffs</strong>
-- List major tradeoffs, risks, or follow-up items captured in the ADR, or say <code>None</code>.</p>
+<p>Use this format:  </p>
+<p><strong>ADR created</strong></p>
+<ul>
+<li>State the ADR file path and the decision title.</li>
+</ul>
+<p><strong>Decision captured</strong></p>
+<ul>
+<li>Summarize the architectural decision in 1-2 bullets.</li>
+</ul>
+<p><strong>Evidence used</strong></p>
+<ul>
+<li>List the key task files and repository evidence used.</li>
+</ul>
+<p><strong>Notable tradeoffs</strong></p>
+<ul>
+<li>List major tradeoffs, risks, or follow-up items captured in the ADR, or say <code>None</code>.</li>
+</ul>
 </section>
 <section class="section">
 <h2>Self-Check</h2>

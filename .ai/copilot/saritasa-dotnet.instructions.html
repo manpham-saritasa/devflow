@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Saritasa Dotnet.Instructions</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,66 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Saritasa Dotnet.Instructions</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">applyTo</span>"<strong>/*.cs,</strong>/<em>.vb,</em><em>/</em>.razor,*<em>/</em>.cshtml"</div>
+  </div>
 </section>
 <section class="section">
-<h2>Task Context</h2>
+<h1>C# Code Style Instructions (Saritasa)</h1>
+<p>Follow Microsoft C# style standards with the following Saritasa additions.</p>
+</section>
+<section class="section">
+<h2>1. Identifiers &amp; Abbreviations</h2>
 <ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
+<li>Private fields do NOT start with <code>_</code> (use <code>private string id;</code>).</li>
+<li>Static fields do NOT start with <code>s_</code>.</li>
+<li>Do not use <code>protected</code>, <code>public</code>, <code>protected static</code>, or <code>public static</code> fields.</li>
+<li><strong>2-letter abbreviations</strong>: Capitalize both (e.g., <code>PK</code>, <code>EF</code>, <code>userId</code>).</li>
+<li><strong>Shortened words</strong>: Capitalize first letter only (e.g., <code>Db</code>, <code>Id</code>).</li>
+<li><strong>3+ letters</strong>: Treat as a normal word (e.g., <code>fromBmp</code>, <code>GenerateSha1()</code>).</li>
 </ul>
 </section>
 <section class="section">
-<h2>Notes for Future Iterations</h2>
+<h2>2. Formatting &amp; Braces</h2>
 <ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
+<li><strong>Allman style</strong>: Braces MUST be on a new line. Always use braces, even for single-line <code>if</code> statements.</li>
+<li><strong>Indentation</strong>: 4 spaces for C# files. 2 spaces for JSON/HTML/CSS.</li>
+<li><strong>Line Length</strong>: Max 120 characters (+/- 10).</li>
+<li><strong>Chains</strong>: Break long LINQ/method chains onto separate lines.</li>
+<li><strong>Blank lines</strong>: One blank line between methods, properties, and blocks.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
+<h2>3. English Spelling &amp; Comments</h2>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Use <strong>US English</strong> (<code>color</code>). No slang/jargon.</li>
+<li>Do NOT use contracted verbs (use <code>Do not</code> instead of <code>Don't</code>, <code>Cannot</code> instead of <code>Can't</code>).</li>
+<li>Comments and exception messages MUST end with a period (<code>.</code>).</li>
+<li>XML docs required for all <code>public</code> classes, properties, and methods.</li>
+<li>Inline comments: Space after <code>//</code>, start uppercase, end with period.</li>
+<li>Comment the "why", not the "how". No dead code.</li>
+<li>TODOs: <code>// TODO: [Initials] Description.</code></li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
+</section>
+<section class="section">
+<h2>4. Logic &amp; Naming</h2>
 <ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
+<li><strong>Conditions</strong>: Put preferred/common branch first (<code>true</code> case). Prefer early exits over nested <code>else</code>.</li>
+<li><strong>Classes</strong>: Use singular nouns for services/controllers (<code>UserController</code>, not <code>UsersController</code>).</li>
+<li><strong>Full names</strong>: Avoid cryptic abbreviations (<code>ProductCtrl</code>). Exceptions: <code>uow</code>, <code>xml</code>, <code>json</code>.</li>
 </ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
+</section>
+<section class="section">
+<h2>5. Directives &amp; Async</h2>
 <ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
+<li>Place <code>using</code> directives ABOVE the namespace.</li>
+<li>Order: System -&gt; Third-party -&gt; Application.</li>
+<li>Namespaces must map 1:1 to folder structure.</li>
+<li><strong>Async</strong>: Do NOT append <code>Async</code> to method names unless a sync version also exists in the class.</li>
+<li>Always include <code>CancellationToken</code> in async signatures.</li>
+<li>Use <code>.ConfigureAwait(false)</code> for NuGet packages/libraries.</li>
 </ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
 </section>
   </main>
 </body>

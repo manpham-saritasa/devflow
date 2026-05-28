@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Changelog</title>
+  <title>Task Progress</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,55 +317,21 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Task Changelog</h1>
+  <h1>Task Progress</h1>
 </section>
 <section class="section">
-<h2>Task Context</h2>
-<ul>
-<li>ID: [JIRA-KEY or task identifier]</li>
-<li>Title: [Task title]</li>
-<li>Repository / Project: [name]</li>
-<li>Purpose: [short task purpose]</li>
-</ul>
-</section>
-<section class="section">
-<h2>Notes for Future Iterations</h2>
-<ul>
-<li>Keep the sections above stable across the task lifetime.</li>
-<li>Append new iterations below. Do not delete prior iterations.</li>
-<li>Each iteration should describe only what was actually implemented, fixed, verified, or deferred in that pass.</li>
-</ul>
+<p>Append one block per iteration. Keep entries in chronological order. Do not delete prior iterations.</p>
 </section>
 <section class="section">
 <h2>Iteration [N] — YYYY-MM-DD HH:MM ±TZ</h2>
-<p><strong>Trigger:</strong> [Jira task | PR comments | review follow-up | user request | bug fix | scope update | other]<br>
-<strong>Status:</strong> [Implemented | Partially Implemented | Blocked | Deferred]<br>
-<strong>Delivery:</strong> [Skill | Manual | Mixed]<br>
-<strong>Plan reference:</strong> [short reference to matching plan iteration]</p>
-<h3>Summary</h3>
-<p>[1-2 sentence summary of what was delivered in this iteration.]</p>
-<h3>Added</h3>
-<p><strong>[1] - Added [item].</strong></p>
 <ul>
-<li>Purpose: ...</li>
-<li>Details: ...   // optional</li>
+<li>Trigger: [new request | review follow-up | bug fix | scope update | other]</li>
+<li>Status: [Planned | In Progress | Implemented | Needs Review | Approved | Approved with Changes | Rejected | Blocked]</li>
+<li>Summary: [1-2 sentence summary of the iteration]</li>
+<li>Files: [plan.md, changelog.md, review.md, and any key code areas if helpful]</li>
+<li>Next Action: [what should happen next]</li>
+<li>ADR Suggested: [Yes/No — short reason if Yes]</li>
 </ul>
-<h3>Changed</h3>
-<p><strong>[1] - Changed [item].</strong></p>
-<ul>
-<li>Reason: ...</li>
-<li>Impact: ...   // optional</li>
-</ul>
-<h3>Fixed</h3>
-<p><strong>[1] - Fixed [item].</strong></p>
-<ul>
-<li>Root cause: ...</li>
-<li>Resolution: ...</li>
-</ul>
-<!--  
-When Delivery is "Mixed", use the Summary to note which items were manual vs. skill.  
-When Delivery is "Skill" or "Manual", no annotation needed.  
--->
 </section>
   </main>
 </body>
