@@ -320,7 +320,7 @@ a:hover {
   <h1>Skill</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>dev-finish</div>
-    <div class="meta-item"><span class="meta-label">description</span>Finish a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.</div>
+    <div class="meta-item"><span class="meta-label">description</span>Finish a gitflow branch for a Jira task. Defaults to gitflow mode (branch in main clone). Supports worktree mode (--worktree). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.</div>
     <div class="meta-item"><span class="meta-label">triggers</span>dev-finish, devfinish</div>
   </div>
 </section>
@@ -348,7 +348,11 @@ a:hover {
 </tr>
 <tr>
 <td data-label="Flag"><code>--gitflow</code></td>
-<td data-label="Behavior">Legacy gitflow mode — branch in main clone, skip worktree cleanup</td>
+<td data-label="Behavior">Gitflow mode (default) — branch in main clone, skip worktree cleanup</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--worktree</code></td>
+<td data-label="Behavior">Worktree mode — cleanup worktree folder + branch</td>
 </tr>
 <tr>
 <td data-label="Flag"><code>--dry-run</code></td>
@@ -362,32 +366,12 @@ a:hover {
 <h3>Step 1: Parse Input</h3>
 <ul>
 <li>Extract <code>KEY</code> from user input (regex: <code>([A-Z0-9]+-\d+)</code>, case-insensitive).</li>
-<li>Parse flags: <code>--worktree-only</code>, <code>--gitflow</code>, <code>--dry-run</code>.</li>
+<li>Parse flags: <code>--worktree-only</code>, <code>--worktree</code>, <code>--dry-run</code>.</li>
 <li>If no KEY: detect from the current directory (see Step 2).</li>
 </ul>
 <h3>Step 1a: Detect Mode</h3>
-<p>If <code>--gitflow</code> flag is set: use <code>legacy</code> mode.  </p>
-<p>Otherwise, auto-detect:</p>
-<pre><code class="language-bash">git worktree list | wc -l
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Worktrees</th>
-<th>Mode</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Worktrees">≥ 2</td>
-<td data-label="Mode"><code>worktree</code> — one or more sibling worktrees already exist</td>
-</tr>
-<tr>
-<td data-label="Worktrees">= 1</td>
-<td data-label="Mode"><code>legacy</code> — only the main clone, use branches directly</td>
-</tr>
-</tbody>
-</table>
+<p>If <code>--worktree</code> flag is set: use <code>worktree</code> mode.  </p>
+<p>Otherwise, default to <code>gitflow</code> mode (branch in main clone).</p>
 <h3>Step 2: Find the Branch</h3>
 <p><strong>Worktree mode:</strong>  </p>
 <p>List all worktrees:</p>
@@ -408,7 +392,7 @@ E:/devflow-worktrees/dev-7-foo       def5678 [feature/dev-7-update-skill]
 </ul>
 <p><strong>If no match:</strong> "No worktree found for <code>[KEY]</code> on this machine." Stop.  </p>
 <p><strong>If multiple matches:</strong> show all and ask user to pick one.  </p>
-<p><strong>Legacy mode:</strong>  </p>
+<p><strong>Gitflow mode:</strong>  </p>
 <p>List all local branches:</p>
 <pre><code class="language-bash">git branch --list &quot;*[KEY]*&quot;
 </code></pre>
@@ -451,7 +435,7 @@ E:/devflow-worktrees/dev-7-foo       def5678 [feature/dev-7-update-skill]
 <p>If <code>--dry-run</code>: display what would happen and stop.</p>
 <pre><code>## Dry-Run Preview
 
-Mode: [worktree | legacy]
+Mode: [worktree | gitflow]
 Task: [KEY]
 [Worktree mode: Worktree: [WORKTREE_PATH]]
 Branch: [BRANCH_NAME]
@@ -518,7 +502,7 @@ Action: [merge PR + delete worktree | merge PR + delete branch | delete worktree
 <pre><code class="language-bash">git -C &quot;[MAIN_REPO]&quot; branch -D &quot;[BRANCH_NAME]&quot; 2&gt;/dev/null
 </code></pre>
 <p>If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.  </p>
-<p><strong>Legacy mode:</strong>  </p>
+<p><strong>Gitflow mode:</strong>  </p>
 <p>Switch to base branch first so you are not on the branch being deleted:</p>
 <pre><code class="language-bash">git checkout [BASE_BRANCH]
 </code></pre>
@@ -541,7 +525,7 @@ Branch deleted: [BRANCH_NAME]
 <pre><code>⚠️  Your shell is in a deleted directory. Switch to the main repo:
   cd [MAIN_REPO]
 </code></pre>
-<p><strong>Legacy mode:</strong></p>
+<p><strong>Gitflow mode:</strong></p>
 <pre><code>✅ dev-finish complete for [KEY]
 
 PR: [PR_URL | skipped | no PR found]

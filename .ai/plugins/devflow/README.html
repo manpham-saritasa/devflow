@@ -345,13 +345,13 @@ flowchart TD
   agent.md                    ← orchestrator (full pipeline)
   templates/                  ← shared templates (plan, changelog, review, ADR)
 
-  1.dev-start/                ← create worktree + branch
+  1.dev-start/                ← create branch (gitflow default, --worktree for worktree)
   2.dev-plan/                 ← analyze + create execution plan
   3.dev-code/                 ← implement planned changes
   4.dev-review/               ← review code against plan + criteria
   5.dev-ship-pr-jira/         ← create PR + comment Jira + generate reports
   6.dev-fix-pr/               ← fix PR review comments (multi-round loop)
-  7.dev-finish/               ← merge PR + delete worktree + cleanup
+  7.dev-finish/               ← merge PR + delete branch + cleanup
   8.dev-adr/                  ← create Architecture Decision Record
   9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
 </code></pre>
@@ -376,7 +376,7 @@ flowchart TD
 <td data-label="Benefits">Isolated workspace or gitflow branch, auto branch</td>
 <td data-label="Example"><code>dev-start PROJ-123</code></td>
 <td style="text-align: center;">✅</td>
-<td data-label="Note"><code>--gitflow</code> for legacy mode, <code>--release</code> for release branches</td>
+<td data-label="Note">Gitflow default. <code>--worktree</code> for isolated folder. <code>--release</code> for release branches</td>
 </tr>
 <tr>
 <td data-label="#">2</td>
@@ -424,7 +424,7 @@ flowchart TD
 <td data-label="Benefits">Merge PR + delete branch/worktree + cleanup</td>
 <td data-label="Example"><code>/dev-finish</code></td>
 <td style="text-align: center;">✅</td>
-<td data-label="Note"><code>--gitflow</code> for legacy mode</td>
+<td data-label="Note">Gitflow default. <code>--worktree</code> for worktree cleanup</td>
 </tr>
 <tr>
 <td data-label="#">8</td>
@@ -481,7 +481,7 @@ flowchart TD
 </tr>
 <tr>
 <td data-label="Advantage"><strong>Full lifecycle</strong></td>
-<td data-label="Detail">Covers every phase from worktree creation to PR merge to archival documentation.</td>
+<td data-label="Detail">Covers every phase from branch creation to PR merge to archival documentation.</td>
 </tr>
 <tr>
 <td data-label="Advantage"><strong>Multi-round support</strong></td>
@@ -537,8 +537,8 @@ flowchart TD
 <td data-label="Detail">Assumes Jira task keys (<code>PROJ-123</code>) for branch naming, task folders, and PR descriptions.</td>
 </tr>
 <tr>
-<td data-label="Limitation"><strong>Worktree required</strong></td>
-<td data-label="Detail"><code>dev-start</code> and <code>dev-finish</code> support both worktree and legacy gitflow modes. Auto-detection picks the right mode. <code>--gitflow</code> flag forces legacy mode when needed.</td>
+<td data-label="Limitation"><strong>Worktree</strong></td>
+<td data-label="Detail"><code>dev-start</code> and <code>dev-finish</code> default to gitflow mode. Use <code>--worktree</code> flag to switch to worktree mode when needed.</td>
 </tr>
 <tr>
 <td data-label="Limitation"><strong>50-thread limit</strong></td>
@@ -574,7 +574,7 @@ Use flags to skip or retry specific phases:</p>
 <tbody>
 <tr>
 <td data-label="Trigger"><code>/dev-start</code> or <code>devstart</code></td>
-<td data-label="What it does">Create a branch from a Jira key. Auto-detects worktree vs legacy gitflow mode. <code>--gitflow</code> forces legacy. <code>--release</code> creates release branch from <code>develop</code>. <code>--hotfix</code> from <code>main</code>, <code>--force</code> from current, <code>--dry-run</code> previews.</td>
+<td data-label="What it does">Create a branch from a Jira key. Gitflow mode by default (branch in main clone). <code>--worktree</code> for worktree mode. <code>--release</code> from <code>develop</code>, <code>--hotfix</code> from <code>main</code>, <code>--force</code> from current, <code>--dry-run</code> previews.</td>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-plan</code></td>
@@ -598,7 +598,7 @@ Use flags to skip or retry specific phases:</p>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-finish</code> or <code>devfinish</code></td>
-<td data-label="What it does">Merge approved PR, delete branch/worktree + cleanup. Auto-detects worktree vs legacy. <code>--gitflow</code> forces legacy mode. <code>--worktree-only</code> skips PR. <code>--dry-run</code> previews.</td>
+<td data-label="What it does">Merge approved PR, delete branch + cleanup. Gitflow mode by default. <code>--worktree</code> for worktree mode. <code>--worktree-only</code> skips PR. <code>--dry-run</code> previews.</td>
 </tr>
 <tr>
 <td data-label="Trigger"><code>/dev-adr</code> or <code>adr</code></td>
@@ -614,16 +614,15 @@ Use flags to skip or retry specific phases:</p>
 <section class="section">
 <h2>Examples</h2>
 <h3>Start to finish</h3>
-<pre><code class="language-bash"># 1. Start a new task (worktree mode)
+<pre><code class="language-bash"># 1. Start a new task (gitflow mode — default)
 dev-start PROJ-2050
-cd ../proj-api-worktrees/proj-2050-login-google
 
-# 1b. Or start in legacy gitflow mode (branch in main clone)
-dev-start PROJ-2050 --gitflow
+# 1b. Or start in worktree mode (isolated folder)
+dev-start PROJ-2050 --worktree
+cd ../proj-api-worktrees/proj-2050-login-google
 
 # 1c. Or create a release branch
 dev-start PROJ-3000 --release
-cd ../proj-api-worktrees/proj-3000-version-2-1-0
 
 # 2. Full pipeline (plan → code → review)
 /devflow PROJ-2050
@@ -638,8 +637,8 @@ cd ../proj-api-worktrees/proj-3000-version-2-1-0
 # 5. PR approved — merge and clean up
 /dev-finish
 
-# 5b. Or finish in legacy gitflow mode
-/dev-finish --gitflow
+# 5b. Or finish in worktree mode
+/dev-finish --worktree
 
 # 6. Create ADR if architectural
 /dev-adr PROJ-2050
@@ -648,7 +647,7 @@ cd ../proj-api-worktrees/proj-3000-version-2-1-0
 <pre><code class="language-bash">/dev-ship --from-pr https://github.com/owner/repo/pull/456
 # → shows Jira and PR reports without creating anything
 </code></pre>
-<h3>Dry-run before deleting a worktree</h3>
+<h3>Dry-run before finishing</h3>
 <pre><code class="language-bash">/dev-finish --dry-run
 # → shows what would happen without making changes
 </code></pre>

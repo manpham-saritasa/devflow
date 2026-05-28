@@ -1,6 +1,6 @@
 ---
 name: dev-start
-description: Start a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Creates feature, hotfix, or release branches.
+description: Start a gitflow branch for a Jira task. Defaults to gitflow mode (branch in main clone). Supports worktree mode (--worktree). Creates feature, hotfix, or release branches.
 triggers:
   - "dev-start"
   - "devstart"
@@ -41,7 +41,8 @@ All development happens inside the worktree — the main repo stays clean.
 | `--hotfix` | Hotfix branch from `main` |
 | `--release` | Release branch from `develop` |
 | `--force` | Branch from current branch, skip branch-state validation |
-| `--gitflow` | Legacy gitflow mode — branch in main clone instead of worktree |
+| `--gitflow` | Gitflow mode (default) — branch in main clone |
+| `--worktree` | Worktree mode — create sibling worktree folder |
 | `--dry-run` | Validate and preview without creating worktree or task folder |
 
 ---
@@ -51,22 +52,14 @@ All development happens inside the worktree — the main repo stays clean.
 ### Step 1: Parse Input
 
 - Extract `KEY` from user input (regex: `([A-Z0-9]+-\d+)`).
-- Parse flags: `--hotfix`, `--release`, `--force`, `--gitflow`, `--dry-run`.
+- Parse flags: `--hotfix`, `--release`, `--force`, `--worktree`, `--dry-run`.
 - If no KEY: ask user for a Jira task key. Stop if none provided.
 
 ### Step 1a: Detect Mode
 
-If `--gitflow` flag is set: use `legacy` mode.
+If `--worktree` flag is set: use `worktree` mode.
 
-Otherwise, auto-detect:
-```bash
-git worktree list | wc -l
-```
-
-| Worktrees | Mode |
-|-----------|------|
-| ≥ 2 | `worktree` — one or more sibling worktrees already exist |
-| = 1 | `legacy` — only the main clone, use branches directly |
+Otherwise, default to `gitflow` mode (branch in main clone).
 
 ### Step 2: Check for Existing Branch
 
@@ -85,13 +78,22 @@ If a match is found: "A worktree for `[KEY]` already exists: `[MATCHED_PATH]`. S
 
 Skip this step if `--dry-run`.
 
-**Legacy mode:**
+**Gitflow mode:**
 Check if a local branch for this task already exists:
 ```bash
 git branch --list "*[KEY]*"
 ```
 
 If a match is found: "A branch for `[KEY]` already exists: `[MATCHED_BRANCH]`. Switch to it: `git checkout [MATCHED_BRANCH]`". Stop.
+
+If no local match, check remote:
+```bash
+git ls-remote --heads origin "*[KEY]*"
+```
+
+If found on remote: "Task `[KEY]` already started on remote: `[BRANCH]`. Checkout instead? (yes / no)"
+- If yes: `git fetch origin [BRANCH] && git checkout [BRANCH]`. Stop.
+- If no: continue creating a new branch.
 
 ### Step 3: Validate Branch State
 
@@ -103,6 +105,8 @@ Run `git branch --show-current`.
 | `--hotfix` | `main` | "Hotfix branches must start from `main`. Switch to `main` first." |
 | `--release` | `develop` | "Release branches must start from `develop`. Switch to `develop` first or use `--force`." |
 | `--force` | any | No alert. Branch from current. |
+
+**Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, ask: "This repo has no `develop` branch. Create a hotfix from `main` instead? (yes / no)" If yes: switch to hotfix mode. If no: stop.
 
 **For `--hotfix`:** also check for uncommitted changes and that `main` is up to date:
 
@@ -153,7 +157,7 @@ Example: `feature/proj-2145-adjust-text` → `proj-2145-adjust-text`
 
 This short name is used for the worktree directory path. The full branch name is kept for git.
 
-**Legacy mode:** skip this step — no worktree folder needed.
+**Gitflow mode:** skip this step — no worktree folder needed.
 
 ### Step 6: Dry-Run Preview
 
@@ -168,7 +172,7 @@ Type: [feature | hotfix | release | force]
 Task: [KEY]
 Summary: [short-summary]
 [Worktree mode: Worktree would be created at: ../[REPO_NAME]-worktrees/[SHORT_NAME]]
-[Legacy mode: Branch would be created in main repo]
+[Gitflow mode: Branch would be created in main repo]
 Task folder would be: .local/tasks/[KEY]
 ```
 
@@ -256,7 +260,7 @@ If neither file exists, skip this step silently (not all projects use them).
 
 If worktree creation fails: report the error and note the task folder was already created.
 
-**Legacy mode:**
+**Gitflow mode:**
 
 Create the branch directly in the main clone:
 ```bash
@@ -286,7 +290,7 @@ Then start:
 
 **Important:** All further work must be done from the worktree folder. Always `cd ../[REPO_NAME]-worktrees/[SHORT_NAME]` before running any dev commands.
 
-**Legacy mode:**
+**Gitflow mode:**
 ```
 ✅ Branch ready: [BRANCH_NAME]
 
