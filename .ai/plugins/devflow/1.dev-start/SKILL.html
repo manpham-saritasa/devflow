@@ -411,7 +411,15 @@ Determine the repo name:</p>
 Check if a local branch for this task already exists:</p>
 <pre><code class="language-bash">git branch --list &quot;*[KEY]*&quot;
 </code></pre>
-<p>If a match is found: "A branch for <code>[KEY]</code> already exists: <code>[MATCHED_BRANCH]</code>. Switch to it: <code>git checkout [MATCHED_BRANCH]</code>". Stop.</p>
+<p>If a match is found: "A branch for <code>[KEY]</code> already exists: <code>[MATCHED_BRANCH]</code>. Switch to it: <code>git checkout [MATCHED_BRANCH]</code>". Stop.  </p>
+<p>If no local match, check remote:</p>
+<pre><code class="language-bash">git ls-remote --heads origin &quot;*[KEY]*&quot;
+</code></pre>
+<p>If found on remote: "Task <code>[KEY]</code> already started on remote: <code>[BRANCH]</code>. Checkout instead? (yes / no)"</p>
+<ul>
+<li>If yes: <code>git fetch origin [BRANCH] &amp;&amp; git checkout [BRANCH]</code>. Stop.</li>
+<li>If no: continue creating a new branch.</li>
+</ul>
 <h3>Step 3: Validate Branch State</h3>
 <p>Run <code>git branch --show-current</code>.</p>
 <table>
@@ -445,6 +453,7 @@ Check if a local branch for this task already exists:</p>
 </tr>
 </tbody>
 </table>
+<p><strong>Single-branch repos (no <code>develop</code>):</strong> When no flags are set and <code>develop</code> does not exist locally or on remote, but <code>main</code> does, ask: "This repo has no <code>develop</code> branch. Create a hotfix from <code>main</code> instead? (yes / no)" If yes: switch to hotfix mode. If no: stop.  </p>
 <p><strong>For <code>--hotfix</code>:</strong> also check for uncommitted changes and that <code>main</code> is up to date:</p>
 <pre><code class="language-bash"># Check working tree is clean
 git status --porcelain

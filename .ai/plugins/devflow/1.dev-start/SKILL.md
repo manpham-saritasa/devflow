@@ -86,6 +86,15 @@ git branch --list "*[KEY]*"
 
 If a match is found: "A branch for `[KEY]` already exists: `[MATCHED_BRANCH]`. Switch to it: `git checkout [MATCHED_BRANCH]`". Stop.
 
+If no local match, check remote:
+```bash
+git ls-remote --heads origin "*[KEY]*"
+```
+
+If found on remote: "Task `[KEY]` already started on remote: `[BRANCH]`. Checkout instead? (yes / no)"
+- If yes: `git fetch origin [BRANCH] && git checkout [BRANCH]`. Stop.
+- If no: continue creating a new branch.
+
 ### Step 3: Validate Branch State
 
 Run `git branch --show-current`.
