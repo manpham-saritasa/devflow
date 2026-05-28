@@ -190,6 +190,12 @@ git branch -D "[BRANCH_NAME]" 2>/dev/null
 ```
 If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.
 
+Delete the remote branch (only if PR was merged):
+```bash
+git push origin --delete "[BRANCH_NAME]" 2>/dev/null
+```
+Skip this step if no PR was found or PR was not merged. If deletion fails (already deleted, no remote, or no permission), ignore the error.
+
 ### Step 7: Report Result
 
 **Worktree mode:**
@@ -212,7 +218,8 @@ If `WAS_IN_WORKTREE = true`, add:
 ✅ dev-finish complete for [KEY]
 
 PR: [PR_URL | skipped | no PR found]
-Branch deleted: [BRANCH_NAME]
+Branch deleted (local): [BRANCH_NAME]
+[Branch deleted (remote): [BRANCH_NAME] — only if PR was merged]
 Switched to: [BASE_BRANCH]
 ```
 
@@ -221,6 +228,7 @@ Switched to: [BASE_BRANCH]
 ## Edge Cases
 
 - **Branch/worktree not found:** fail fast with a clear message.
+- **Remote branch still exists after PR merge:** `dev-finish` deletes it with `git push origin --delete` only after confirming the PR was merged. Not deleted if PR is skipped or still open.
 - **KEY not extractable from branch name:** stop and ask user to provide KEY explicitly.
 - **No `main` worktree:** fall back to `develop` for `MAIN_REPO`. If neither exists, use the first worktree listed.
 - **`gh` CLI not installed:** stop and tell user to install it (`gh auth login`).

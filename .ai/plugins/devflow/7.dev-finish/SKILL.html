@@ -512,7 +512,11 @@ Action: [merge PR + delete worktree | merge PR + delete branch | delete worktree
 <p>Delete the local branch:</p>
 <pre><code class="language-bash">git branch -D &quot;[BRANCH_NAME]&quot; 2&gt;/dev/null
 </code></pre>
-<p>If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.</p>
+<p>If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.  </p>
+<p>Delete the remote branch (may still exist if PR merge didn't auto-delete):</p>
+<pre><code class="language-bash">git push origin --delete &quot;[BRANCH_NAME]&quot; 2&gt;/dev/null
+</code></pre>
+<p>If remote branch deletion fails (already deleted, no remote, or no permission), ignore the error.</p>
 <h3>Step 7: Report Result</h3>
 <p><strong>Worktree mode:</strong></p>
 <pre><code>✅ dev-finish complete for [KEY]
@@ -529,7 +533,8 @@ Branch deleted: [BRANCH_NAME]
 <pre><code>✅ dev-finish complete for [KEY]
 
 PR: [PR_URL | skipped | no PR found]
-Branch deleted: [BRANCH_NAME]
+Branch deleted (local): [BRANCH_NAME]
+Branch deleted (remote): [BRANCH_NAME]
 Switched to: [BASE_BRANCH]
 </code></pre>
 </section>
@@ -537,6 +542,7 @@ Switched to: [BASE_BRANCH]
 <h2>Edge Cases</h2>
 <ul>
 <li><strong>Branch/worktree not found:</strong> fail fast with a clear message.</li>
+<li><strong>Remote branch still exists after PR merge:</strong> <code>dev-finish</code> deletes it with <code>git push origin --delete</code>. Covers cases where PR was merged without <code>--delete-branch</code> or via GitHub UI.</li>
 <li><strong>KEY not extractable from branch name:</strong> stop and ask user to provide KEY explicitly.</li>
 <li><strong>No <code>main</code> worktree:</strong> fall back to <code>develop</code> for <code>MAIN_REPO</code>. If neither exists, use the first worktree listed.</li>
 <li><strong><code>gh</code> CLI not installed:</strong> stop and tell user to install it (<code>gh auth login</code>).</li>
