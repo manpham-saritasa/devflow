@@ -6,6 +6,7 @@
 - Before each big section, put `---` first.
 - Always end completed work messages with `✅ Done.`
 - Prefix every question to me with `❓`
+- Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
 - If unsure, say so.
 - For answers, include confidence as `/10`:
   - 🟢 high
