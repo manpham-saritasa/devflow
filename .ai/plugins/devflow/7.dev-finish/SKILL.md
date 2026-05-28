@@ -1,6 +1,6 @@
 ---
 name: dev-finish
-description: Finish a gitflow branch for a Jira task. Supports worktree mode (sibling folder) and legacy gitflow mode (branch in main clone). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.
+description: Finish a gitflow branch for a Jira task. Defaults to gitflow mode (branch in main clone). Supports worktree mode (--worktree). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.
 triggers:
   - "dev-finish"
   - "devfinish"
@@ -18,7 +18,8 @@ Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables ar
 |------|----------|
 | (none) | Merge PR if approved, then delete worktree/branch |
 | `--worktree-only` | Delete worktree/branch only, skip PR merge |
-| `--gitflow` | Legacy gitflow mode — branch in main clone, skip worktree cleanup |
+| `--gitflow` | Gitflow mode (default) — branch in main clone, skip worktree cleanup |
+| `--worktree` | Worktree mode — cleanup worktree folder + branch |
 | `--dry-run` | Preview what would happen without making changes (read-only) |
 
 ---
@@ -28,22 +29,14 @@ Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables ar
 ### Step 1: Parse Input
 
 - Extract `KEY` from user input (regex: `([A-Z0-9]+-\d+)`, case-insensitive).
-- Parse flags: `--worktree-only`, `--gitflow`, `--dry-run`.
+- Parse flags: `--worktree-only`, `--worktree`, `--dry-run`.
 - If no KEY: detect from the current directory (see Step 2).
 
 ### Step 1a: Detect Mode
 
-If `--gitflow` flag is set: use `legacy` mode.
+If `--worktree` flag is set: use `worktree` mode.
 
-Otherwise, auto-detect:
-```bash
-git worktree list | wc -l
-```
-
-| Worktrees | Mode |
-|-----------|------|
-| ≥ 2 | `worktree` — one or more sibling worktrees already exist |
-| = 1 | `legacy` — only the main clone, use branches directly |
+Otherwise, default to `gitflow` mode (branch in main clone).
 
 ### Step 2: Find the Branch
 
@@ -75,7 +68,7 @@ Extract from the matching line:
 
 **If multiple matches:** show all and ask user to pick one.
 
-**Legacy mode:**
+**Gitflow mode:**
 
 List all local branches:
 ```bash
@@ -114,7 +107,7 @@ If `--dry-run`: display what would happen and stop.
 ```
 ## Dry-Run Preview
 
-Mode: [worktree | legacy]
+Mode: [worktree | gitflow]
 Task: [KEY]
 [Worktree mode: Worktree: [WORKTREE_PATH]]
 Branch: [BRANCH_NAME]
@@ -180,7 +173,7 @@ git -C "[MAIN_REPO]" branch -D "[BRANCH_NAME]" 2>/dev/null
 ```
 If branch deletion fails (already deleted by PR merge, or never existed), ignore the error.
 
-**Legacy mode:**
+**Gitflow mode:**
 
 Switch to base branch first so you are not on the branch being deleted:
 ```bash
@@ -214,7 +207,7 @@ If `WAS_IN_WORKTREE = true`, add:
   cd [MAIN_REPO]
 ```
 
-**Legacy mode:**
+**Gitflow mode:**
 ```
 ✅ dev-finish complete for [KEY]
 
