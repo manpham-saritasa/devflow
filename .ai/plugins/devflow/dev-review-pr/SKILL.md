@@ -157,6 +157,8 @@ Flow:
 
 ### Step 5: Review Across Dimensions
 
+**Auto-skip check:** Before analyzing, check `[TASK_DIR]/review-skip.yaml` when it exists. Load all skip rules — each rule has `path` and `line`. When a finding matches a skip rule during review, mark it as `🔒 Kept` automatically with the saved reason.
+
 Analyze PR data (`FILES[]`, `DIFF`, `COMMITS[]`, `REVIEWS[]`, `PR_BODY`, `PR_TITLE`) across each dimension below.
 
 Extra context sources:
@@ -245,6 +247,53 @@ PR hygiene:
 - Are test names descriptive of the scenario?
 - Are test assertions meaningful (not tautologies)?
 
+#### How to ignore findings
+
+The user can tell the agent to ignore specific findings using their # numbers from the table. The agent will still include them in the report but skip them when posting inline comments.
+
+Format:
+```
+Ignore: #2, #4
+```
+
+After the user confirms, save the ignored findings to `[TASK_DIR]/review-skip.yaml` so future reviews of the same task auto-skip them.
+
+**Auto-skip on future reviews:** Before posting inline comments, check `[TASK_DIR]/review-skip.yaml` when it exists. Each entry has `path` and `line` — if a finding matches both, auto-skip it and mark as `🔒 Kept` in the report with the saved reason.
+
+Skip file format:
+```yaml
+- path: ".github/prompts/refactor-code.prompt.md"
+  line: 64
+  reason: "Trailing newline not a priority"
+```
+
+When loading a skip file, the agent confirms:
+```
+📋 Loaded [N] skip rule(s) from [TASK_DIR]/review-skip.yaml. Auto-ignoring matching findings.
+```
+
+The agent confirms what was skipped:
+```
+⏭️ Skipped 2 finding(s) per request: #2, #4
+```
+
+Ignored findings stay in the report marked as `🔒 Kept` but are not posted as PR threads.
+
+After removing ignored findings, show the final table again with only the remaining findings (renumbered from 1). Ask "Any more to ignore?" again. Repeat until user says `go` or confirms. Then proceed to Step 7.
+
+```
+## Final Review Table — [PR_TITLE]
+
+⏭️ Ignored: #2, #4
+
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | Critical | Security | `src/login.php` | 42 | SQL injection via raw user input | Use parameterized query |
+| 2 | High | Performance | `src/report.php` | 88-95 | N+1 query inside loop | Eager-load with JOIN |
+
+Any more to ignore? (e.g., `Ignore: #1`) or `go` to proceed.
+```
+
 #### 5h. Changelog / Documentation Check
 - If a `changelog.md` exists in the task folder, does the diff match it?
 - Are new public APIs, config options, or env vars documented?
@@ -252,7 +301,7 @@ PR hygiene:
 
 ### Step 6: Present Review Table
 
-Show all findings in a table sorted by Priority (Critical → Low):
+Show all findings in a table sorted by Priority (Critical → Low). Number each row starting at 1. After presenting, ask "Any findings to ignore? (e.g., `Ignore: #2, #4`) or `go` to proceed."
 
 ```
 ## PR Review — [PR_TITLE]
@@ -261,21 +310,21 @@ PR: [PR_URL]
 Branch: [HEAD_BRANCH] → [BASE_BRANCH]
 Files changed: [count] | +[additions] -[deletions] | [N] commits
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| Critical | Security | `src/login.php` | 42 | SQL injection via raw user input in query | Use parameterized query or ORM |
-| High | Performance | `src/report.php` | 88-95 | N+1 query inside loop fetching user data | Eager-load users with JOIN |
-| Medium | Naming Convention | `src/utils.php` | 12 | Abbreviation `calcAmt` instead of `calculateAmount` | Rename to `calculateAmount` |
-| Low | Quality | `README.md` | 1 | Missing section for new env var | Add `NEW_FEATURE_FLAG` to env docs |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | Critical | Security | `src/login.php` | 42 | SQL injection via raw user input in query | Use parameterized query or ORM |
+| 2 | High | Performance | `src/report.php` | 88-95 | N+1 query inside loop fetching user data | Eager-load users with JOIN |
+| 3 | Medium | Naming Convention | `src/utils.php` | 12 | Abbreviation `calcAmt` instead of `calculateAmount` | Rename to `calculateAmount` |
+| 4 | Low | Quality | `README.md` | 1 | Missing section for new env var | Add `NEW_FEATURE_FLAG` to env docs |
 ```
 
 If no issues found:
 ```
 ✅ No issues found in this PR.
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| — | — | — | — | All checks passed | — |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| — | — | — | — | — | All checks passed | — |
 ```
 
 ### Step 7: Write Feedback Report
@@ -305,9 +354,9 @@ Report format — keep exact file paths and line numbers from Step 5 for reuse i
 
 ## Findings
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| ... | ... | ... | ... | ... | ... |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | ... | ... | ... | ... | ... | ... |
 
 ## Verdict
 
