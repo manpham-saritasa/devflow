@@ -2,6 +2,7 @@ import { readdirSync, existsSync } from 'fs';
 import { resolve, join } from 'path';
 import { DevflowConfig, AiTool } from '../config/schema.js';
 import { getContentRoot } from '../utils/source.js';
+import { parseSkillFrontmatter, renderFrontmatter } from '../utils/frontmatter.js';
 
 export interface FileCopyEntry {
   src: string;
@@ -134,7 +135,72 @@ export function buildManifest(config: DevflowConfig, targetDir: string): FileCop
             entries.push(...copyDirEntries(skillSrc, resolve(targetDir, '.ai', 'skills', skill)));
           }
         }
+        // Claude: generate .claude/skills/ wrappers referencing .ai/skills/
+        if (config.tools.includes('claude')) {
+          for (const skill of selected) {
+            const skillMd = resolve(contentRoot, '.ai', 'skills', skill, 'SKILL.md');
+            const fm = parseSkillFrontmatter(skillMd);
+            if (fm) {
+              entries.push({
+                src: buildSkillWrapper(fm, `.ai/skills/${skill}/SKILL.md`),
+                dest: resolve(targetDir, '.claude', 'skills', fm.name, 'SKILL.md'),
+                isInline: true,
+              });
+            }
+          }
+        }
         break;
+      }
+
+      case 'plugins': {
+        const pluginsRoot = resolve(contentRoot, '.ai', 'plugins');
+        if (!existsSync(pluginsRoot)) break;
+        for (const plugin of readdirSync(pluginsRoot, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name)) {
+          const pluginSrc = resolve(pluginsRoot, plugin);
+          entries.push(...copyDirEntries(pluginSrc, resolve(targetDir, '.ai', 'plugins', plugin)));
+
+          // Claude: generate .claude/skills/ wrappers for each skill + agent.md
+          if (config.tools.includes('claude')) {
+            for (const { subdir, skillFile } of listPluginSkills(pluginSrc)) {
+              const refPath = subdir
+                ? `.ai/plugins/${plugin}/${subdir}/SKILL.md`
+                : `.ai/plugins/${plugin}/agent.md`;
+              const fm = parseSkillFrontmatter(skillFile);
+              if (fm) {
+                entries.push({
+                  src: buildSkillWrapper(fm, refPath),
+                  dest: resolve(targetDir, '.claude', 'skills', fm.name, 'SKILL.md'),
+                  isInline: true,
+                });
+              }
+            }
+          }
+        }
+        break;
+      }
+
+      case 'rules': {
+        const rulesRoot = resolve(contentRoot, '.ai', 'rules');
+        const selected = config.rules ?? listItems(rulesRoot);
+        for (const item of selected) {
+          const itemPath = resolve(rulesRoot, item + '.md');
+          if (existsSync(itemPath)) {
+            entries.push({ src: itemPath, dest: resolve(targetDir, '.ai', 'rules', item + '.md') });
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  // Claude: copy agents to .claude/agents/ when agents component is selected
+  if (config.tools.includes('claude') && config.components.includes('agents')) {
+    const agentsRoot = resolve(contentRoot, '.ai', 'agents');
+    const selected = config.agents ?? listItems(agentsRoot);
+    for (const item of selected) {
+      const itemPath = resolve(agentsRoot, item + '.md');
+      if (existsSync(itemPath)) {
+        entries.push({ src: itemPath, dest: resolve(targetDir, '.claude', 'agents', item + '.md') });
       }
     }
   }
@@ -176,4 +242,36 @@ function dedupe(entries: FileCopyEntry[]): FileCopyEntry[] {
     seen.add(e.dest);
     return true;
   });
+}
+
+/**
+ * Returns all SKILL.md files (and agent.md) found in a plugin directory.
+ * Each entry has the subdir name (empty string for root agent.md) and the full skill file path.
+ */
+function listPluginSkills(pluginDir: string): Array<{ subdir: string; skillFile: string }> {
+  if (!existsSync(pluginDir)) return [];
+  const results: Array<{ subdir: string; skillFile: string }> = [];
+
+  // Root agent.md (orchestrator)
+  const agentMd = resolve(pluginDir, 'agent.md');
+  if (existsSync(agentMd)) {
+    results.push({ subdir: '', skillFile: agentMd });
+  }
+
+  // Subdirectory SKILL.md files
+  for (const entry of readdirSync(pluginDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const skillMd = resolve(pluginDir, entry.name, 'SKILL.md');
+    if (existsSync(skillMd)) {
+      results.push({ subdir: entry.name, skillFile: skillMd });
+    }
+  }
+
+  return results;
+}
+
+/** Generates inline SKILL.md wrapper content that delegates via @ reference. */
+function buildSkillWrapper(fm: ReturnType<typeof parseSkillFrontmatter>, refPath: string): string {
+  if (!fm) return '';
+  return `${renderFrontmatter(fm)}\n\n@${refPath}\n`;
 }
