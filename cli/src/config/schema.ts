@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const AI_TOOLS = ['claude', 'gemini', 'copilot', 'cursor', 'windsurf', 'codeium', 'aider', 'zed'] as const;
-export const COMPONENTS = ['agents', 'skills', 'prompts', 'instructions', 'startup'] as const;
+export const COMPONENTS = ['agents', 'skills', 'prompts', 'instructions', 'startup', 'plugins', 'rules'] as const;
 export const CONFLICT_MODES = ['overwrite', 'backup', 'skip'] as const;
 
 export type AiTool = (typeof AI_TOOLS)[number];
@@ -18,6 +18,8 @@ export const DevflowConfigSchema = z.object({
   skills: z.array(z.string()).nullable().default(null),
   prompts: z.array(z.string()).nullable().default(null),
   instructions: z.array(z.string()).nullable().default(null),
+  plugins: z.array(z.string()).nullable().default(null),
+  rules: z.array(z.string()).nullable().default(null),
   conflictMode: z.enum(CONFLICT_MODES),
 });
 
@@ -40,4 +42,6 @@ export const COMPONENT_LABELS: Record<Component, string> = {
   prompts: 'Prompts (reusable templates)',
   instructions: 'Instructions (coding & communication rules)',
   startup: 'Startup (session entry point)',
+  plugins: 'Plugins (devflow skills, commands & orchestrator)',
+  rules: 'Rules (PR rules, coding rules, session)',
 };

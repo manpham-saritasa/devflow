@@ -19,6 +19,8 @@ interface ComponentSelection {
   skills: string[] | null;
   prompts: string[] | null;
   instructions: string[] | null;
+  plugins: string[] | null;
+  rules: string[] | null;
 }
 
 export async function initCommand(): Promise<void> {
@@ -67,6 +69,8 @@ export async function initCommand(): Promise<void> {
     skills: null,
     prompts: null,
     instructions: null,
+    plugins: null,
+    rules: null,
   };
 
   // Ask for each filterable component
@@ -144,6 +148,9 @@ export async function initCommand(): Promise<void> {
     }
   }
 
+  // plugins component has no sub-selection — it's an atomic unit
+  // (no prompt needed; all plugins are always synced together)
+
   const conflictModeAnswer = await select({
     message: 'How to handle existing files?',
     options: [
@@ -165,6 +172,8 @@ export async function initCommand(): Promise<void> {
     skills: componentSelection.skills,
     prompts: componentSelection.prompts,
     instructions: componentSelection.instructions,
+    plugins: componentSelection.plugins,
+    rules: componentSelection.rules,
     conflictMode,
   };
 
