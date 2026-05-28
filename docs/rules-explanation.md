@@ -2,8 +2,6 @@
 
 **Purpose:** This document explains the AI coding rules in this repository in plain, accessible language. Each section below describes *what the rule means*, *why it exists*, and *how it helps you* as a developer working with AI coding assistants.
 
----
-
 ## Summary — What This All Means for You
 
 | What You Get | How It Helps |
