@@ -479,6 +479,7 @@ These are the inline review comments already posted on the PR diff (by Copilot, 
 <p><strong>If <code>dev-get</code> succeeds:</strong> use the saved Jira task content as the main fit-check source.  </p>
 <p><strong>If <code>dev-get</code> fails</strong> (missing credentials, network error, Jira unavailable): note it and rely on the PR body, branch name, commit messages, and any existing local task files. Mention this limit in the report.</p>
 <h3>Step 5: Review Across Dimensions</h3>
+<p><strong>Auto-skip check:</strong> Before analyzing, check <code>[TASK_DIR]/review-skip.yaml</code> when it exists. Load all skip rules — each rule has <code>path</code> and <code>line</code>. When a finding matches a skip rule during review, mark it as <code>🔒 Kept</code> automatically with the saved reason.  </p>
 <p>Analyze PR data (<code>FILES[]</code>, <code>DIFF</code>, <code>COMMITS[]</code>, <code>REVIEWS[]</code>, <code>PR_BODY</code>, <code>PR_TITLE</code>) across each dimension below.  </p>
 <p>Extra context sources:</p>
 <ul>
@@ -599,6 +600,38 @@ If a finding has no valid inline review location, keep it in the report and revi
 <li>Are test names descriptive of the scenario?</li>
 <li>Are test assertions meaningful (not tautologies)?</li>
 </ul>
+<h4>How to ignore findings</h4>
+<p>The user can tell the agent to ignore specific findings using their # numbers from the table. The agent will still include them in the report but skip them when posting inline comments.  </p>
+<p>Format:</p>
+<pre><code>Ignore: #2, #4
+</code></pre>
+<p>After the user confirms, save the ignored findings to <code>[TASK_DIR]/review-skip.yaml</code> so future reviews of the same task auto-skip them.  </p>
+<p><strong>Auto-skip on future reviews:</strong> Before posting inline comments, check <code>[TASK_DIR]/review-skip.yaml</code> when it exists. Each entry has <code>path</code> and <code>line</code> — if a finding matches both, auto-skip it and mark as <code>🔒 Kept</code> in the report with the saved reason.  </p>
+<p>Skip file format:</p>
+<pre><code class="language-yaml">
+- path: &quot;.github/prompts/refactor-code.prompt.md&quot;
+  line: 64
+  reason: &quot;Trailing newline not a priority&quot;
+</code></pre>
+<p>When loading a skip file, the agent confirms:</p>
+<pre><code>📋 Loaded [N] skip rule(s) from [TASK_DIR]/review-skip.yaml. Auto-ignoring matching findings.
+</code></pre>
+<p>The agent confirms what was skipped:</p>
+<pre><code>⏭️ Skipped 2 finding(s) per request: #2, #4
+</code></pre>
+<p>Ignored findings stay in the report marked as <code>🔒 Kept</code> but are not posted as PR threads.  </p>
+<p>After removing ignored findings, show the final table again with only the remaining findings (renumbered from 1). Ask "Any more to ignore?" again. Repeat until user says <code>go</code> or confirms. Then proceed to Step 7.</p>
+<pre><code>## Final Review Table — [PR_TITLE]
+
+⏭️ Ignored: #2, #4
+
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | Critical | Security | `src/login.php` | 42 | SQL injection via raw user input | Use parameterized query |
+| 2 | High | Performance | `src/report.php` | 88-95 | N+1 query inside loop | Eager-load with JOIN |
+
+Any more to ignore? (e.g., `Ignore: #1`) or `go` to proceed.
+</code></pre>
 <h4>5h. Changelog / Documentation Check</h4>
 <ul>
 <li>If a <code>changelog.md</code> exists in the task folder, does the diff match it?</li>
@@ -606,26 +639,26 @@ If a finding has no valid inline review location, keep it in the report and revi
 <li>Are architectural decisions explained in the PR body or linked ADR?</li>
 </ul>
 <h3>Step 6: Present Review Table</h3>
-<p>Show all findings in a table sorted by Priority (Critical → Low):</p>
+<p>Show all findings in a table sorted by Priority (Critical → Low). Number each row starting at 1. After presenting, ask "Any findings to ignore? (e.g., <code>Ignore: #2, #4</code>) or <code>go</code> to proceed."</p>
 <pre><code>## PR Review — [PR_TITLE]
 
 PR: [PR_URL]
 Branch: [HEAD_BRANCH] → [BASE_BRANCH]
 Files changed: [count] | +[additions] -[deletions] | [N] commits
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| Critical | Security | `src/login.php` | 42 | SQL injection via raw user input in query | Use parameterized query or ORM |
-| High | Performance | `src/report.php` | 88-95 | N+1 query inside loop fetching user data | Eager-load users with JOIN |
-| Medium | Naming Convention | `src/utils.php` | 12 | Abbreviation `calcAmt` instead of `calculateAmount` | Rename to `calculateAmount` |
-| Low | Quality | `README.md` | 1 | Missing section for new env var | Add `NEW_FEATURE_FLAG` to env docs |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | Critical | Security | `src/login.php` | 42 | SQL injection via raw user input in query | Use parameterized query or ORM |
+| 2 | High | Performance | `src/report.php` | 88-95 | N+1 query inside loop fetching user data | Eager-load users with JOIN |
+| 3 | Medium | Naming Convention | `src/utils.php` | 12 | Abbreviation `calcAmt` instead of `calculateAmount` | Rename to `calculateAmount` |
+| 4 | Low | Quality | `README.md` | 1 | Missing section for new env var | Add `NEW_FEATURE_FLAG` to env docs |
 </code></pre>
 <p>If no issues found:</p>
 <pre><code>✅ No issues found in this PR.
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| — | — | — | — | All checks passed | — |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| — | — | — | — | — | All checks passed | — |
 </code></pre>
 <h3>Step 7: Write Feedback Report</h3>
 <p>If <code>KEY</code> was extracted, write the report to <code>TASK_DIR/pr-feedback-[KEY].md</code>.  </p>
@@ -648,9 +681,9 @@ Files changed: [count] | +[additions] -[deletions] | [N] commits
 
 ## Findings
 
-| Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
-|----------|----------------|-------------|-------------|---------------|-------------------|
-| ... | ... | ... | ... | ... | ... |
+| # | Priority | Review Category | Checked File | Checked Line | Issue Summary | Suggested Solution |
+|--|----------|----------------|-------------|-------------|---------------|-------------------|
+| 1 | ... | ... | ... | ... | ... | ... |
 
 ## Verdict
 
@@ -784,7 +817,7 @@ PR: [PR_URL]
 <li class="task-list-item"><input type="checkbox" disabled/> <code>--code-base</code> flag respected — fails fast if branch not local?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Codebase context fetched when <code>--code-base</code> is set?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Task key extracted when possible?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Jira task context fetched when <code>.env</code> available?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Jira task context fetched when <code>.env</code> or <code>.env.local</code> available?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Fit check uses Jira requirements when available, or notes limitation when not?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All review dimensions checked?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Issues assigned correct priority?</li>

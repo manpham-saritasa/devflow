@@ -237,17 +237,22 @@ FULL_PATH=$(cd "../[REPO_NAME]-worktrees/[SHORT_NAME]" && pwd)
 echo "Full path: $FULL_PATH"
 ```
 
-**Copy `.env`:**
+**Copy `.env` and `.env.local`:**
 
-Copy the `.env` file from the repo root to the new worktree so the worktree has the same environment configuration:
+Copy environment files from the repo root to the new worktree:
 
 ```bash
 if [ -f ".env" ]; then
     cp ".env" "$FULL_PATH/.env"
 fi
+if [ -f ".env.local" ]; then
+    cp ".env.local" "$FULL_PATH/.env.local"
+fi
 ```
 
-If `.env` does not exist in the repo root, skip this step silently (not all projects use a `.env` file).
+If neither file exists, skip this step silently (not all projects use them).
+
+`.env.local` is the recommended location for Jira credentials (`JIRA_EMAIL`, `JIRA_API_TOKEN`, `JIRA_BASE_URL`) used by `dev-get`. It is automatically gitignored via the standard `.env.*` pattern and never committed.
 
 If worktree creation fails: report the error and note the task folder was already created.
 

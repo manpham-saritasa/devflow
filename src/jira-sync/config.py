@@ -11,6 +11,7 @@ REPO_ROOT = BASE_DIR.parent.parent
 CONFIG_PATH = BASE_DIR / "config.json"
 
 load_dotenv(BASE_DIR / ".env")
+load_dotenv(REPO_ROOT / ".env.local")
 
 
 @dataclass(frozen=True)
@@ -95,6 +96,9 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
 APP_CONFIG = load_app_config()
 
 JIRA_URL = os.getenv("JIRA_URL", "").rstrip("/")
+JIRA_COMPANY_DOMAIN = os.getenv("JIRA_COMPANY_DOMAIN", "")
+if not JIRA_URL and JIRA_COMPANY_DOMAIN:
+    JIRA_URL = f"https://{JIRA_COMPANY_DOMAIN}.atlassian.net"
 JIRA_EMAIL = os.getenv("JIRA_EMAIL", "")
 JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN", "")
 JIRA_PROJECT_KEY = os.getenv("JIRA_PROJECT_KEY", "")
@@ -108,8 +112,8 @@ HTTP_TIMEOUT_SECONDS = float(os.getenv("HTTP_TIMEOUT_SECONDS", "30"))
 
 if not all([JIRA_URL, JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY]):
     raise EnvironmentError(
-        "Missing required env vars. Check .env file:"
-        "  JIRA_URL, JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY"
+        "Missing required env vars. Check .env.local file:"
+        "  JIRA_COMPANY_DOMAIN (or JIRA_URL), JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY"
     )
 
 DOWNLOAD_PATH = str(APP_CONFIG.download_path)

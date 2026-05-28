@@ -388,7 +388,7 @@ a:hover {
 </section>
 <section class="section">
 <h2>Jira Credentials</h2>
-<p>Read Jira credentials from <code>.env</code> in the repository root. Required variables:</p>
+<p>Read Jira credentials from <code>.env</code> in the repository root. If <code>.env</code> is missing or incomplete, fallback to <code>.env.local</code>. Required variables:</p>
 <pre><code>JIRA_COMPANY_DOMAIN=saritasa
 JIRA_PROJECT_KEY=RMASUP
 JIRA_EMAIL=john.doe@saritasa.com
@@ -511,7 +511,7 @@ gh pr create --base [BASE_BRANCH] --head $(git branch --show-current) --title &q
 </ul>
 <h3>Step 8: Comment Jira</h3>
 <p>Skip if <code>--pr-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>, or <code>--no-jira</code>.  </p>
-<p>Before commenting, verify <code>.env</code> is present in the repo root and contains all required variables (<code>JIRA_COMPANY_DOMAIN</code>, <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>). If missing or incomplete, stop: "Jira credentials not found. Add them to <code>.env</code> in the repo root. See the Jira Credentials section for format."  </p>
+<p>Before commenting, verify credentials are present in the repo root (<code>.env</code> first, then <code>.env.local</code> fallback) and contain all required variables (<code>JIRA_COMPANY_DOMAIN</code>, <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>). If missing or incomplete, stop: "Jira credentials not found. Add them to <code>.env</code> or <code>.env.local</code> in the repo root. See the Jira Credentials section for format."  </p>
 <p>Use Jira API with the credentials from <code>.env</code>:</p>
 <ul>
 <li>Base URL: <code>https://[JIRA_COMPANY_DOMAIN].atlassian.net</code></li>

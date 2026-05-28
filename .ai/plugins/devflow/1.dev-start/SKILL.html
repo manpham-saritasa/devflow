@@ -568,13 +568,17 @@ git pull origin [BASE_BRANCH]
 <pre><code class="language-bash">FULL_PATH=$(cd &quot;../[REPO_NAME]-worktrees/[SHORT_NAME]&quot; &amp;&amp; pwd)
 echo &quot;Full path: $FULL_PATH&quot;
 </code></pre>
-<p><strong>Copy <code>.env</code>:</strong>  </p>
-<p>Copy the <code>.env</code> file from the repo root to the new worktree so the worktree has the same environment configuration:</p>
+<p><strong>Copy <code>.env</code> and <code>.env.local</code>:</strong>  </p>
+<p>Copy environment files from the repo root to the new worktree:</p>
 <pre><code class="language-bash">if [ -f &quot;.env&quot; ]; then
     cp &quot;.env&quot; &quot;$FULL_PATH/.env&quot;
 fi
+if [ -f &quot;.env.local&quot; ]; then
+    cp &quot;.env.local&quot; &quot;$FULL_PATH/.env.local&quot;
+fi
 </code></pre>
-<p>If <code>.env</code> does not exist in the repo root, skip this step silently (not all projects use a <code>.env</code> file).  </p>
+<p>If neither file exists, skip this step silently (not all projects use them).  </p>
+<p><code>.env.local</code> is the recommended location for Jira credentials (<code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>, <code>JIRA_BASE_URL</code>) used by <code>dev-get</code>. It is automatically gitignored via the standard <code>.env.*</code> pattern and never committed.  </p>
 <p>If worktree creation fails: report the error and note the task folder was already created.  </p>
 <p><strong>Legacy mode:</strong>  </p>
 <p>Create the branch directly in the main clone:</p>

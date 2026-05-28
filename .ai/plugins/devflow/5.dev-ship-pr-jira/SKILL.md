@@ -49,7 +49,7 @@ Read shared paths from `config.md`. `TASK_DIR` is defined there (as `[TASKS_ROOT
 
 ## Jira Credentials
 
-Read Jira credentials from `.env` in the repository root. Required variables:
+Read Jira credentials from `.env` in the repository root. If `.env` is missing or incomplete, fallback to `.env.local`. Required variables:
 
 ```
 JIRA_COMPANY_DOMAIN=saritasa
@@ -206,7 +206,7 @@ Skip if `--dry-run` or `--from-pr`:
 
 Skip if `--pr-only`, `--dry-run`, `--technical-only`, `--from-pr`, or `--no-jira`.
 
-Before commenting, verify `.env` is present in the repo root and contains all required variables (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If missing or incomplete, stop: "Jira credentials not found. Add them to `.env` in the repo root. See the Jira Credentials section for format."
+Before commenting, verify credentials are present in the repo root (`.env` first, then `.env.local` fallback) and contain all required variables (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If missing or incomplete, stop: "Jira credentials not found. Add them to `.env` or `.env.local` in the repo root. See the Jira Credentials section for format."
 
 Use Jira API with the credentials from `.env`:
 - Base URL: `https://[JIRA_COMPANY_DOMAIN].atlassian.net`

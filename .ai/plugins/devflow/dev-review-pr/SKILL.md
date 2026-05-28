@@ -515,7 +515,7 @@ PR: [PR_URL]
 - [ ] `--code-base` flag respected — fails fast if branch not local?
 - [ ] Codebase context fetched when `--code-base` is set?
 - [ ] Task key extracted when possible?
-- [ ] Jira task context fetched when `.env` available?
+- [ ] Jira task context fetched when `.env` or `.env.local` available?
 - [ ] Fit check uses Jira requirements when available, or notes limitation when not?
 - [ ] All review dimensions checked?
 - [ ] Issues assigned correct priority?
