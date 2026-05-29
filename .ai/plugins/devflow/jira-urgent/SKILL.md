@@ -11,62 +11,20 @@ triggers:
 
 ## Paths
 
-- `CONFIG` — `./projects.config` (skill-relative, key=value format)
-- `OUTPUT_DIR` — `.local/jira/`
-- `OUTPUT_FILE` — `urgent-{YYYY-MM-DD}.md`
-- `IGNORE_FILE` — `.local/jira/ignored-comments.txt` — one comment ID per line
-- `TIMEZONE` — `Asia/Bangkok`
-- `DRAFT_MODE` — `student` (student = friendly team-facing; caveman = minimal)
+- `CONFIG` — `./projects.config` (skill-relative)
+- `IGNORE_FILE` — `./ignored-comments.txt` (skill-relative) — one comment ID per line
 
 ---
 
-## Flags
+## Workflow
 
-| Flag | Behavior |
-|------|----------|
-| (none) | Urgent mode on default project |
-| `--choose` | Prompt to pick a project |
-| `--refresh` | Re-discover projects, update config, then run |
-| `<KEY>` | Override project key (e.g., `PROJ`) |
+Run the Python script and present its output cleanly in chat:
 
----
-
-## Output Format (Strict — follow exactly)
-
-Save to `.local/jira/urgent-{YYYY-MM-DD}.md`. Print full body to chat.
-
-**Urgent mode format:**
-
-Each item links directly to the urgent comment. Use deep link format:
-`https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/<KEY>?focusedCommentId=<comment_id>`
-
-```markdown
-# Jira — Urgent Tasks: <KEY> ({YYYY-MM-DD})
-
-## 🔴 Needs your answer ({count})
-
-### 1. [<KEY-N>](<deep_link_with_comment_id>) — <summary>
-- Status: <status> | Priority: <priority>
-- <anchor_author> asked on <anchor_datetime> (<tag>):
-  > <anchor_preview>
-
-**Draft reply (confidence: <High|Medium|Low>):**
-
-> <draft text>
-
----
-
-## 🟡 Verify when convenient ({count})
-
-### N. [<KEY-N>](<deep_link_with_comment_id>) — <summary>
-...
-
-**Draft reply (confidence: High):**
-
-> Thanks <author>. I'll verify today and confirm here.
+```bash
+python .ai/plugins/devflow/jira-urgent/main.py
 ```
 
-No items: "No urgent items in `<KEY>` — your team is not currently blocked on you."
+Then for each item found, fetch the full comment body from Jira and draft a reply per the classification rules below. Present as formatted markdown — not raw terminal output.
 
 ---
 
@@ -103,95 +61,41 @@ If matched AND no later comment by you → classify intent. Otherwise drop.
 | B (question) | needs_answer | `question` |
 | B (question) | verify | `verify` |
 
-### Sort Order
+---
 
-Group by workflow stage first, then priority within each group:
+## Output Format (Strict — follow exactly)
 
-1. **Blocked** — Blocked, On Hold
-2. **Active** — Ready for Development, In Progress, Code Review
-3. **Review** — TM Review, In Review
+```markdown
+# Jira — Urgent Tasks: <KEY> ({YYYY-MM-DD})
 
-Within each group: `at_mention` first, `question` next, `verify` last.
-Within tag: priority Highest → High → Medium → Low → Lowest.
-Within priority: comment datetime descending.
+## 🔴 Needs your answer ({count})
 
-### Drop Conditions
+### 1. [<KEY-N>](<deep_link_with_comment_id>) — <summary>
+- **Status:** <status> | **Priority:** <priority> | **Assignee:** <assignee>
+- **<anchor_author> asked on <anchor_datetime>** (<tag>):
+  > <anchor_preview>
 
-Status in: Completed, Done, Closed, Resolved, On Production, On Staging.
+**Draft reply (confidence: <High|Medium|Low>):**
+
+> <draft text>
 
 ---
 
-## Steps
+## 🟡 Verify when convenient ({count})
 
-### Step 1: Parse Input
+### N. [<KEY-N>](<deep_link_with_comment_id>) — <summary>
+...
 
-Extract: project key (optional), flags (`--choose`, `--refresh`).
+**Draft reply (confidence: High):**
 
-### Step 2: Load Credentials
-
-Read `.env.local` (preferred) or `.env` from repo root. Extract:
-- `JIRA_COMPANY_DOMAIN` — the Atlassian subdomain (e.g., `saritasa`)
-- `JIRA_EMAIL`
-- `JIRA_API_TOKEN`
-
-Do not use `source` — read the file and parse `KEY=VALUE` lines directly.
-
-### Step 3: Get User Account ID
-
-```bash
-curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
-  -H "Accept: application/json" \
-  "https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/myself"
+> Thanks <author>. I'll verify today and confirm here.
 ```
 
-Parse `accountId` from the JSON response.
+No items: "No urgent items in `<KEY>` — your team is not currently blocked on you."
 
-### Step 4: Resolve Project Key
+---
 
-| Case | Action |
-|------|--------|
-| Explicit `<KEY>` in command | Use it |
-| `--refresh` | Discover projects → pick new default → update config → use |
-| `--choose` | Pick from saved projects → use for this run |
-| No flag, no key | Use `default_project_key` from config |
-
-**Discover projects** — call the search API, extract unique project keys and names, save to `CONFIG` in key=value format. Use the POST endpoint:
-
-```bash
-curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  -d '{"jql":"sprint in openSprints() AND (assignee=currentUser() OR reporter=currentUser())","maxResults":100,"fields":["project"]}' \
-  "https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql"
-```
-
-### Step 5: Query Jira
-
-Use the JQL search POST endpoint: `POST /rest/api/3/search/jql` with JSON body.
-
-**Urgent mode:**
-
-```bash
-curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  -d '{"jql":"project=<KEY> AND sprint in openSprints() AND (assignee=currentUser() OR reporter=currentUser() OR issue in watchedIssues()) AND status not in (Completed,Done,Closed,Resolved,\"On Production\",\"On Staging\") ORDER BY priority DESC, updated DESC","maxResults":50,"fields":["summary","status","priority","issuetype","comment","assignee","updated"]}' \
-  "https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql"
-```
-
-### Step 6: Filter & Classify
-
-For each issue, apply urgent rules from Detection Logic. Record per item:
-- `key`, `summary`, `status`, `priority`, `assignee`
-- `anchor_comment_id`, `anchor_author`, `anchor_datetime` (in configured timezone)
-- `anchor_preview` (first ~200 chars)
-- `tag`
-
-**Drop ignored comments:** read `IGNORE_FILE` (one comment ID per line). If `anchor_comment_id` is in the list, drop the item — user has already reviewed and chosen not to reply.
-
-Build deep links using comment IDs: `https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/<KEY>?focusedCommentId=<anchor_comment_id>`
-
-### Step 7: Draft Reply
+## Draft Reply Templates
 
 | Tag | Template |
 |-----|----------|
@@ -204,44 +108,15 @@ Rules:
 - Never invent decisions
 - Tag confidence: `High`, `Medium`, `Low`
 
-### Step 8: Status
-
-```
-**Changed:** <N> urgent of <M> total (X ignored)
-**Needs review:** <flags>
-
-To ignore items you don't need to reply to, add their comment ID to `.local/jira/ignored-comments.txt`:
-```
-508167
-506832
-```
-Ignored comments won't appear in future runs.
-```
-
 ---
 
 ## Rules
 
 | Rule | Detail |
 |------|--------|
-| Anchor IDs from API | Extract `comment.id` directly from JSON. Never retype or summarize IDs before building links. |
-
-| Full output in chat | Print the same markdown that goes into the saved file. |
-| Single project | No multi-project aggregation. Use `--choose` to switch. |
+| Always re-query | Never reuse cached data. Each run must query Jira fresh. |
+| Print to chat | Present clean formatted markdown in chat. Do not save to file. |
+| Single project | Use default from `projects.config`. |
 | Read-only | Never post comments or transition issues. Ask for confirmation before sending any draft. |
 | Match on accountId | Never match on display name — names collide. |
 | Skip answered | User comment after the urgent-trigger comment → drop. |
-| Cap at 50 | If query hits 50, note in status. |
-
----
-
-## Examples
-
-```
-jurgent                       → query Jira, save file, display
-jurgent                       → (second run) show saved list, no API call
-jurgent --refresh             → force re-query Jira
-jurgent PROJ                  → urgent on specific project
-```
-
-**After first run:** subsequent calls display from saved file without querying Jira. Only re-queries when you run `jurgent` again or use `--refresh`. This lets you loop through the list, reply, and ignore items without hitting the API each time.

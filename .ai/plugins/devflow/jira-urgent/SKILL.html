@@ -320,53 +320,23 @@ a:hover {
   <h1>Skill</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>jira-urgent</div>
-    <div class="meta-item"><span class="meta-label">description</span>List Jira tasks where the team is waiting on you. Finds issues with unanswered mentions or questions, drafts replies. Supports --full mode for all open tasks.</div>
+    <div class="meta-item"><span class="meta-label">description</span>List Jira tasks where the team is waiting on you. Finds issues with unanswered mentions or questions, drafts replies.</div>
     <div class="meta-item"><span class="meta-label">triggers</span>jira-urgent, jurgent, my Jira tasks, what does my team need from me, urgent Jira items</div>
   </div>
 </section>
 <section class="section">
 <h2>Paths</h2>
 <ul>
-<li><code>CONFIG</code> — <code>./projects.config</code> (skill-relative, key=value format)</li>
-<li><code>OUTPUT_DIR</code> — <code>.local/jira/</code></li>
-<li><code>OUTPUT_FILE</code> — <code>urgent-{YYYY-MM-DD}.md</code></li>
-<li><code>IGNORE_FILE</code> — <code>.local/jira/ignored-comments.txt</code> — one comment ID per line</li>
-<li><code>TIMEZONE</code> — <code>Asia/Bangkok</code></li>
-<li><code>DRAFT_MODE</code> — <code>student</code> (student = friendly team-facing; caveman = minimal)</li>
+<li><code>CONFIG</code> — <code>./projects.config</code> (skill-relative)</li>
+<li><code>IGNORE_FILE</code> — <code>./ignored-comments.txt</code> (skill-relative) — one comment ID per line</li>
 </ul>
 </section>
 <section class="section">
-<h2>Flags</h2>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Flag">(none)</td>
-<td data-label="Behavior">Urgent mode on default project</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>--full</code></td>
-<td data-label="Behavior">Full mode: all open tasks, no drafts</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>--choose</code></td>
-<td data-label="Behavior">Prompt to pick a project</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>--refresh</code></td>
-<td data-label="Behavior">Re-discover projects, update config, then run</td>
-</tr>
-<tr>
-<td data-label="Flag"><code>&lt;KEY&gt;</code></td>
-<td data-label="Behavior">Override project key (e.g., <code>PROJ</code>)</td>
-</tr>
-</tbody>
-</table>
+<h2>Workflow</h2>
+<p>Run the Python script and present its output cleanly in chat:</p>
+<pre><code class="language-bash">python .ai/plugins/devflow/jira-urgent/main.py
+</code></pre>
+<p>Then for each item found, fetch the full comment body from Jira and draft a reply per the classification rules below. Present as formatted markdown — not raw terminal output.  </p>
 </section>
 <section class="section">
 <h2>Detection Logic</h2>
@@ -435,151 +405,9 @@ a:hover {
 </tr>
 </tbody>
 </table>
-<h3>Sort Order (urgent mode)</h3>
-<p>Group by workflow stage first, then priority within each group:</p>
-<ol>
-<li><strong>Blocked</strong> — Blocked, On Hold</li>
-<li><strong>Active</strong> — Ready for Development, In Progress, Code Review</li>
-<li><strong>Review</strong> — TM Review, In Review</li>
-</ol>
-<p>Within each group: <code>at_mention</code> first, <code>question</code> next, <code>verify</code> last.<br>
-Within tag: priority Highest → High → Medium → Low → Lowest.<br>
-Within priority: comment datetime descending.</p>
-<h3>Status Bucketing (full mode)</h3>
-<table>
-<thead>
-<tr>
-<th>Statuses</th>
-<th>Bucket</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Statuses">TM Review, In Review, Code Review</td>
-<td data-label="Bucket">Top priority</td>
-</tr>
-<tr>
-<td data-label="Statuses">In Progress</td>
-<td data-label="Bucket">In Progress</td>
-</tr>
-<tr>
-<td data-label="Statuses">Ready for Development, Open, To Do</td>
-<td data-label="Bucket">Ready for Development</td>
-</tr>
-<tr>
-<td data-label="Statuses">Everything else</td>
-<td data-label="Bucket">Other</td>
-</tr>
-</tbody>
-</table>
-<h3>Drop Conditions (both modes)</h3>
-<p>Status in: Completed, Done, Closed, Resolved, On Production, On Staging.  </p>
 </section>
 <section class="section">
-<h2>Steps</h2>
-<h3>Step 1: Parse Input</h3>
-<p>Extract: mode (<code>urgent</code> | <code>full</code>), project key (optional), flags (<code>--choose</code>, <code>--refresh</code>).</p>
-<h3>Step 2: Load Credentials</h3>
-<p>Read <code>.env.local</code> (preferred) or <code>.env</code> from repo root. Extract:</p>
-<ul>
-<li><code>JIRA_COMPANY_DOMAIN</code> — the Atlassian subdomain (e.g., <code>saritasa</code>)</li>
-<li><code>JIRA_EMAIL</code></li>
-<li><code>JIRA_API_TOKEN</code></li>
-</ul>
-<p>Do not use <code>source</code> — read the file and parse <code>KEY=VALUE</code> lines directly.</p>
-<h3>Step 3: Get User Account ID</h3>
-<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
-  -H &quot;Accept: application/json&quot; \
-  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/myself&quot;
-</code></pre>
-<p>Parse <code>accountId</code> from the JSON response.</p>
-<h3>Step 4: Resolve Project Key</h3>
-<table>
-<thead>
-<tr>
-<th>Case</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Case">Explicit <code>&lt;KEY&gt;</code> in command</td>
-<td data-label="Action">Use it</td>
-</tr>
-<tr>
-<td data-label="Case"><code>--refresh</code></td>
-<td data-label="Action">Discover projects → pick new default → update config → use</td>
-</tr>
-<tr>
-<td data-label="Case"><code>--choose</code></td>
-<td data-label="Action">Pick from saved projects → use for this run</td>
-</tr>
-<tr>
-<td data-label="Case">No flag, no key</td>
-<td data-label="Action">Use <code>default_project_key</code> from config</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Discover projects</strong> — call the search API, extract unique project keys and names, save to <code>CONFIG</code> in key=value format. Use the POST endpoint:</p>
-<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -H &quot;Accept: application/json&quot; \
-  -d '{&quot;jql&quot;:&quot;sprint in openSprints() AND (assignee=currentUser() OR reporter=currentUser())&quot;,&quot;maxResults&quot;:100,&quot;fields&quot;:[&quot;project&quot;]}' \
-  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql&quot;
-</code></pre>
-<h3>Step 5: Query Jira</h3>
-<p>Use the JQL search POST endpoint: <code>POST /rest/api/3/search/jql</code> with JSON body.  </p>
-<p><strong>Urgent mode — two queries:</strong>  </p>
-<p>Query A (assigned to you):</p>
-<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -H &quot;Accept: application/json&quot; \
-  -d '{&quot;jql&quot;:&quot;project=&lt;KEY&gt; AND sprint in openSprints() AND assignee=currentUser() AND status not in (Completed,Done,Closed,Resolved,\&quot;On Production\&quot;,\&quot;On Staging\&quot;) ORDER BY priority DESC, updated DESC&quot;,&quot;maxResults&quot;:50,&quot;fields&quot;:[&quot;summary&quot;,&quot;status&quot;,&quot;priority&quot;,&quot;issuetype&quot;,&quot;comment&quot;,&quot;assignee&quot;,&quot;updated&quot;]}' \
-  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql&quot;
-</code></pre>
-<p>Query B (reporter, not assignee): same but <code>assignee!=currentUser() AND reporter=currentUser()</code>.  </p>
-<p><strong>Full mode:</strong> Query A only. Fields: <code>summary, status, priority, issuetype, updated</code>. maxResults: 100.</p>
-<h3>Step 6: Filter &amp; Classify (urgent mode only)</h3>
-<p>For each issue, apply urgent rules from Detection Logic. Record per item:</p>
-<ul>
-<li><code>key</code>, <code>summary</code>, <code>status</code>, <code>priority</code>, <code>assignee</code></li>
-<li><code>anchor_comment_id</code>, <code>anchor_author</code>, <code>anchor_datetime</code> (in configured timezone)</li>
-<li><code>anchor_preview</code> (first ~200 chars)</li>
-<li><code>tag</code></li>
-</ul>
-<p><strong>Drop ignored comments:</strong> read <code>IGNORE_FILE</code> (one comment ID per line). If <code>anchor_comment_id</code> is in the list, drop the item — user has already reviewed and chosen not to reply.  </p>
-<p>Build deep links using comment IDs: <code>https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/&lt;KEY&gt;?focusedCommentId=&lt;anchor_comment_id&gt;</code></p>
-<h3>Step 7: Draft Reply (urgent mode only)</h3>
-<table>
-<thead>
-<tr>
-<th>Tag</th>
-<th>Template</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Tag"><code>verify</code>, <code>at_mention_verify</code></td>
-<td data-label="Template">"Thanks <code>&lt;author&gt;</code>. I'll verify on <code>&lt;env&gt;</code> today and confirm here."</td>
-</tr>
-<tr>
-<td data-label="Tag"><code>at_mention</code>, <code>question</code></td>
-<td data-label="Template">Substantive reply addressing the question. 2-6 sentences.</td>
-</tr>
-</tbody>
-</table>
-<p>Rules:</p>
-<ul>
-<li>Address teammate by <code>anchor_author</code></li>
-<li>Insufficient context → <code>**I'm not sure yet.**</code> + how to find out</li>
-<li>Never invent decisions</li>
-<li>Tag confidence: <code>High</code>, <code>Medium</code>, <code>Low</code></li>
-</ul>
-<h3>Step 8: Output</h3>
-<p>Save to <code>.local/jira/urgent-{YYYY-MM-DD}.md</code>. Print full body to chat.  </p>
-<p><strong>Urgent mode format:</strong>  </p>
-<p>Each item links directly to the urgent comment. Use deep link format:<br>
-<code>https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/&lt;KEY&gt;?focusedCommentId=&lt;comment_id&gt;</code></p>
+<h2>Output Format (Strict — follow exactly)</h2>
 <pre><code class="language-markdown"># Jira — Urgent Tasks: &lt;KEY&gt; ({YYYY-MM-DD})
 
 ## 🔴 Needs your answer ({count})
@@ -602,35 +430,37 @@ Within priority: comment datetime descending.</p>
 
 **Draft reply (confidence: High):**
 
-&gt; Thanks &lt;author&gt;. I'll verify on dev today and confirm here.
+&gt; Thanks &lt;author&gt;. I'll verify today and confirm here.
 </code></pre>
 <p>No items: "No urgent items in <code>&lt;KEY&gt;</code> — your team is not currently blocked on you."  </p>
-<p><strong>Full mode format:</strong></p>
-<pre><code class="language-markdown"># Jira — All My Open Tasks: &lt;KEY&gt; ({YYYY-MM-DD})
-
-### Top priority (review needed)
-- [&lt;KEY-N&gt;](&lt;task_link&gt;) (&lt;priority&gt;) — &lt;summary&gt;
-  - Last updated: &lt;YYYY-MM-DD HH:MM&gt;
-
-### In Progress
-- ...
-
-### Ready for Development
-- ...
-
-### Other
-- ...
-</code></pre>
-<h3>Step 9: Status</h3>
-<pre><code>**Changed:** &lt;N&gt; urgent of &lt;M&gt; total (X ignored)
-**Needs review:** &lt;flags&gt;
-
-To ignore items you don't need to reply to, add their comment ID to `.local/jira/ignored-comments.txt`:
-</code></pre>
-<p>508167<br>
-506832</p>
-<pre><code>Ignored comments won't appear in future runs.
-</code></pre>
+</section>
+<section class="section">
+<h2>Draft Reply Templates</h2>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Template</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tag"><code>verify</code>, <code>at_mention_verify</code></td>
+<td data-label="Template">"Thanks <code>&lt;author&gt;</code>. I'll verify today and confirm here."</td>
+</tr>
+<tr>
+<td data-label="Tag"><code>at_mention</code>, <code>question</code></td>
+<td data-label="Template">Substantive reply addressing the question. 2-6 sentences.</td>
+</tr>
+</tbody>
+</table>
+<p>Rules:</p>
+<ul>
+<li>Address teammate by <code>anchor_author</code></li>
+<li>Insufficient context → <code>**I'm not sure yet.**</code> + how to find out</li>
+<li>Never invent decisions</li>
+<li>Tag confidence: <code>High</code>, <code>Medium</code>, <code>Low</code></li>
+</ul>
 </section>
 <section class="section">
 <h2>Rules</h2>
@@ -643,20 +473,16 @@ To ignore items you don't need to reply to, add their comment ID to `.local/jira
 </thead>
 <tbody>
 <tr>
-<td data-label="Rule">Anchor IDs from API</td>
-<td data-label="Detail">Extract <code>comment.id</code> directly from JSON. Never retype or summarize IDs before building links.</td>
-</tr>
-<tr>
 <td data-label="Rule">Always re-query</td>
 <td data-label="Detail">Never reuse cached data. Each run must query Jira fresh.</td>
 </tr>
 <tr>
-<td data-label="Rule">Full output in chat</td>
-<td data-label="Detail">Print the same markdown that goes into the saved file.</td>
+<td data-label="Rule">Print to chat</td>
+<td data-label="Detail">Present clean formatted markdown in chat. Do not save to file.</td>
 </tr>
 <tr>
 <td data-label="Rule">Single project</td>
-<td data-label="Detail">No multi-project aggregation. Use <code>--choose</code> to switch.</td>
+<td data-label="Detail">Use default from <code>projects.config</code>.</td>
 </tr>
 <tr>
 <td data-label="Rule">Read-only</td>
@@ -670,22 +496,8 @@ To ignore items you don't need to reply to, add their comment ID to `.local/jira
 <td data-label="Rule">Skip answered</td>
 <td data-label="Detail">User comment after the urgent-trigger comment → drop.</td>
 </tr>
-<tr>
-<td data-label="Rule">Cap at 50</td>
-<td data-label="Detail">If query hits 50, note in status.</td>
-</tr>
 </tbody>
 </table>
-</section>
-<section class="section">
-<h2>Examples</h2>
-<pre><code>jurgent                       → query Jira, save file, display
-jurgent                       → (second run) show saved list, no API call
-jurgent --refresh             → force re-query Jira
-jurgent PROJ                  → urgent on specific project
-jurgent --full                → all open tasks, no drafts
-</code></pre>
-<p><strong>After first run:</strong> subsequent calls display from saved file without querying Jira. Only re-queries when you run <code>jurgent</code> again or use <code>--refresh</code>. This lets you loop through the list, reply, and ignore items without hitting the API each time.</p>
 </section>
   </main>
 </body>

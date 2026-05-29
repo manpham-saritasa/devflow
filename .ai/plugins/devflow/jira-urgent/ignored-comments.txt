@@ -1,0 +1,14 @@
+# Ignored Jira Comments
+# Add one comment ID per line. These comments won't appear in jira-urgent output.
+# Clear this file to reset all ignores.
+
+508009
+508878
+507341
+509939
+504567
+505417
+509507
+507296
+509583
+505486
