@@ -65,6 +65,20 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 
 ---
 
+## On-demand rules — load by task type
+
+Before starting a task, check if a matching rule file exists and read it:
+
+| Task type | Read this |
+|---|---|
+| Coding (implement, fix, refactor) | `rules/coding-rules.md` |
+| Reviewing PR comments or code | `rules/pr-rules.md` |
+| Creating or editing `.md` files | auto-run `md-to-html` after save (per `memory.md`) |
+
+If multiple apply, read all matching files before starting.
+
+---
+
 ## Priority order
 
 | Priority | Source |
@@ -73,8 +87,9 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 | 2 | `memory.md` at .ai folder |
 | 3 | Chosen agent from `agents/` |
 | 4 | Chosen skill from `skills/` |
-| 5 | `AGENTS.md` rules |
-| 6 | Default AI behavior |
+| 5 | On-demand rules from `rules/` |
+| 6 | `AGENTS.md` rules |
+| 7 | Default AI behavior |
 
 ---
 

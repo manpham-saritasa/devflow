@@ -13,14 +13,10 @@ def parse_frontmatter(md_text: str):
     if not lines:
         return md_text, {}
 
-    # Find opening --- within first 10 lines (heading may precede it)
-    start = -1
-    for i in range(min(10, len(lines))):
-        if lines[i].strip() == "---":
-            start = i
-            break
-    if start == -1:
+    # Find opening --- on line 0 only (frontmatter must be at top of file)
+    if not lines or lines[0].strip() != "---":
         return md_text, {}
+    start = 0
 
     # Find closing ---
     end = -1

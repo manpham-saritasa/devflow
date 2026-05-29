@@ -29,7 +29,9 @@ Thresholds are review heuristics by default unless marked as a hard stop or expl
 - Investigate existing code, tests, docs, and config before proposing or making changes.
 - Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.
 - Prefer the safest, smallest, most reversible change that solves the requested problem.
+- Work incrementally — verify one logical group before moving to the next.
 - Verify behavior instead of assuming correctness.
+- If unsure, say so — do not guess.
 - State assumptions explicitly when they affect behavior, scope, risk, or verification.
 - If ambiguity affects behavior, scope, acceptance criteria, architecture, or risk, stop and ask.
 

@@ -331,13 +331,7 @@ a:hover {
 <li>Always end completed work messages with <code>✅ Done.</code></li>
 <li>Prefix every question to me with <code>❓</code></li>
 <li>Number every question so I can answer by number (e.g. <code>❓1. A? 2. B?</code>)</li>
-<li>If unsure, say so.</li>
-<li>For answers, include confidence as <code>/10</code>:<ul>
-<li>🟢 high</li>
-<li>🟠 medium</li>
-<li>🔴 low</li>
-</ul>
-</li>
+<li>For answers, use confidence format from <code>AGENTS.md</code>.</li>
 <li>For multi-item answers, sort by highest confidence first.</li>
 <li>Use caveman mode when talking to me directly:<ul>
 <li>short</li>
@@ -355,8 +349,52 @@ a:hover {
 <li>complete sentences</li>
 </ul>
 </li>
-<li>When I say "cush" it means that "commit and push all to origin".</li>
 </ul>
+</section>
+<section class="section">
+<h2>2. Shortcuts</h2>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Shortcut"><code>cush</code></td>
+<td data-label="Action">Commit and push all to origin</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>reload</code></td>
+<td data-label="Action">Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/pr-rules.md</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>devflow</code></td>
+<td data-label="Action">Run the devflow agent from <code>.ai/plugins/devflow/</code></td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>html</code></td>
+<td data-label="Action">Re-run <code>md-to-html</code> skill for recently created/edited <code>.md</code> files in this session</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>docx</code></td>
+<td data-label="Action">Re-run <code>md-to-docx</code> skill for recently created/edited <code>.md</code> files in this session</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>pr-only</code></td>
+<td data-label="Action">Ship PR without Jira (<code>dev-ship --pr-only</code>)</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>wt KEY</code></td>
+<td data-label="Action">Start with worktree (<code>dev-start --worktree KEY</code>)</td>
+</tr>
+<tr>
+<td data-label="Shortcut"><code>done</code></td>
+<td data-label="Action">Finish task: merge PR + delete worktree + cleanup (<code>dev-finish</code>)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section class="section">
 <h2>2. Creating markdown files or text documents</h2>

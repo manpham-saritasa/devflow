@@ -321,7 +321,68 @@ a:hover {
 </section>
 <section class="section">
 <p>Orchestration file for this repository.<br>
-Read this before starting any work if available.</p>
+Read this before starting any work if available.  </p>
+</section>
+<section class="section">
+<h2>Supported AI tools</h2>
+<p>This file is loaded via <code>AGENTS.md</code> which is auto-read by:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Auto-reads <code>AGENTS.md</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tool">OpenAI Codex CLI</td>
+<td data-label="Auto-reads AGENTS.md">✅</td>
+</tr>
+<tr>
+<td data-label="Tool">OpenCode</td>
+<td data-label="Auto-reads AGENTS.md">✅</td>
+</tr>
+<tr>
+<td data-label="Tool">GitHub Copilot (coding agent)</td>
+<td data-label="Auto-reads AGENTS.md">✅</td>
+</tr>
+<tr>
+<td data-label="Tool">Claude Code</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>CLAUDE.md</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Gemini CLI</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>GEMINI.md</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Windsurf</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>.windsurfrules</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Codeium</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>.codeiumrules</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Aider</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>CONVENTIONS.md</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Zed</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>.rules</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">JetBrains AI Assistant</td>
+<td data-label="Auto-reads AGENTS.md">✅️ via <code>.rules</code> symlink</td>
+</tr>
+<tr>
+<td data-label="Tool">Cursor</td>
+<td data-label="Auto-reads AGENTS.md">✅ via <code>.cursor/rules/main.mdc</code> — points to <code>AGENTS.md</code></td>
+</tr>
+</tbody>
+</table>
+<div class="blockquotes">
+<p>Edit only <code>AGENTS.md</code>. Run <code>sync.sh</code> or <code>sync.ps1</code> to propagate to all tool-specific files.  </p>
+</div>
 </section>
 <section class="section">
 <h2>Start of every session</h2>
@@ -404,6 +465,33 @@ If no agent fits, say no good agent found, then continue with memory and rules o
 If no skill fits, say no good skill found, then continue with memory and rules only.  </p>
 </section>
 <section class="section">
+<h2>On-demand rules — load by task type</h2>
+<p>Before starting a task, check if a matching rule file exists and read it:</p>
+<table>
+<thead>
+<tr>
+<th>Task type</th>
+<th>Read this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Task type">Coding (implement, fix, refactor)</td>
+<td data-label="Read this"><code>rules/coding-rules.md</code></td>
+</tr>
+<tr>
+<td data-label="Task type">Reviewing PR comments or code</td>
+<td data-label="Read this"><code>rules/pr-rules.md</code></td>
+</tr>
+<tr>
+<td data-label="Task type">Creating or editing <code>.md</code> files</td>
+<td data-label="Read this">auto-run <code>md-to-html</code> after save (per <code>memory.md</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>If multiple apply, read all matching files before starting.  </p>
+</section>
+<section class="section">
 <h2>Priority order</h2>
 <table>
 <thead>
@@ -431,10 +519,14 @@ If no skill fits, say no good skill found, then continue with memory and rules o
 </tr>
 <tr>
 <td data-label="Priority">5</td>
-<td data-label="Source"><code>AGENTS.md</code> rules</td>
+<td data-label="Source">On-demand rules from <code>rules/</code></td>
 </tr>
 <tr>
 <td data-label="Priority">6</td>
+<td data-label="Source"><code>AGENTS.md</code> rules</td>
+</tr>
+<tr>
+<td data-label="Priority">7</td>
 <td data-label="Source">Default AI behavior</td>
 </tr>
 </tbody>
