@@ -210,29 +210,28 @@ If there is a tradeoff between a very small local patch and a small shared abstr
 
 ---
 
-## Quality Thresholds (Review Triggers)
+## Quality Thresholds (Mandatory for new code)
 
-These are review heuristics, not optimization targets or automatic blockers.
+These thresholds apply to all new or modified code. Legacy code that was not touched is exempt by default — do not refactor it just to meet thresholds.
 
 ### Code Size
-- Function or method > 40 lines: consider extraction or simplification.
-- File > 300 lines: consider splitting or rethinking structure.
-- Function parameters > 4: consider a parameter object or simplification.
-- Nesting depth > 4: consider early returns or extraction.
-- Long chains of calls: if more than 3 chained calls, consider named intermediates.
+- Function or method > 40 lines: extract or simplify.
+- File > 300 lines: split or restructure.
+- Function parameters > 4: use a parameter object or simplify.
+- Nesting depth > 4: use early returns or extraction.
+- Long chains of calls: if more than 3 chained calls, use named intermediates.
 
 ### Complexity
-- High cyclomatic or cognitive complexity: call it out and prefer simplification when editing that code.
-- Deep inheritance beyond project norms: prefer composition.
+- High cyclomatic or cognitive complexity: simplify when editing that code.
+- Deep inheritance beyond project norms: use composition.
 
 ### Naming
-- Prefer clear, readable names.
-- Very short names are fine in small local scopes, loops, or catch variables.
+- Use clear, readable names.
+- Very short names ok in small local scopes, loops, or catch variables.
 
 ### Change Size
-- More than 10 touched files: verify scope is still focused.
-- Around 600 changed lines or 30 files: consider splitting into smaller PRs.
+- More than 10 touched files: stop and verify scope is still focused.
 - New dependency: justify it explicitly.
-- Duplicated business logic: prefer shared abstraction.
+- Duplicated business logic: use shared abstraction.
 
-Generated, vendored, or config-only code usually does not need these thresholds enforced unless explicitly requested.
+Generated, vendored, or config-only code is exempt.

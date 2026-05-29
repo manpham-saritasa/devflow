@@ -37,7 +37,7 @@
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
 | `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/pr-rules.md, rules/session-rules.md |
 | `devflow` | Run the devflow agent from `.ai/plugins/devflow/` |
-| `html` | Read `.local/sessions/current.md`, re-run `md-to-html` for all touched `.md` files |
+| `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat |
 | `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
 | `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
 | `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
@@ -60,4 +60,3 @@
 - When creating documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
 - When creating or editing `.md` files, always run the `md-to-html` skill to generate the corresponding `.html` file.
-- When creating or editing files, update `.local/sessions/current.md` with the file path, action, and timestamp.

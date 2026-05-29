@@ -541,34 +541,33 @@ a:hover {
 </ul>
 </section>
 <section class="section">
-<h2>Quality Thresholds (Review Triggers)</h2>
-<p>These are review heuristics, not optimization targets or automatic blockers.</p>
+<h2>Quality Thresholds (Mandatory for new code)</h2>
+<p>These thresholds apply to all new or modified code. Legacy code that was not touched is exempt by default — do not refactor it just to meet thresholds.</p>
 <h3>Code Size</h3>
 <ul>
-<li>Function or method &gt; 40 lines: consider extraction or simplification.</li>
-<li>File &gt; 300 lines: consider splitting or rethinking structure.</li>
-<li>Function parameters &gt; 4: consider a parameter object or simplification.</li>
-<li>Nesting depth &gt; 4: consider early returns or extraction.</li>
-<li>Long chains of calls: if more than 3 chained calls, consider named intermediates.</li>
+<li>Function or method &gt; 40 lines: extract or simplify.</li>
+<li>File &gt; 300 lines: split or restructure.</li>
+<li>Function parameters &gt; 4: use a parameter object or simplify.</li>
+<li>Nesting depth &gt; 4: use early returns or extraction.</li>
+<li>Long chains of calls: if more than 3 chained calls, use named intermediates.</li>
 </ul>
 <h3>Complexity</h3>
 <ul>
-<li>High cyclomatic or cognitive complexity: call it out and prefer simplification when editing that code.</li>
-<li>Deep inheritance beyond project norms: prefer composition.</li>
+<li>High cyclomatic or cognitive complexity: simplify when editing that code.</li>
+<li>Deep inheritance beyond project norms: use composition.</li>
 </ul>
 <h3>Naming</h3>
 <ul>
-<li>Prefer clear, readable names.</li>
-<li>Very short names are fine in small local scopes, loops, or catch variables.</li>
+<li>Use clear, readable names.</li>
+<li>Very short names ok in small local scopes, loops, or catch variables.</li>
 </ul>
 <h3>Change Size</h3>
 <ul>
-<li>More than 10 touched files: verify scope is still focused.</li>
-<li>Around 600 changed lines or 30 files: consider splitting into smaller PRs.</li>
+<li>More than 10 touched files: stop and verify scope is still focused.</li>
 <li>New dependency: justify it explicitly.</li>
-<li>Duplicated business logic: prefer shared abstraction.</li>
+<li>Duplicated business logic: use shared abstraction.</li>
 </ul>
-<p>Generated, vendored, or config-only code usually does not need these thresholds enforced unless explicitly requested.</p>
+<p>Generated, vendored, or config-only code is exempt.</p>
 </section>
   </main>
 </body>

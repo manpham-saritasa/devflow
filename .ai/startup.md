@@ -73,7 +73,6 @@ Before starting a task, check if a matching rule file exists and read it:
 | Task type | Read this |
 |---|---|
 | Coding (implement, fix, refactor) | `rules/coding-rules.md` |
-| Reviewing PR comments or code | `rules/pr-rules.md` |
 | Creating or editing `.md` files | auto-run `md-to-html` after save (per `memory.md`) |
 
 If multiple apply, read all matching files before starting.

@@ -18,12 +18,4 @@ On `save` shortcut or major task completion, save session state to `.local/sessi
 
 2. **Extract key corrections** and append them to `.local/sessions/corrections.md` so the AI can read them on next startup.
 
-3. **Track touched files** in `.local/sessions/current.md` — append each created/edited file with action and timestamp.
-
-Clear `.local/sessions/current.md` at the start of a new session (rewrite with current session header).
-
-At session start, read the most recent file from `.local/sessions/` (by filename date). Extract a 1-2 line summary of what was done and key decisions. Write it under the `### Previous Session` section in `.local/sessions/current.md`.
-
-Also read `.local/sessions/corrections.md` if it exists. Note any corrections or lessons learned from prior sessions.
-
 The `.local/` folder is gitignored and lives in the main repo, so it persists across worktrees.
