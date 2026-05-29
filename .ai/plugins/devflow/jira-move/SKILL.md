@@ -46,7 +46,7 @@ jmove PROJ-1000 --discover      → discover all transitions, save to config
 ### Step 2: Load Credentials
 
 Read `.env.local` (preferred) or `.env` from repo root. Extract:
-- `JIRA_DOMAIN` or `JIRA_COMPANY_DOMAIN` — the Atlassian subdomain (e.g., `saritasa`)
+- `JIRA_COMPANY_DOMAIN` — the Atlassian subdomain (e.g., `saritasa`)
 - `JIRA_EMAIL`
 - `JIRA_API_TOKEN`
 
