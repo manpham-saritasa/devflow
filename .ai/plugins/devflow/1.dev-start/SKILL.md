@@ -301,3 +301,7 @@ You are already on the branch. Start:
   Full flow:  /devflow [KEY]
   Plan only:  /dev-plan [KEY]
 ```
+
+### Step 10: Update Jira Status
+
+Call `dev-jira-transition` skill with `KEY` and milestone `dev-start`. Non-blocking — continue on failure.

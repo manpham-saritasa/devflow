@@ -342,3 +342,7 @@ If `--technical-only`:
 ```
 
 (Omit skipped blocks per flags.)
+
+### Step 10: Update Jira Status
+
+Call `dev-jira-transition` skill with `KEY` and milestone `dev-ship`. Non-blocking — continue on failure.
