@@ -343,6 +343,30 @@ a:hover {
 <li>Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.</li>
 <li>Prefer the safest, smallest, most reversible change that solves the requested problem.</li>
 <li>Work incrementally — verify one logical group before moving to the next.</li>
+<li>Show the planned changes in a table before editing — let the user confirm first. Format:</li>
+</ul>
+<p>🪛 <strong>Summary:</strong> [1-line what these changes achieve]</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>Change</th>
+<th>Category</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="#">1</td>
+<td data-label="File">path/file.md</td>
+<td data-label="Change">what changes</td>
+<td data-label="Category">new/fix/refactor/style/docs/config</td>
+<td data-label="Why">reason for change</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>Verify behavior instead of assuming correctness.</li>
 <li>If unsure, say so — do not guess.</li>
 <li>State assumptions explicitly when they affect behavior, scope, risk, or verification.</li>

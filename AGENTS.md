@@ -30,6 +30,13 @@ Thresholds are review heuristics by default unless marked as a hard stop or expl
 - Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.
 - Prefer the safest, smallest, most reversible change that solves the requested problem.
 - Work incrementally — verify one logical group before moving to the next.
+- Show the planned changes in a table before editing — let the user confirm first. Format:
+
+🪛 **Summary:** [1-line what these changes achieve]
+
+| # | File | Change | Category | Why |
+|---|------|--------|----------|-----|
+| 1 | path/file.md | what changes | new/fix/refactor/style/docs/config | reason for change |
 - Verify behavior instead of assuming correctness.
 - If unsure, say so — do not guess.
 - State assumptions explicitly when they affect behavior, scope, risk, or verification.
