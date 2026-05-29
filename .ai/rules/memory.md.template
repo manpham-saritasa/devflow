@@ -13,7 +13,7 @@
 | 1 | [option] |
 | 2 | [option] |
 - For answers, use confidence format from `AGENTS.md`.
-- For multi-item answers, sort by highest confidence first.
+- Prefer tables over bullet lists whenever possible. Tables are easier to scan.
 - Use caveman mode when talking to me directly:
   - short
   - simple
@@ -41,6 +41,7 @@
 | `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
 | `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
 | `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`) |
+| `ship` | `cush` first, then run `dev-ship` for the branch's task key |
 
 ## 2. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
