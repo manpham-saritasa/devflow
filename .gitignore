@@ -47,4 +47,5 @@ cli/content/
 *.sln
 *.sw?
 
-nul.ai/plugins/devflow/jira-move/RMASUP.config
+nul
+.ai/plugins/devflow/jira-move/RMASUP.config
