@@ -320,16 +320,15 @@ a:hover {
   <h1>Session Tracking Rule</h1>
 </section>
 <section class="section">
-<p>Every 10 minutes during a working session:</p>
-<ol>
-<li><strong>Save session state</strong> to <code>.local/sessions/[YYYY-MM-DD].md</code> — use today's date as filename. Append to the file if it already exists:<ul>
-<li>Summary of what was done</li>
-<li>List of files changed</li>
-<li>Key decisions made</li>
-</ul>
-</li>
-</ol>
-<p>Example: <code>.local/sessions/2026-05-29.md</code></p>
+<p>On <code>save</code> shortcut or major task completion, save session state to <code>.local/sessions/raw/[YYYY-MM-DD].md</code>:</p>
+<pre><code>    ## 14:30
+
+    - Did: [what was done]
+    - Files: [files changed]
+    - Decided: [key decisions made]
+</code></pre>
+<p>First entry of the day includes <code># Session — YYYY-MM-DD</code> header. Subsequent entries just append <code>## HH:MM</code> blocks.</p>
+<p>Example: <code>.local/sessions/raw/2026-05-29.md</code></p>
 <p>Path resolves to the main repo's <code>.local/sessions/</code> folder — shared across all worktrees, gitignored.</p>
 <ol start="2">
 <li>

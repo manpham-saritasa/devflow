@@ -43,6 +43,7 @@
 | `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
 | `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`) |
 | `ship` | `cush` first, then run `dev-ship` for the branch's task key |
+| `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
 
 ## 2. Creating markdown files or text documents
 - Big `##` section come, put `---` first.

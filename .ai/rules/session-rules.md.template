@@ -1,13 +1,18 @@
 # Session Tracking Rule
 
-Every 10 minutes during a working session:
+On `save` shortcut or major task completion, save session state to `.local/sessions/raw/[YYYY-MM-DD].md`:
 
-1. **Save session state** to `.local/sessions/[YYYY-MM-DD].md` — use today's date as filename. Append to the file if it already exists:
-   - Summary of what was done
-   - List of files changed
-   - Key decisions made
+   ```markdown
+   ## 14:30
 
-   Example: `.local/sessions/2026-05-29.md`
+   - Did: [what was done]
+   - Files: [files changed]
+   - Decided: [key decisions made]
+   ```
+
+   First entry of the day includes `# Session — YYYY-MM-DD` header. Subsequent entries just append `## HH:MM` blocks.
+
+   Example: `.local/sessions/raw/2026-05-29.md`
 
    Path resolves to the main repo's `.local/sessions/` folder — shared across all worktrees, gitignored.
 
