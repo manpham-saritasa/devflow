@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>jira-urgent</div>
+    <div class="meta-item"><span class="meta-label">description</span>List Jira tasks where the team is waiting on you. Finds issues with unanswered mentions or questions, drafts replies. Supports --full mode for all open tasks.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>jira-urgent, jurgent, my Jira tasks, what does my team need from me, urgent Jira items</div>
+  </div>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<ul>
+<li><code>CONFIG</code> — <code>./projects.config</code> (skill-relative, key=value format)</li>
+<li><code>OUTPUT_DIR</code> — <code>.local/jira/</code></li>
+<li><code>OUTPUT_FILE</code> — <code>urgent-{YYYY-MM-DD}.md</code></li>
+<li><code>IGNORE_FILE</code> — <code>.local/jira/ignored-comments.txt</code> — one comment ID per line</li>
+<li><code>TIMEZONE</code> — <code>Asia/Bangkok</code></li>
+<li><code>DRAFT_MODE</code> — <code>student</code> (student = friendly team-facing; caveman = minimal)</li>
+</ul>
+</section>
+<section class="section">
+<h2>Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Urgent mode on default project</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--full</code></td>
+<td data-label="Behavior">Full mode: all open tasks, no drafts</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--choose</code></td>
+<td data-label="Behavior">Prompt to pick a project</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--refresh</code></td>
+<td data-label="Behavior">Re-discover projects, update config, then run</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>&lt;KEY&gt;</code></td>
+<td data-label="Behavior">Override project key (e.g., <code>PROJ</code>)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Detection Logic</h2>
+<h3>Urgent Item Rules</h3>
+<p>Walk comments newest → oldest. Find first comment matching:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule"><strong>A</strong></td>
+<td data-label="Condition">Author ≠ you AND mentions you via @-mention</td>
+</tr>
+<tr>
+<td data-label="Rule"><strong>B</strong></td>
+<td data-label="Condition">Author ≠ you AND contains <code>?</code></td>
+</tr>
+</tbody>
+</table>
+<p>If matched AND no later comment by you → classify intent. Otherwise drop.</p>
+<h3>Intent Classification</h3>
+<p><strong>Pass 1 — keyword filter:</strong></p>
+<ul>
+<li><code>verify</code> if: "is fixed", "was fixed", "resolved", "not reproducible", "please verify", "please check", "ready for review", "ready for qa", "ready for testing"</li>
+<li><code>needs_answer</code> if (overrides verify): "which", "should we", "do we", "can you", "could you", "what about", "any solution", "any update"</li>
+</ul>
+<p><strong>Pass 2 — LLM judgment (if ambiguous):</strong></p>
+<ul>
+<li><code>verify</code> — teammate reporting completed work, asking for confirmation/review</li>
+<li><code>needs_answer</code> — teammate asking question, requesting decision, blocked waiting on info</li>
+<li>Default: <code>needs_answer</code> (safer to surface)</li>
+</ul>
+<h3>Tag Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Intent</th>
+<th>Tag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">A (mention)</td>
+<td data-label="Intent">needs_answer</td>
+<td data-label="Tag"><code>at_mention</code></td>
+</tr>
+<tr>
+<td data-label="Rule">A (mention)</td>
+<td data-label="Intent">verify</td>
+<td data-label="Tag"><code>at_mention_verify</code></td>
+</tr>
+<tr>
+<td data-label="Rule">B (question)</td>
+<td data-label="Intent">needs_answer</td>
+<td data-label="Tag"><code>question</code></td>
+</tr>
+<tr>
+<td data-label="Rule">B (question)</td>
+<td data-label="Intent">verify</td>
+<td data-label="Tag"><code>verify</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Sort Order (urgent mode)</h3>
+<p>Group by workflow stage first, then priority within each group:</p>
+<ol>
+<li><strong>Blocked</strong> — Blocked, On Hold</li>
+<li><strong>Active</strong> — Ready for Development, In Progress, Code Review</li>
+<li><strong>Review</strong> — TM Review, In Review</li>
+</ol>
+<p>Within each group: <code>at_mention</code> first, <code>question</code> next, <code>verify</code> last.<br>
+Within tag: priority Highest → High → Medium → Low → Lowest.<br>
+Within priority: comment datetime descending.</p>
+<h3>Status Bucketing (full mode)</h3>
+<table>
+<thead>
+<tr>
+<th>Statuses</th>
+<th>Bucket</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Statuses">TM Review, In Review, Code Review</td>
+<td data-label="Bucket">Top priority</td>
+</tr>
+<tr>
+<td data-label="Statuses">In Progress</td>
+<td data-label="Bucket">In Progress</td>
+</tr>
+<tr>
+<td data-label="Statuses">Ready for Development, Open, To Do</td>
+<td data-label="Bucket">Ready for Development</td>
+</tr>
+<tr>
+<td data-label="Statuses">Everything else</td>
+<td data-label="Bucket">Other</td>
+</tr>
+</tbody>
+</table>
+<h3>Drop Conditions (both modes)</h3>
+<p>Status in: Completed, Done, Closed, Resolved, On Production, On Staging.  </p>
+</section>
+<section class="section">
+<h2>Steps</h2>
+<h3>Step 1: Parse Input</h3>
+<p>Extract: mode (<code>urgent</code> | <code>full</code>), project key (optional), flags (<code>--choose</code>, <code>--refresh</code>).</p>
+<h3>Step 2: Load Credentials</h3>
+<p>Read <code>.env.local</code> (preferred) or <code>.env</code> from repo root. Extract:</p>
+<ul>
+<li><code>JIRA_COMPANY_DOMAIN</code> — the Atlassian subdomain (e.g., <code>saritasa</code>)</li>
+<li><code>JIRA_EMAIL</code></li>
+<li><code>JIRA_API_TOKEN</code></li>
+</ul>
+<p>Do not use <code>source</code> — read the file and parse <code>KEY=VALUE</code> lines directly.</p>
+<h3>Step 3: Get User Account ID</h3>
+<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
+  -H &quot;Accept: application/json&quot; \
+  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/myself&quot;
+</code></pre>
+<p>Parse <code>accountId</code> from the JSON response.</p>
+<h3>Step 4: Resolve Project Key</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Case">Explicit <code>&lt;KEY&gt;</code> in command</td>
+<td data-label="Action">Use it</td>
+</tr>
+<tr>
+<td data-label="Case"><code>--refresh</code></td>
+<td data-label="Action">Discover projects → pick new default → update config → use</td>
+</tr>
+<tr>
+<td data-label="Case"><code>--choose</code></td>
+<td data-label="Action">Pick from saved projects → use for this run</td>
+</tr>
+<tr>
+<td data-label="Case">No flag, no key</td>
+<td data-label="Action">Use <code>default_project_key</code> from config</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Discover projects</strong> — call the search API, extract unique project keys and names, save to <code>CONFIG</code> in key=value format. Use the POST endpoint:</p>
+<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Accept: application/json&quot; \
+  -d '{&quot;jql&quot;:&quot;sprint in openSprints() AND (assignee=currentUser() OR reporter=currentUser())&quot;,&quot;maxResults&quot;:100,&quot;fields&quot;:[&quot;project&quot;]}' \
+  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql&quot;
+</code></pre>
+<h3>Step 5: Query Jira</h3>
+<p>Use the JQL search POST endpoint: <code>POST /rest/api/3/search/jql</code> with JSON body.  </p>
+<p><strong>Urgent mode — two queries:</strong>  </p>
+<p>Query A (assigned to you):</p>
+<pre><code class="language-bash">curl -s -u &quot;${JIRA_EMAIL}:${JIRA_API_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Accept: application/json&quot; \
+  -d '{&quot;jql&quot;:&quot;project=&lt;KEY&gt; AND sprint in openSprints() AND assignee=currentUser() AND status not in (Completed,Done,Closed,Resolved,\&quot;On Production\&quot;,\&quot;On Staging\&quot;) ORDER BY priority DESC, updated DESC&quot;,&quot;maxResults&quot;:50,&quot;fields&quot;:[&quot;summary&quot;,&quot;status&quot;,&quot;priority&quot;,&quot;issuetype&quot;,&quot;comment&quot;,&quot;assignee&quot;,&quot;updated&quot;]}' \
+  &quot;https://${JIRA_COMPANY_DOMAIN}.atlassian.net/rest/api/3/search/jql&quot;
+</code></pre>
+<p>Query B (reporter, not assignee): same but <code>assignee!=currentUser() AND reporter=currentUser()</code>.  </p>
+<p><strong>Full mode:</strong> Query A only. Fields: <code>summary, status, priority, issuetype, updated</code>. maxResults: 100.</p>
+<h3>Step 6: Filter &amp; Classify (urgent mode only)</h3>
+<p>For each issue, apply urgent rules from Detection Logic. Record per item:</p>
+<ul>
+<li><code>key</code>, <code>summary</code>, <code>status</code>, <code>priority</code>, <code>assignee</code></li>
+<li><code>anchor_comment_id</code>, <code>anchor_author</code>, <code>anchor_datetime</code> (in configured timezone)</li>
+<li><code>anchor_preview</code> (first ~200 chars)</li>
+<li><code>tag</code></li>
+</ul>
+<p><strong>Drop ignored comments:</strong> read <code>IGNORE_FILE</code> (one comment ID per line). If <code>anchor_comment_id</code> is in the list, drop the item — user has already reviewed and chosen not to reply.  </p>
+<p>Build deep links using comment IDs: <code>https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/&lt;KEY&gt;?focusedCommentId=&lt;anchor_comment_id&gt;</code></p>
+<h3>Step 7: Draft Reply (urgent mode only)</h3>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Template</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tag"><code>verify</code>, <code>at_mention_verify</code></td>
+<td data-label="Template">"Thanks <code>&lt;author&gt;</code>. I'll verify on <code>&lt;env&gt;</code> today and confirm here."</td>
+</tr>
+<tr>
+<td data-label="Tag"><code>at_mention</code>, <code>question</code></td>
+<td data-label="Template">Substantive reply addressing the question. 2-6 sentences.</td>
+</tr>
+</tbody>
+</table>
+<p>Rules:</p>
+<ul>
+<li>Address teammate by <code>anchor_author</code></li>
+<li>Insufficient context → <code>**I'm not sure yet.**</code> + how to find out</li>
+<li>Never invent decisions</li>
+<li>Tag confidence: <code>High</code>, <code>Medium</code>, <code>Low</code></li>
+</ul>
+<h3>Step 8: Output</h3>
+<p>Save to <code>.local/jira/urgent-{YYYY-MM-DD}.md</code>. Print full body to chat.  </p>
+<p><strong>Urgent mode format:</strong>  </p>
+<p>Each item links directly to the urgent comment. Use deep link format:<br>
+<code>https://${JIRA_COMPANY_DOMAIN}.atlassian.net/browse/&lt;KEY&gt;?focusedCommentId=&lt;comment_id&gt;</code></p>
+<pre><code class="language-markdown"># Jira — Urgent Tasks: &lt;KEY&gt; ({YYYY-MM-DD})
+
+## 🔴 Needs your answer ({count})
+
+### 1. [&lt;KEY-N&gt;](&lt;deep_link_with_comment_id&gt;) — &lt;summary&gt;
+- **Status:** &lt;status&gt; | **Priority:** &lt;priority&gt; | **Assignee:** &lt;assignee&gt;
+- **&lt;anchor_author&gt; asked on &lt;anchor_datetime&gt;** (&lt;tag&gt;):
+  &gt; &lt;anchor_preview&gt;
+
+**Draft reply (confidence: &lt;High|Medium|Low&gt;):**
+
+&gt; &lt;draft text&gt;
+
+---
+
+## 🟡 Verify when convenient ({count})
+
+### N. [&lt;KEY-N&gt;](&lt;deep_link_with_comment_id&gt;) — &lt;summary&gt;
+...
+
+**Draft reply (confidence: High):**
+
+&gt; Thanks &lt;author&gt;. I'll verify on dev today and confirm here.
+</code></pre>
+<p>No items: "No urgent items in <code>&lt;KEY&gt;</code> — your team is not currently blocked on you."  </p>
+<p><strong>Full mode format:</strong></p>
+<pre><code class="language-markdown"># Jira — All My Open Tasks: &lt;KEY&gt; ({YYYY-MM-DD})
+
+### Top priority (review needed)
+- [&lt;KEY-N&gt;](&lt;task_link&gt;) (&lt;priority&gt;) — &lt;summary&gt;
+  - Last updated: &lt;YYYY-MM-DD HH:MM&gt;
+
+### In Progress
+- ...
+
+### Ready for Development
+- ...
+
+### Other
+- ...
+</code></pre>
+<h3>Step 9: Status</h3>
+<pre><code>**Changed:** &lt;N&gt; urgent of &lt;M&gt; total (X ignored)
+**Needs review:** &lt;flags&gt;
+
+To ignore items you don't need to reply to, add their comment ID to `.local/jira/ignored-comments.txt`:
+</code></pre>
+<p>508167<br>
+506832</p>
+<pre><code>Ignored comments won't appear in future runs.
+</code></pre>
+</section>
+<section class="section">
+<h2>Rules</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Rule">Anchor IDs from API</td>
+<td data-label="Detail">Extract <code>comment.id</code> directly from JSON. Never retype or summarize IDs before building links.</td>
+</tr>
+<tr>
+<td data-label="Rule">Always re-query</td>
+<td data-label="Detail">Never reuse cached data. Each run must query Jira fresh.</td>
+</tr>
+<tr>
+<td data-label="Rule">Full output in chat</td>
+<td data-label="Detail">Print the same markdown that goes into the saved file.</td>
+</tr>
+<tr>
+<td data-label="Rule">Single project</td>
+<td data-label="Detail">No multi-project aggregation. Use <code>--choose</code> to switch.</td>
+</tr>
+<tr>
+<td data-label="Rule">Read-only</td>
+<td data-label="Detail">Never post comments or transition issues. Ask for confirmation before sending any draft.</td>
+</tr>
+<tr>
+<td data-label="Rule">Match on accountId</td>
+<td data-label="Detail">Never match on display name — names collide.</td>
+</tr>
+<tr>
+<td data-label="Rule">Skip answered</td>
+<td data-label="Detail">User comment after the urgent-trigger comment → drop.</td>
+</tr>
+<tr>
+<td data-label="Rule">Cap at 50</td>
+<td data-label="Detail">If query hits 50, note in status.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Examples</h2>
+<pre><code>jurgent                       → query Jira, save file, display
+jurgent                       → (second run) show saved list, no API call
+jurgent --refresh             → force re-query Jira
+jurgent PROJ                  → urgent on specific project
+jurgent --full                → all open tasks, no drafts
+</code></pre>
+<p><strong>After first run:</strong> subsequent calls display from saved file without querying Jira. Only re-queries when you run <code>jurgent</code> again or use <code>--refresh</code>. This lets you loop through the list, reply, and ignore items without hitting the API each time.</p>
+</section>
+  </main>
+</body>
+</html>
