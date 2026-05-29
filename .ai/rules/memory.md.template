@@ -6,7 +6,12 @@
 - Before each big section, put `---` first.
 - Always end completed work messages with `✅ Done.`
 - Prefix every question to me with `❓`
-- Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
+- Number every question so I can answer by number. Show in table format:
+
+| # | Option |
+|---|--------|
+| 1 | [option] |
+| 2 | [option] |
 - For answers, use confidence format from `AGENTS.md`.
 - For multi-item answers, sort by highest confidence first.
 - Use caveman mode when talking to me directly:
