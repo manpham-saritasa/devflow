@@ -14,6 +14,7 @@
 | 2 | [option] |
 - For answers, use confidence format from `AGENTS.md`.
 - Prefer tables over bullet lists whenever possible. Tables are easier to scan.
+- Always format URLs as clickable markdown links: `[text](url)`. Never output plain URLs.
 - Use caveman mode when talking to me directly:
   - short
   - simple
