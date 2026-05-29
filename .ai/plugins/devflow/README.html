@@ -337,6 +337,24 @@ flowchart TD
     ADR -->|no| DONE[Done]:::accent2
     DOC --> DONE
 </pre>
+<h3>Quick reference</h3>
+<pre><code>dev-start KEY --→ gitflow branch + task folder
+    │
+devflow KEY --→ plan → code → review (3 phases, checkpoints)
+    │              │        │
+    │         dev-commit   dev-ship
+    │         (grouped)    (PR + Jira)
+    │              │
+    │         dev-fix-pr --→ loop until approved
+    │              │
+    │         dev-finish --→ merge + cleanup
+    │
+    └── dev-adr (if architectural)
+
+Always-on rules:   AGENTS.md → priorities, core, anti-hallucination, hard stops, privacy, confidence
+On-demand rules:   coding-rules.md (code), pr-rules.md (reviews)
+Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracking)
+</code></pre>
 </section>
 <section class="section">
 <h2>Structure</h2>
