@@ -304,4 +304,4 @@ You are already on the branch. Start:
 
 ### Step 10: Update Jira Status
 
-Call `dev-jira-transition` skill with `KEY` and milestone `dev-start`. Non-blocking — continue on failure.
+Call `jira-move` skill with `KEY` and milestone `in-progress`. Non-blocking — continue on failure.
