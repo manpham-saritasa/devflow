@@ -186,9 +186,20 @@ Filter by `headRefName == $(git branch --show-current)`.
   git log --oneline --since="[LAST_COMMENT_DATE]"
   ```
 - **If no new commits:** skip — "✅ PR #[N] already up to date. No new commits since last summary."
-- **If new commits found:** generate a short comment summarizing the recent changes and post it:
+- **If new commits found:** generate a summary in table format and post it:
   ```bash
   gh pr comment [PR_NUMBER] --body "[SUMMARY]"
+  ```
+  Summary format:
+  ```
+  ## Recent Changes
+
+  | Commit | Summary |
+  |--------|---------|
+  | abc123 | What changed |
+  | def456 | What changed |
+
+  **New:** [1-line highlight of key additions]
   ```
 - Continue to Step 7 using the existing PR URL.
 

@@ -501,14 +501,22 @@ git log --oneline --since="[LAST_COMMENT_DATE]"
 <li>
 <p><strong>If no new commits:</strong> skip — "✅ PR #[N] already up to date. No new commits since last summary."</p>
 </li>
-<li>
-<p><strong>If new commits found:</strong> generate a short comment summarizing the recent changes and post it:</p>
-<pre><code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"
+<li><strong>If new commits found:</strong> generate a summary in table format and post it:<pre><code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"
 </code></pre>
 </li>
-<li>
-<p>Continue to Step 7 using the existing PR URL.</p>
-</li>
+</ul>
+<p>Summary format:</p>
+<pre><code>    ## Recent Changes
+
+    | Commit | Summary |
+    |--------|---------|
+    | abc123 | What changed |
+    | def456 | What changed |
+
+    **New:** [1-line highlight of key additions]
+</code></pre>
+<ul>
+<li>Continue to Step 7 using the existing PR URL.</li>
 </ul>
 <p>If no open PR exists for the current branch:</p>
 <pre><code class="language-bash">git push origin $(git branch --show-current)
