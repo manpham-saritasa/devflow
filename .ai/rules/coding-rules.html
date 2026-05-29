@@ -325,6 +325,44 @@ a:hover {
 </div>
 </section>
 <section class="section">
+<h2>Reuse Over Duplication</h2>
+<p>Prefer one shared implementation for shared knowledge.</p>
+<ul>
+<li>If the same business rule, transformation, validation, mapping, or workflow appears in 2 or more places, or is clearly going to, prefer a shared function, class, component, extension, or helper instead of copy-paste.</li>
+<li>Do not duplicate core rules or invariants just to keep a patch local.</li>
+<li>Extract shared business logic when duplication represents a real shared invariant or is likely to grow.</li>
+<li>Avoid speculative or framework-like abstractions for one-off logic.</li>
+<li>Name abstractions by domain intent, not vague utility names.</li>
+<li>Put shared code in the correct layer (domain, application, infrastructure, UI, test support).</li>
+<li>Keep one authoritative implementation for each piece of shared knowledge.</li>
+<li>Add or update tests around the shared abstraction.</li>
+<li>Keep refactor and behavior changes separate when practical.</li>
+</ul>
+<p>Good to extract:</p>
+<ul>
+<li>Domain rules and validations.</li>
+<li>Mapping and formatting logic.</li>
+<li>Cross-cutting workflows and policies (retry / backoff, authorization checks, logging).</li>
+<li>Reusable UI components or layout patterns.</li>
+</ul>
+<p>Avoid premature abstraction:</p>
+<ul>
+<li>One-off code or one-time paths.</li>
+<li>Similar code with different reasons to change.</li>
+<li>"Clever" helpers that hide simple logic and reduce clarity.</li>
+<li>Framework-like abstractions introduced only for one feature.</li>
+</ul>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Good: <code>ValidateEmail()</code> used in 3 controllers -&gt; extract to shared helper with unit tests.</p></div>
+<div class="example-box bad-box"><p>❌ Bad: Extract a generic <code>ValidationEngine</code> for one-off logic that only runs in one place.</p></div>
+
+<ul>
+
+
+<li>Rule: Extract when duplication represents a real shared invariant or is likely to grow. Do not extract to "prepare for the future."</li>
+</ul>
+</section>
+<section class="section">
 <h2>Minimal and Surgical Changes</h2>
 <p>Solve the requested problem without expanding product scope.  </p>
 <p>Do:</p>
