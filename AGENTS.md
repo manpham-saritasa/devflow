@@ -137,3 +137,5 @@ Rules:
 ---
 
 > **Coding rules:** see `rules/coding-rules.md` — loaded on-demand for code tasks.
+
+> **Personal setup (optional):** copy `rules/memory.md.template` → `.local/memory.md` and `rules/session-rules.md.template` → `.local/session-rules.md`. Edit to customize your shortcuts, comm style, and session tracking.

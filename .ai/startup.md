@@ -31,7 +31,8 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 
 | Step | Action |
 |---|---|
-| 1 | Read `memory.md` at the .ai folder and follow it for the whole session |
+| 1 | If `.local/memory.md` exists, read it and follow for the whole session |
+| 2 | If `.local/session-rules.md` exists, read and follow session tracking rules |
 
 If session is long, task changes, or context is fuzzy, re-read it.
 
