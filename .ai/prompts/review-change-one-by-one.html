@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompts Index</title>
+  <title>Review Change One By One</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,35 +317,50 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Prompts Index</h1>
+  <h1>Review Change One By One</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>Review changes one by one</div>
+    <div class="meta-item"><span class="meta-label">description</span>Show each planned change as a scrollable option list, confirm individually, execute all at once</div>
+    <div class="meta-item"><span class="meta-label">type</span>review</div>
+  </div>
 </section>
 <section class="section">
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Summary</th>
-<th>Usage / Note</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Name"><code>get-changelog.md</code></td>
-<td data-label="Summary">Generates concise, user-facing changelog content from branch evidence (diffs, commits, Jira context) formatted for Jira or GitHub PR comments.</td>
-<td data-label="Usage / Note">Run against the current local branch after implementation is complete. Output uses Added / Changed / Fixes sections with numbered, outcome-focused bullets.</td>
-</tr>
-<tr>
-<td data-label="Name"><code>get-jira-task.md</code></td>
-<td data-label="Summary">Transforms a single Jira issue into an implementation-ready task specification in Markdown, incorporating context from related historical issues.</td>
-<td data-label="Usage / Note">Designed as a Rovo prompt for use inside Jira. Produces a structured <code>task.md</code> with Overview, Requirements, Acceptance Criteria, Constraints, Affected Modules, Related Historical Tasks, Open Questions, and Technical Notes.</td>
-</tr>
-<tr>
-<td data-label="Name"><code>review-change-one-by-one.md</code></td>
-<td data-label="Summary">Shows each planned change as a scrollable option list, confirms individually, executes all at once.</td>
-<td data-label="Usage / Note">Use when reviewing planned changes — never execute before final confirmation.</td>
-</tr>
-</tbody>
-</table>
+<p>You are reviewing a set of planned changes. Follow this flow:</p>
+</section>
+<section class="section">
+<h2>Step 1: Show the plan</h2>
+<pre><code>## Planned Changes
+
+| # | File | Change | Options |
+|---|------|--------|---------|
+| 1 | `{file}` | {what} | A: {option}, B: {option} |
+| 2 | `{file}` | {what} | A: {option}, B: {option} |
+</code></pre>
+</section>
+<section class="section">
+<h2>Step 2: Confirm each change</h2>
+<p>For each <code>#</code> in order, ask:</p>
+<pre><code>❓ Change #{N}: {file} — {what}
+
+| Option | Action |
+|--------|--------|
+| A | {first option} |
+| B | {second option} |
+| C | Skip this change |
+</code></pre>
+<p>Wait for user to pick a letter before moving to the next <code>#</code>.</p>
+</section>
+<section class="section">
+<h2>Step 3: Execute all</h2>
+<p>After ALL changes confirmed, run everything at once. Do not execute one-by-one.</p>
+</section>
+<section class="section">
+<h2>Rules</h2>
+<ul>
+<li>User can scroll and pick — never force sequential locked-in choices.</li>
+<li>If user says "go with A for all", accept and execute all.</li>
+<li>Never execute before final change is confirmed.</li>
+</ul>
 </section>
   </main>
 </body>
