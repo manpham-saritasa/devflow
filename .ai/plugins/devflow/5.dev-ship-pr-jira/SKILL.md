@@ -180,8 +180,27 @@ Filter by `headRefName == $(git branch --show-current)`.
 
 - If an open PR already exists for this branch: **fail fast for PR creation**. Do **not** create another PR.
 - Reuse the existing PR URL.
-- Generate a short comment that summarizes changes from the recent commits since the PR branch was last updated.
-- Post that summary to the existing PR with `gh pr comment [PR_NUMBER] --body "[SUMMARY]"`.
+- Check if there are new commits since the last PR comment:
+  ```bash
+  gh pr view [PR_NUMBER] --json comments --jq '.comments[-1].createdAt'
+  git log --oneline --since="[LAST_COMMENT_DATE]"
+  ```
+- **If no new commits:** skip — "✅ PR #[N] already up to date. No new commits since last summary."
+- **If new commits found:** generate a summary in table format and post it:
+  ```bash
+  gh pr comment [PR_NUMBER] --body "[SUMMARY]"
+  ```
+  Summary format:
+  ```
+  ## Recent Changes
+
+  | Commit | Summary |
+  |--------|---------|
+  | abc123 | What changed |
+  | def456 | What changed |
+
+  **New:** [1-line highlight of key additions]
+  ```
 - Continue to Step 7 using the existing PR URL.
 
 If no open PR exists for the current branch:
@@ -342,3 +361,7 @@ If `--technical-only`:
 ```
 
 (Omit skipped blocks per flags.)
+
+### Step 10: Update Jira Status
+
+Call `jira-move` skill with `KEY` and milestone `review`. Non-blocking — continue on failure.

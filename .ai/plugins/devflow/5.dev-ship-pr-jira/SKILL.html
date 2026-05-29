@@ -492,8 +492,30 @@ Each block should stay separate so the user can copy the PR body or Jira comment
 <ul>
 <li>If an open PR already exists for this branch: <strong>fail fast for PR creation</strong>. Do <strong>not</strong> create another PR.</li>
 <li>Reuse the existing PR URL.</li>
-<li>Generate a short comment that summarizes changes from the recent commits since the PR branch was last updated.</li>
-<li>Post that summary to the existing PR with <code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"</code>.</li>
+<li>
+<p>Check if there are new commits since the last PR comment:</p>
+<pre><code>gh pr view [PR_NUMBER] --json comments --jq '.comments[-1].createdAt'
+git log --oneline --since="[LAST_COMMENT_DATE]"
+</code></pre>
+</li>
+<li>
+<p><strong>If no new commits:</strong> skip — "✅ PR #[N] already up to date. No new commits since last summary."</p>
+</li>
+<li><strong>If new commits found:</strong> generate a summary in table format and post it:<pre><code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"
+</code></pre>
+</li>
+</ul>
+<p>Summary format:</p>
+<pre><code>    ## Recent Changes
+
+    | Commit | Summary |
+    |--------|---------|
+    | abc123 | What changed |
+    | def456 | What changed |
+
+    **New:** [1-line highlight of key additions]
+</code></pre>
+<ul>
 <li>Continue to Step 7 using the existing PR URL.</li>
 </ul>
 <p>If no open PR exists for the current branch:</p>
@@ -608,6 +630,8 @@ Content-Type: application/json
 [exact changelog content written]
 </code></pre>
 <p>(Omit skipped blocks per flags.)</p>
+<h3>Step 10: Update Jira Status</h3>
+<p>Call <code>jira-move</code> skill with <code>KEY</code> and milestone <code>review</code>. Non-blocking — continue on failure.</p>
 </section>
   </main>
 </body>

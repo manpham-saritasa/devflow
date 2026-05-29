@@ -321,8 +321,117 @@ a:hover {
 </section>
 <section class="section">
 <div class="blockquotes">
-<p>Loaded on-demand for coding tasks. See <code>AGENTS.md</code> for always-on rules.</p>
+<p>Loaded on-demand for coding tasks. See <code>AGENTS.md</code> for always-on rules.  </p>
 </div>
+</section>
+<section class="section">
+<h2>Task Workflow</h2>
+<div class="blockquotes">
+<p>If not specified, use this workflow when asked to implement a feature, fix a bug, or complete a multi-step coding task.</p>
+</div>
+<h3>1. Clarify</h3>
+<ul>
+<li>Turn the request into checkable goals.</li>
+<li>Break work into logical groups.</li>
+<li>Define verification steps for each phase.</li>
+<li>If multiple valid interpretations remain, stop and ask instead of guessing.</li>
+</ul>
+<h3>2. Plan</h3>
+<ul>
+<li>Make a short, phase-by-phase plan before coding.</li>
+<li>Show the plan first when the task is multi-step, high-risk, or likely to produce a broad diff.</li>
+<li>Group work into meaningful review slices, for example: "Data Model", "Business Logic", "API", "UI", or "Tests".</li>
+<li>Each phase must include a concrete check such as a test, build, lint, or command.</li>
+</ul>
+<h3>3. Implement</h3>
+<ul>
+<li>Work incrementally and verify one logical group before moving to the next.</li>
+<li>Touch only files relevant to the task.</li>
+<li>Preserve existing behavior unless the task explicitly asks to change it.</li>
+<li>Avoid unrelated refactors, broad reformatting, or extra features.</li>
+<li>Small related refactors are acceptable only when they directly improve correctness, reuse, maintainability, or verification.</li>
+</ul>
+<h3>4. Stop Conditions</h3>
+<p>Stop and ask if:</p>
+<ul>
+<li>an assumption fails;</li>
+<li>requirements conflict;</li>
+<li>existing code or behavior conflicts with the plan;</li>
+<li>a verification step fails and the correct fix is unclear;</li>
+<li>the requested change appears to violate an invariant, architectural boundary, or business rule;</li>
+<li>the implementation becomes significantly more complex or broader than planned;</li>
+<li>the plan requires a scope change or re-planning.</li>
+</ul>
+<h3>5. Verification</h3>
+<ul>
+<li>Run the tests, builds, linters, or checks relevant to the change.</li>
+<li>Prefer the smallest verification that proves the requested behavior.</li>
+<li>If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.</li>
+<li>For bug fixes, add or update a test when practical; if not, explain how the fix was verified.</li>
+<li>For behavior changes or new business logic, add or update tests when practical.</li>
+<li>Never mark something as verified without saying what was actually checked.</li>
+<li>Never pretend verification happened.</li>
+</ul>
+<h3>6. Report</h3>
+<p>Summarize using this format:  </p>
+<p><strong>What changed</strong></p>
+<ul>
+<li>Grouped by logical feature area, not file list.</li>
+</ul>
+<p><strong>What was verified</strong></p>
+<ul>
+<li>Tests run, checks passed, and commands executed.</li>
+</ul>
+<p><strong>What was not verified</strong></p>
+<ul>
+<li>Explain what was not verified and why.</li>
+</ul>
+<p><strong>Remaining assumptions, risks, or follow-ups</strong></p>
+<ul>
+<li>List them explicitly, or say <code>None</code>.</li>
+</ul>
+<p><strong>Evidence / uncertainty</strong></p>
+<ul>
+<li>List key assumptions, missing context, and any conclusions that are inferred rather than directly verified.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Reuse Over Duplication</h2>
+<p>Prefer one shared implementation for shared knowledge.</p>
+<ul>
+<li>If the same business rule, transformation, validation, mapping, or workflow appears in 2 or more places, or is clearly going to, prefer a shared function, class, component, extension, or helper instead of copy-paste.</li>
+<li>Do not duplicate core rules or invariants just to keep a patch local.</li>
+<li>Extract shared business logic when duplication represents a real shared invariant or is likely to grow.</li>
+<li>Avoid speculative or framework-like abstractions for one-off logic.</li>
+<li>Name abstractions by domain intent, not vague utility names.</li>
+<li>Put shared code in the correct layer (domain, application, infrastructure, UI, test support).</li>
+<li>Keep one authoritative implementation for each piece of shared knowledge.</li>
+<li>Add or update tests around the shared abstraction.</li>
+<li>Keep refactor and behavior changes separate when practical.</li>
+</ul>
+<p>Good to extract:</p>
+<ul>
+<li>Domain rules and validations.</li>
+<li>Mapping and formatting logic.</li>
+<li>Cross-cutting workflows and policies (retry / backoff, authorization checks, logging).</li>
+<li>Reusable UI components or layout patterns.</li>
+</ul>
+<p>Avoid premature abstraction:</p>
+<ul>
+<li>One-off code or one-time paths.</li>
+<li>Similar code with different reasons to change.</li>
+<li>"Clever" helpers that hide simple logic and reduce clarity.</li>
+<li>Framework-like abstractions introduced only for one feature.</li>
+</ul>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Good: <code>ValidateEmail()</code> used in 3 controllers -&gt; extract to shared helper with unit tests.</p></div>
+<div class="example-box bad-box"><p>❌ Bad: Extract a generic <code>ValidationEngine</code> for one-off logic that only runs in one place.</p></div>
+
+<ul>
+
+
+<li>Rule: Extract when duplication represents a real shared invariant or is likely to grow. Do not extract to "prepare for the future."</li>
+</ul>
 </section>
 <section class="section">
 <h2>Minimal and Surgical Changes</h2>

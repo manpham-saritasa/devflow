@@ -18,6 +18,27 @@ flowchart TD
     DOC --> DONE
 ```
 
+### Quick reference
+
+```
+dev-start KEY --→ gitflow branch + task folder
+    │
+devflow KEY --→ plan → code → review (3 phases, checkpoints)
+    │              │        │
+    │         dev-commit   dev-ship
+    │         (grouped)    (PR + Jira)
+    │              │
+    │         dev-fix-pr --→ loop until approved
+    │              │
+    │         dev-finish --→ merge + cleanup
+    │
+    └── dev-adr (if architectural)
+
+Always-on rules:   AGENTS.md → priorities, core, anti-hallucination, hard stops, privacy, confidence
+On-demand rules:   coding-rules.md (code), pr-rules.md (reviews)
+Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracking)
+```
+
 ---
 
 ## Structure

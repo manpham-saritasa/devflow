@@ -322,24 +322,27 @@ a:hover {
 <section class="section">
 <p>Every 10 minutes during a working session:</p>
 <ol>
-<li><strong>Save session state</strong> to <code>../../sessions/[session ID].md</code> with:<ul>
+<li><strong>Save session state</strong> to <code>.local/sessions/[YYYY-MM-DD].md</code> — use today's date as filename. Append to the file if it already exists:<ul>
 <li>Summary of what was done</li>
 <li>List of files changed</li>
 <li>Key decisions made</li>
 </ul>
 </li>
 </ol>
-<p>Example from a worktree:</p>
-<pre><code>    D:\devflow-worktrees\feature\key-11-enhance-more\
-    └── ..\..\sessions\
-    ├── 2026-05-27.md
-    └── corrections.md
-</code></pre>
-<p>Resolves to: <code>D:\devflow-worktrees\sessions\</code></p>
+<p>Example: <code>.local/sessions/2026-05-29.md</code></p>
+<p>Path resolves to the main repo's <code>.local/sessions/</code> folder — shared across all worktrees, gitignored.</p>
 <ol start="2">
-<li><strong>Extract key corrections</strong> and append them to <code>../../sessions/corrections.md</code> so the AI can read them on next startup.</li>
+<li>
+<p><strong>Extract key corrections</strong> and append them to <code>.local/sessions/corrections.md</code> so the AI can read them on next startup.</p>
+</li>
+<li>
+<p><strong>Track touched files</strong> in <code>.local/sessions/current.md</code> — append each created/edited file with action and timestamp.</p>
+</li>
 </ol>
-<p>The session folder (<code>../../sessions</code>) lives outside any single worktree so it persists across all feature branches.</p>
+<p>Clear <code>.local/sessions/current.md</code> at the start of a new session (rewrite with current session header).  </p>
+<p>At session start, read the most recent file from <code>.local/sessions/</code> (by filename date). Extract a 1-2 line summary of what was done and key decisions. Write it under the <code>### Previous Session</code> section in <code>.local/sessions/current.md</code>.  </p>
+<p>Also read <code>.local/sessions/corrections.md</code> if it exists. Note any corrections or lessons learned from prior sessions.  </p>
+<p>The <code>.local/</code> folder is gitignored and lives in the main repo, so it persists across worktrees.</p>
 </section>
   </main>
 </body>

@@ -6,13 +6,15 @@
 - Before each big section, put `---` first.
 - Always end completed work messages with `✅ Done.`
 - Prefix every question to me with `❓`
-- Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
-- If unsure, say so.
-- For answers, include confidence as `/10`:
-  - 🟢 high
-  - 🟠 medium
-  - 🔴 low
-- For multi-item answers, sort by highest confidence first.
+- Number every question so I can answer by number. Show in table format:
+
+| # | Option |
+|---|--------|
+| 1 | [option] |
+| 2 | [option] |
+- For answers, use confidence format from `AGENTS.md`.
+- Prefer tables over bullet lists whenever possible. Tables are easier to scan.
+- Always format URLs as clickable markdown links: `[text](url)`. Never output plain URLs.
 - Use caveman mode when talking to me directly:
   - short
   - simple
@@ -25,7 +27,22 @@
   - structured
   - natural professional tone
   - complete sentences
-- When I say "cush" it means that "commit and push all to origin".
+
+---
+
+## 2. Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `cush` | Commit using `dev-commit` skill, then push all to origin |
+| `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/pr-rules.md, rules/session-rules.md |
+| `devflow` | Run the devflow agent from `.ai/plugins/devflow/` |
+| `html` | Read `.local/sessions/current.md`, re-run `md-to-html` for all touched `.md` files |
+| `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
+| `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
+| `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
+| `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`) |
+| `ship` | `cush` first, then run `dev-ship` for the branch's task key |
 
 ## 2. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
@@ -42,3 +59,4 @@
 - When creating documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
 - When creating or editing `.md` files, always run the `md-to-html` skill to generate the corresponding `.html` file.
+- When creating or editing files, update `.local/sessions/current.md` with the file path, action, and timestamp.
