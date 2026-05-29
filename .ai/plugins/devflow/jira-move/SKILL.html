@@ -371,13 +371,14 @@ jmove PROJ-1000 --discover      → discover all transitions, save to config
 <li><code>--discover</code> — optional flag</li>
 </ul>
 <h3>Step 2: Load Credentials</h3>
-<p>Read Jira credentials from <code>.env.local</code> or <code>.env</code>:</p>
+<p>Read <code>.env.local</code> (preferred) or <code>.env</code> from repo root. Extract:</p>
 <ul>
-<li><code>JIRA_COMPANY_DOMAIN</code></li>
+<li><code>JIRA_DOMAIN</code> or <code>JIRA_COMPANY_DOMAIN</code> — the Atlassian subdomain (e.g., <code>saritasa</code>)</li>
 <li><code>JIRA_EMAIL</code></li>
 <li><code>JIRA_API_TOKEN</code></li>
 </ul>
-<p>If missing: stop — "❌ Jira credentials not found in .env or .env.local."  </p>
+<p>Do not use <code>source</code> — read the file and parse <code>KEY=VALUE</code> lines directly.  </p>
+<p>If missing: stop — "❌ Jira credentials not found in .env.local or .env."  </p>
 <div class="blockquotes">
 <p>When called from pipeline skills (dev-start/dev-ship): skip silently instead of stopping.</p>
 </div>
