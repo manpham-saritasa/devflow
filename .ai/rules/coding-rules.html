@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Coding Workflow</title>
+  <title>AI Coding Rules</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,80 +317,149 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>AI Coding Workflow</h1>
+  <h1>AI Coding Rules</h1>
 </section>
 <section class="section">
 <div class="blockquotes">
-<p>If not specified, use this workflow when asked to implement a feature, fix a bug, or complete a multi-step coding task.</p>
+<p>Loaded on-demand for coding tasks. See <code>AGENTS.md</code> for always-on rules.</p>
 </div>
 </section>
 <section class="section">
-<h2>Task Workflow</h2>
-<h3>1. Clarify</h3>
+<h2>Minimal and Surgical Changes</h2>
+<p>Solve the requested problem without expanding product scope.  </p>
+<p>Do:</p>
 <ul>
-<li>Turn the request into checkable goals.</li>
-<li>Break work into logical groups.</li>
-<li>Define verification steps for each phase.</li>
-<li>If multiple valid interpretations remain, stop and ask instead of guessing.</li>
-</ul>
-<h3>2. Plan</h3>
-<ul>
-<li>Make a short, phase-by-phase plan before coding.</li>
-<li>Show the plan first when the task is multi-step, high-risk, or likely to produce a broad diff.</li>
-<li>Group work into meaningful review slices, for example: "Data Model", "Business Logic", "API", "UI", or "Tests".</li>
-<li>Each phase must include a concrete check such as a test, build, lint, or command.</li>
-</ul>
-<h3>3. Implement</h3>
-<ul>
-<li>Work incrementally and verify one logical group before moving to the next.</li>
 <li>Touch only files relevant to the task.</li>
-<li>Preserve existing behavior unless the task explicitly asks to change it.</li>
-<li>Avoid unrelated refactors, broad reformatting, or extra features.</li>
-<li>Small related refactors are acceptable only when they directly improve correctness, reuse, maintainability, or verification.</li>
+<li>Preserve existing behavior unless the task asks to change it.</li>
+<li>Clean up only code your change made dead or obviously wrong.</li>
+<li>Keep diffs small and reviewable.</li>
 </ul>
-<h3>4. Stop Conditions</h3>
-<p>Stop and ask if:</p>
+<p>Do not:</p>
 <ul>
-<li>an assumption fails;</li>
-<li>requirements conflict;</li>
-<li>existing code or behavior conflicts with the plan;</li>
-<li>a verification step fails and the correct fix is unclear;</li>
-<li>the requested change appears to violate an invariant, architectural boundary, or business rule;</li>
-<li>the implementation becomes significantly more complex or broader than planned;</li>
-<li>the plan requires a scope change or re-planning.</li>
+<li>Add new features or "flexibility" nobody asked for.</li>
+<li>Refactor unrelated code.</li>
+<li>Reformat whole files without need.</li>
+<li>Rewrite working code just because of personal style preference.</li>
 </ul>
-<h3>5. Verification</h3>
+<p>If there is a tradeoff between a very small local patch and a small shared abstraction:</p>
 <ul>
-<li>Run the tests, builds, linters, or checks relevant to the change.</li>
-<li>Prefer the smallest verification that proves the requested behavior.</li>
-<li>If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.</li>
-<li>For bug fixes, add or update a test when practical; if not, explain how the fix was verified.</li>
-<li>For behavior changes or new business logic, add or update tests when practical.</li>
-<li>Never mark something as verified without saying what was actually checked.</li>
-<li>Never pretend verification happened.</li>
+<li>If it duplicates a core rule or invariant, prefer the shared abstraction.</li>
+<li>If it is truly one-off and unlikely to repeat, keep it local.</li>
 </ul>
-<h3>6. Report</h3>
-<p>Summarize using this format:  </p>
-<p><strong>What changed</strong></p>
+<h4>Example</h4>
+<div class="example-box good-box"><p>✅ Acceptable: Rename a confusing variable while fixing a bug in the same function.</p></div>
+<div class="example-box bad-box"><p>❌ Not acceptable: Reorganize an entire module while implementing a new feature.</p></div>
+
 <ul>
-<li>Grouped by logical feature area, not file list.</li>
+
+
+<li>Rule: Refactor only what directly improves the current task. Stop at the boundary of the task scope.</li>
 </ul>
-<p><strong>What was verified</strong></p>
+</section>
+<section class="section">
+<h2>Change Constraints</h2>
+<h3>Architecture</h3>
 <ul>
-<li>Tests run, checks passed, and commands executed.</li>
+<li>Extend existing patterns before introducing new ones.</li>
+<li>Do not introduce parallel architectural systems unless explicitly requested.</li>
+<li>Avoid introducing alternate:<ul>
+<li>state management</li>
+<li>validation systems</li>
+<li>routing patterns</li>
+<li>dependency injection</li>
+<li>data access layers</li>
 </ul>
-<p><strong>What was not verified</strong></p>
+</li>
+</ul>
+<h3>Error Handling and Reliability</h3>
 <ul>
-<li>Explain what was not verified and why.</li>
+<li>Handle errors explicitly; never silently ignore them.</li>
+<li>Fail fast at boundaries when input is invalid, state is impossible, a required dependency is missing with no fallback, or the error reveals a logic bug.</li>
+<li>Degrade gracefully only when partial failure is intentional.</li>
+<li>Error messages must be actionable: say what went wrong and what to do next.</li>
+<li>Never expose internal stack traces or sensitive internals to end users.</li>
+<li>Log enough context for debugging.</li>
 </ul>
-<p><strong>Remaining assumptions, risks, or follow-ups</strong></p>
+<h3>Async Rules</h3>
 <ul>
-<li>List them explicitly, or say <code>None</code>.</li>
+<li>Catch async errors at boundaries.</li>
+<li>Do not use fire-and-forget when failure has observable consequences.</li>
+<li>Retry only idempotent operations.</li>
+<li>Use capped exponential backoff with jitter.</li>
+<li>Every external call must have a timeout.</li>
+<li>Never wait indefinitely.</li>
 </ul>
-<p><strong>Evidence / uncertainty</strong></p>
+<h3>Tests and Errors</h3>
 <ul>
-<li>List key assumptions, missing context, and any conclusions that are inferred rather than directly verified.</li>
+<li>Test setup must not fail silently.</li>
+<li>Let assertion failures propagate naturally.</li>
+<li>Do not swallow errors in test helpers.</li>
 </ul>
+</section>
+<section class="section">
+<h2>Security</h2>
+<h3>Secrets and Credentials</h3>
+<ul>
+<li>Never hardcode real secrets, passwords, tokens, or credentials.</li>
+<li>Use environment variables or an approved secrets manager.</li>
+<li>In tests, use fake values or mocks, never real credentials.</li>
+<li>If a secret is committed accidentally, rotate it and remove it from history as part of the fix.</li>
+</ul>
+<h3>Input Validation</h3>
+<ul>
+<li>Validate and sanitize all external input at the boundaries.</li>
+<li>External input includes file paths, CLI arguments, HTTP input, network responses, subprocess output, and environment variables.</li>
+<li>Prefer allowlists over denylists where practical.</li>
+</ul>
+<h3>Command Execution</h3>
+<ul>
+<li>Never interpolate untrusted input directly into shell command strings.</li>
+<li>Prefer passing subprocess arguments as arrays or structured arguments, not raw strings.</li>
+<li>Validate file paths and arguments before passing them to subprocesses.</li>
+</ul>
+<h3>Dependencies</h3>
+<ul>
+<li>Prefer existing dependencies first.</li>
+<li>Add new dependencies only when clearly justified and the change stays minimal.</li>
+<li>Document why a new dependency is needed when adding one.</li>
+<li>Do not introduce dependencies with known critical vulnerabilities.</li>
+<li>When a dependency is intentionally frozen, document the reason and next review date.</li>
+</ul>
+<h3>Secure by Default</h3>
+<ul>
+<li>New features should ship in the safest sensible configuration.</li>
+<li>Loosen only when needed and documented.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Quality Thresholds (Review Triggers)</h2>
+<p>These are review heuristics, not optimization targets or automatic blockers.</p>
+<h3>Code Size</h3>
+<ul>
+<li>Function or method &gt; 40 lines: consider extraction or simplification.</li>
+<li>File &gt; 300 lines: consider splitting or rethinking structure.</li>
+<li>Function parameters &gt; 4: consider a parameter object or simplification.</li>
+<li>Nesting depth &gt; 4: consider early returns or extraction.</li>
+<li>Long chains of calls: if more than 3 chained calls, consider named intermediates.</li>
+</ul>
+<h3>Complexity</h3>
+<ul>
+<li>High cyclomatic or cognitive complexity: call it out and prefer simplification when editing that code.</li>
+<li>Deep inheritance beyond project norms: prefer composition.</li>
+</ul>
+<h3>Naming</h3>
+<ul>
+<li>Prefer clear, readable names.</li>
+<li>Very short names are fine in small local scopes, loops, or catch variables.</li>
+</ul>
+<h3>Change Size</h3>
+<ul>
+<li>More than 10 touched files: verify scope is still focused.</li>
+<li>Around 600 changed lines or 30 files: consider splitting into smaller PRs.</li>
+<li>New dependency: justify it explicitly.</li>
+<li>Duplicated business logic: prefer shared abstraction.</li>
+</ul>
+<p>Generated, vendored, or config-only code usually does not need these thresholds enforced unless explicitly requested.</p>
 </section>
   </main>
 </body>
