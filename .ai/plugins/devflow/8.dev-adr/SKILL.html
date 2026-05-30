@@ -398,6 +398,7 @@ gh pr diff [NUMBER] --repo [OWNER]/[REPO]
 <li>Use concrete repository terms: real services, modules, interfaces, schemas</li>
 <li>Never invent technical details not supported by evidence</li>
 </ul>
+<p>If there are open questions that need answers, show them in the chat window after the report — do not include them in the ADR file.  </p>
 <p><strong>Section 9 — Supporting Evidence</strong> — omit sub-items that have no content:</p>
 <pre><code>
 - **Task evidence:** [omit this line if no task evidence]
@@ -405,7 +406,6 @@ gh pr diff [NUMBER] --repo [OWNER]/[REPO]
 - **Related ADRs / prior tasks:** [omit this line if none, or write `None`]
 - **External references:** [omit this line if no external sources]
 </code></pre>
-<p><strong>Section 10 — Open Questions</strong> — omit the entire section if there are no open questions.</p>
 <h3>Step 5: Report Result</h3>
 <pre><code>✅ ADR created: docs/adrs/[KEY]-[summary].md
 
@@ -417,6 +417,9 @@ Evidence used:
 
 Tradeoffs:
 
+Open questions:
+
+- [list questions that need answers, or &quot;None&quot;]
 - [major tradeoffs, risks, follow-ups — or &quot;None&quot;]
 </code></pre>
 </section>
@@ -424,11 +427,11 @@ Tradeoffs:
 <h2>Self-Check</h2>
 <p>Before finalizing, verify:</p>
 <ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Open questions shown in chat, not in the ADR file?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> ADR reflects the decision actually implemented?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Used the repository ADR template exactly?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> All placeholders replaced with real summaries?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Section 9 has clickable markdown links for Jira and all relevant PRs? Empty sub-items omitted?</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Section 10 omitted if no open questions?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> No ADR created when no architectural decision exists?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Filename matches <code>[KEY]-[short-decision-summary].md</code> in kebab-case?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Existing ADRs checked for duplicates?</li>

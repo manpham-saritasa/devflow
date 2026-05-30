@@ -89,6 +89,8 @@ Write to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case.
 - Use concrete repository terms: real services, modules, interfaces, schemas
 - Never invent technical details not supported by evidence
 
+If there are open questions that need answers, show them in the chat window after the report — do not include them in the ADR file.
+
 **Section 9 — Supporting Evidence** — omit sub-items that have no content:
 
 ```
@@ -97,8 +99,6 @@ Write to `ADR_DIR/[KEY]-[short-decision-summary].md` using kebab-case.
 - **Related ADRs / prior tasks:** [omit this line if none, or write `None`]
 - **External references:** [omit this line if no external sources]
 ```
-
-**Section 10 — Open Questions** — omit the entire section if there are no open questions.
 
 ### Step 5: Report Result
 
@@ -111,6 +111,9 @@ Evidence used:
 - [key files and PRs with clickable URLs]
 
 Tradeoffs:
+
+Open questions:
+- [list questions that need answers, or "None"]
 - [major tradeoffs, risks, follow-ups — or "None"]
 ```
 
@@ -119,11 +122,11 @@ Tradeoffs:
 ## Self-Check
 
 Before finalizing, verify:
+- [ ] Open questions shown in chat, not in the ADR file?
 - [ ] ADR reflects the decision actually implemented?
 - [ ] Used the repository ADR template exactly?
 - [ ] All placeholders replaced with real summaries?
 - [ ] Section 9 has clickable markdown links for Jira and all relevant PRs? Empty sub-items omitted?
-- [ ] Section 10 omitted if no open questions?
 - [ ] No ADR created when no architectural decision exists?
 - [ ] Filename matches `[KEY]-[short-decision-summary].md` in kebab-case?
 - [ ] Existing ADRs checked for duplicates?
