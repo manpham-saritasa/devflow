@@ -3,18 +3,7 @@ name: dev-ship-pr-jira
 description: ship feature to create GitHub PR and comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.
 triggers: 
   - "dev-ship-pr-jira"
-  - "dev-ship-pr-jira --pr-only"
-  - "dev-ship-pr-jira --jira-only"
-  - "dev-ship-pr-jira --dry-run"
-  - "dev-ship-pr-jira --technical-only"
-  - "dev-ship-pr-jira --from-pr"
   - "dev-ship"
-  - "dev-ship --pr-only"
-  - "dev-ship --jira-only"
-  - "dev-ship --dry-run"
-  - "dev-ship --technical-only"
-  - "dev-ship --from-pr"
-  - "dev-ship --no-jira"
 ---
 
 ## When to Use
