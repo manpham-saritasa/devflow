@@ -28,18 +28,19 @@ class Milestones:
                     self.milestones[k] = [s.strip() for s in v.split(",") if s.strip()]
 
     def resolve(self, target, project_transitions=None):
-        """Resolve milestone name or status name to actual Jira status.
-        If project_transitions provided, picks first status that exists in project."""
-        tl = target.lower()
-        if tl in self.milestones:
-            candidates = self.milestones[tl]
-            if project_transitions:
-                for s in candidates:
-                    if s in project_transitions or any(
-                        s.lower() == t.lower() for t in project_transitions
-                    ):
-                        return s
-            return candidates[0]
+        tl = target.lower().replace("-", " ")
+        # Check milestone keys (normalized from hyphens)
+        for mname, statuses in self.milestones.items():
+            if mname.replace("-", " ") == tl:
+                candidates = statuses
+                if project_transitions:
+                    for s in candidates:
+                        if s in project_transitions or any(
+                            s.lower() == t.lower() for t in project_transitions
+                        ):
+                            return s
+                return candidates[0]
+        # Check status names directly
         for statuses in self.milestones.values():
             for s in statuses:
                 if s.lower() == tl:
