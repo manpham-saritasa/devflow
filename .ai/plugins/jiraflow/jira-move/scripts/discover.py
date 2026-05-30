@@ -23,7 +23,7 @@ class Discoverer:
 
         discovered_milestones = self._discover_stages(key, config)
         config["milestones"] = discovered_milestones
-        save_config(project_key, config)
+        save_config(project_key, config, self.milestones.pipeline)
 
         self._print_summary(config)
         self._maybe_restore(key, config, original_status)
@@ -69,7 +69,7 @@ class Discoverer:
                     f"  [NO] No transition to milestone '{milestone_name}' from '{current}'"
                 )
                 print(f"  -> Move '{key}' manually, then re-run --discover.")
-                save_config(project_key, config)
+                save_config(project_key, config, self.milestones.pipeline)
                 return None
 
             try:
@@ -81,7 +81,7 @@ class Discoverer:
                 print(
                     f"  -> Move '{key}' to milestone '{milestone_name}' manually, then re-run --discover."
                 )
-                save_config(project_key, config)
+                save_config(project_key, config, self.milestones.pipeline)
                 return None
 
         current = self._get_status(key)
@@ -91,6 +91,12 @@ class Discoverer:
                 str(t["id"]): t["to"]["name"] for t in transitions
             }
             visited.add(current)
+
+        # Ensure all states in the transition map have milestone mappings
+        for status_name in config["transitions"]:
+            ms = self.milestones.status_to_milestone(status_name)
+            if ms and ms not in discovered_milestones:
+                discovered_milestones[ms] = [status_name]
 
         return discovered_milestones
 
@@ -244,14 +250,16 @@ def load_config(project_key):
     return config
 
 
-def save_config(project_key, config):
+def save_config(project_key, config, pipeline_order=None):
     path = f"{SKILL_DIR}/{project_key}.config"
     import os as _os
 
     lines = [f"# Jira Move - {project_key} Transitions", ""]
     if config.get("milestones"):
-        for ms, statuses in sorted(config["milestones"].items()):
-            lines.append(f"{ms}={', '.join(statuses)}")
+        ordered = pipeline_order or sorted(config["milestones"].keys())
+        for ms in ordered:
+            if ms in config["milestones"]:
+                lines.append(f"{ms}={', '.join(config['milestones'][ms])}")
         lines.append("")
     for status_name, transitions in sorted(config["transitions"].items()):
         if not transitions:
