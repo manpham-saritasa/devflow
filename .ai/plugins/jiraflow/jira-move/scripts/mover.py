@@ -124,6 +124,28 @@ class Mover:
 
         print(f"[WARN] No transition from {current} to {target_name}.")
 
+    def _fallback_to_production(self, key, step_status, step_ms, step_target, target_ms):
+        """If target is complete but stuck at verify/review, try On Production first."""
+        if target_ms != "complete" or step_ms not in ("verify", "review"):
+            return None
+        prod_target = "On Production"
+        prod_trans = self.config["transitions"].get(step_status, {})
+        prod_tid = self._find_transition(prod_trans, prod_target)
+        if prod_tid is None:
+            prod_trans = self._refresh_transitions(key, step_status)
+            prod_tid = self._find_transition(prod_trans, prod_target)
+        if not prod_tid:
+            return None
+        print(f"  -> {prod_target} (fallback)")
+        self._execute_step(key, prod_tid)
+        new_status = self._get_status(key)
+        trans_map = self.config["transitions"].get(new_status, {})
+        tid = self._find_transition(trans_map, step_target)
+        if tid is None:
+            trans_map_refreshed = self._refresh_transitions(key, new_status)
+            tid = self._find_transition(trans_map_refreshed, step_target)
+        return tid
+
     def _route_pipeline(self, key, current_ms, target_ms):
         path = self.pipeline.path_to(current_ms, target_ms)
         print(f"  -> Routing through pipeline: {current_ms} -> ... -> {target_ms}")
@@ -137,6 +159,8 @@ class Mover:
             if tid is None:
                 trans_map = self._refresh_transitions(key, step_status)
                 tid = self._find_transition(trans_map, step_target)
+            if tid is None:
+                tid = self._fallback_to_production(key, step_status, step_ms, target_ms)
             if tid is None:
                 print(f"  [WARN] Stuck at {step_status} - can't reach {step_ms}")
                 return
