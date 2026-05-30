@@ -106,6 +106,8 @@ Run `git branch --show-current`.
 | `--release` | `develop` | "Release branches must start from `develop`. Switch to `develop` first or use `--force`." |
 | `--force` | any | No alert. Branch from current. |
 
+When auto-hotfix mode is active (single-branch repo), the `--hotfix` row applies instead of the default.
+
 **Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, auto-switch to hotfix mode. Branch from `main` using hotfix naming (`hotfix/[key]-[summary]`). No prompt needed.
 
 **For `--hotfix`:** also check for uncommitted changes and that `main` is up to date:
@@ -197,6 +199,8 @@ Determine the base branch based on flags:
 | `--hotfix` | `main` |
 | `--release` | `develop` |
 | `--force` | current branch (`git branch --show-current`) |
+
+When auto-hotfix mode is active (single-branch repo), `main` is used as the base branch.
 
 ```bash
 git fetch origin [BASE_BRANCH]

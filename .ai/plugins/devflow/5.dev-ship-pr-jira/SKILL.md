@@ -97,9 +97,11 @@ Check if the current branch is `main` or `develop`:
 git branch --show-current
 ```
 
-If on `main` or `develop`: call `dev-start [KEY]` to create the feature branch. After branch creation, restart this skill from Step 1.
+If on `main` or `develop`: call `dev-start [KEY]` to create the feature branch. After branch creation, continue to Step 3. If dev-start fails, stop.
 
-If already on a feature, hotfix, or release branch: continue to Step 3.
+Otherwise: continue to Step 3.
+
+Skip this step entirely if using --jira-only, --from-pr, --dry-run, or --technical-only.
 
 ### Step 3: Generate Reports
 
