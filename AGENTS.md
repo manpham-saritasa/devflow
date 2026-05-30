@@ -30,9 +30,10 @@ Thresholds are review heuristics by default unless marked as a hard stop or expl
 - Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.
 - Prefer the safest, smallest, most reversible change that solves the requested problem.
 - Work incrementally — verify one logical group before moving to the next.
-- Show the planned changes in a table before editing — let the user confirm first. Format:
+- Stop and confirm the plan before editing only when: the plan is unclear, there are 2+ valid approaches, or the change is big (3+ files, or 3+ functions/methods in 1 file). Small, clear, single-approach changes can proceed directly.
+- When confirmation is needed, show a plan table:
 
-🪛 **Summary:** [1-line what these changes achieve]
+🚛 **Summary:** [1-line what these changes achieve]
 
 | # | File | Change | Category | Why |
 |---|------|--------|----------|-----|
