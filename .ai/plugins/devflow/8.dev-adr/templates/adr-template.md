@@ -3,7 +3,7 @@
 - Condense the text into simple, short, and direct English while keeping all core concepts.
 - Do not write like a marketing document with long paragraphs.
 - In table, use list format in the cell if needed.
-- Record decisions, constraints, pending items, open questions, impacts, cost considerations, and long-term considerations clearly.
+- Record decisions, constraints, pending items, impacts, cost considerations, and long-term considerations clearly.
 - Separate what is decided now from what is still pending or out of scope.
 - If cost is important, distinguish between confirmed cost facts and estimated cost assumptions.
 - If long-term direction is important, distinguish between current decision, expected future direction, and deferred future decisions.
@@ -11,11 +11,9 @@
 - Use `Options Considered` to compare benefits and tradeoffs across options, including short-term cost, long-term cost, maintenance effort, rewrite effort, and long-term sustainability when relevant.
 - Use `Expected Outcomes` for what will likely happen after the decision is applied, including benefits, tradeoffs, follow-up work, risks, and long-term effects.
 - Use `Pending Items` for unresolved validations, dependencies, deferred decisions, and any cost or long-term assumptions that are not validated yet.
-- Use `Open Questions` only for questions that still need an answer from the client, team, owner, or reviewer.
-- Do not use `Open Questions` for technical facts already known but not yet verified; keep those in `Pending Items`.
+- If there are open questions that still need an answer from the client, team, owner, or reviewer, ask them in the chat window — do not include them in the ADR file.
 - Use `Review Guidance` only for future change rules and revisit triggers, including cost thresholds, strategy changes, or new findings that may invalidate the decision later.
 - Do not repeat `Pending Items`, `Change Impact`, or `Expected Outcomes` inside `Review Guidance`.
-- Format open questions as `Q1`, `A1`, `Q2`, `A2`, and so on.
 - Every `[Summary or explanation about...]` placeholder must be replaced with a real 1-2 sentence summary. Never remove them silently — fill them with task-specific context.
 
 # ADR: [Short Decision Title]
@@ -41,9 +39,9 @@
 
 ## 2. Chosen Direction
 
-- [State the main decision in 1-3 short bullets.]
-- [Describe the chosen approach or boundary.]
-- [State any hard rule that future work must follow.]
+- **Bold the key decision, product, solution, or direction.** Use 1-3 short bullets.
+- Describe the chosen approach or boundary.
+- State any hard rule that future work must follow.
 
 ***
 
@@ -145,17 +143,3 @@
 
 ### External references:
 	[List of external sources (Microsoft Learn, official docs, etc.) with clickable links that support the decision.]
-
-***
-
-## 10. Open Questions
-[Summary or explanation about the Open Questions.]
-
-**Q1:** [Question that still needs an answer.]
-**A1:** [Try to prefill a suggestion or options to choose.]
-
-**Q2:** [Question about ownership, scope, timing, approval, cost, or future direction.]  
-**A2:** [Try to prefill a suggestion or options to choose.]
-
-**Q3:** [Question that may change the final plan.]  
-**A3:** [Try to prefill a suggestion or options to choose.]

@@ -192,7 +192,7 @@ def main():
     domain = env.get("JIRA_COMPANY_DOMAIN", "")
     email = env.get("JIRA_EMAIL", "")
     token = env.get("JIRA_API_TOKEN", "")
-    project = env.get("JIRA_PROJECT_KEY", "RMASUP")
+    project = env.get("JIRA_PROJECT_KEY", "PROJ")
     # Override with positional arg (e.g., jurgent COAPS)
     if len(sys.argv) > 1 and not sys.argv[1].startswith("--"):
         project = sys.argv[1].upper()

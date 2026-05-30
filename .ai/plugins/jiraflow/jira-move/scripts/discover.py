@@ -4,6 +4,16 @@ import json
 import urllib.error
 import urllib.request
 
+DEAD_END_STATUSES = {"Cancelled", "Blocked", "Complete", "Completed", "Completed."}
+
+
+def _is_dead_end(to_name, milestone_name, milestones):
+    """Dead-end statuses are skipped unless targeting the complete milestone."""
+    if to_name not in DEAD_END_STATUSES:
+        return False
+    to_ms = milestones.status_to_milestone(to_name)
+    return to_ms != milestone_name
+
 
 class Discoverer:
     def __init__(self, domain, auth, milestones, pipeline):
@@ -65,6 +75,10 @@ class Discoverer:
             trans_map = config["transitions"].get(current, {})
             tid = self._find_transition_to_milestone(trans_map, milestone_name)
             if not tid:
+                tid = self._fallback_transition(key, trans_map, visited, milestone_name)
+                if tid == "used":
+                    continue
+            if not tid:
                 print(
                     f"  [NO] No transition to milestone '{milestone_name}' from '{current}'"
                 )
@@ -92,13 +106,37 @@ class Discoverer:
             }
             visited.add(current)
 
-        # Ensure all states in the transition map have milestone mappings
-        for status_name in config["transitions"]:
+        self._fill_milestone_mappings(config, discovered_milestones)
+
+        return discovered_milestones
+
+    def _fill_milestone_mappings(self, config, discovered_milestones):
+        """Add milestone mappings for source statuses and their target statuses."""
+        for status_name, transitions in list(config["transitions"].items()):
             ms = self.milestones.status_to_milestone(status_name)
             if ms and ms not in discovered_milestones:
                 discovered_milestones[ms] = [status_name]
+            for to_name in transitions.values():
+                ms = self.milestones.status_to_milestone(to_name)
+                if ms and ms not in discovered_milestones:
+                    discovered_milestones[ms] = [to_name]
 
-        return discovered_milestones
+    def _fallback_transition(self, key, trans_map, visited, milestone_name):
+        """Try unvisited transitions to known milestones. Skip dead ends."""
+        for t_id, to_name in trans_map.items():
+            if _is_dead_end(to_name, milestone_name, self.milestones):
+                continue
+            to_ms = self.milestones.status_to_milestone(to_name)
+            if to_ms and to_name not in visited:
+                try:
+                    print(f"  -> Trying {to_name} ({to_ms})...")
+                    self._execute(key, t_id)
+                    new = self._get_status(key)
+                    print(f"  [OK] Moved to {new}\n")
+                    return "used"
+                except RuntimeError:
+                    continue
+        return None
 
     def _print_summary(self, config):
         total = sum(len(t) for t in config["transitions"].values())
@@ -159,6 +197,8 @@ class Discoverer:
 
     def _find_transition_to_milestone(self, trans_map, milestone_name):
         for tid, to_name in trans_map.items():
+            if _is_dead_end(to_name, milestone_name, self.milestones):
+                continue
             to_ms = self.milestones.status_to_milestone(to_name)
             if to_ms == milestone_name:
                 return tid

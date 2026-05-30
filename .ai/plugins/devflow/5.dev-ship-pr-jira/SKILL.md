@@ -3,18 +3,7 @@ name: dev-ship-pr-jira
 description: ship feature to create GitHub PR and comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.
 triggers: 
   - "dev-ship-pr-jira"
-  - "dev-ship-pr-jira --pr-only"
-  - "dev-ship-pr-jira --jira-only"
-  - "dev-ship-pr-jira --dry-run"
-  - "dev-ship-pr-jira --technical-only"
-  - "dev-ship-pr-jira --from-pr"
   - "dev-ship"
-  - "dev-ship --pr-only"
-  - "dev-ship --jira-only"
-  - "dev-ship --dry-run"
-  - "dev-ship --technical-only"
-  - "dev-ship --from-pr"
-  - "dev-ship --no-jira"
 ---
 
 ## When to Use
@@ -53,13 +42,13 @@ Read Jira credentials from `.env` in the repository root. If `.env` is missing o
 
 ```
 JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=RMASUP
+JIRA_PROJECT_KEY=PROJ
 JIRA_EMAIL=john.doe@saritasa.com
 JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 ```
 
 - `JIRA_COMPANY_DOMAIN` — your Jira instance subdomain (the part before `.atlassian.net`)
-- `JIRA_PROJECT_KEY` — the project key (e.g. `RMASUP`, `PROJ`)
+- `JIRA_PROJECT_KEY` — the project key (e.g. `PROJ`, `PROJ`)
 - `JIRA_EMAIL` — the email associated with your Atlassian account
 - `JIRA_API_TOKEN` — your Atlassian API token (generate at https://id.atlassian.com/manage-profile/security/api-tokens)
 
@@ -87,8 +76,21 @@ gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,headRefName
 ```
 Extract KEY via regex `([A-Z0-9]+-\d+)` from `title` or `headRefName`. If fail: ask user for KEY. Stop if no valid KEY.
 
-**Otherwise:** `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
+Otherwise: `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
 If fail: ask user for KEY or Jira link. Stop if no valid KEY.
+
+### Step 2a: Ensure Feature Branch
+
+Check if the current branch is `main` or `develop`:
+```bash
+git branch --show-current
+```
+
+If on `main` or `develop`: call `dev-start [KEY]` to create the feature branch. After branch creation, continue to Step 3. If dev-start fails, stop.
+
+Otherwise: continue to Step 3.
+
+Skip this step entirely if using --jira-only, --from-pr, --dry-run, or --technical-only.
 
 ### Step 3: Generate Reports
 

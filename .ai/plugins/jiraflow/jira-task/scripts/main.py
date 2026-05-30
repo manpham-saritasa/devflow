@@ -192,7 +192,7 @@ def main():
     domain = env.get("JIRA_COMPANY_DOMAIN", "")
     email = env.get("JIRA_EMAIL", "")
     token = env.get("JIRA_API_TOKEN", "")
-    project = env.get("JIRA_PROJECT_KEY", "RMASUP")
+    project = env.get("JIRA_PROJECT_KEY", "PROJ")
     # Positional arg: KEY (non-flag) overrides project
     for arg in sys.argv[1:]:
         if not arg.startswith("--"):

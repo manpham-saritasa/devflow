@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create PR and Comment Jira</title>
+  <title>Change Report SKILL.md — Diff</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,142 +317,42 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Create PR and Comment Jira</h1>
+  <h1>Change Report SKILL.md — Diff</h1>
 </section>
 <section class="section">
-<p>This skill helps you send your code to GitHub and tell the Jira task about it. It does many things in one action.</p>
-</section>
-<section class="section">
-<h2>What do I need?</h2>
-<p>Before using this skill, make sure you have:</p>
-<ol>
-<li><strong>gh CLI</strong> - GitHub command-line tool, installed and logged in</li>
-<li><strong>Jira MCP</strong> - connection to Jira (must be set up)</li>
-<li><strong>Jira credentials</strong> — in <code>.env</code> or <code>.env.local</code> at repo root:<pre><code>JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=PROJ
-JIRA_EMAIL=john.doe@saritasa.com
-JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
+<p>User edits applied to <code>.ai/skills/change-report/SKILL.md</code> after initial creation.</p>
+<pre><code class="language-diff">--- a/.ai/skills/change-report/SKILL.md (written by agent)
++++ b/.ai/skills/change-report/SKILL.md (edited by user)
+
+@@ -23,21 +23,19 @@
+
+
+ - Number each group so the user can reference them: &quot;group #3 looks wrong.&quot;
+-- Explanation is required for every group. Review is optional — omit if nothing to flag.
++- Explanation is required for every group.
+
+ ## Final Response: Change Report
+
+ ```text
+-### Group 1: [Group title]  
++### 1: [Group title]  
+
+-Files: path/a.md, path/b.py  
+-  
+-[One-line summary of what changed and why]  
++🤖: [One-line summary of what changed and why]
+
+
+ - Explanation: [practical impact, benefits, or what this means for the user/project]
+-- Review: [attention points, if any]  
+
+-### Group 2: [Group title]  
++- Files: path/a.md, path/b.py  
++  
++### 2: [Group title]  
+
+ ...
 </code></pre>
-</li>
-</ol>
-<ul>
-<li><code>JIRA_COMPANY_DOMAIN</code> — your Jira subdomain (the part before <code>.atlassian.net</code>)</li>
-<li><code>JIRA_PROJECT_KEY</code> — your project key (e.g. <code>PROJ</code>)</li>
-<li><code>JIRA_EMAIL</code> — your Atlassian account email</li>
-<li><code>JIRA_API_TOKEN</code> — API token from <a target="_blank" href="https://id.atlassian.com/manage-profile/security/api-tokens">https://id.atlassian.com/manage-profile/security/api-tokens</a></li>
-</ul>
-</section>
-<section class="section">
-<h2>What does this skill do?</h2>
-<ol>
-<li>Creates a pull request on GitHub with a technical report for future developers</li>
-<li>Writes a comment on your Jira task with a non-technical summary for testers and PMs</li>
-<li>Saves progress information for later</li>
-<li>Shows you a preview before doing anything</li>
-</ol>
-<p>It uses two different templates:</p>
-<ul>
-<li><strong>PR body</strong> - technical (architecture, decisions, risks, reuse patterns)</li>
-<li><strong>Jira comment</strong> - non-technical (behavior, user impact, testing notes)</li>
-</ul>
-</section>
-<section class="section">
-<h2>When should I use it?</h2>
-<p>Use this skill when:</p>
-<ul>
-<li>You finished writing code for a task</li>
-<li>Your code is committed and ready</li>
-<li>You want to create a PR on GitHub</li>
-<li>You want to tell Jira about the PR at the same time</li>
-<li>Your branch name has the task ID in it (like <code>feature/PROJ-123-add-login</code>)</li>
-</ul>
-</section>
-<section class="section">
-<h2>How to run it</h2>
-<p>Type one of these in Claude Code:</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Command"><code>/dev-ship</code></td>
-<td data-label="What it does">Create PR + comment Jira (default)</td>
-</tr>
-<tr>
-<td data-label="Command"><code>/dev-ship --pr-only</code></td>
-<td data-label="What it does">Create PR only, skip Jira</td>
-</tr>
-<tr>
-<td data-label="Command"><code>/dev-ship --jira-only</code></td>
-<td data-label="What it does">Comment Jira only, skip PR</td>
-</tr>
-<tr>
-<td data-label="Command"><code>/dev-ship --dry-run</code></td>
-<td data-label="What it does">Preview both changelogs only, no action</td>
-</tr>
-<tr>
-<td data-label="Command"><code>/dev-ship --technical-only</code></td>
-<td data-label="What it does">Save technical changelog to <code>.local</code> only</td>
-</tr>
-<tr>
-<td data-label="Command"><code>/dev-ship [KEY]</code></td>
-<td data-label="What it does">Use a specific task key</td>
-</tr>
-</tbody>
-</table>
-<p>The skill will show you what it will do, then ask you to say "YES" before making changes.</p>
-</section>
-<section class="section">
-<h2>Important things to know</h2>
-<ul>
-<li>Your branch name MUST have the task ID (like <code>PROJ-123</code>)</li>
-<li>All your changes must be committed (nothing new uncommitted)</li>
-<li>The PR will be sent to the <code>develop</code> branch by default</li>
-<li>You will see a preview and can say NO if something is wrong</li>
-<li>This skill will NOT commit your code, only use what you already committed</li>
-</ul>
-</section>
-<section class="section">
-<h2>What happens step by step?</h2>
-<ol>
-<li><strong>Check your code</strong> - looks at what you changed</li>
-<li><strong>Get the task ID</strong> - reads it from your branch name</li>
-<li><strong>Generate reports</strong> - creates two reports:<ul>
-<li>Technical PR report (for future developers)</li>
-<li>Non-technical Jira report (for testers and PMs)</li>
-</ul>
-</li>
-<li><strong>Show you a preview</strong> - displays both reports</li>
-<li><strong>Ask for permission</strong> - waits for you to say YES</li>
-<li><strong>Create the PR</strong> - sends code to GitHub with the technical report</li>
-<li><strong>Save progress</strong> - updates <code>.local/tasks/[KEY]/progress.md</code></li>
-<li><strong>Comment on Jira</strong> - posts the non-technical report with the PR link</li>
-</ol>
-</section>
-<section class="section">
-<h2>Examples</h2>
-<h3>Example 1: Add a login feature</h3>
-<p>Your branch is: <code>feature/PROJ-123-add-login</code>  </p>
-<p>The skill:</p>
-<ul>
-<li>Takes the task ID: <code>PROJ-123</code></li>
-<li>Reads your changes</li>
-<li>Creates a PR with title: <code>Add login feature PROJ-123</code></li>
-<li>Comments on Jira task <code>PROJ-123</code> with the PR link</li>
-</ul>
-<h3>Example 2: Fix a bug</h3>
-<p>Your branch is: <code>bugfix/PROJ-456-fix-crash</code>  </p>
-<p>The skill:</p>
-<ul>
-<li>Takes the task ID: <code>PROJ-456</code></li>
-<li>Reads what you fixed</li>
-<li>Creates a PR with title: <code>Fix crash PROJ-456</code></li>
-<li>Comments on Jira task <code>PROJ-456</code> with the PR link</li>
-</ul>
 </section>
   </main>
 </body>
