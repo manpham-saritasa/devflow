@@ -168,7 +168,7 @@ td li {
     margin: 4px 0;
 }
 pre {
-    margin: 0;
+    margin: 0 0 20px;
     padding: 16px;
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -590,24 +590,13 @@ a:hover {
 <li><strong>Task evidence:</strong> The Jira task asks for setup guidelines and best practices for the new SQL server, with GEO moving first and RMA likely moving later to reduce the cost and effort of managing two servers at the same time.</li>
 <li><strong>Plan evidence:</strong> Comments recommend Azure SQL Managed Instance over Azure SQL Database or staying on a VM because of better SQL Server compatibility, SSRS catalog support, removal of Windows Server overhead, and built-in high availability and backups.</li>
 <li><strong>Review evidence:</strong> Comments state that a migration assessment should reveal compatibility blockers, affected objects, SKU recommendation, and cost estimates. They also note that Azure access is needed to run the assessment, and that some procedures depend on local Windows disk.</li>
-<li><strong>Related ADRs / prior tasks:</strong> <code>None</code>.</li>
-<li><strong>External references — Microsoft Learn:</strong><ul>
+<li><strong>External references — Microsoft Learn:</strong></li>
 <li><a target="_blank" href="https://learn.microsoft.com/en-us/sql/sql-server/end-of-support/sql-server-end-of-support-overview">SQL Server end of support options</a> — confirms SQL 2017 extended support ends 2027; recommends MI as first migration option.</li>
 <li><a target="_blank" href="https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/sql-managed-instance-paas-overview">What is Azure SQL Managed Instance?</a> — confirms near-100% SQL Server compatibility, SQL Agent, linked servers, cross-database queries, automated patching/backups/HA, SSRS catalog hosting.</li>
 <li><a target="_blank" href="https://learn.microsoft.com/en-us/azure/azure-sql/database/features-comparison">Features comparison: SQL DB vs SQL MI</a> — confirms SQL DB lacks SQL Agent, linked servers, cross-database queries, and SSRS support that the current GEO system depends on.</li>
 <li><a target="_blank" href="https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/sql-managed-instance-paas-overview#business-intelligence">SQL MI — Business Intelligence section</a> — confirms MI can host SSRS catalog databases while SSRS engine runs on a VM.</li>
 <li><a target="_blank" href="https://learn.microsoft.com/en-us/sql/sql-server/end-of-support/sql-server-end-of-support-overview#sql-server-on-azure-vms">End of support — Azure VM vs MI comparison</a> — confirms VM option still requires managing both SQL Server and OS; MI option is fully managed with evergreen features.</li>
 </ul>
-</li>
-</ul>
-</section>
-<section class="section">
-<h2>10. Open Questions</h2>
-<div class="block-grid">
-<div class="block-card"><p class="q"><strong>Q1:</strong> Who will handle the Azure setup steps needed for the migration assessment?</p><p class="a"><strong>A1:</strong> Either Saritasa gets the required Azure access, or the client team runs the setup and shares the assessment output.</p></div>
-<div class="block-card"><p class="q"><strong>Q2:</strong> Should this recommendation be framed only around GEO migration, or as the first step toward a future shared GEO and RMA environment?</p><p class="a"><strong>A2:</strong> Preferred framing is GEO first, with a future shared environment kept as the expected direction but not treated as a final committed scope yet.</p></div>
-<div class="block-card"><p class="q"><strong>Q3:</strong> Is the client comfortable keeping the SSRS engine on a small VM in the short term while the databases move first?</p><p class="a"><strong>A3:</strong> Current recommendation is yes, because it keeps the heavy SQL workload on Managed Instance while isolating the smaller SSRS engine as a separate workstream.</p></div>
-</div>
 </section>
   </main>
 </body>
