@@ -390,13 +390,13 @@ a:hover {
 <h2>Jira Credentials</h2>
 <p>Read Jira credentials from <code>.env</code> in the repository root. If <code>.env</code> is missing or incomplete, fallback to <code>.env.local</code>. Required variables:</p>
 <pre><code>JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=RMASUP
+JIRA_PROJECT_KEY=PROJ
 JIRA_EMAIL=john.doe@saritasa.com
 JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 </code></pre>
 <ul>
 <li><code>JIRA_COMPANY_DOMAIN</code> — your Jira instance subdomain (the part before <code>.atlassian.net</code>)</li>
-<li><code>JIRA_PROJECT_KEY</code> — the project key (e.g. <code>RMASUP</code>, <code>PROJ</code>)</li>
+<li><code>JIRA_PROJECT_KEY</code> — the project key (e.g. <code>PROJ</code>, <code>PROJ</code>)</li>
 <li><code>JIRA_EMAIL</code> — the email associated with your Atlassian account</li>
 <li><code>JIRA_API_TOKEN</code> — your Atlassian API token (generate at <a target="_blank" href="https://id.atlassian.com/manage-profile/security/api-tokens">https://id.atlassian.com/manage-profile/security/api-tokens</a>)</li>
 </ul>
@@ -420,8 +420,15 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 <pre><code class="language-bash">gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,headRefName
 </code></pre>
 <p>Extract KEY via regex <code>([A-Z0-9]+-\d+)</code> from <code>title</code> or <code>headRefName</code>. If fail: ask user for KEY. Stop if no valid KEY.  </p>
-<p><strong>Otherwise:</strong> <code>git branch --show-current</code>, extract KEY regex <code>([A-Z0-9]+-\d+)</code>.<br>
+<p>Otherwise: <code>git branch --show-current</code>, extract KEY regex <code>([A-Z0-9]+-\d+)</code>.<br>
 If fail: ask user for KEY or Jira link. Stop if no valid KEY.</p>
+<h3>Step 2a: Ensure Feature Branch</h3>
+<p>Check if the current branch is <code>main</code> or <code>develop</code>:</p>
+<pre><code class="language-bash">git branch --show-current
+</code></pre>
+<p>If on <code>main</code> or <code>develop</code>: call <code>dev-start [KEY]</code> to create the feature branch. After branch creation, continue to Step 3. If dev-start fails, stop.  </p>
+<p>Otherwise: continue to Step 3.  </p>
+<p>Skip this step entirely if using --jira-only, --from-pr, --dry-run, or --technical-only.</p>
 <h3>Step 3: Generate Reports</h3>
 <p>If <code>--no-jira</code>: generate only the <strong>PR report</strong> (technical). Skip the Jira report entirely.  </p>
 <p>Otherwise, generate TWO reports:  </p>
@@ -631,7 +638,7 @@ Content-Type: application/json
 </code></pre>
 <p>(Omit skipped blocks per flags.)</p>
 <h3>Step 10: Update Jira Status</h3>
-<p>Call <code>jira-move</code> skill with <code>KEY</code> and milestone <code>review</code>. Non-blocking — continue on failure.</p>
+<p>Call <code>jira-move</code> skill with <code>KEY</code> and milestone <code>code-review</code>. Non-blocking — continue on failure.</p>
 </section>
   </main>
 </body>

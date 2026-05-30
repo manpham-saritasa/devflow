@@ -12,12 +12,12 @@ Before using this skill, make sure you have:
 
    ```
    JIRA_COMPANY_DOMAIN=saritasa
-   JIRA_PROJECT_KEY=RMASUP
+   JIRA_PROJECT_KEY=PROJ
    JIRA_EMAIL=john.doe@saritasa.com
    JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
    ```
    - `JIRA_COMPANY_DOMAIN` — your Jira subdomain (the part before `.atlassian.net`)
-   - `JIRA_PROJECT_KEY` — your project key (e.g. `RMASUP`)
+   - `JIRA_PROJECT_KEY` — your project key (e.g. `PROJ`)
    - `JIRA_EMAIL` — your Atlassian account email
    - `JIRA_API_TOKEN` — API token from https://id.atlassian.com/manage-profile/security/api-tokens
 

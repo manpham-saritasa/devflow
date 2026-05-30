@@ -53,13 +53,13 @@ Read Jira credentials from `.env` in the repository root. If `.env` is missing o
 
 ```
 JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=RMASUP
+JIRA_PROJECT_KEY=PROJ
 JIRA_EMAIL=john.doe@saritasa.com
 JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 ```
 
 - `JIRA_COMPANY_DOMAIN` — your Jira instance subdomain (the part before `.atlassian.net`)
-- `JIRA_PROJECT_KEY` — the project key (e.g. `RMASUP`, `PROJ`)
+- `JIRA_PROJECT_KEY` — the project key (e.g. `PROJ`, `PROJ`)
 - `JIRA_EMAIL` — the email associated with your Atlassian account
 - `JIRA_API_TOKEN` — your Atlassian API token (generate at https://id.atlassian.com/manage-profile/security/api-tokens)
 
