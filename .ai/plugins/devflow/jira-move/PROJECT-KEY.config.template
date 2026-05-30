@@ -1,12 +1,6 @@
-# Jira Move — [PROJECT-KEY] Transitions
-# Copy to ./[PROJECT-KEY].config. Fill IDs with `jmove --discover KEY`.
-# Edit names if your project uses different status names.
+# Jira Move — PROJECT-KEY Transitions
+# Copy to ./PROJECT-KEY.config. Run --discover to fill transition IDs.
 
-READY_FOR_DEV_NAME=Ready For Development
-READY_FOR_DEV_ID=
-IN_PROGRESS_NAME=In Progress
-IN_PROGRESS_ID=
-CODE_REVIEW_NAME=Code Review
-CODE_REVIEW_ID=
-READY_FOR_QA_NAME=Ready for QA
-READY_FOR_QA_ID=
+PIPELINE=Backlog, Ready for Development, In Progress, Code Review, Ready for QA
+
+# Transition map: STATUS=ID=TO,ID=TO (auto-filled by --discover)
