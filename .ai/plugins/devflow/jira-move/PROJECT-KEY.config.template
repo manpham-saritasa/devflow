@@ -1,6 +1,2 @@
 # Jira Move — PROJECT-KEY Transitions
 # Copy to ./PROJECT-KEY.config. Run --discover to fill transition IDs.
-
-PIPELINE=Backlog, Ready for Development, In Progress, Code Review, Ready for QA
-
-# Transition map: STATUS=ID=TO,ID=TO (auto-filled by --discover)

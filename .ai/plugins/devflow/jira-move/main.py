@@ -10,21 +10,6 @@ import urllib.request
 SKILL_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(SKILL_DIR))))
 
-MILESTONE_ALIASES = {
-    "ready": "Ready for Development",
-    "in-progress": "In Progress",
-    "review": "Code Review",
-    "qa": "Ready for QA",
-}
-
-AUTO_NEXT = {
-    "backlog": "ready",
-    "ready for development": "in-progress",
-    "in progress": "review",
-    "code review": "qa",
-    "ready for qa": "done",
-}
-
 
 def load_env():
     env = {}
@@ -41,11 +26,78 @@ def load_env():
     return env
 
 
+def load_milestones():
+    path = os.path.join(SKILL_DIR, "milestones.config")
+    if not os.path.exists(path):
+        return {}, []
+    milestones = {}
+    pipeline = []
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            k, v = k.strip(), v.strip()
+            if k.upper() == "PIPELINE":
+                pipeline = [s.strip() for s in v.split(",") if s.strip()]
+            else:
+                milestones[k] = [s.strip() for s in v.split(",") if s.strip()]
+    return milestones, pipeline
+
+
+def status_to_milestone(status_name, milestones):
+    sl = status_name.lower()
+    for mname, statuses in milestones.items():
+        for s in statuses:
+            if s.lower() == sl:
+                return mname
+    for mname, statuses in milestones.items():
+        for s in statuses:
+            if s.lower() in sl or sl in s.lower():
+                return mname
+    return None
+
+
+def resolve_target(
+    target, milestones, project_milestones=None, project_transitions=None
+):
+    """Resolve milestone/status name to actual Jira status.
+    Checks project config first, then global milestones.config.
+    If project_transitions provided, picks the first status that exists in the project."""
+    tl = target.lower()
+    # Check project config first (cached from --discover)
+    if project_milestones:
+        if tl in project_milestones:
+            for s in project_milestones[tl]:
+                return s
+        for mname, statuses in project_milestones.items():
+            for s in statuses:
+                if s.lower() == tl:
+                    return s
+    # Fall back to global milestones
+    if tl in milestones:
+        candidates = milestones[tl]
+        if project_transitions:
+            # Pick first candidate that exists in this project
+            for s in candidates:
+                if s in project_transitions or any(
+                    s.lower() == t.lower() for t in project_transitions
+                ):
+                    return s
+        return candidates[0]
+    for mname, statuses in milestones.items():
+        for s in statuses:
+            if s.lower() == tl:
+                return s
+    return target
+
+
 def load_config(project_key):
     path = os.path.join(SKILL_DIR, f"{project_key}.config")
     if not os.path.exists(path):
         return None
-    config = {"pipeline": [], "transitions": {}}
+    config = {"milestones": {}, "transitions": {}}
     with open(path) as f:
         for line in f:
             line = line.strip()
@@ -53,16 +105,20 @@ def load_config(project_key):
                 continue
             k, v = line.split("=", 1)
             k, v = k.strip(), v.strip()
-            if k == "PIPELINE":
-                config["pipeline"] = [s.strip() for s in v.split(",") if s.strip()]
-            elif "," in v and "=" in v:
+            if k.upper() == "PIPELINE":
+                continue
+            if "=" in v:
                 # Transition map: STATUS=ID=TO,ID=TO
                 transitions = {}
                 for pair in v.split(","):
                     parts = pair.split("=", 1)
                     if len(parts) == 2:
                         transitions[parts[0].strip()] = parts[1].strip()
-                config["transitions"][k] = transitions
+                if transitions:
+                    config["transitions"][k] = transitions
+            else:
+                # Milestone mapping: milestone=Status1,Status2
+                config["milestones"][k] = [s.strip() for s in v.split(",") if s.strip()]
     return config
 
 
@@ -71,9 +127,13 @@ def save_config(project_key, config):
     lines = [
         f"# Jira Move — {project_key} Transitions",
         "",
-        f"PIPELINE={', '.join(config['pipeline'])}",
-        "",
     ]
+    # Milestone mappings first
+    if config.get("milestones"):
+        for ms, statuses in sorted(config["milestones"].items()):
+            lines.append(f"{ms}={', '.join(statuses)}")
+        lines.append("")
+    # Transition map
     for status_name, transitions in sorted(config["transitions"].items()):
         if not transitions:
             continue
@@ -136,20 +196,9 @@ def get_all_statuses(domain, auth, project_key):
     return sorted(statuses)
 
 
-def jira_post(domain, auth, path, body):
-    data = json.dumps(body).encode()
-    req = urllib.request.Request(
-        f"https://{domain}.atlassian.net/rest/api/3{path}", data=data
-    )
-    req.add_header("Authorization", f"Basic {auth}")
-    req.add_header("Content-Type", "application/json")
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read())
-
-
-def discover(domain, auth, key):
+def discover(domain, auth, key, milestones, pipeline):
     project_key = key.split("-")[0]
-    config = load_config(project_key) or {"pipeline": [], "transitions": {}}
+    config = load_config(project_key) or {"milestones": {}, "transitions": {}}
     original_status = get_status(domain, auth, key)
 
     print(f"## Discovering workflow for {project_key} using {key}\n")
@@ -159,18 +208,21 @@ def discover(domain, auth, key):
     if all_statuses:
         print(f"### Project Statuses ({len(all_statuses)}):")
         for s in all_statuses:
-            print(f"  - {s}")
+            ms = status_to_milestone(s, milestones) or "—"
+            print(f"  - {s}  [{ms}]")
         print()
 
-    # Build pipeline from known dev statuses + visited states
     visited = set()
-    pipeline = list(config["pipeline"])
+    discovered_milestones = {}  # milestone → [status names found in this project]
     stage = 0
 
-    for target_name in pipeline:
+    for milestone_name in pipeline:
         stage += 1
         current = get_status(domain, auth, key)
-        print(f"### Stage {stage}: Looking for '{target_name}' (current: {current})")
+        current_milestone = status_to_milestone(current, milestones) or current
+        print(
+            f"### Stage {stage}: Milestone '{milestone_name}' (current: {current} [{current_milestone}])"
+        )
 
         # Record transitions from current state
         if current not in visited:
@@ -179,20 +231,26 @@ def discover(domain, auth, key):
                 str(t["id"]): t["to"]["name"] for t in transitions
             }
             visited.add(current)
+            # Map current status to its milestone
+            current_ms = status_to_milestone(current, milestones)
+            if current_ms:
+                discovered_milestones.setdefault(current_ms, [])
+                if current not in discovered_milestones[current_ms]:
+                    discovered_milestones[current_ms].append(current)
             print_transitions(transitions)
 
-        if current.lower() == target_name.lower():
+        if current_milestone == milestone_name:
+            print(f"  ✅ Already at milestone '{milestone_name}'\n")
             continue
 
-        # Skip move if target is the last pipeline stage (already discovered from current)
         if stage == len(pipeline):
             continue
 
-        # Try to move
         trans_map = config["transitions"].get(current, {})
         tid = None
         for id_candidate, to_name in trans_map.items():
-            if to_name.lower() == target_name.lower():
+            to_milestone = status_to_milestone(to_name, milestones)
+            if to_milestone == milestone_name:
                 tid = id_candidate
                 break
 
@@ -200,21 +258,22 @@ def discover(domain, auth, key):
             try:
                 execute_transition(domain, auth, key, tid)
                 new = get_status(domain, auth, key)
-                print(f"  ✅ Moved to {new}")
+                print(f"  ✅ Moved to {new}\n")
             except RuntimeError as e:
                 print(f"  🛑 Can't move: {e}")
                 print(
-                    f"  → Move '{key}' to '{target_name}' manually, then re-run --discover."
+                    f"  → Move '{key}' to milestone '{milestone_name}' manually, then re-run --discover."
                 )
                 save_config(project_key, config)
                 return
         else:
-            print(f"  ❌ No transition to '{target_name}' from '{current}'")
+            print(
+                f"  ❌ No transition to milestone '{milestone_name}' from '{current}'"
+            )
             print(f"  → Move '{key}' manually, then re-run --discover.")
             save_config(project_key, config)
             return
 
-    # Record final state
     current = get_status(domain, auth, key)
     if current not in visited:
         transitions = get_transitions(domain, auth, key)
@@ -223,22 +282,18 @@ def discover(domain, auth, key):
         }
         visited.add(current)
 
-    # Update pipeline with all visited states
-    for s in visited:
-        if s not in pipeline:
-            pipeline.append(s)
-    config["pipeline"] = pipeline
+    config["milestones"] = discovered_milestones
     save_config(project_key, config)
 
     total_transitions = sum(len(t) for t in config["transitions"].values())
     print(f"\n### Summary — {len(visited)} states, {total_transitions} transitions")
     for status_name in sorted(visited):
+        ms = status_to_milestone(status_name, milestones) or "—"
         trans_map = config["transitions"].get(status_name, {})
         if trans_map:
             to_list = ", ".join(trans_map.values())
-            print(f"  {status_name} → {to_list}")
+            print(f"  {status_name}  [{ms}] → {to_list}")
 
-    # Restore
     current = get_status(domain, auth, key)
     if current.lower() != original_status.lower():
         print(f"\n↩️  Restoring {key} to {original_status}...")
@@ -248,33 +303,25 @@ def discover(domain, auth, key):
 def restore_task(domain, auth, key, config, original_status):
     current = get_status(domain, auth, key)
     max_steps = 10
-
     while current.lower() != original_status.lower() and max_steps > 0:
         max_steps -= 1
         trans_map = config["transitions"].get(current, {})
         tid = None
-
-        # Direct transition to original status
         for t, name in trans_map.items():
             if name.lower() == original_status.lower():
                 tid = t
                 break
-
-        # Walk backwards via Ready for Development
         if not tid:
             for t, name in trans_map.items():
                 if name.lower() == "ready for development":
                     tid = t
                     break
-
         if not tid:
             print(f"  ⚠️ No reverse path from {current}")
             break
-
         execute_transition(domain, auth, key, tid)
         current = get_status(domain, auth, key)
         print(f"  → {current}")
-
     if current.lower() == original_status.lower():
         print(f"  ✅ Restored to {original_status}")
     else:
@@ -289,16 +336,20 @@ def print_transitions(transitions):
     print()
 
 
-def move(domain, auth, key, milestone):
+def move(domain, auth, key, target, milestones, pipeline=None):
     project_key = key.split("-")[0]
     config = load_config(project_key)
-    if not config or not config["pipeline"]:
+    if not config or not config["transitions"]:
         print(f"❌ No config for {project_key}. Run --discover first.")
         return
 
-    # Resolve alias
-    target_name = MILESTONE_ALIASES.get(milestone, milestone)
+    # Build pipeline order from milestones
+    if pipeline is None:
+        pipeline = list(milestones.keys())
 
+    target_name = resolve_target(
+        target, milestones, config.get("milestones"), list(config["transitions"].keys())
+    )
     current = get_status(domain, auth, key)
     print(f"Current: {current} → Target: {target_name}")
 
@@ -314,8 +365,107 @@ def move(domain, auth, key, milestone):
             break
 
     if not tid:
-        print(f"⚠️  No transition from {current} to {target_name} in config.")
-        print("   Run --discover to rebuild transition map.")
+        transitions = get_transitions(domain, auth, key)
+        config["transitions"][current] = {
+            str(t["id"]): t["to"]["name"] for t in transitions
+        }
+        trans_map = config["transitions"][current]
+        for id_candidate, to_name in trans_map.items():
+            if to_name.lower() == target_name.lower():
+                tid = id_candidate
+                break
+
+    if not tid:
+        # Smart routing: walk pipeline to reach target milestone
+        current_ms = status_to_milestone(current, milestones)
+        target_ms = status_to_milestone(target_name, milestones) or target.lower()
+
+        if current_ms and target_ms and pipeline:
+            try:
+                current_idx = pipeline.index(current_ms)
+                target_idx = pipeline.index(target_ms)
+                if target_idx > current_idx:
+                    print(
+                        f"  → Routing through pipeline: {current_ms} → ... → {target_ms}"
+                    )
+                    for step_ms in pipeline[current_idx + 1 : target_idx + 1]:
+                        step_target = resolve_target(
+                            step_ms,
+                            milestones,
+                            config.get("milestones"),
+                            list(config["transitions"].keys()),
+                        )
+                        step_tid = None
+                        step_trans = config["transitions"].get(
+                            get_status(domain, auth, key), {}
+                        )
+                        for id_candidate, to_name in step_trans.items():
+                            if to_name.lower() == step_target.lower():
+                                step_tid = id_candidate
+                                break
+                        if not step_tid:
+                            print(
+                                f"  ⚠️  Stuck at {get_status(domain, auth, key)} — can't reach {step_ms}"
+                            )
+                            return
+                        try:
+                            execute_transition(domain, auth, key, step_tid)
+                            new = get_status(domain, auth, key)
+                            print(f"  → {new}")
+                        except RuntimeError as e:
+                            print(f"  ⚠️  Failed at {step_ms}: {e}")
+                            return
+                    final = get_status(domain, auth, key)
+                    print(f"✅ {key} → {final}")
+                    return
+            except ValueError:
+                pass
+
+        # Fallback for backlog: move to ready first, then backlog
+        is_backlog = target.lower() == "backlog" or (
+            target.lower() in milestones and target.lower() == "backlog"
+        )
+        if is_backlog:
+            print(f"  → No direct path to backlog, trying via ready...")
+            ready_target = resolve_target(
+                "ready",
+                milestones,
+                config.get("milestones"),
+                list(config["transitions"].keys()),
+            )
+            ready_tid = None
+            for id_candidate, to_name in trans_map.items():
+                if to_name.lower() == ready_target.lower():
+                    ready_tid = id_candidate
+                    break
+            if ready_tid:
+                try:
+                    execute_transition(domain, auth, key, ready_tid)
+                    ready_status = get_status(domain, auth, key)
+                    print(f"  → {ready_status}")
+                    ready_trans = config["transitions"].get(ready_status, {})
+                    for id_candidate, to_name in ready_trans.items():
+                        if (
+                            to_name.lower() == "backlog"
+                            or status_to_milestone(to_name, milestones) == "backlog"
+                        ):
+                            try:
+                                execute_transition(domain, auth, key, id_candidate)
+                                final = get_status(domain, auth, key)
+                                print(f"✅ {key} → {final}")
+                            except RuntimeError as e:
+                                print(
+                                    f"⚠️  Moved to {ready_status} but couldn't reach backlog: {e}"
+                                )
+                            return
+                    print(
+                        f"⚠️  Moved to {ready_status} but no transition to backlog from there."
+                    )
+                except RuntimeError as e:
+                    print(f"⚠️  Failed to move to {ready_target}: {e}")
+                return
+
+        print(f"⚠️  No transition from {current} to {target_name}.")
         return
 
     try:
@@ -326,17 +476,25 @@ def move(domain, auth, key, milestone):
         print(f"⚠️  Failed: {e}")
 
 
-def auto_move(domain, auth, key):
-    current = get_status(domain, auth, key).lower()
-    for status_name, milestone in AUTO_NEXT.items():
-        if status_name in current:
-            if milestone == "done":
-                print(f"✅ Dev pipeline complete for {key}. Hand off to QA.")
-                return
-            print(f"Auto: {current} → {milestone}")
-            move(domain, auth, key, milestone)
-            return
-    print(f"⚠️  Current status '{current}' not in dev flow. Use ready/review/qa.")
+def auto_move(domain, auth, key, milestones, pipeline):
+    current = get_status(domain, auth, key)
+    cm = status_to_milestone(current, milestones)
+    if cm is None:
+        print(
+            f"⚠️  Current status '{current}' not in milestones. Use milestone name directly."
+        )
+        return
+    try:
+        idx = pipeline.index(cm)
+    except ValueError:
+        print(f"⚠️  Milestone '{cm}' not in pipeline.")
+        return
+    if idx + 1 >= len(pipeline):
+        print(f"✅ Dev pipeline complete for {key}.")
+        return
+    next_ms = pipeline[idx + 1]
+    print(f"Auto: {current} ({cm}) → {next_ms}")
+    move(domain, auth, key, next_ms, milestones)
 
 
 def main():
@@ -345,22 +503,24 @@ def main():
     email = env["JIRA_EMAIL"]
     token = env["JIRA_API_TOKEN"]
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()
+    milestones, pipeline = load_milestones()
 
     if len(sys.argv) < 2:
-        print("Usage: python main.py KEY [ready|review|qa|in-progress] [--discover]")
+        ms_list = ", ".join(pipeline) if pipeline else "ready, review, qa"
+        print(f"Usage: python main.py KEY [{ms_list}] [--discover]")
         return
 
     key = sys.argv[1].upper()
     is_discover = "--discover" in sys.argv
 
     if is_discover:
-        discover(domain, auth, key)
+        discover(domain, auth, key, milestones, pipeline)
         return
 
     if len(sys.argv) >= 3:
-        move(domain, auth, key, sys.argv[2])
+        move(domain, auth, key, sys.argv[2], milestones, pipeline)
     else:
-        auto_move(domain, auth, key)
+        auto_move(domain, auth, key, milestones, pipeline)
 
 
 if __name__ == "__main__":

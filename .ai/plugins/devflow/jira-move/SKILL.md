@@ -1,6 +1,6 @@
 ---
 name: jira-move
-description: Transition a Jira issue to a target status using per-project config with full transition map.
+description: Transition a Jira issue using milestone-based workflow. Per-project transition map + shared milestones config.
 triggers:
   - "jira-move"
   - "jmove"
@@ -11,30 +11,40 @@ triggers:
 Run the Python script:
 
 ```bash
-python .ai/plugins/devflow/jira-move/main.py KEY [ready|review|qa|in-progress] [--discover]
+python .ai/plugins/devflow/jira-move/main.py KEY [MILESTONE] [--discover]
 ```
 
 | Command | Action |
 |---------|--------|
-| `main.py KEY` | Auto-detect current status, move to next step |
-| `main.py KEY ready` | Move to Ready For Development |
-| `main.py KEY review` | Move to Code Review |
-| `main.py KEY qa` | Move to Ready For QA |
-| `main.py KEY in-progress` | Move to In Progress |
-| `main.py KEY --discover` | Explore all statuses + transitions, save to config, restore task |
+| `main.py KEY` | Auto-detect current milestone, advance to next |
+| `main.py KEY ready` | Move to `ready` milestone (e.g., "Ready for Development") |
+| `main.py KEY review` | Move to `review` milestone (e.g., "TM Review", "In Review") |
+| `main.py KEY pending` | Move to `pending` milestone (e.g., "In Progress") |
+| `main.py KEY verify` | Move to `verify` milestone (e.g., "On Staging", "On Production") |
+| `main.py KEY complete` | Move to `complete` milestone (e.g., "Completed") |
+| `main.py KEY --discover` | Explore all statuses, save transition map, restore task |
+
+Accepts milestone names OR raw Jira status names.
 
 ---
 
-## Config Format
+## Config
+
+**`milestones.config`** — shared across all projects:
 
 ```config
-PIPELINE=Backlog, Ready for Development, In Progress, Code Review, Ready for QA
+PIPELINE=backlog,ready,pending,code-review,ready-for-qa,in-qa,review,verify,complete
 
-Backlog=10=Blocked,221=Ready for Development,3=Completed
-Ready for Development=10=Blocked,231=In Progress,241=Backlog
+ready=Ready for Development,Ready to Do
+pending=On Development,Doing,Do-ing,On going,In Progress
+review=TM Review,In Review
+verify=On Staging,On Production,Verified
+complete=Completed,Completed.
 ```
 
-- `PIPELINE` — ordered dev flow, used for auto-detection and --discover probing
-- `STATUS=ID=TO,ID=TO` — full transition map for each visited status
+**`PROJ.config`** — per-project transition map (auto-filled by --discover):
 
-New project: copy `PROJECT-KEY.config.template` → `PROJ.config`, edit pipeline, run `--discover`.
+```config
+Backlog=10=Blocked,221=Ready for Development,3=Completed
+In Progress=10=Blocked,311=Code Review,351=Ready for Development
+```
