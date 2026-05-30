@@ -11,7 +11,7 @@ triggers:
 Run the Python script:
 
 ```bash
-python .ai/plugins/devflow/jira-move/main.py KEY [MILESTONE] [--discover]
+python .ai/plugins/devflow/jira-move/scripts/main.py KEY [MILESTONE] [--discover]
 ```
 
 | Command | Action |
