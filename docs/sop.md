@@ -26,16 +26,32 @@ Backlog → Ready → In Progress → Code Review → Ready for QA → In QA →
 
 ---
 
-## 2. Starting a Task
+## 2. Why This Workflow Beats Vibe Coding
 
-### 2.1 Pull the task from Jira
+| Dimension | Vibe Coding | Our Flow | Edge |
+|-----------|-------------|----------|------|
+| Planning | Code first, figure out later | Structured plan, codebase investigation, related task research | Clear |
+| Traceability | No record of what was done | `changelog.md` + `progress.md` as single source of truth | Huge |
+| Review | User eyeballs it | 8-dimension self-review: fit, quality, security, perf, naming, testing, design, changelog | Huge |
+| Safety | No guardrails | Checkpoints before push, merge, delete. Dry-run on destructive ops | Huge |
+| Jira Sync | Manual — forget to update status | Auto-status transitions, PR links in comments, time logging | Clear |
+| Commits | One giant "fix stuff" commit | Grouped by logical change, chronological order, task key in message | Clear |
+| PR Comments | Fix ad-hoc, miss some | Structured loop: list → plan → fix → resolve. Multi-round until done | Huge |
+| Memory | Zero — knowledge walks when dev leaves | ADRs for architectural decisions, task folders preserved as snapshots | Huge |
+| Daily Awareness | Check Jira manually | `jtask` grouped list, `jurgent` finds blocked items | Clear |
+
+---
+
+## 3. Starting a Task
+
+### 3.1 Pull the task from Jira
 
 Run `dev-get PROJ-123` to fetch the Jira issue into your local task folder. This creates:
 
 - `.local/tasks/PROJ-123/task.md` — structured task summary
 - `.local/tasks/PROJ-123/raw.md` — full Jira source (description, comments, metadata)
 
-### 2.2 Create a branch
+### 3.2 Create a branch
 
 Run `dev-start PROJ-123` to create a gitflow branch:
 
@@ -58,9 +74,9 @@ The task's Jira status is automatically moved to **In Progress**.
 
 ---
 
-## 3. Planning and Implementation
+## 4. Planning and Implementation
 
-### 3.1 Plan before you code
+### 4.1 Plan before you code
 
 Run `/devflow PROJ-123` to enter the full pipeline. The orchestrator will:
 
@@ -78,7 +94,7 @@ Individual phases:
 
 The orchestrator runs plan → code → review in sequence, stopping at each checkpoint for your approval.
 
-### 3.2 Commit in logical groups
+### 4.2 Commit in logical groups
 
 Run `/dev-commit` to stage and commit changes. The skill:
 
@@ -94,7 +110,7 @@ Examples:
 - `Fix null reference in PDF export PROJ-123`
 - `Update API error handling PROJ-123`
 
-### 3.3 Self-review before shipping
+### 4.3 Self-review before shipping
 
 Run `/dev-review` before opening a PR. The review checks:
 
@@ -106,7 +122,7 @@ Findings are categorized as `[blocking]` or `[minor]`. Blocking issues must be f
 
 ---
 
-## 4. Shipping the PR
+## 5. Shipping the PR
 
 Run `/dev-ship` to create a PR and notify Jira:
 
@@ -127,7 +143,7 @@ After shipping, the task moves to **Code Review**.
 
 ---
 
-## 5. Fixing PR Comments
+## 6. Fixing PR Comments
 
 Run `/dev-fix-pr` when a reviewer requests changes. The skill:
 
@@ -142,7 +158,7 @@ Commit format: `Fix PR comments PROJ-123`
 
 ---
 
-## 6. Finishing a Task
+## 7. Finishing a Task
 
 Run `/dev-finish` when the PR is approved. The skill:
 
@@ -157,7 +173,7 @@ The task moves to **Ready for QA**.
 
 ---
 
-## 7. Architecture Decisions
+## 8. Architecture Decisions
 
 Run `/dev-adr PROJ-123` when the task introduced:
 
@@ -171,9 +187,9 @@ The skill reads your task evidence and generates an ADR in `docs/adrs/`. It skip
 
 ---
 
-## 8. Daily Workflow
+## 9. Daily Workflow
 
-### 8.1 See what's assigned to you
+### 9.1 See what's assigned to you
 
 Run `jtask` to list your Jira tasks grouped by status:
 
@@ -184,7 +200,7 @@ Run `jtask` to list your Jira tasks grouped by status:
 | `--ready` | Ready to start |
 | `--review` | Under review |
 
-### 8.2 Check what the team needs from you
+### 9.2 Check what the team needs from you
 
 Run `jurgent` to find tasks where someone is waiting on your response. The skill:
 
@@ -192,17 +208,17 @@ Run `jurgent` to find tasks where someone is waiting on your response. The skill
 - Skips comments you already replied to
 - Orders results by priority and urgency
 
-### 8.3 Move tasks through the pipeline
+### 9.3 Move tasks through the pipeline
 
 Run `jmove PROJ-123` to transition a task to its next milestone. The skill uses per-project transition maps and shared milestone definitions.
 
-### 8.4 Log your time
+### 9.4 Log your time
 
 Run `jlog` to log work hours to Jira via Tempo. Supports flexible duration formats (`1h`, `30m`, `1h30m`), past dates (`--date`), and job types (`--job`). Shows a daily summary after logging.
 
 ---
 
-## 9. Branch and Worktree Conventions
+## 10. Branch and Worktree Conventions
 
 | Mode | How it works | When to use |
 |------|-------------|------------|
@@ -222,7 +238,7 @@ Worktrees are fully independent — each has its own `.env` file and working dir
 
 ---
 
-## 10. Quick Reference
+## 11. Quick Reference
 
 | Action | Command |
 |--------|---------|
@@ -243,7 +259,7 @@ Worktrees are fully independent — each has its own `.env` file and working dir
 
 ---
 
-## 11. Do Not
+## 12. Do Not
 
 - Push directly to `main` or `develop`
 - Merge your own PR without review

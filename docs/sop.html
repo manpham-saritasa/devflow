@@ -385,14 +385,83 @@ a:hover {
 </table>
 </section>
 <section class="section">
-<h2>2. Starting a Task</h2>
-<h3>2.1 Pull the task from Jira</h3>
+<h2>2. Why This Workflow Beats Vibe Coding</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Vibe Coding</th>
+<th>Our Flow</th>
+<th>Edge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Dimension">Planning</td>
+<td data-label="Vibe Coding">Code first, figure out later</td>
+<td data-label="Our Flow">Structured plan, codebase investigation, related task research</td>
+<td data-label="Edge">Clear</td>
+</tr>
+<tr>
+<td data-label="Dimension">Traceability</td>
+<td data-label="Vibe Coding">No record of what was done</td>
+<td data-label="Our Flow"><code>changelog.md</code> + <code>progress.md</code> as single source of truth</td>
+<td data-label="Edge">Huge</td>
+</tr>
+<tr>
+<td data-label="Dimension">Review</td>
+<td data-label="Vibe Coding">User eyeballs it</td>
+<td data-label="Our Flow">8-dimension self-review: fit, quality, security, perf, naming, testing, design, changelog</td>
+<td data-label="Edge">Huge</td>
+</tr>
+<tr>
+<td data-label="Dimension">Safety</td>
+<td data-label="Vibe Coding">No guardrails</td>
+<td data-label="Our Flow">Checkpoints before push, merge, delete. Dry-run on destructive ops</td>
+<td data-label="Edge">Huge</td>
+</tr>
+<tr>
+<td data-label="Dimension">Jira Sync</td>
+<td data-label="Vibe Coding">Manual — forget to update status</td>
+<td data-label="Our Flow">Auto-status transitions, PR links in comments, time logging</td>
+<td data-label="Edge">Clear</td>
+</tr>
+<tr>
+<td data-label="Dimension">Commits</td>
+<td data-label="Vibe Coding">One giant "fix stuff" commit</td>
+<td data-label="Our Flow">Grouped by logical change, chronological order, task key in message</td>
+<td data-label="Edge">Clear</td>
+</tr>
+<tr>
+<td data-label="Dimension">PR Comments</td>
+<td data-label="Vibe Coding">Fix ad-hoc, miss some</td>
+<td data-label="Our Flow">Structured loop: list → plan → fix → resolve. Multi-round until done</td>
+<td data-label="Edge">Huge</td>
+</tr>
+<tr>
+<td data-label="Dimension">Memory</td>
+<td data-label="Vibe Coding">Zero — knowledge walks when dev leaves</td>
+<td data-label="Our Flow">ADRs for architectural decisions, task folders preserved as snapshots</td>
+<td data-label="Edge">Huge</td>
+</tr>
+<tr>
+<td data-label="Dimension">Daily Awareness</td>
+<td data-label="Vibe Coding">Check Jira manually</td>
+<td data-label="Our Flow"><code>jtask</code> grouped list, <code>jurgent</code> finds blocked items</td>
+<td data-label="Edge">Clear</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>3. Starting a Task</h2>
+<h3>3.1 Pull the task from Jira</h3>
 <p>Run <code>dev-get PROJ-123</code> to fetch the Jira issue into your local task folder. This creates:</p>
 <ul>
 <li><code>.local/tasks/PROJ-123/task.md</code> — structured task summary</li>
 <li><code>.local/tasks/PROJ-123/raw.md</code> — full Jira source (description, comments, metadata)</li>
 </ul>
-<h3>2.2 Create a branch</h3>
+<h3>3.2 Create a branch</h3>
 <p>Run <code>dev-start PROJ-123</code> to create a gitflow branch:</p>
 <table>
 <thead>
@@ -428,8 +497,8 @@ release/proj-789-version-1-2-0
 <p>The task's Jira status is automatically moved to <strong>In Progress</strong>.  </p>
 </section>
 <section class="section">
-<h2>3. Planning and Implementation</h2>
-<h3>3.1 Plan before you code</h3>
+<h2>4. Planning and Implementation</h2>
+<h3>4.1 Plan before you code</h3>
 <p>Run <code>/devflow PROJ-123</code> to enter the full pipeline. The orchestrator will:</p>
 <ol>
 <li>Detect your current progress</li>
@@ -464,7 +533,7 @@ release/proj-789-version-1-2-0
 </tbody>
 </table>
 <p>The orchestrator runs plan → code → review in sequence, stopping at each checkpoint for your approval.</p>
-<h3>3.2 Commit in logical groups</h3>
+<h3>4.2 Commit in logical groups</h3>
 <p>Run <code>/dev-commit</code> to stage and commit changes. The skill:</p>
 <ul>
 <li>Groups related files together</li>
@@ -479,7 +548,7 @@ release/proj-789-version-1-2-0
 <li><code>Fix null reference in PDF export PROJ-123</code></li>
 <li><code>Update API error handling PROJ-123</code></li>
 </ul>
-<h3>3.3 Self-review before shipping</h3>
+<h3>4.3 Self-review before shipping</h3>
 <p>Run <code>/dev-review</code> before opening a PR. The review checks:</p>
 <ul>
 <li><strong>Fit</strong> — does the code match the plan and acceptance criteria?</li>
@@ -489,7 +558,7 @@ release/proj-789-version-1-2-0
 <p>Findings are categorized as <code>[blocking]</code> or <code>[minor]</code>. Blocking issues must be fixed before shipping.  </p>
 </section>
 <section class="section">
-<h2>4. Shipping the PR</h2>
+<h2>5. Shipping the PR</h2>
 <p>Run <code>/dev-ship</code> to create a PR and notify Jira:</p>
 <table>
 <thead>
@@ -529,7 +598,7 @@ release/proj-789-version-1-2-0
 <p>After shipping, the task moves to <strong>Code Review</strong>.  </p>
 </section>
 <section class="section">
-<h2>5. Fixing PR Comments</h2>
+<h2>6. Fixing PR Comments</h2>
 <p>Run <code>/dev-fix-pr</code> when a reviewer requests changes. The skill:</p>
 <ol>
 <li>Lists all unresolved review threads</li>
@@ -541,7 +610,7 @@ release/proj-789-version-1-2-0
 <p>Commit format: <code>Fix PR comments PROJ-123</code>  </p>
 </section>
 <section class="section">
-<h2>6. Finishing a Task</h2>
+<h2>7. Finishing a Task</h2>
 <p>Run <code>/dev-finish</code> when the PR is approved. The skill:</p>
 <ol>
 <li>Verifies the PR is approved (stops if changes are still requested)</li>
@@ -553,7 +622,7 @@ release/proj-789-version-1-2-0
 <p>The task moves to <strong>Ready for QA</strong>.  </p>
 </section>
 <section class="section">
-<h2>7. Architecture Decisions</h2>
+<h2>8. Architecture Decisions</h2>
 <p>Run <code>/dev-adr PROJ-123</code> when the task introduced:</p>
 <ul>
 <li>A new third-party service or external API</li>
@@ -565,8 +634,8 @@ release/proj-789-version-1-2-0
 <p>The skill reads your task evidence and generates an ADR in <code>docs/adrs/</code>. It skips non-architectural tasks automatically.  </p>
 </section>
 <section class="section">
-<h2>8. Daily Workflow</h2>
-<h3>8.1 See what's assigned to you</h3>
+<h2>9. Daily Workflow</h2>
+<h3>9.1 See what's assigned to you</h3>
 <p>Run <code>jtask</code> to list your Jira tasks grouped by status:</p>
 <table>
 <thead>
@@ -594,20 +663,20 @@ release/proj-789-version-1-2-0
 </tr>
 </tbody>
 </table>
-<h3>8.2 Check what the team needs from you</h3>
+<h3>9.2 Check what the team needs from you</h3>
 <p>Run <code>jurgent</code> to find tasks where someone is waiting on your response. The skill:</p>
 <ul>
 <li>Scans Jira comments for unanswered mentions and questions</li>
 <li>Skips comments you already replied to</li>
 <li>Orders results by priority and urgency</li>
 </ul>
-<h3>8.3 Move tasks through the pipeline</h3>
+<h3>9.3 Move tasks through the pipeline</h3>
 <p>Run <code>jmove PROJ-123</code> to transition a task to its next milestone. The skill uses per-project transition maps and shared milestone definitions.</p>
-<h3>8.4 Log your time</h3>
+<h3>9.4 Log your time</h3>
 <p>Run <code>jlog</code> to log work hours to Jira via Tempo. Supports flexible duration formats (<code>1h</code>, <code>30m</code>, <code>1h30m</code>), past dates (<code>--date</code>), and job types (<code>--job</code>). Shows a daily summary after logging.  </p>
 </section>
 <section class="section">
-<h2>9. Branch and Worktree Conventions</h2>
+<h2>10. Branch and Worktree Conventions</h2>
 <table>
 <thead>
 <tr>
@@ -638,7 +707,7 @@ project-api-worktrees/                ← all worktrees here
 <p>Worktrees are fully independent — each has its own <code>.env</code> file and working directory. The main clone stays clean on <code>main</code> or <code>develop</code>.  </p>
 </section>
 <section class="section">
-<h2>10. Quick Reference</h2>
+<h2>11. Quick Reference</h2>
 <table>
 <thead>
 <tr>
@@ -707,7 +776,7 @@ project-api-worktrees/                ← all worktrees here
 </table>
 </section>
 <section class="section">
-<h2>11. Do Not</h2>
+<h2>12. Do Not</h2>
 <ul>
 <li>Push directly to <code>main</code> or <code>develop</code></li>
 <li>Merge your own PR without review</li>
