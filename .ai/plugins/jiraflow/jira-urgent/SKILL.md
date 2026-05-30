@@ -9,6 +9,10 @@ triggers:
   - "urgent Jira items"
 ---
 
+## Config
+
+Read shared auth from `../../config.md`.
+
 ## Paths
 
 - `CONFIG` — `./projects.config` (skill-relative)
@@ -21,7 +25,7 @@ triggers:
 Run the Python script and present its output cleanly in chat:
 
 ```bash
-python .ai/plugins/devflow/jira-urgent/main.py
+python .ai/plugins/jiraflow/jira-urgent/scripts/main.py
 ```
 
 Then for each item found, fetch the full comment body from Jira and draft a reply per the classification rules below. Present as formatted markdown — not raw terminal output.

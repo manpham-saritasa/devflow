@@ -6,12 +6,16 @@ triggers:
   - "jmove"
 ---
 
+## Config
+
+Read shared auth from ../../config.md. Milestones in ./milestones.config.
+
 ## Workflow
 
 Run the Python script:
 
 ```bash
-python .ai/plugins/devflow/jira-move/scripts/main.py KEY [MILESTONE] [--discover]
+python .ai/plugins/jiraflow/jira-move/scripts/main.py KEY [MILESTONE] [--discover]
 ```
 
 | Command | Action |

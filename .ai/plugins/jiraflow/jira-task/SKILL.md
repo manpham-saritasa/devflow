@@ -6,6 +6,10 @@ triggers:
   - "jtask"
 ---
 
+## Config
+
+Read shared auth from `../../config.md`.
+
 ## Paths
 
 - `CONFIG` — `./projects.config` (skill-relative)
@@ -18,7 +22,7 @@ triggers:
 Run the Python script and present its output cleanly in chat:
 
 ```bash
-python .ai/plugins/devflow/jira-task/main.py [--pending | --ready]
+python .ai/plugins/jiraflow/jira-task/scripts/main.py [--pending | --ready]
 ```
 
 | Flag | Shows |
