@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standard Operating Procedure — Development Workflow</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Standard Operating Procedure — Development Workflow</h1>
+</section>
+<section class="section">
+<p>This SOP defines how our team takes a Jira task from backlog to production. It covers branching, coding, review, shipping, and the tools that automate each step.  </p>
+</section>
+<section class="section">
+<h2>1. Task Lifecycle Overview</h2>
+<p>Every task follows this pipeline:</p>
+<pre><code>Backlog → Ready → In Progress → Code Review → Ready for QA → In QA → Review → Verify → Complete
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>What happens</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Stage">Backlog</td>
+<td data-label="What happens">Task created, not yet prioritized</td>
+<td data-label="Owner">PM</td>
+</tr>
+<tr>
+<td data-label="Stage">Ready</td>
+<td data-label="What happens">Task assigned, ready to start</td>
+<td data-label="Owner">Developer</td>
+</tr>
+<tr>
+<td data-label="Stage">In Progress</td>
+<td data-label="What happens">Branch created, coding started</td>
+<td data-label="Owner">Developer</td>
+</tr>
+<tr>
+<td data-label="Stage">Code Review</td>
+<td data-label="What happens">PR opened, reviewer assigned</td>
+<td data-label="Owner">Reviewer</td>
+</tr>
+<tr>
+<td data-label="Stage">Ready for QA</td>
+<td data-label="What happens">PR merged, ready for testing</td>
+<td data-label="Owner">Developer</td>
+</tr>
+<tr>
+<td data-label="Stage">In QA</td>
+<td data-label="What happens">Tester is verifying</td>
+<td data-label="Owner">Tester</td>
+</tr>
+<tr>
+<td data-label="Stage">Review</td>
+<td data-label="What happens">Stakeholder or tech lead review</td>
+<td data-label="Owner">Lead</td>
+</tr>
+<tr>
+<td data-label="Stage">Verify</td>
+<td data-label="What happens">Deployed to staging or production</td>
+<td data-label="Owner">Developer</td>
+</tr>
+<tr>
+<td data-label="Stage">Complete</td>
+<td data-label="What happens">Task closed</td>
+<td data-label="Owner">PM</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>2. Starting a Task</h2>
+<h3>2.1 Pull the task from Jira</h3>
+<p>Run <code>dev-get PROJ-123</code> to fetch the Jira issue into your local task folder. This creates:</p>
+<ul>
+<li><code>.local/tasks/PROJ-123/task.md</code> — structured task summary</li>
+<li><code>.local/tasks/PROJ-123/raw.md</code> — full Jira source (description, comments, metadata)</li>
+</ul>
+<h3>2.2 Create a branch</h3>
+<p>Run <code>dev-start PROJ-123</code> to create a gitflow branch:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Command"><code>dev-start PROJ-123</code></td>
+<td data-label="What it does">Feature branch from <code>develop</code></td>
+</tr>
+<tr>
+<td data-label="Command"><code>dev-start PROJ-123 --hotfix</code></td>
+<td data-label="What it does">Hotfix branch from <code>main</code></td>
+</tr>
+<tr>
+<td data-label="Command"><code>dev-start PROJ-123 --release</code></td>
+<td data-label="What it does">Release branch from <code>develop</code></td>
+</tr>
+<tr>
+<td data-label="Command"><code>dev-start PROJ-123 --worktree</code></td>
+<td data-label="What it does">Isolated worktree (recommended for parallel tasks)</td>
+</tr>
+</tbody>
+</table>
+<p>The branch name follows this format:</p>
+<pre><code>feature/proj-123-short-summary
+hotfix/proj-456-fix-crash
+release/proj-789-version-1-2-0
+</code></pre>
+<p>The task's Jira status is automatically moved to <strong>In Progress</strong>.  </p>
+</section>
+<section class="section">
+<h2>3. Planning and Implementation</h2>
+<h3>3.1 Plan before you code</h3>
+<p>Run <code>/devflow PROJ-123</code> to enter the full pipeline. The orchestrator will:</p>
+<ol>
+<li>Detect your current progress</li>
+<li>Suggest the next step</li>
+<li>Run each phase with checkpoints</li>
+</ol>
+<p>Individual phases:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Command</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Phase">Plan</td>
+<td data-label="Command"><code>/dev-plan PROJ-123</code></td>
+<td data-label="Output"><code>plan.md</code> — structured execution plan</td>
+</tr>
+<tr>
+<td data-label="Phase">Code</td>
+<td data-label="Command"><code>/dev-code</code></td>
+<td data-label="Output"><code>changelog.md</code> — what was implemented</td>
+</tr>
+<tr>
+<td data-label="Phase">Review</td>
+<td data-label="Command"><code>/dev-review</code></td>
+<td data-label="Output"><code>review.md</code> — self-review findings</td>
+</tr>
+</tbody>
+</table>
+<p>The orchestrator runs plan → code → review in sequence, stopping at each checkpoint for your approval.</p>
+<h3>3.2 Commit in logical groups</h3>
+<p>Run <code>/dev-commit</code> to stage and commit changes. The skill:</p>
+<ul>
+<li>Groups related files together</li>
+<li>Orders commits chronologically</li>
+<li>Appends the task key to every commit message</li>
+<li>Keeps commits small and reviewable</li>
+</ul>
+<p>Commit message format: <code>{action} {description} PROJ-123</code>  </p>
+<p>Examples:</p>
+<ul>
+<li><code>Add login form validation PROJ-123</code></li>
+<li><code>Fix null reference in PDF export PROJ-123</code></li>
+<li><code>Update API error handling PROJ-123</code></li>
+</ul>
+<h3>3.3 Self-review before shipping</h3>
+<p>Run <code>/dev-review</code> before opening a PR. The review checks:</p>
+<ul>
+<li><strong>Fit</strong> — does the code match the plan and acceptance criteria?</li>
+<li><strong>Quality</strong> — correctness, readability, test coverage, error handling</li>
+<li><strong>Changelog gaps</strong> — are there unlogged manual changes?</li>
+</ul>
+<p>Findings are categorized as <code>[blocking]</code> or <code>[minor]</code>. Blocking issues must be fixed before shipping.  </p>
+</section>
+<section class="section">
+<h2>4. Shipping the PR</h2>
+<p>Run <code>/dev-ship</code> to create a PR and notify Jira:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Create PR + comment Jira</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--pr-only</code></td>
+<td data-label="Behavior">Create PR only, skip Jira</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--jira-only</code></td>
+<td data-label="Behavior">Comment Jira only, skip PR</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--no-jira</code></td>
+<td data-label="Behavior">Create PR only, no Jira integration</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--dry-run</code></td>
+<td data-label="Behavior">Preview reports without creating anything</td>
+</tr>
+</tbody>
+</table>
+<p>The skill generates two reports:</p>
+<ol>
+<li><strong>Technical PR body</strong> — architecture, decisions, file paths, code patterns. For future engineers.</li>
+<li><strong>Non-technical Jira comment</strong> — behavior changes, user impact only. For testers and PMs.</li>
+</ol>
+<p>After shipping, the task moves to <strong>Code Review</strong>.  </p>
+</section>
+<section class="section">
+<h2>5. Fixing PR Comments</h2>
+<p>Run <code>/dev-fix-pr</code> when a reviewer requests changes. The skill:</p>
+<ol>
+<li>Lists all unresolved review threads</li>
+<li>Plans fixes for each comment</li>
+<li>Applies approved changes in logical commits</li>
+<li>Pushes and resolves threads via GraphQL</li>
+</ol>
+<p>The skill supports multiple rounds — it loops until all comments are resolved or you choose to stop.  </p>
+<p>Commit format: <code>Fix PR comments PROJ-123</code>  </p>
+</section>
+<section class="section">
+<h2>6. Finishing a Task</h2>
+<p>Run <code>/dev-finish</code> when the PR is approved. The skill:</p>
+<ol>
+<li>Verifies the PR is approved (stops if changes are still requested)</li>
+<li>Merges the PR using the configured merge strategy (default: <code>--merge</code>, preserves history)</li>
+<li>Deletes the local branch or worktree</li>
+<li>Cleans up remote branch</li>
+</ol>
+<p>The task folder (<code>.local/tasks/PROJ-123/</code>) is preserved — it contains your plan, changelog, and review history as a snapshot of completed work.  </p>
+<p>The task moves to <strong>Ready for QA</strong>.  </p>
+</section>
+<section class="section">
+<h2>7. Architecture Decisions</h2>
+<p>Run <code>/dev-adr PROJ-123</code> when the task introduced:</p>
+<ul>
+<li>A new third-party service or external API</li>
+<li>A new library or package that introduces a new capability</li>
+<li>A replacement of an existing technical approach</li>
+<li>A database schema change</li>
+<li>An auth or permission boundary change</li>
+</ul>
+<p>The skill reads your task evidence and generates an ADR in <code>docs/adrs/</code>. It skips non-architectural tasks automatically.  </p>
+</section>
+<section class="section">
+<h2>8. Daily Workflow</h2>
+<h3>8.1 See what's assigned to you</h3>
+<p>Run <code>jtask</code> to list your Jira tasks grouped by status:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="What it shows">All assigned tasks</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--pending</code></td>
+<td data-label="What it shows">Currently in progress</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--ready</code></td>
+<td data-label="What it shows">Ready to start</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--review</code></td>
+<td data-label="What it shows">Under review</td>
+</tr>
+</tbody>
+</table>
+<h3>8.2 Check what the team needs from you</h3>
+<p>Run <code>jurgent</code> to find tasks where someone is waiting on your response. The skill:</p>
+<ul>
+<li>Scans Jira comments for unanswered mentions and questions</li>
+<li>Skips comments you already replied to</li>
+<li>Orders results by priority and urgency</li>
+</ul>
+<h3>8.3 Move tasks through the pipeline</h3>
+<p>Run <code>jmove PROJ-123</code> to transition a task to its next milestone. The skill uses per-project transition maps and shared milestone definitions.</p>
+<h3>8.4 Log your time</h3>
+<p>Run <code>jlog</code> to log work hours to Jira via Tempo. Supports flexible duration formats (<code>1h</code>, <code>30m</code>, <code>1h30m</code>), past dates (<code>--date</code>), and job types (<code>--job</code>). Shows a daily summary after logging.  </p>
+</section>
+<section class="section">
+<h2>9. Branch and Worktree Conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>How it works</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Mode">Gitflow</td>
+<td data-label="How it works">Branch in the main clone</td>
+<td data-label="When to use">Single task, simple workflow</td>
+</tr>
+<tr>
+<td data-label="Mode">Worktree</td>
+<td data-label="How it works">Isolated sibling folder</td>
+<td data-label="When to use">Multiple parallel tasks, clean separation</td>
+</tr>
+</tbody>
+</table>
+<p>Worktree structure:</p>
+<pre><code>project-api/                          ← main clone
+project-api-worktrees/                ← all worktrees here
+├── proj-111-short-name/              ← worktree 1
+├── proj-222-short-name/              ← worktree 2
+</code></pre>
+<p>Worktrees are fully independent — each has its own <code>.env</code> file and working directory. The main clone stays clean on <code>main</code> or <code>develop</code>.  </p>
+</section>
+<section class="section">
+<h2>10. Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Action">Start task</td>
+<td data-label="Command"><code>dev-start PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">Fetch task</td>
+<td data-label="Command"><code>dev-get PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">Full pipeline</td>
+<td data-label="Command"><code>/devflow PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">Plan only</td>
+<td data-label="Command"><code>/dev-plan PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">Commit changes</td>
+<td data-label="Command"><code>/dev-commit</code></td>
+</tr>
+<tr>
+<td data-label="Action">Self-review</td>
+<td data-label="Command"><code>/dev-review</code></td>
+</tr>
+<tr>
+<td data-label="Action">Ship PR</td>
+<td data-label="Command"><code>/dev-ship</code></td>
+</tr>
+<tr>
+<td data-label="Action">Fix PR comments</td>
+<td data-label="Command"><code>/dev-fix-pr</code></td>
+</tr>
+<tr>
+<td data-label="Action">Finish task</td>
+<td data-label="Command"><code>/dev-finish</code></td>
+</tr>
+<tr>
+<td data-label="Action">Create ADR</td>
+<td data-label="Command"><code>/dev-adr PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">List my tasks</td>
+<td data-label="Command"><code>jtask</code></td>
+</tr>
+<tr>
+<td data-label="Action">Check urgent items</td>
+<td data-label="Command"><code>jurgent</code></td>
+</tr>
+<tr>
+<td data-label="Action">Move Jira status</td>
+<td data-label="Command"><code>jmove PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="Action">Log time</td>
+<td data-label="Command"><code>jlog</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>11. Do Not</h2>
+<ul>
+<li>Push directly to <code>main</code> or <code>develop</code></li>
+<li>Merge your own PR without review</li>
+<li>Skip the plan before coding complex tasks</li>
+<li>Commit unrelated changes together</li>
+<li>Leave a worktree without finishing or deleting it</li>
+<li>Skip the changelog — it is the single source of truth for what was delivered</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>
