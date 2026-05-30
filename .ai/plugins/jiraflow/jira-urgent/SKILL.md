@@ -15,8 +15,14 @@ Read shared auth from `../../config.md`.
 
 ## Paths
 
-- `CONFIG` — `./projects.config` (skill-relative)
 - `IGNORE_FILE` — `./ignored-comments.txt` (skill-relative) — one comment ID per line
+
+## Flags
+
+| Flag | Behavior |
+|------|----------|
+| (none) | Default project from `JIRA_PROJECT_KEY` in `.env.local` |
+| `[PROJECT_KEY]` | Override project key (e.g., `PROJ`) |
 
 ---
 
@@ -120,7 +126,7 @@ Rules:
 |------|--------|
 | Always re-query | Never reuse cached data. Each run must query Jira fresh. |
 | Print to chat | Present clean formatted markdown in chat. Do not save to file. |
-| Single project | Use default from `projects.config`. |
+| Single project | Use `[PROJECT_KEY]` to switch. |
 | Read-only | Never post comments or transition issues. Ask for confirmation before sending any draft. |
 | Match on accountId | Never match on display name — names collide. |
 | Skip answered | User comment after the urgent-trigger comment → drop. |

@@ -42,5 +42,5 @@ Present the output as formatted markdown — not raw terminal output. Clean up a
 |------|--------|
 | Always re-query | Never reuse cached data. Each run must query Jira fresh. |
 | Print to chat | Show the full script output in chat. Do not save to file. |
-| Single project | Use default from `projects.config`. |
+| Single project | Use `[PROJECT_KEY]` to switch. |
 | Read-only | Never post comments or transition issues. |

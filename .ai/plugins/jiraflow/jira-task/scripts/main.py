@@ -193,6 +193,11 @@ def main():
     email = env.get("JIRA_EMAIL", "")
     token = env.get("JIRA_API_TOKEN", "")
     project = env.get("JIRA_PROJECT_KEY", "RMASUP")
+    # Positional arg: KEY (non-flag) overrides project
+    for arg in sys.argv[1:]:
+        if not arg.startswith("--"):
+            project = arg.upper()
+            break
 
     if not all([domain, email, token]):
         print("Missing JIRA credentials in .env.local")
