@@ -147,6 +147,10 @@ If merge fails: report the error and stop. Do not delete the worktree.
 ✅ PR merged: [PR_URL]
 ```
 
+### Step 5b: Update Jira Status
+
+Call `jira-move` skill with `KEY` and milestone `ready-for-qa`. Non-blocking — continue on failure.
+
 ### Step 6: Cleanup
 
 **Worktree mode:**

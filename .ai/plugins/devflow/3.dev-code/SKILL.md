@@ -42,10 +42,17 @@ Work through `## Proposed Changes` in order. For each change:
 
 ### Step 4: Verify
 
-- Run relevant tests, builds, linters
-- Prefer the smallest verification that proves the requested behavior
-- Never claim verification that didn't happen
-- If verification is incomplete, state what was/wasn't run and why
+Run tests for the changed code before proceeding:
+```bash
+# Run the smallest relevant test suite for the diff
+```
+
+- If tests fail: fix before continuing. Do not skip failing tests.
+- If no tests exist for the changed area: add at least one test for new behavior, or note the gap and why.
+- Run linters and builds after tests pass.
+- Prefer the smallest verification that proves the requested behavior.
+- Never claim verification that didn't happen.
+- If verification is incomplete, state what was/wasn't run and why.
 
 ### Step 5: Capture Manual Changes
 

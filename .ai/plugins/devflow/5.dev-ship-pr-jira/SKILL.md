@@ -364,4 +364,4 @@ If `--technical-only`:
 
 ### Step 10: Update Jira Status
 
-Call `jira-move` skill with `KEY` and milestone `review`. Non-blocking — continue on failure.
+Call `jira-move` skill with `KEY` and milestone `code-review`. Non-blocking — continue on failure.

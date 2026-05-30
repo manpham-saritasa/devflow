@@ -46,7 +46,18 @@ Review full changed files when context is needed to judge correctness, not just 
 - Check `Out of scope`, `Do not modify`, and other plan constraints
 - Verify the latest changelog iteration accurately reflects implementation
 
-### Step 4: Quality Check
+### Step 4: Run Tests
+
+Run the relevant test suite before proceeding:
+```bash
+# Run tests for the changed area. Prefer the smallest command that covers the diff.
+```
+
+If tests fail: list failures, flag as `[blocking]`, stop. Do not produce a verdict.
+If no tests exist: note it as a finding under Test & Verification Review.
+If tests pass: continue to quality check.
+
+### Step 4b: Quality Check
 
 Review across these dimensions:
 - **Correctness:** edge cases, null handling, control flow, regression risk
@@ -109,6 +120,7 @@ Do not create ADR files — only recommend.
 
 ## Self-Check
 
+- [ ] Tests run and passing? If no tests exist, gap noted?
 - [ ] Review compared actual code against task context, plan, and changelog?
 - [ ] Repository conventions and architecture respected?
 - [ ] Full files reviewed when context needed, not just diff hunks?

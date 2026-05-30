@@ -216,7 +216,9 @@ gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "[ID]"
 
 **Do NOT resolve reply-only threads** — the user handles those manually in the PR UI. If a reply was posted (not just a code fix), the reply itself auto-resolves the thread — skip the GraphQL mutation for that thread.
 
-After resolving, show summary:
+After resolving, call `jira-move` skill with `KEY` and milestone `code-review`. Non-blocking — continue on failure.
+
+Show summary:
 ```
 ✅ Round complete
 
