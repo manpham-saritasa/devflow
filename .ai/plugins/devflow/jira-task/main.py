@@ -184,7 +184,7 @@ def build_output(ongoing, ready, ignored_count, project, today):
 def main():
     show_pending = "--pending" in sys.argv
     show_ready = "--ready" in sys.argv
-    show_all = not show_pending and not show_ready
+    show_review = "--review" in sys.argv
 
     env = load_env()
     domain = env.get("JIRA_COMPANY_DOMAIN", "")
@@ -205,6 +205,9 @@ def main():
         ready = []
     elif show_ready:
         ongoing = []
+    elif show_review:
+        ongoing = [t for t in ongoing if t["status"] in ("In Review", "TM Review")]
+        ready = []
 
     today = datetime.now().strftime("%Y-%m-%d")
     output = build_output(ongoing, ready, len(ignored_ids), project, today)

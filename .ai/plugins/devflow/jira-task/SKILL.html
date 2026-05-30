@@ -334,8 +334,34 @@ a:hover {
 <section class="section">
 <h2>Workflow</h2>
 <p>Run the Python script and present its output cleanly in chat:</p>
-<pre><code class="language-bash">python .ai/plugins/devflow/jira-task/main.py
+<pre><code class="language-bash">python .ai/plugins/devflow/jira-task/main.py [--pending | --ready]
 </code></pre>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Shows">On-Going + Ready for Development</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--pending</code></td>
+<td data-label="Shows">On-Going tasks only</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--ready</code></td>
+<td data-label="Shows">Ready for Development tasks only</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--review</code></td>
+<td data-label="Shows">Tasks needing your review (In Review, TM Review)</td>
+</tr>
+</tbody>
+</table>
 <p>Present the output as formatted markdown — not raw terminal output. Clean up any artifact spacing or separators. Use the script's actual data, not a template.  </p>
 </section>
 <section class="section">

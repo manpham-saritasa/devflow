@@ -26,6 +26,7 @@ python .ai/plugins/devflow/jira-task/main.py [--pending | --ready]
 | (none) | On-Going + Ready for Development |
 | `--pending` | On-Going tasks only |
 | `--ready` | Ready for Development tasks only |
+| `--review` | Tasks needing your review (In Review, TM Review) |
 
 Present the output as formatted markdown — not raw terminal output. Clean up any artifact spacing or separators. Use the script's actual data, not a template.
 
