@@ -87,8 +87,19 @@ gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,headRefName
 ```
 Extract KEY via regex `([A-Z0-9]+-\d+)` from `title` or `headRefName`. If fail: ask user for KEY. Stop if no valid KEY.
 
-**Otherwise:** `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
+Otherwise: `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
 If fail: ask user for KEY or Jira link. Stop if no valid KEY.
+
+### Step 2a: Ensure Feature Branch
+
+Check if the current branch is `main` or `develop`:
+```bash
+git branch --show-current
+```
+
+If on `main` or `develop`: call `dev-start [KEY]` to create the feature branch. After branch creation, restart this skill from Step 1.
+
+If already on a feature, hotfix, or release branch: continue to Step 3.
 
 ### Step 3: Generate Reports
 

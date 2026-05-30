@@ -106,7 +106,7 @@ Run `git branch --show-current`.
 | `--release` | `develop` | "Release branches must start from `develop`. Switch to `develop` first or use `--force`." |
 | `--force` | any | No alert. Branch from current. |
 
-**Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, ask: "This repo has no `develop` branch. Create a hotfix from `main` instead? (yes / no)" If yes: switch to hotfix mode. If no: stop.
+**Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, auto-switch to hotfix mode. Branch from `main` using hotfix naming (`hotfix/[key]-[summary]`). No prompt needed.
 
 **For `--hotfix`:** also check for uncommitted changes and that `main` is up to date:
 
