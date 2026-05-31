@@ -19,17 +19,13 @@ Check `REVIEW_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error:
 
 ### Step 1: Read Context
 
-Read from `TASK_DIR`:
-- `task.md`, `raw.md` — requirements, constraints, acceptance criteria
-- `plan.md` — latest iteration as planned baseline
-- `changelog.md` — latest iteration as claimed summary (not source of truth)
-- `review.md` — prior passes, determine next review pass number, track unresolved findings
-- `progress.md` — current state, active iteration
+Read all available files from `TASK_DIR/`. Missing files are not errors.
+
 
 ### Step 2: Identify Changes
 
 ```bash
-git diff develop...HEAD
+git diff [BASE_BRANCH]...HEAD  # main if no develop
 ```
 Fallback: `git diff main...HEAD`
 

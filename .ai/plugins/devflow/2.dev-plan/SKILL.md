@@ -19,15 +19,8 @@ Check `PLAN_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error: t
 
 ### Step 1: Gather Context
 
-Read from `TASK_DIR` when present:
-- `task.md` — requirements, constraints, open questions
-- `raw.md` — Jira description, comments, implementation notes
-- `plan.md` — prior iterations, unresolved work, decisions
-- `review.md` — prior review outcomes, unresolved findings
-- `progress.md` — task timeline, next iteration number
-- PR review feedback captured in `review.md` or user message — comments to address
+Read all available files from `TASK_DIR/`. Missing files are not errors.
 
-If local task files are missing, prefer running `dev-get [KEY]` first to populate `task.md` and `raw.md`. If `dev-get` cannot run, fall back to the user message. Do not fail on missing files.
 
 ### Step 2: Investigate Codebase
 

@@ -37,14 +37,9 @@ If none apply: stop — "No ADR needed for this task."
 
 ### Step 2: Gather Evidence
 
-Read from `TASK_DIR` when present:
-- `task.md` — requirements and constraints
-- `raw.md` — Jira description, comments, implementation notes
-- `plan.md` — intended implementation direction
-- `changelog.md` — delivered implementation summary
-- `review.md` — quality concerns, tradeoffs, corrections
-- `progress.md` — task timeline and state
-- `pr.md` — shipped scope, PR links
+Read all available files from `TASK_DIR/`. Missing files are not errors.
+
+
 
 **When `TASK_DIR` is missing or incomplete:** search for merged PRs:
 ```bash

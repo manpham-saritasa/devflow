@@ -21,7 +21,7 @@ Check `CHANGELOG_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Err
 
 Read `TASK_DIR/plan.md`. Fallback: check project root. Treat the latest `## Iteration [N]` section as the active implementation source. Missing → stop: "Error: plan.md not found."
 
-Also read: `task.md`, `raw.md`, `review.md`, `progress.md`, `changelog.md` (if present) for constraints, review findings, and prior state.
+Read all available files from `TASK_DIR/` for constraints, review findings, and prior state.
 
 If `review.md` exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.
 

@@ -91,7 +91,7 @@ Source priority:
 
 2. **If `TASK_DIR/changelog.md` exists:** reclassify latest iteration.
 
-3. **Else:** `git diff develop..HEAD`, auto-extract + populate.
+3. **Else:** `git diff [BASE_BRANCH]..HEAD  # main if no develop`, auto-extract + populate.
 
 Rules for Jira report (skip if `--no-jira`):
 - Behavior + user impact only. No variable/function/class/path/method names.
@@ -146,7 +146,7 @@ If `--dry-run` or `--from-pr`: skip to Step 9 (read-only — no PR, no Jira, no 
 
 If `--technical-only`: proceed to Step 7 (update progress), then skip to Step 9.
 
-If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Ready? Say YES."
+If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Proceed? (yes / no)"
 
 ### Step 6: Create or Reuse PR
 
@@ -211,101 +211,7 @@ Call `jira-comment` skill with `KEY`, `JIRA_BODY` (from JIRA_TEMPLATE), and `PR_
 
 ### Step 9: Success
 
-Show the final result in separate blocks so URLs and posted content are easy to copy.
-
-If a new PR was created:
-```text
-✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## PR Body Posted
-[exact PR body that was posted]
-```
-
-```md
-## Jira Comment Posted
-[exact Jira comment that was posted]
-```
-
-If an existing PR was reused:
-```text
-✅ PR reused: {PR_URL}
-✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## PR Comment Posted
-[exact PR comment that was posted]
-```
-
-```md
-## Jira Comment Posted
-[exact Jira comment that was posted]
-```
-
-If `--from-pr`:
-```text
-✅ Reports generated from PR: {PR_URL}
-```
-
-```md
-## PR Report
-[exact PR report]
-```
-
-```md
-## Jira Report
-[exact Jira report]
-```
-
-If `--no-jira` and a new PR was created:
-```text
-✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## PR Body Posted
-[exact PR body that was posted]
-```
-
-If `--no-jira` and an existing PR was reused:
-```text
-✅ PR reused: {PR_URL}
-✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## PR Comment Posted
-[exact PR comment that was posted]
-```
-
-If `--jira-only`:
-```text
-✅ Jira: [KEY] commented
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## Jira Comment Posted
-[exact Jira comment that was posted]
-```
-
-If `--technical-only`:
-```text
-✅ Progress: .local/tasks/[KEY]/progress.md
-```
-
-```md
-## Technical Changelog (.local)
-[exact changelog content written]
-```
-
-(Omit skipped blocks per flags.)
+Use `templates/success-output.md` — pick the block matching the flags used. Omit skipped blocks.
 
 ### Step 10: Update Jira Status
 
