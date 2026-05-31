@@ -18,7 +18,7 @@
 | dev-get | `.ai/plugins/devflow/dev-get/` | `dev-get`, `devget`, `pull task`, `pull ticket` | Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md using external templates. |
 | create-pr | `.ai/plugins/githubflow/create-pr/` | `create-pr` | Create or reuse a GitHub pull request. Pass title and body, get back PR URL. Use when dev-ship needs to open a PR, or any skill needs GitHub PR creation. |
 | fix-pr | `.ai/plugins/githubflow/fix-pr/` | `fix-pr` | Push branch and resolve GitHub PR review threads via GraphQL. Use when dev-fix-pr needs to push fixes and resolve comments. |
-| review-pr | `.ai/plugins/githubflow/review-pr/` | `review-pr`, `reviewpr`, `dev-review-pr` | Review a GitHub PR across key quality checks. Supports current and past PRs. Outputs prioritized findings and a saved report. |
+| review-pr | `.ai/plugins/githubflow/review-pr/` | `review-pr`, `reviewpr` | Review a GitHub PR across quality dimensions using PR diff and metadata. Use when user wants a code review of any PR by URL. |
 | jira-comment | `.ai/plugins/jiraflow/jira-comment/` | `jira-comment`, `jcomment` | Post a comment to a Jira issue with an optional PR link at the bottom. Use when dev-ship needs to comment Jira, or any skill needs to notify a Jira task. |
 | jira-move | `.ai/plugins/jiraflow/jira-move/` | `jira-move`, `jmove` | Transition a Jira issue using milestone-based workflow. Per-project transition map + shared milestones config. |
 | jira-task | `.ai/plugins/jiraflow/jira-task/` | `jira-task`, `jtask` | List your assigned Jira tasks in pending states, ordered by priority within status groups. |
