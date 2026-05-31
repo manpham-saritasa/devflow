@@ -187,35 +187,7 @@ If a single comment spans multiple files, list each file on its own line within 
 
 ### Step 6: Push and Resolve (§5)
 
-Push the branch to origin:
-```bash
-git push origin "[BRANCH_NAME]"
-```
-
-**After push — resolve code-fix threads silently:**
-
-Fetch unresolved thread IDs again:
-```bash
-gh api graphql -f query='
-query {
-  repository(owner: "[OWNER]", name: "[REPO]") {
-    pullRequest(number: [PR_NUMBER]) {
-      reviewThreads(first: 50) {
-        nodes { id isResolved path }
-      }
-    }
-  }
-}'
-```
-
-For each thread addressed by a code fix, resolve silently (no reply posted):
-```bash
-gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "[ID]"}) { thread { isResolved } } }'
-```
-
-**Do NOT resolve reply-only threads** — the user handles those manually in the PR UI. If a reply was posted (not just a code fix), the reply itself auto-resolves the thread — skip the GraphQL mutation for that thread.
-
-After resolving, call `jira-move` skill with `KEY` and milestone `code-review`. Non-blocking — continue on failure.
+Call `fix-pr` skill from `.ai/plugins/githubflow/fix-pr/SKILL.md` to push and resolve threads. Then call `jira-move` with `KEY` and milestone `code-review` (non-blocking).
 
 Show summary:
 ```

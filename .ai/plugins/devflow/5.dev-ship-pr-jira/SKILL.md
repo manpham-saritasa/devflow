@@ -152,50 +152,7 @@ If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Proceed? (yes / no)"
 
 Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`.
 
-Before creating a PR, check whether an open PR already exists for the current branch.
-
-```bash
-gh pr list --state open --json number,title,url,headRefName,baseRefName
-```
-
-Filter by `headRefName == $(git branch --show-current)`.
-
-- If an open PR already exists for this branch: **fail fast for PR creation**. Do **not** create another PR.
-- Reuse the existing PR URL.
-- Check if there are new commits since the last PR comment:
-  ```bash
-  gh pr view [PR_NUMBER] --json comments --jq '.comments[-1].createdAt'
-  git log --oneline --since="[LAST_COMMENT_DATE]"
-  ```
-- **If no new commits:** skip — "✅ PR #[N] already up to date. No new commits since last summary."
-- **If new commits found:** generate a summary in table format and post it:
-  ```bash
-  gh pr comment [PR_NUMBER] --body "[SUMMARY]"
-  ```
-  Summary format:
-  ```
-  ## Recent Changes
-
-  | Commit | Summary |
-  |--------|---------|
-  | abc123 | What changed |
-  | def456 | What changed |
-
-  **New:** [1-line highlight of key additions]
-  ```
-- Continue to Step 7 using the existing PR URL.
-
-If no open PR exists for the current branch:
-```bash
-git push origin $(git branch --show-current)
-gh pr create --base [BASE_BRANCH] --head $(git branch --show-current) --title "{MSG}" --body "{BODY}"
-```
-
-`[BASE_BRANCH]` must match the repository default branch (for example `main` or `develop`). Do not assume `develop` if the repository uses another default branch.
-
-Capture PR URL. `{PR_BODY}` is the output from `PR_TEMPLATE`.
-
-If `--no-jira`: the PR body uses only the PR report (no Jira report).
+Call `create-pr` skill with `KEY`, `MSG`, and `PR_BODY`. Capture `PR_URL`. See `.ai/plugins/githubflow/create-pr/SKILL.md`.
 
 ### Step 7: Update Progress
 
