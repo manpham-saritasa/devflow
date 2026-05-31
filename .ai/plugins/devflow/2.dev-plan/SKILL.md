@@ -13,9 +13,7 @@ Read shared paths from `config.md`.
 
 ## Workflow
 
-### Step 0: Check Templates
-
-Check `PLAN_TEMPLATE` and `PROGRESS_TEMPLATE` exist. Missing → stop: "Error: template not found."
+Check required templates from `config.md` exist. Missing → stop.
 
 ### Step 1: Gather Context
 

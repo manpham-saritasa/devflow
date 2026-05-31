@@ -9,6 +9,15 @@ triggers:
 ## Paths
 
 Read shared paths from `config.md`.
+
+## When to Use
+
+- `dev-start KEY` — feature branch from develop
+- `dev-start KEY --hotfix` — hotfix from main
+- `dev-start KEY --release` — release branch
+- `dev-start KEY --worktree` — isolated worktree
+- `dev-start KEY --dry-run` — preview only
+
 ### Worktree folder hierarchy
 
 When you run `dev-start PROJ-2145` from the main repo, it creates a sibling worktree folder. The resulting layout looks like this:
