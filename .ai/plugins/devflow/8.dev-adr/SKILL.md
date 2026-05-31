@@ -9,8 +9,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. All `TASKS_ROOT`, `TASK_DIR`, and `ADR_DIR` variables are defined there.
-
+Read shared paths from `config.md`.
 ---
 
 ## Decision Triggers

@@ -31,27 +31,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. `TASK_DIR` is defined there (as `[TASKS_ROOT]/[KEY]` where `TASKS_ROOT` = `.local/tasks`).
-
-- `JIRA_TEMPLATE`: `jira-summary-template.md` — non-technical, for testers/PMs/clients
-- `PR_TEMPLATE`: `pr-summary-template.md` — technical, for future engineers
-
-## Jira Credentials
-
-Read Jira credentials from `.env` in the repository root. If `.env` is missing or incomplete, fallback to `.env.local`. Required variables:
-
-```
-JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=PROJ
-JIRA_EMAIL=john.doe@saritasa.com
-JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
-```
-
-- `JIRA_COMPANY_DOMAIN` — your Jira instance subdomain (the part before `.atlassian.net`)
-- `JIRA_PROJECT_KEY` — the project key (e.g. `PROJ`, `PROJ`)
-- `JIRA_EMAIL` — the email associated with your Atlassian account
-- `JIRA_API_TOKEN` — your Atlassian API token (generate at https://id.atlassian.com/manage-profile/security/api-tokens)
-
+Read shared paths from `config.md`.
 ## Output Style
 
 **Jira comment** — use `JIRA_TEMPLATE`. Non-technical: behavior + user impact only. Audience: testers, PMs, clients. Never mention code-level details.
@@ -227,44 +207,7 @@ Skip if `--dry-run` or `--from-pr`:
 
 Skip if `--pr-only`, `--dry-run`, `--technical-only`, `--from-pr`, or `--no-jira`.
 
-Before commenting, verify credentials are present in the repo root (`.env` first, then `.env.local` fallback) and contain all required variables (`JIRA_COMPANY_DOMAIN`, `JIRA_PROJECT_KEY`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). If missing or incomplete, stop: "Jira credentials not found. Add them to `.env` or `.env.local` in the repo root. See the Jira Credentials section for format."
-
-Use Jira API with the credentials from `.env`:
-- Base URL: `https://[JIRA_COMPANY_DOMAIN].atlassian.net`
-- Auth: Basic auth using `[JIRA_EMAIL]:[JIRA_API_TOKEN]`
-- Endpoint: `POST /rest/api/3/issue/[KEY]/comment`
-
-```
-POST https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/issue/[KEY]/comment
-Authorization: Basic [base64(JIRA_EMAIL:JIRA_API_TOKEN)]
-Content-Type: application/json
-
-{
-  "body": {
-    "type": "doc",
-    "version": 1,
-    "content": [
-      {
-        "type": "paragraph",
-        "content": [
-          {
-            "type": "text",
-            "text": "{JIRA_BODY}\n\n"
-          },
-          {
-            "type": "text",
-            "text": "View PR: ",
-            "marks": [{"type": "link", "attrs": {"href": "{PR_URL}"}}]
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**Required**: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: `[View PR]({PR_URL})`). Never omit or move to top.
-`{JIRA_BODY}` is the output from `JIRA_TEMPLATE`.
+Call `jira-comment` skill with `KEY`, `JIRA_BODY` (from JIRA_TEMPLATE), and `PR_URL`. See `.ai/plugins/jiraflow/jira-comment/SKILL.md`.
 
 ### Step 9: Success
 

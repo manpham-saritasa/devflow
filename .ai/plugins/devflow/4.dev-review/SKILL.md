@@ -8,8 +8,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. All `TASKS_ROOT`, `TASK_DIR`, and template variables are defined there.
-
+Read shared paths from `config.md`.
 ---
 
 ## Workflow
@@ -109,15 +108,7 @@ Update `TASK_DIR/progress.md`:
 
 ## ADR Triggers
 
-Set `ADR Suggested = Yes` if:
-- New third-party service or external API integrated
-- New library/package introduces new capability or pattern
-- Existing technical approach replaced
-- Database schema changed
-- Auth flow structure changed
-
-Do not create ADR files — only recommend.
-
+See decision triggers in `8.dev-adr/SKILL.md`. Set `ADR Suggested = Yes` when any trigger matches. Do not create ADR files — only recommend.
 ## Self-Check
 
 - [ ] Tests run and passing? If no tests exist, gap noted?

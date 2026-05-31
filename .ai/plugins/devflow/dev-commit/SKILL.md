@@ -8,8 +8,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. All `TASKS_ROOT` and `TASK_DIR` variables are defined there.
-
+Read shared paths from `config.md`.
 ---
 
 ## Workflow

@@ -7,12 +7,6 @@ triggers:
   - "/dev-flow"
 ---
 
-## Paths
-
-Read shared paths from `config.md`. All `TASKS_ROOT`, `TASK_DIR`, and template variables are defined there.
-
----
-
 Role: Development flow orchestrator. Detect the current progress of a task, suggest the next action, and run the appropriate skill. Supports the full lifecycle: start → plan → code → review → ship → fix → finish → document.
 
 ---

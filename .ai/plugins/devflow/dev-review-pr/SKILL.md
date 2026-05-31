@@ -24,7 +24,6 @@ triggers:
 ## Paths
 
 Read shared paths from `config.md`.
-
 ---
 
 ## Workflow

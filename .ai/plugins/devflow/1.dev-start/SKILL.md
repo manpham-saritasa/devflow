@@ -8,10 +8,7 @@ triggers:
 
 ## Paths
 
-Read shared paths from `config.md`. `TASKS_ROOT` and `TASK_DIR` are defined there.
-
-- `WORKTREE_ROOT`: `[REPO_NAME]-worktrees` — sibling folder to the repo, e.g. `../proj-api-worktrees`
-
+Read shared paths from `config.md`.
 ### Worktree folder hierarchy
 
 When you run `dev-start PROJ-2145` from the main repo, it creates a sibling worktree folder. The resulting layout looks like this:
