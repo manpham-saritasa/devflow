@@ -31,11 +31,7 @@ Read shared paths from `config.md`.
 - Parse flags: `--worktree-only`, `--worktree`, `--dry-run`.
 - If no KEY: detect from the current directory (see Step 2).
 
-### Step 1a: Detect Mode
-
-If `--worktree` flag is set: use `worktree` mode.
-
-Otherwise, default to `gitflow` mode (branch in main clone).
+**Mode:** `--worktree` for worktree, default is gitflow.
 
 ### Step 2: Find the Branch
 
@@ -132,7 +128,7 @@ Skip this step if `--worktree-only`.
 | `REVIEW_REQUIRED` | "PR is awaiting review. Cannot merge yet: [PR_URL]" Stop. |
 | blank / null | "PR has no reviews yet. Cannot merge: [PR_URL]" Stop. |
 
-#### Step 5a: Merge the PR
+#**Merge the PR:**
 
 Use the merge strategy from `config.md` (`MERGE_STRATEGY`, defaults to `--merge` which preserves full commit history):
 
@@ -146,9 +142,7 @@ If merge fails: report the error and stop. Do not delete the worktree.
 ✅ PR merged: [PR_URL]
 ```
 
-### Step 5b: Update Jira Status
-
-Call `jira-move` skill with `KEY` and milestone `ready-for-qa`. Non-blocking — continue on failure.
+**Update Jira:** Call `jira-move` with `KEY` and milestone `ready-for-qa` (non-blocking).
 
 ### Step 6: Cleanup
 

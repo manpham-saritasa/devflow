@@ -61,11 +61,7 @@ All development happens inside the worktree — the main repo stays clean.
 - Parse flags: `--hotfix`, `--release`, `--force`, `--worktree`, `--dry-run`.
 - If no KEY: ask user for a Jira task key. Stop if none provided.
 
-### Step 1a: Detect Mode
-
-If `--worktree` flag is set: use `worktree` mode.
-
-Otherwise, default to `gitflow` mode (branch in main clone).
+**Mode:** `--worktree` for worktree, default is gitflow.
 
 ### Step 2: Check for Existing Branch
 

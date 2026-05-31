@@ -59,18 +59,7 @@ Extract KEY via regex `([A-Z0-9]+-\d+)` from `title` or `headRefName`. If fail: 
 Otherwise: `git branch --show-current`, extract KEY regex `([A-Z0-9]+-\d+)`.
 If fail: ask user for KEY or Jira link. Stop if no valid KEY.
 
-### Step 2a: Ensure Feature Branch
-
-Check if the current branch is `main` or `develop`:
-```bash
-git branch --show-current
-```
-
-If on `main` or `develop`: call `dev-start [KEY]` to create the feature branch. After branch creation, continue to Step 3. If dev-start fails, stop.
-
-Otherwise: continue to Step 3.
-
-Skip this step entirely if using --jira-only, --from-pr, --dry-run, or --technical-only.
+**Ensure feature branch:** Check if on `main` or `develop`. If so, call `dev-start [KEY]` first, then restart. Skip this check if using --jira-only, --from-pr, --dry-run, or --technical-only.
 
 ### Step 3: Generate Reports
 

@@ -1,4 +1,8 @@
 ---
+
+## Paths
+
+Read shared paths from `config.md`.
 name: "devflow"
 description: "Smart development flow orchestrator. Detects task progress and suggests or runs the next skill automatically."
 triggers:
@@ -7,9 +11,17 @@ triggers:
   - "/dev-flow"
 ---
 
+## Paths
+
+Read shared paths from `config.md`.
+
 Role: Development flow orchestrator. Detect the current progress of a task, suggest the next action, and run the appropriate skill. Supports the full lifecycle: start → plan → code → review → ship → fix → finish → document.
 
 ---
+
+## Paths
+
+Read shared paths from `config.md`.
 
 ## Workflow
 
@@ -22,7 +34,7 @@ If fail: ask user for KEY. Stop if no valid KEY.
 ### Step 2: Setup Task Folder
 
 If `TASK_DIR` does not exist, create it.
-If `TASK_DIR/task.md` does not exist and Jira MCP is available, fetch the Jira issue and save key details to `task.md`.
+If `TASK_DIR/task.md` does not exist, prefer Jira MCP to fetch the issue. If MCP unavailable or fails, ask user for a short task summary and create `task.md` manually.
 
 ### Step 3: Detect Current Progress
 
@@ -47,6 +59,8 @@ Run checks in order. Check furthest progress first — first match wins. Each co
 - Checks 3-5: `gh pr list --head [BRANCH] --state open --json reviewDecision`
 - Checks 6-8: `test -f [TASK_DIR]/[file]`
 - Check 9: `git worktree list | grep -i [KEY]`
+
+**Guard:** If checks 6-7 match (review.md or changelog.md exists) but plan.md is missing, warn: "Task has code/review evidence but no plan.md. Run `/dev-plan [KEY]` first for a baseline before reviewing or shipping."
 
 For checks 1-5, extract `BRANCH_NAME` from worktree (`git -C [WORKTREE_PATH] branch --show-current`) or legacy (`git branch --show-current`). If no branch, skip to check 6.
 
@@ -99,11 +113,19 @@ If the user provides a flag (`--plan-only`, `--code-only`, `--review-only`), ski
 
 ---
 
+## Paths
+
+Read shared paths from `config.md`.
+
 ## Full Auto Mode
 
 If user says `/devflow [KEY] --auto`: skip the "Run now?" prompt. Execute each skill in sequence automatically, stopping only at each skill's internal checkpoints. Continue through all stages until complete or the user stops at a checkpoint.
 
 ---
+
+## Paths
+
+Read shared paths from `config.md`.
 
 ## Progress File
 
