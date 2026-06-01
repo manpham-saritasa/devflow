@@ -1,5 +1,3 @@
-# Skill: md-to-html
-
 ---
 name: md-to-html
 description: Convert Markdown files into polished standalone HTML files using a clean card-based layout, embedded CSS, responsive tables, and readable document styling.
@@ -8,6 +6,8 @@ triggers:
   - "to-html"
   - "md-html"
 ---
+
+# Skill: md-to-html
 
 ## Purpose
 

@@ -1,5 +1,3 @@
-# Skill: grill-me
-
 ---
 name: grill-me
 description: interview the user relentlessly about every aspect of their plan or design until you reach a shared understanding.
@@ -7,6 +5,8 @@ triggers:
   - "grill me"
   - "grill"
 ---
+
+# Skill: grill-me
 
 ## Usage
 
