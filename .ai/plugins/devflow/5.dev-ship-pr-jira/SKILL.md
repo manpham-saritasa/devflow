@@ -143,11 +143,11 @@ Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`.
 
 Call `create-pr` skill with `KEY`, `MSG`, and `PR_BODY`. Capture `PR_URL`. See `.ai/plugins/githubflow/create-pr/SKILL.md`.
 
-### Step 7: Update Progress
+### Step 7: Update Progress in Plan
 
 Skip if `--dry-run` or `--from-pr`:
-- If `TASK_DIR/progress.md` exists: prepend status "Shipped", PR URL, timestamp
-- Else: create new file
+- If `TASK_DIR/plan.md` exists: append progress row with status "Shipped", PR URL, timestamp
+- Else: skip progress update
 
 ### Step 8: Comment Jira
 

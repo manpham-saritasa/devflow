@@ -74,7 +74,7 @@ The skill will show you what it will do, then ask you to say "YES" before making
 4. **Show you a preview** - displays both reports
 5. **Ask for permission** - waits for you to say YES
 6. **Create the PR** - sends code to GitHub with the technical report
-7. **Save progress** - updates `.local/tasks/[KEY]/progress.md`
+7. **Save progress** - updates `.local/tasks/[KEY]/plan.md` progress section
 8. **Comment on Jira** - posts the non-technical report with the PR link
 
 ## Examples

@@ -134,7 +134,7 @@ Use flags to skip or retry specific phases:
 | Trigger | What it does |
 |---------|-------------|
 | `/dev-start` or `devstart` | Create a branch from a Jira key. Gitflow mode by default (branch in main clone). `--worktree` for worktree mode. `--release` from `develop`, `--hotfix` from `main`, `--force` from current, `--dry-run` previews. |
-| `/dev-plan` | Analyze task + codebase, produce `plan.md` + `progress.md`. |
+| `/dev-plan` | Analyze task + codebase, produce `plan.md`. |
 | `/dev-code` | Read `plan.md`, implement changes, capture manual changes, write `changelog.md` with `Delivery` tracking. |
 | `/dev-review` | Review changes via `git diff`, check changelog for unlogged changes, write `review.md`, issue verdict. |
 | `/dev-ship` or `/dev-ship-pr-jira` | Create PR + comment Jira. `--pr-only`, `--jira-only`, `--dry-run`, `--technical-only`, `--from-pr [URL]`. |

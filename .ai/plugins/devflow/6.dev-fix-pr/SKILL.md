@@ -208,8 +208,8 @@ Skip if `--dry-run`.
 - List each file changed and a brief description of the fix
 - Create the file if it doesn't exist
 
-**Update `TASK_DIR/progress.md`:**
-- If exists: prepend status "Fixing", PR URL, timestamp, round number
+**Update `TASK_DIR/plan.md` progress:**
+- If exists: append progress row with status "Fixing", PR URL, timestamp, round number
 - Else: create new file with status "Fixing"
 
 ### Step 8: Check for More Comments
@@ -234,7 +234,7 @@ If any remain: "[N] new unresolved comments found. Continue fixing? (yes / no)"
 
 If zero remain: "✅ All comments resolved on this PR."
 - Changelog: `TASK_DIR/changelog.md` updated
-- Progress: `TASK_DIR/progress.md` updated
+- Progress: `TASK_DIR/plan.md` updated
 - Stop.
 
 ---

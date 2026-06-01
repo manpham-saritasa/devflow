@@ -8,7 +8,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 
 ```text
 ✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
@@ -26,7 +26,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 ```text
 ✅ PR reused: {PR_URL}
 ✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
@@ -59,7 +59,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 
 ```text
 ✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
@@ -72,7 +72,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 ```text
 ✅ PR reused: {PR_URL}
 ✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
@@ -84,7 +84,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 
 ```text
 ✅ Jira: [KEY] commented
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
@@ -95,7 +95,7 @@ Show the final result in separate blocks so URLs and posted content are easy to 
 ## --technical-only
 
 ```text
-✅ Progress: .local/tasks/[KEY]/progress.md
+✅ Progress: .local/tasks/[KEY]/plan.md
 ```
 
 ```md
