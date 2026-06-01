@@ -22,10 +22,10 @@ Read all available files from `TASK_DIR/`. Missing files are not errors.
 ### Step 1.5: Detect Task Type
 
 Check the plan's `**Type:**` field:
-- `**Type:** refactor` → 6.verify already wrote `review.md`.
-  Read `TASK_DIR/review.md` for the verdict. Skip to Step 6
-  (write review — use the existing content).
-  Update plan.md progress with verdict status only.
+- `**Type:** refactor` → refactor already verified by 6.verify.
+  No further review needed. Skip entire workflow.
+  Report: "Refactor verified by 6.verify. See `refactor-review.md`."
+  Update plan.md progress with verdict from refactor-review.md.
 - `**Type:** feature` or missing → continue to Step 2.
 
 

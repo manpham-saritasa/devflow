@@ -24,17 +24,12 @@ Read task context from the best available source:
 
 - Explore the repository structure, related tasks, and relevant ADRs.
 - Identify affected modules, services, and boundaries.
-- For refactor tasks: capture original specs (API contracts, business rules, side effects, test counts).
 
 ### Step 3: Detect Task Type
 
-- **Feature**: new behavior, new endpoints, new UI.
-- **Refactor**: restructuring, cleaning up, improving without new features.
-
-For refactor tasks, tag the plan with `**Type:** refactor` and structure steps with concern tags:
-- `[structure]` — boundaries, ownership, layout
-- `[simplify]` — readability, naming, complexity
-- `[api]` — contract redesign, migration
+- **Feature**: new behavior, new endpoints, new UI → continue to Step 4.
+- **Refactor**: restructuring, cleaning up → delegate to `1.plan`.
+  Stop and tell user: "Refactor detected. Spawning 1.plan to capture specs and write plan."
 
 ### Step 4: Propose Changes
 
@@ -47,22 +42,9 @@ Show investigation summary to user. Include:
 ### Step 5: Write Plan
 
 After user approval, write `TASK_DIR/plan.md` using `PLAN_TEMPLATE`:
-
-**For feature tasks:**
 - Fill stable sections (Task Context, Requirements, Constraints)
 - Append new `## Iteration [N]` with proposed changes
 - Write progress checkboxes for each change
-- Append first progress table entry
-
-**For refactor tasks:**
-- Fill stable sections
-- Write `**Type:** refactor`
-- Write `## Original specs` — capture APIs, business rules, side effects, test counts
-- Write `## Phased plan` with step tags:
-  - `[structure]` — boundaries, ownership, layout
-  - `[simplify]` — readability, naming, complexity
-  - `[api]` — contract redesign, migration
-- Write progress checkboxes matching each step
 - Append first progress table entry
 
 ### Step 6: Verify

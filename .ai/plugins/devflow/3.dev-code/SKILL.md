@@ -28,10 +28,9 @@ If `review.md` exists with unresolved findings relevant to the current iteration
 ### Step 1.5: Detect Task Type
 
 Check the plan's `**Type:**` field:
-- `**Type:** refactor` → route to refactorflow. Stop and instruct user:
-  "Refactor task detected. Run `2.grill` to pressure-test the plan,
-   then `3.structure` / `4.api` / `5.simplify` per step tags in the phased plan,
-   then `6.verify` for final verification."
+- `**Type:** refactor` → spawn the refactorflow agent.
+  Tell user: "Refactor task detected. Handing off to refactorflow."
+  Stop — refactorflow handles the rest.
 - `**Type:** feature` or missing → continue to Step 2.
 
 ### Step 2: Read Codebase
