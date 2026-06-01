@@ -2,6 +2,12 @@
 
 20+ skills available. LLM reads this once to discover all capabilities.
 
+## Agent Definition (1)
+
+| Agent | Path | Description |
+|-------|------|-------------|
+| refactorflow | `.ai/agents/refactorflow.md` | Auto-drives full refactor flow: review → grill → execute → verify |
+
 ## Devflow Plugin (11)
 
 | Skill | Path | Triggers | Description |
@@ -26,6 +32,17 @@
 | jira-task | `.ai/plugins/jiraflow/jira-task/` | `jtask` | List assigned tasks by status group |
 | jira-move | `.ai/plugins/jiraflow/jira-move/` | `jmove` | Move tasks through pipeline milestones |
 
+## Refactorflow Plugin (6)
+
+| Skill | Path | Triggers | Description |
+|-------|------|----------|-------------|
+| review | `.ai/plugins/refactorflow/skills/1.review/` | `refactor`, `review` | Diagnose architecture friction, write plan |
+| grill | `.ai/plugins/refactorflow/skills/2.grill/` | `grill` | Pressure-test refactor plan |
+| structure | `.ai/plugins/refactorflow/skills/3.structure/` | — (routed) | Fix boundaries, ownership, layout |
+| api | `.ai/plugins/refactorflow/skills/4.api/` | — (routed) | Redesign contracts with migration planning |
+| simplify | `.ai/plugins/refactorflow/skills/5.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
+| verify | `.ai/plugins/refactorflow/skills/6.verify/` | `verify` | Confirm nothing broke against original specs |
+
 ## Matt Pocock Skills (4)
 
 | Skill | Path | Triggers | Description |
@@ -41,6 +58,12 @@
 |-------|------|----------|-------------|
 | md-to-html | `.ai/skills/md-to-html/` | `md-to-html` | Convert Markdown to standalone HTML |
 | md-to-docx | `.ai/skills/md-to-docx/` | `md-to-docx` | Convert Markdown to Word document |
+
+## Refactor Skills (1)
+
+| Skill | Path | Triggers | Description |
+|-------|------|----------|-------------|
+| quick-refactor | `.agents/skills/quick-refactor/` | `quick-refactor`, `quick refactor` | Quick, test-driven refactor. ≤ 3 files. No plan file. |
 
 ## Personal Skills (1)
 
