@@ -1,8 +1,4 @@
 ---
-
-## Paths
-
-Read shared paths from `config.md`.
 name: "devflow"
 description: "Smart development flow orchestrator. Detects task progress and suggests or runs the next skill automatically."
 triggers:
@@ -10,10 +6,6 @@ triggers:
   - "/devflow"
   - "/dev-flow"
 ---
-
-## Paths
-
-Read shared paths from `config.md`.
 
 Role: Development flow orchestrator. Detect the current progress of a task, suggest the next action, and run the appropriate skill. Supports the full lifecycle: start → plan → code → review → ship → fix → finish → document.
 
