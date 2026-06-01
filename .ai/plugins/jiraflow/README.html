@@ -320,11 +320,16 @@ a:hover {
   <h1>Jiraflow Plugin</h1>
 </section>
 <section class="section">
-<p>JIRA workflow skills for release management.</p>
+<p>JIRA workflow skills for task management and release operations.</p>
 </section>
 <section class="section">
 <h2>Structure</h2>
 <pre><code>jiraflow/
+  config.md                   ← shared transitions and milestones
+  jira-urgent/                ← list tasks waiting on your reply
+  jira-mine/                  ← list your assigned tasks
+  jira-comment/               ← post a comment to a JIRA issue
+  jira-move/                  ← transition issue between statuses
   release-add/                ← add task(s) to a JIRA release version
   release-note/               ← generate client-friendly release notes
 </code></pre>
@@ -343,25 +348,42 @@ a:hover {
 <tbody>
 <tr>
 <td data-label="#">1</td>
-<td data-label="Skill"><code>release-add</code></td>
-<td data-label="Benefits">Add task to JIRA release version via API</td>
-<td data-label="Example"><code>release-add PROJ-2143 "API next version"</code></td>
+<td data-label="Skill"><code>jira-mine</code></td>
+<td data-label="Benefits">List your assigned tasks, ordered by priority</td>
+<td data-label="Example"><code>jira-mine</code> or <code>jmine</code></td>
 </tr>
 <tr>
 <td data-label="#">2</td>
+<td data-label="Skill"><code>jira-urgent</code></td>
+<td data-label="Benefits">Find tasks where team is waiting on you</td>
+<td data-label="Example"><code>jira-urgent</code></td>
+</tr>
+<tr>
+<td data-label="#">3</td>
+<td data-label="Skill"><code>jira-comment</code></td>
+<td data-label="Benefits">Post comment to JIRA issue</td>
+<td data-label="Example"><code>jira-comment PROJ-123</code></td>
+</tr>
+<tr>
+<td data-label="#">4</td>
+<td data-label="Skill"><code>jira-move</code></td>
+<td data-label="Benefits">Transition issue between statuses</td>
+<td data-label="Example"><code>jira-move PROJ-123 "In Review"</code></td>
+</tr>
+<tr>
+<td data-label="#">5</td>
+<td data-label="Skill"><code>release-add</code></td>
+<td data-label="Benefits">Add task to JIRA release version</td>
+<td data-label="Example"><code>release-add PROJ-2143 "API next version"</code></td>
+</tr>
+<tr>
+<td data-label="#">6</td>
 <td data-label="Skill"><code>release-note</code></td>
-<td data-label="Benefits">Generate client-facing release note from JIRA</td>
+<td data-label="Benefits">Generate client-facing release note</td>
 <td data-label="Example"><code>release-note "API next version"</code></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section class="section">
-<h2>Future</h2>
-<ul>
-<li><code>release-create</code> — create a new release version in JIRA</li>
-<li><code>release-status</code> — show progress of a release</li>
-</ul>
 </section>
   </main>
 </body>

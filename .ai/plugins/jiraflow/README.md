@@ -1,11 +1,16 @@
 # Jiraflow Plugin
 
-JIRA workflow skills for release management.
+JIRA workflow skills for task management and release operations.
 
 ## Structure
 
 ```
 jiraflow/
+  config.md                   ← shared transitions and milestones
+  jira-urgent/                ← list tasks waiting on your reply
+  jira-mine/                  ← list your assigned tasks
+  jira-comment/               ← post a comment to a JIRA issue
+  jira-move/                  ← transition issue between statuses
   release-add/                ← add task(s) to a JIRA release version
   release-note/               ← generate client-friendly release notes
 ```
@@ -14,10 +19,9 @@ jiraflow/
 
 | # | Skill | Benefits | Example |
 |---|-------|----------|---------|
-| 1 | `release-add` | Add task to JIRA release version via API | `release-add PROJ-2143 "API next version"` |
-| 2 | `release-note` | Generate client-facing release note from JIRA | `release-note "API next version"` |
-
-## Future
-
-- `release-create` — create a new release version in JIRA
-- `release-status` — show progress of a release
+| 1 | `jira-mine` | List your assigned tasks, ordered by priority | `jira-mine` or `jmine` |
+| 2 | `jira-urgent` | Find tasks where team is waiting on you | `jira-urgent` |
+| 3 | `jira-comment` | Post comment to JIRA issue | `jira-comment PROJ-123` |
+| 4 | `jira-move` | Transition issue between statuses | `jira-move PROJ-123 "In Review"` |
+| 5 | `release-add` | Add task to JIRA release version | `release-add PROJ-2143 "API next version"` |
+| 6 | `release-note` | Generate client-facing release note | `release-note "API next version"` |
