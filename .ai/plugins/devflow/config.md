@@ -14,6 +14,14 @@ All skills and agents in this plugin reference these paths. Resolve relative to 
 
 ---
 
+## Work Mode
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `WORK_MODE` | `default` | `default` (full file pipeline), `manual` (chat only, no artifact files) |
+
+---
+
 ## Templates
 
 Located in `templates/` relative to the plugin root.

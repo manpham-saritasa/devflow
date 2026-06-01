@@ -326,7 +326,9 @@ a:hover {
 </section>
 <section class="section">
 <h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and <code>ADR_DIR</code> variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>Read shared paths from <code>config.md</code>.</h2>
 </section>
 <section class="section">
 <h2>Decision Triggers</h2>
@@ -350,16 +352,8 @@ a:hover {
 <li>If still no KEY: ask user. Stop if none provided.</li>
 </ul>
 <h3>Step 2: Gather Evidence</h3>
-<p>Read from <code>TASK_DIR</code> when present:</p>
-<ul>
-<li><code>task.md</code> — requirements and constraints</li>
-<li><code>raw.md</code> — Jira description, comments, implementation notes</li>
-<li><code>plan.md</code> — intended implementation direction</li>
-<li><code>changelog.md</code> — delivered implementation summary</li>
-<li><code>review.md</code> — quality concerns, tradeoffs, corrections</li>
-<li><code>progress.md</code> — task timeline and state</li>
-<li><code>pr.md</code> — shipped scope, PR links</li>
-</ul>
+<p><strong>If <code>TASK_DIR</code> is missing or incomplete:</strong> run <code>dev-get [KEY]</code> to fetch Jira context in-memory. Do not persist raw.md or task.md. Then search for merged PRs as additional evidence.  </p>
+<p>Read all available files from <code>TASK_DIR/</code>. Missing files are not errors.  </p>
 <p><strong>When <code>TASK_DIR</code> is missing or incomplete:</strong> search for merged PRs:</p>
 <pre><code class="language-bash">gh search prs &quot;[KEY]&quot; --merged --json number,title,url,headRepository
 </code></pre>

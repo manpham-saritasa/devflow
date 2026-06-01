@@ -86,6 +86,8 @@ Before writing the review, compare `git diff` against the latest changelog itera
 
 ### Step 6: Write Review
 
+**Manual mode:** Skip file writes. Present findings and verdict in chat.
+
 Determine the next review pass number from prior `review.md` (default: 1).
 Append to `TASK_DIR/review.md` using `REVIEW_TEMPLATE`:
 - New review pass for the active iteration

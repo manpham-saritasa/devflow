@@ -326,15 +326,17 @@ a:hover {
 </section>
 <section class="section">
 <h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and template variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>Read shared paths from <code>config.md</code>.</h2>
 </section>
 <section class="section">
 <h2>Workflow</h2>
-<h3>Step 0: Check Templates</h3>
-<p>Check <code>CHANGELOG_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
+<p>Check required templates from <code>config.md</code> exist. Missing → stop.</p>
 <h3>Step 1: Read Plan</h3>
+<p><strong>Manual mode:</strong> Skip file reads. No plan.md exists — user handled implementation manually. Jump to Step 7.  </p>
 <p>Read <code>TASK_DIR/plan.md</code>. Fallback: check project root. Treat the latest <code>## Iteration [N]</code> section as the active implementation source. Missing → stop: "Error: plan.md not found."  </p>
-<p>Also read: <code>task.md</code>, <code>raw.md</code>, <code>review.md</code>, <code>progress.md</code>, <code>changelog.md</code> (if present) for constraints, review findings, and prior state.  </p>
+<p>Read all available files from <code>TASK_DIR/</code> for constraints, review findings, and prior state.  </p>
 <p>If <code>review.md</code> exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.</p>
 <h3>Step 2: Read Codebase</h3>
 <ul>
@@ -351,11 +353,16 @@ a:hover {
 <li>Report progress to user after each major item</li>
 </ul>
 <h3>Step 4: Verify</h3>
+<p>Run tests for the changed code before proceeding:</p>
+<pre><code class="language-bash"># Run the smallest relevant test suite for the diff
+</code></pre>
 <ul>
-<li>Run relevant tests, builds, linters</li>
-<li>Prefer the smallest verification that proves the requested behavior</li>
-<li>Never claim verification that didn't happen</li>
-<li>If verification is incomplete, state what was/wasn't run and why</li>
+<li>If tests fail: fix before continuing. Do not skip failing tests.</li>
+<li>If no tests exist for the changed area: add at least one test for new behavior, or note the gap and why.</li>
+<li>Run linters and builds after tests pass.</li>
+<li>Prefer the smallest verification that proves the requested behavior.</li>
+<li>Never claim verification that didn't happen.</li>
+<li>If verification is incomplete, state what was/wasn't run and why.</li>
 </ul>
 <h3>Step 5: Capture Manual Changes</h3>
 <p>Before writing the changelog, ask the user:  </p>
@@ -388,14 +395,7 @@ a:hover {
 </section>
 <section class="section">
 <h2>ADR Triggers</h2>
-<p>Set <code>ADR Suggested = Yes</code> if any of:</p>
-<ul>
-<li>New third-party service or external API integrated</li>
-<li>New library/package introduces new capability or pattern</li>
-<li>Existing technical approach replaced</li>
-<li>Database schema changed</li>
-<li>Auth flow structure changed</li>
-</ul>
+<p>See decision triggers in <code>8.dev-adr/SKILL.md</code>. Set <code>ADR Suggested = Yes</code> when any trigger matches. Do not create ADR files — only recommend.</p>
 </section>
 <section class="section">
 <h2>Stop Conditions</h2>

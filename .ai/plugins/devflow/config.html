@@ -320,7 +320,55 @@ a:hover {
   <h1>Devflow Plugin — Shared Configuration</h1>
 </section>
 <section class="section">
-<p>All skills and agents in this plugin reference these paths. Resolve relative to the plugin root.</p>
+<p>All skills and agents in this plugin reference these paths. Resolve relative to the plugin root.  </p>
+</section>
+<section class="section">
+<h2>Paths</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Variable"><code>TASKS_ROOT</code></td>
+<td data-label="Value"><code>.local/tasks</code></td>
+<td data-label="Description">Task evidence folder (repo-relative)</td>
+</tr>
+<tr>
+<td data-label="Variable"><code>TASK_DIR</code></td>
+<td data-label="Value"><code>[TASKS_ROOT]/[KEY]</code></td>
+<td data-label="Description">Per-task folder</td>
+</tr>
+<tr>
+<td data-label="Variable"><code>ADR_DIR</code></td>
+<td data-label="Value"><code>docs/adrs</code></td>
+<td data-label="Description">Architecture Decision Records folder</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Work Mode</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Variable"><code>WORK_MODE</code></td>
+<td data-label="Value"><code>default</code></td>
+<td data-label="Description"><code>default</code> (full file pipeline), <code>manual</code> (chat only, no artifact files)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section class="section">
 <h2>Templates</h2>

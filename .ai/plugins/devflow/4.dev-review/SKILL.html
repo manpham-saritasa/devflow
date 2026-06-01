@@ -326,23 +326,17 @@ a:hover {
 </section>
 <section class="section">
 <h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. All <code>TASKS_ROOT</code>, <code>TASK_DIR</code>, and template variables are defined there.  </p>
+</section>
+<section class="section">
+<h2>Read shared paths from <code>config.md</code>.</h2>
 </section>
 <section class="section">
 <h2>Workflow</h2>
-<h3>Step 0: Check Templates</h3>
-<p>Check <code>REVIEW_TEMPLATE</code> and <code>PROGRESS_TEMPLATE</code> exist. Missing → stop: "Error: template not found."</p>
+<p>Check required templates from <code>config.md</code> exist. Missing → stop.</p>
 <h3>Step 1: Read Context</h3>
-<p>Read from <code>TASK_DIR</code>:</p>
-<ul>
-<li><code>task.md</code>, <code>raw.md</code> — requirements, constraints, acceptance criteria</li>
-<li><code>plan.md</code> — latest iteration as planned baseline</li>
-<li><code>changelog.md</code> — latest iteration as claimed summary (not source of truth)</li>
-<li><code>review.md</code> — prior passes, determine next review pass number, track unresolved findings</li>
-<li><code>progress.md</code> — current state, active iteration</li>
-</ul>
+<p>Read all available files from <code>TASK_DIR/</code>. Missing files are not errors.</p>
 <h3>Step 2: Identify Changes</h3>
-<pre><code class="language-bash">git diff develop...HEAD
+<pre><code class="language-bash">git diff [BASE_BRANCH]...HEAD  # main if no develop
 </code></pre>
 <p>Fallback: <code>git diff main...HEAD</code>  </p>
 <p>Collect <code>diff_files[]</code> from the branch diff.<br>
@@ -356,7 +350,14 @@ Review full changed files when context is needed to judge correctness, not just 
 <li>Check <code>Out of scope</code>, <code>Do not modify</code>, and other plan constraints</li>
 <li>Verify the latest changelog iteration accurately reflects implementation</li>
 </ul>
-<h3>Step 4: Quality Check</h3>
+<h3>Step 4: Run Tests</h3>
+<p>Run the relevant test suite before proceeding:</p>
+<pre><code class="language-bash"># Run tests for the changed area. Prefer the smallest command that covers the diff.
+</code></pre>
+<p>If tests fail: list failures, flag as <code>[blocking]</code>, stop. Do not produce a verdict.<br>
+If no tests exist: note it as a finding under Test &amp; Verification Review.<br>
+If tests pass: continue to quality check.</p>
+<h3>Step 4b: Quality Check</h3>
 <p>Review across these dimensions:</p>
 <ul>
 <li><strong>Correctness:</strong> edge cases, null handling, control flow, regression risk</li>
@@ -395,6 +396,7 @@ Review full changed files when context is needed to judge correctness, not just 
 </li>
 </ul>
 <h3>Step 6: Write Review</h3>
+<p><strong>Manual mode:</strong> Skip file writes. Present findings and verdict in chat.  </p>
 <p>Determine the next review pass number from prior <code>review.md</code> (default: 1).<br>
 Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p>
 <ul>
@@ -413,19 +415,12 @@ Append to <code>TASK_DIR/review.md</code> using <code>REVIEW_TEMPLATE</code>:</p
 </section>
 <section class="section">
 <h2>ADR Triggers</h2>
-<p>Set <code>ADR Suggested = Yes</code> if:</p>
-<ul>
-<li>New third-party service or external API integrated</li>
-<li>New library/package introduces new capability or pattern</li>
-<li>Existing technical approach replaced</li>
-<li>Database schema changed</li>
-<li>Auth flow structure changed</li>
-</ul>
-<p>Do not create ADR files — only recommend.</p>
+<p>See decision triggers in <code>8.dev-adr/SKILL.md</code>. Set <code>ADR Suggested = Yes</code> when any trigger matches. Do not create ADR files — only recommend.</p>
 </section>
 <section class="section">
 <h2>Self-Check</h2>
 <ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Tests run and passing? If no tests exist, gap noted?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Review compared actual code against task context, plan, and changelog?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Repository conventions and architecture respected?</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Full files reviewed when context needed, not just diff hunks?</li>

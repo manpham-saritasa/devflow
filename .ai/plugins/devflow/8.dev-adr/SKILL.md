@@ -37,6 +37,8 @@ If none apply: stop — "No ADR needed for this task."
 
 ### Step 2: Gather Evidence
 
+**If `TASK_DIR` is missing or incomplete:** run `dev-get [KEY]` to fetch Jira context in-memory. Do not persist raw.md or task.md. Then search for merged PRs as additional evidence.
+
 Read all available files from `TASK_DIR/`. Missing files are not errors.
 
 

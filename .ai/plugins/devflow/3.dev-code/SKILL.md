@@ -17,6 +17,8 @@ Check required templates from `config.md` exist. Missing → stop.
 
 ### Step 1: Read Plan
 
+**Manual mode:** Skip file reads. No plan.md exists — user handled implementation manually. Jump to Step 7.
+
 Read `TASK_DIR/plan.md`. Fallback: check project root. Treat the latest `## Iteration [N]` section as the active implementation source. Missing → stop: "Error: plan.md not found."
 
 Read all available files from `TASK_DIR/` for constraints, review findings, and prior state.

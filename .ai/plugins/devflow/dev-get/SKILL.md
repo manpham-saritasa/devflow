@@ -1,16 +1,21 @@
 ---
 name: dev-get
-description: Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md using external templates.
+description: Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md using external templates. Use --memory-only to fetch without writing files.
 triggers:
   - "dev-get"
   - "devget"
   - "pull task"
-  - "pull ticket"  
+  - "pull ticket"
+  - "dev-get --memory-only"
 ---
 
 ## Paths
 
 Read shared paths from `config.md`.
+
+## Flags
+
+- `--memory-only` — fetch Jira data, format in-memory, skip Steps 6-7 (no file writes)
 ---
 
 ## When to Use
@@ -82,9 +87,13 @@ One/both exist → tell human which. Ask "Overwrite [KEY] task files? (yes/no)".
 
 ### Step 5: Ensure Folder
 
+**--memory-only:** Skip. No folder or files to create.
+
 Create `[TASK_DIR]/` if not exists. All paths relative to repo root.
 
 ### Step 6: Write task.md
+
+**--memory-only:** Format task data in chat. Do not write files.
 
 - Read template from `templates/task-template.md` next to this SKILL.
 - Fill the template section by section. Do not leave placeholder text behind.
@@ -110,6 +119,8 @@ Rules:
 - If Jira does not provide enough detail for a section, use `None identified` or a short fill-manually note instead of fake specifics.
 
 ### Step 7: Write raw.md
+
+**--memory-only:** Skip. No file writes needed.
 
 - Read template from `templates/raw-template.md` next to this SKILL.
 - Fill every placeholder the template expects.
