@@ -372,6 +372,7 @@ Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracki
   7.dev-finish/               ← merge PR + delete branch + cleanup
   8.dev-adr/                  ← create Architecture Decision Record
   9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
+  10.dev-push/                 ← commit all + push to origin
 </code></pre>
 </section>
 <section class="section">
@@ -475,6 +476,14 @@ Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracki
 <td data-label="Example"><code>/review-pr [URL]</code></td>
 <td style="text-align: center;">✅</td>
 <td data-label="Note">No worktree needed, works on any PR</td>
+</tr>
+<tr>
+<td data-label="#">12</td>
+<td data-label="Skill"><code>dev-push</code></td>
+<td data-label="Benefits">Commit all + push to origin</td>
+<td data-label="Example"><code>dpush</code> or <code>/dev-push</code></td>
+<td style="text-align: center;">✅</td>
+<td data-label="Note">Delegates to dev-commit for staging</td>
 </tr>
 </tbody>
 </table>
@@ -625,6 +634,10 @@ Use flags to skip or retry specific phases:</p>
 <tr>
 <td data-label="Trigger"><code>/review-pr</code> or <code>/reviewpr</code></td>
 <td data-label="What it does">Review a GitHub PR across multiple dimensions (fit, quality, naming, design, performance, security, testing). Provide a URL for any PR or run from a worktree to auto-detect the open PR. Generates a <code>pr-feedback-[KEY].md</code> report.</td>
+</tr>
+<tr>
+<td data-label="Trigger"><code>/dev-push</code> or <code>dpush</code></td>
+<td data-label="What it does">Commit all changes via dev-commit, then push to origin. Quick ship for WIP or small fixes.</td>
 </tr>
 </tbody>
 </table>

@@ -57,6 +57,7 @@ devflow/
   7.dev-finish/               ← merge PR + delete branch + cleanup
   8.dev-adr/                  ← create Architecture Decision Record
   9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
+  10.dev-push/                 ← commit all + push to origin
 ```
 
 ---
@@ -76,6 +77,7 @@ devflow/
 | 9 | `dev-commit` | Stage + commit in related groups | `/dev-commit` | ✅ | Runs standalone or during dev-code |
 | 10 | `dev-get` | Pull Jira issue into task folder | `/dev-get PROJ-123` | ✅ | Writes raw.md + task.md from templates |
 | 11 | `dev-review-pr` | Review any PR across 8 quality dimensions | `/review-pr [URL]` | ✅ | No worktree needed, works on any PR |
+| 12 | `dev-push` | Commit all + push to origin | `dpush` or `/dev-push` | ✅ | Delegates to dev-commit for staging |
 
 ---
 
@@ -140,6 +142,7 @@ Use flags to skip or retry specific phases:
 | `/dev-finish` or `devfinish` | Merge approved PR, delete branch + cleanup. Gitflow mode by default. `--worktree` for worktree mode. `--worktree-only` skips PR. `--dry-run` previews. |
 | `/dev-adr` or `adr` | Create an ADR from completed task evidence. Skips non-architectural tasks. |
 | `/review-pr` or `/reviewpr` | Review a GitHub PR across multiple dimensions (fit, quality, naming, design, performance, security, testing). Provide a URL for any PR or run from a worktree to auto-detect the open PR. Generates a `pr-feedback-[KEY].md` report. |
+| `/dev-push` or `dpush` | Commit all changes via dev-commit, then push to origin. Quick ship for WIP or small fixes. |
 
 ---
 
