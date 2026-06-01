@@ -13,7 +13,7 @@ Invoked by refactorflow agent during execution.
 
 This skill is invoked by the refactorflow agent in auto mode.
 In manual mode, run directly when a plan step is tagged `[api]`.
-Always create a plan with 1.review first.
+Always create a plan with 1.plan first.
 
 ## Goal
 
@@ -42,12 +42,16 @@ If you cannot determine the classification, you MUST ask for more information be
 
 ## Preferred approach
 
-- Prefer additive evolution first:
-  - add new contract,
-  - keep old contract delegating when feasible.
-- Migrate callers gradually where possible.
-- Use adapters or translation layers when old and new contracts must coexist.
-- Make deprecation explicit and time-bounded.
+1. Read the plan file and find the step tagged `[api]`.
+2. Run relevant tests before touching anything. If any test fails, report and stop.
+3. Classify the change (internal only / backward compatible / breaking).
+4. Apply the change following the preferred approach:
+   - Add new contract first.
+   - Keep old contract delegating when feasible.
+   - Migrate callers gradually where possible.
+   - Use adapters or translation layers when old and new must coexist.
+   - Make deprecation explicit and time-bounded.
+5. Run tests after the change. If a test fails and the fix isn't obvious, revert and report.
 
 ## Output format
 

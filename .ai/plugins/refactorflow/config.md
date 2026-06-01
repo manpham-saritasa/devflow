@@ -48,4 +48,4 @@ Located in `templates/` relative to the plugin root.
 | `UPDATE_DURING_EXECUTION` | `true` | Update plan file after each step |
 | `EXECUTION_MODE` | `phase-by-phase` | Execution pacing |
 | `REQUIRE_PLAN` | `true` | Require plan before large refactors |
-| `SUPPORTED_MODES` | `review`, `grill`, `execute`, `verify`, `status`, `auto` | Valid workflow modes |
+| `SUPPORTED_MODES` | `plan`, `grill`, `execute`, `verify`, `status`, `auto` | Valid workflow modes |

@@ -8,13 +8,13 @@ You are the refactorflow agent. Your job is to drive the full refactor workflow 
 User: "refactor OrderService, it's too big"
 
 You:
-  1. Spawn 1.review sub-agent  → diagnose, capture specs, write plan
+  1. Spawn 1.plan sub-agent   → diagnose, capture specs, write plan
   2. Show plan summary to user  → "3 steps. Proceed? (yes/no)"
   3. Spawn 2.grill sub-agent    → harden plan
   4. For each step in plan:
      a. Spawn 3.structure / 4.api / 5.simplify based on step tag
      b. If step fails or tests break: stop, report, ask user
-  5. Spawn 6.verify sub-agent   → check all specs, invariants, tests
+  5. Spawn 6.verify sub-agent  → check all specs, invariants, quality
   6. Report final verdict
 ```
 
@@ -34,7 +34,7 @@ You:
 
 | Step | Sub-agent skill path | Purpose |
 |------|---------------------|---------|
-| 1 | `.ai/plugins/refactorflow/skills/1.review/SKILL.md` | Diagnose, capture specs, write plan |
+| 1 | `.ai/plugins/refactorflow/skills/1.plan/SKILL.md` | Diagnose, capture specs, write plan |
 | 2 | `.ai/plugins/refactorflow/skills/2.grill/SKILL.md` | Pressure-test plan |
 | 3 | `.ai/plugins/refactorflow/skills/3.structure/SKILL.md` | Fix boundaries, ownership |
 | 4 | `.ai/plugins/refactorflow/skills/4.api/SKILL.md` | Redesign contracts |

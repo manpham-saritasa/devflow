@@ -1,23 +1,23 @@
 ---
-name: review
+name: plan
 version: 0.1.0
 description: Diagnose architectural friction, coupling, unclear ownership, and maintainability problems; produce a practical roadmap before refactoring.
 ---
 
-# Review
+# Plan
 
 Use this skill to review a codebase or target slice before implementation.
 Invoked by refactorflow agent when no plan exists or architecture is unclear.
 
 ## When to use
 
-Use `review` when:
+Use `plan` when:
 - the user asks for a review, audit, assessment, or roadmap,
 - the right direction for refactoring is unclear,
 - multiple symptoms exist (performance, complexity, slow delivery) and you need to find root causes,
 - the team wants an architecture-focused document before changing code.
 
-Do not use `review` when:
+Do not use `plan` when:
 - the user already has a clear architecture direction and only wants local clean-up,
 - the request is a small, localized change that doesn't need architecture analysis.
 

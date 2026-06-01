@@ -13,7 +13,7 @@ Invoked by refactorflow agent during execution.
 
 This skill is invoked by the refactorflow agent in auto mode.
 In manual mode, run directly when a plan step is tagged `[structure]`.
-Always create a plan with 1.review first.
+Always create a plan with 1.plan first.
 
 ## Goal
 
@@ -38,11 +38,14 @@ Read the matching file for your project's stack.
 
 ## Process
 
-1. Identify structural findings.
-2. Propose a target structure.
-3. Plan the smallest safe sequence of changes.
-4. List invariants and risks.
-5. Execute only the first safe step when implementation is requested.
+1. Read the plan file and find the step tagged `[structure]`.
+2. Run relevant tests before touching anything. If any test fails, report and stop.
+3. Identify structural findings.
+4. Propose a target structure.
+5. Plan the smallest safe sequence of changes.
+6. List invariants and risks.
+7. Execute only the first safe step when implementation is requested.
+8. Run tests after each change. If a test fails and the fix isn't obvious, revert and report.
 
 ## Output format
 

@@ -11,7 +11,7 @@ Two modes: agent (auto-drives) or manual (numbered skills).
 User: "refactor OrderService"
 
 Agent drives full flow:
-  → 1.review → shows plan → "Proceed?"
+  → 1.plan → shows plan → "Proceed?"
   → 2.grill → hardens plan
   → 3/4/5 execute each step
   → 6.verify → final report ✅
@@ -21,7 +21,7 @@ Agent drives full flow:
 
 ```
 Run numbered skills in order:
-  1.review → plan written
+  1.plan → plan written
   2.grill → plan hardened
   3/4/5 → execute each step
   6.verify → final report ✅
@@ -31,9 +31,9 @@ Run numbered skills in order:
 
 | Skill | Purpose |
 |-------|---------|
-| `review` | Diagnose friction, coupling, ownership — writes the plan |
+| `plan` | Diagnose friction, coupling, ownership — writes the plan |
 | `grill` | Pressure-test plan before execution |
-| `verify` | Compare against original specs — confirm nothing broke |
+| `verify` | Verify against original specs — confirm nothing broke |
 | `structure` | Fix module boundaries, dependency direction, layout |
 | `simplify` | Reduce local complexity, nesting, naming, duplication |
 | `api` | Redesign contracts with compatibility migration planning |
@@ -46,7 +46,7 @@ Run numbered skills in order:
 | Multi-step planned refactor | `refactorflow` agent or numbered skills |
 | Rename a method, extract a helper | `quick-refactor` |
 | Split a god class, redesign boundaries | `refactorflow` |
-| "I don't know what's wrong here" | `refactorflow` (starts with 1.review) |
+| "I don't know what's wrong here" | `refactorflow` (starts with 1.plan) |
 
 ## File map
 
@@ -56,12 +56,12 @@ refactorflow/
 ├── README.md                This file
 ├── PRINCIPLES.md            Shared rules for all 6 skills
 ├── skills/
-│   ├── 1.review/            Architecture diagnosis → plan
+│   ├── 1.plan/              Architecture diagnosis → plan
 │   ├── 2.grill/             Plan pressure-test
 │   ├── 3.structure/         Boundaries & ownership
 │   ├── 4.api/               Contract redesign
 │   ├── 5.simplify/          Local readability
-│   └── 6.verify/            Compare against original specs
+│   └── 6.verify/            Verify against original specs
 ├── templates/
 │   └── refactor-plan.md     Plan template with fill guidance
 └── references/              Stack-specific guidance (13 frameworks)

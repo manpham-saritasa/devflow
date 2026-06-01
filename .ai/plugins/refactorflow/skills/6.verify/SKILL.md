@@ -1,20 +1,21 @@
 ---
 name: verify
 version: 0.1.0
-description: Verify a completed or in-progress refactor against the original specs and invariants from the plan.
+description: Verify refactor results against the plan's original specs, invariants, and code quality. Produces a verdict.
 ---
 
 # Verify
-## When to use
 
+Use this skill to verify refactor results against the plan.
+Invoked by refactorflow agent after execution completes.
 This skill is invoked by the refactorflow agent in auto mode.
 In manual mode, run directly after all plan steps are complete.
-Always create a plan with 1.review first.
+Always create a plan with 1.plan first.
 
 ## Goal
 
-Confirm the refactor did not break anything by comparing current state against
-the plan's original specs and invariants.
+Verify the refactor against the plan's original specs, invariants, and code quality.
+Produce a verdict: Pass / Pass with Changes / Fail.
 
 ## Process
 
@@ -31,14 +32,31 @@ the plan's original specs and invariants.
 
 ## Verification checklist
 
+### Specs & invariants
 - **API contracts** — Same inputs → same outputs, same status codes?
 - **Business rules** — Discounts, calculations, side effects unchanged?
-- **Test suite** — All tests pass? Same count as baseline? No new failures?
 - **Invariants** — Every invariant from the plan still holds?
 - **Side effects** — Emails, events, logs — still firing correctly?
-- **Performance** — Any obvious regression? (optional, if spec captured timing)
+
+### Code quality (from dev-review)
+- **Correctness** — Edge cases, null handling, control flow, regression risk.
+- **Readability** — Naming, duplication, complexity, maintainability.
+- **Design** — Alignment with abstractions, separation of concerns, patterns.
+- **Security** — Validation, auth/authz, injection, data exposure.
+- **Performance** — Queries, loops, memory, repeated work.
+- **Error handling** — Logging, failure behavior.
+
+### Tests
+- **Test suite** — All tests pass? Same count as baseline? No new failures?
+- **Coverage** — Did the refactor expose untested paths?
 
 ## Output
+
+Produce a verify report and write it to the review file.
+
+When a devflow task folder exists (`.local/tasks/{KEY}/task.md`):
+write to `.local/tasks/{KEY}/review.md`.
+When standalone: report inline in chat.
 
 ```
 ## Verify Report
@@ -58,6 +76,14 @@ the plan's original specs and invariants.
 |---|-----------|--------|
 | 1 | Order response shape unchanged | ✅ Intact |
 | 2 | Discount calculation unchanged | ✅ Intact |
+
+### Quality
+| Dimension | Finding | Severity |
+|-----------|---------|----------|
+| Correctness | No regressions | ✅ |
+| Readability | Improved after simplify step | ✅ |
+| Security | No new exposure | ✅ |
+| Error handling | Unchanged | ✅ |
 
 ### Tests
 - Orders.Domain.Tests: 42/42 pass ✅

@@ -36,12 +36,12 @@
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
-| review | `.ai/plugins/refactorflow/skills/1.review/` | `refactor`, `review` | Diagnose architecture friction, write plan |
+| plan | `.ai/plugins/refactorflow/skills/1.plan/` | `refactor`, `plan` | Diagnose architecture friction, write plan |
 | grill | `.ai/plugins/refactorflow/skills/2.grill/` | `grill` | Pressure-test refactor plan |
 | structure | `.ai/plugins/refactorflow/skills/3.structure/` | — (routed) | Fix boundaries, ownership, layout |
 | api | `.ai/plugins/refactorflow/skills/4.api/` | — (routed) | Redesign contracts with migration planning |
 | simplify | `.ai/plugins/refactorflow/skills/5.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
-| verify | `.ai/plugins/refactorflow/skills/6.verify/` | `verify` | Confirm nothing broke against original specs |
+| verify | `.ai/plugins/refactorflow/skills/6.verify/` | `verify` | Verify against original specs + quality |
 
 ## Matt Pocock Skills (4)
 

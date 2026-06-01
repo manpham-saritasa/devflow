@@ -1,7 +1,7 @@
 # Refactor Plan
 
-> Fill this template after `review` runs. Grill before executing.
-> Verify after all steps complete.
+> Fill this template after `plan` runs. Grill before executing.
+> Review after all steps complete.
 
 ## Goal and scope
 - What problem are we solving? What is explicitly out of scope?

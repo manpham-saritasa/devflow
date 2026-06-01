@@ -13,7 +13,7 @@ Invoked by refactorflow agent during execution.
 
 This skill is invoked by the refactorflow agent in auto mode.
 In manual mode, run directly when a plan step is tagged `[simplify]`.
-Always create a plan with 1.review first.
+Always create a plan with 1.plan first.
 
 ## Goal
 
@@ -39,12 +39,16 @@ Read the matching file for your project's stack.
 
 ## Preferred transformations
 
-- guard clauses for early exits,
-- clearer, intent-revealing names,
-- small meaningful extractions (functions/methods),
-- safe deduplication of repeated logic,
-- dead code removal when confidence is high,
-- flattening nested control flow where reasonable.
+1. Read the plan file and find the step tagged `[simplify]`.
+2. Run relevant tests before touching anything. If any test fails, report and stop.
+3. Apply transformations:
+   - Guard clauses for early exits.
+   - Clearer, intent-revealing names.
+   - Small meaningful extractions (functions/methods).
+   - Safe deduplication of repeated logic.
+   - Dead code removal when confidence is high.
+   - Flattening nested control flow where reasonable.
+4. Run tests after each change. If a test fails and the fix isn't obvious, revert and report.
 
 ## Output format
 

@@ -12,7 +12,7 @@ Invoked by refactorflow agent when plan exists but needs hardening.
 ## When to use
 
 This skill is invoked by the refactorflow agent in auto mode.
-In manual mode, run directly after 1.review to harden the plan.
+In manual mode, run directly after 1.plan to harden the plan.
 
 Use `grill` when:
 - a plan exists (see `config.md` at plugin root for path resolution) but is weak, vague, or risky,
@@ -20,8 +20,8 @@ Use `grill` when:
 - the plan feels underspecified before execution.
 
 Do not use `grill` when:
-- no plan exists (use `review` first),
-- architecture is still unclear (use `review` first),
+- no plan exists (use `plan` first),
+- architecture is still unclear (use `plan` first),
 - the user wants to execute, not grill.
 
 ## Goal
