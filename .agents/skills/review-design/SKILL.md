@@ -1,9 +1,9 @@
 ---
-name: deep-review
-description: Review a workflow, plugin, skill, or process across 13 dimensions. Outputs prioritized findings with reasons and suggested fixes. Use when user says "deep review", "review this plugin", "audit", or wants a comprehensive quality check.
+name: review-design
+description: Review a workflow, plugin, skill, or process across 13 dimensions. Outputs prioritized findings with reasons and suggested fixes. Use when user says "review design", "audit", or wants a comprehensive design quality check.
 triggers:
-  - "deep review"
-  - "deep-review"
+  - "review design"
+  - "review-design"
   - "audit"
 ---
 
@@ -13,7 +13,7 @@ Review any AI agent workflow: a plugin, skill, process, or pipeline. Read all re
 
 ## Dimensions
 
-Review across ALL 10 dimensions. Do not skip any.
+Review across ALL 13 dimensions. Do not skip any.
 
 | # | Dimension | What to check |
 |---|-----------|---------------|
@@ -34,7 +34,7 @@ Review across ALL 10 dimensions. Do not skip any.
 ## Output Format
 
 ```text
-## Deep Review — [Target Name]
+## Design Review — [Target Name]
 
 Type: [plugin / skill / workflow / process]
 Files reviewed: [N]
@@ -44,6 +44,13 @@ Files reviewed: [N]
 | # | Criticality | Dimension | Location | Issue | Reason | Suggested Fix |
 |---|-------------|-----------|----------|-------|--------|---------------|
 | 1 | Critical | Safety | path:line | No checkpoint before merge | Risk of accidental deploy | Add checkpoint: "Proceed? (yes/no)" |
+
+### Scope, Correctness, Edge Cases, Long-Term
+
+- **Scope**: [finding or "No issues found."]
+- **Correctness**: [finding or "No issues found."]
+- **Edge Cases**: [finding or "No issues found."]
+- **Long-Term**: [finding or "No issues found."]
 
 ### Summary
 
@@ -68,7 +75,8 @@ Files reviewed: [N]
 
 ## Rules
 
-- Read ALL files in the target before evaluating.
+- Read ALL files in the target before evaluating. If target > 50 files, sample key files and note sampling.
+- If target is empty, report and stop.
 - Every finding must have: location, issue description, reason why it matters, and a suggested fix.
 - Do not skip dimensions. If a dimension has no issues, note it: "Dimension X: no issues found."
 - Sort findings by Critical → High → Medium → Low.
