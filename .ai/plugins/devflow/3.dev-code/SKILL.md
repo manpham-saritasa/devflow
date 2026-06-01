@@ -1,6 +1,6 @@
 ---
 name: dev-code
-description: Read plan.md, implement the planned changes for the latest iteration, and append results to changelog.md and progress.md.
+description: Read plan.md, implement the planned changes for the latest iteration, append results to changelog.md, and update plan.md progress checkboxes.
 triggers:
   - "dev-code"
   - "devcode"
@@ -25,11 +25,20 @@ Read all available files from `TASK_DIR/` for constraints, review findings, and 
 
 If `review.md` exists with unresolved findings relevant to the current iteration, treat them as additional execution constraints.
 
+### Step 1.5: Detect Task Type
+
+Check the plan's `**Type:**` field:
+- `**Type:** refactor` → route to refactorflow. Stop and instruct user:
+  "Refactor task detected. Run `2.grill` to pressure-test the plan,
+   then `3.structure` / `4.api` / `5.simplify` per step tags in the phased plan,
+   then `6.verify` for final verification."
+- `**Type:** feature` or missing → continue to Step 2.
+
 ### Step 2: Read Codebase
 
 - Read all files before editing them. Never modify unread files.
 - Respect repository conventions, architecture, naming, and test patterns.
-- Do not edit prior iteration sections in `plan.md`, `changelog.md`, `review.md`, or `progress.md` except to fix obvious typos with user approval.
+- Do not edit prior iteration sections in `plan.md`, `changelog.md`, or `review.md` except to fix obvious typos with user approval.
 
 ### Step 3: Implement
 
@@ -74,12 +83,13 @@ Append a new iteration to `TASK_DIR/changelog.md` using `CHANGELOG_TEMPLATE`:
   - If root cause cannot be proven, state best-supported explanation and label as inferred
   - If fixed without reliable reproduction, state that explicitly
 
-### Step 7: Update Progress
+### Step 7: Update Progress in Plan
 
-Append/update timeline entry in `TASK_DIR/progress.md` using `PROGRESS_TEMPLATE`:
-- `Trigger`, `Status`, `Summary`, `Files`, `Next Action`, `ADR Suggested`
-- Status after coding: `Implemented`, `In Progress`, `Blocked`, or `Needs Review`
-- `ADR Suggested` must be `Yes` or `No`. If `Yes`, include short reason but do not create ADR.
+Update the `## Progress` section in `TASK_DIR/plan.md`:
+- Tick the checkbox for each completed change: `- [x] 1. [Change title]`
+- Append a row to the progress table:
+  `| [date] | [step] | Implemented — [N]/[N] tests pass |`
+- Update the `Current status` field in the header to `Implemented` or `In Progress`.
 
 ## ADR Triggers
 

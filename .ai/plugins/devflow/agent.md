@@ -119,6 +119,6 @@ If user says `/devflow [KEY] --auto`: skip the "Run now?" prompt. Execute each s
 
 Read shared paths from `config.md`.
 
-## Progress File
+## Progress Tracking
 
-After each skill completes, append to `TASK_DIR/progress.md` (skills handle this internally). The orchestrator reads `progress.md` to show the timeline if available.
+After each skill completes, update the `## Progress` section in `TASK_DIR/plan.md` (skills handle this internally). The orchestrator reads the progress checkboxes and table to determine current state.

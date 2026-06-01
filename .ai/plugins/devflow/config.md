@@ -29,7 +29,6 @@ Located in `templates/` relative to the plugin root.
 | Variable | File |
 |----------|------|
 | `PLAN_TEMPLATE` | `templates/plan-template.md` |
-| `PROGRESS_TEMPLATE` | `templates/progress-template.md` |
 | `CHANGELOG_TEMPLATE` | `templates/changelog-template.md` |
 | `REVIEW_TEMPLATE` | `templates/review-template.md` |
 

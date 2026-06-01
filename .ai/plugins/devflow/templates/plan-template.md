@@ -81,3 +81,16 @@
 
 ### Open Questions
 - [question / assumption / blocker or `None`]
+
+---
+
+## Progress
+
+Checklist tracks step completion. Progress table tracks timeline.
+
+- [ ] 1. [Change title]
+- [ ] 2. [Change title]
+
+| Date | Step | Action |
+|------|------|--------|
+| [date] | — | Plan created |

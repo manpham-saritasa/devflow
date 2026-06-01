@@ -1,6 +1,6 @@
 ---
 name: dev-review
-description: Review implemented code against task context and the latest plan/changelog iteration. Append findings to review.md and progress.md.
+description: Review implemented code against task context and the latest plan/changelog iteration. Append findings to review.md and update plan.md progress.
 triggers:
   - "dev-review"
   - "devreview"
@@ -18,6 +18,15 @@ Check required templates from `config.md` exist. Missing → stop.
 ### Step 1: Read Context
 
 Read all available files from `TASK_DIR/`. Missing files are not errors.
+
+### Step 1.5: Detect Task Type
+
+Check the plan's `**Type:**` field:
+- `**Type:** refactor` → 6.verify already wrote `review.md`.
+  Read `TASK_DIR/review.md` for the verdict. Skip to Step 6
+  (write review — use the existing content).
+  Update plan.md progress with verdict status only.
+- `**Type:** feature` or missing → continue to Step 2.
 
 
 ### Step 2: Identify Changes
@@ -96,10 +105,13 @@ Append to `TASK_DIR/review.md` using `REVIEW_TEMPLATE`:
 - Every issue with severity, category, location, explanation, suggested fix
 - Empty sections: write `None`
 
-### Step 7: Update Progress
+### Step 7: Update Progress in Plan
 
-Update `TASK_DIR/progress.md`:
-- Status: `Approved`, `Approved with Changes`, `Rejected`, `Blocked`, or `Needs Review`
+Update the `## Progress` section in `TASK_DIR/plan.md`:
+- Tick relevant checkboxes if review passes.
+- Append a row to the progress table:
+  `| [date] | — | Review: [Pass / Pass with Changes / Fail] |`
+- Update the `Current status` field: `Approved`, `Approved with Changes`, `Rejected`, or `Blocked`.
 - `ADR Suggested`: `Yes`/`No` with reason if yes
 
 ## ADR Triggers
@@ -115,6 +127,6 @@ See decision triggers in `8.dev-adr/SKILL.md`. Set `ADR Suggested = Yes` when an
 - [ ] Unexpected files flagged?
 - [ ] Blocking vs minor issues distinguished?
 - [ ] Review pass number determined from prior reviews?
-- [ ] Progress.md updated?
+- [ ] Plan.md progress updated?
 - [ ] Verdict matches findings?
 - [ ] ADR recommended only when appropriate?
