@@ -74,6 +74,14 @@ Follow `PRINCIPLES.md` at plugin root.
   (see `config.md` at plugin root for path resolution; default: `.local/tasks/refactor/refactor-plan.md`).
 - Align with any existing API guidelines or architecture documents if available.
 
+## Stop Conditions
+
+Stop and ask if:
+- Plan file is missing or the step tagged `[api]` cannot be found
+- Compatibility classification is unclear — must classify before proceeding
+- Breaking change detected without explicit migration plan
+- Tests fail and the fix is not obvious — revert and report
+
 ## Example
 
 ### Scenario

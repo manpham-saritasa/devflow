@@ -71,6 +71,13 @@ Follow `PRINCIPLES.md` at plugin root.
 - Avoid micro-optimizations unless they also improve clarity.
 - Be explicit about any assumptions when removing or deduplicating code.
 
+## Stop Conditions
+
+Stop and ask if:
+- Plan file is missing or the step tagged `[simplify]` cannot be found
+- Simplification may change behavior — flag and confirm before acting
+- Tests fail and the fix is not obvious — revert and report
+
 ## Example
 
 ### Scenario (before)

@@ -55,8 +55,9 @@ Produce a verdict: Pass / Pass with Changes / Fail.
 Produce a verify report and write it to the review file.
 
 When a devflow task folder exists (`.local/tasks/{KEY}/task.md`):
-write to `.local/tasks/{KEY}/review.md`.
-When standalone: report inline in chat.
+write to `.local/tasks/{KEY}/refactor-review.md`.
+When standalone: write to `.local/tasks/refactor/refactor-review.md`.
+Fallback: report inline in chat.
 
 ```
 ## Verify Report

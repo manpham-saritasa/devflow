@@ -68,6 +68,13 @@ Follow `PRINCIPLES.md` at plugin root.
 - Prefer concrete over vague.
 - If a step cannot be made safe, flag it and explain why.
 
+## Stop Conditions
+
+Stop and ask if:
+- Plan file is missing, empty, or corrupt
+- Plan format is unrecognized (missing required sections)
+- User wants to execute without grilling and risks are unclear
+
 ## Example
 
 ### Before (weak plan)

@@ -69,6 +69,14 @@ Follow `PRINCIPLES.md` at plugin root.
 - Stop after one bounded step unless the user explicitly asks to continue with another step.
 - Ask for confirmation when structural changes affect many files or modules.
 
+## Stop Conditions
+
+Stop and ask if:
+- Plan file is missing or the step tagged `[structure]` cannot be found
+- Tests fail and the fix is not obvious — revert and report
+- Change scope expands beyond the single planned step
+- Invariant or business rule appears at risk
+
 ## Example
 
 ### Scenario
