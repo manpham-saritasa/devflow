@@ -140,6 +140,5 @@
 	[List of PRs details that support this ADR.]	
 - **Related ADRs / prior tasks:** 
 	[List of relevant prior decisions, or `None`.]
-
-### External references:
+- **Additional references:**
 	[List of external sources (Microsoft Learn, official docs, etc.) with clickable links that support the decision.]

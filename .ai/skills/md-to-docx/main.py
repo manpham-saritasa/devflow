@@ -39,11 +39,20 @@ class Converter:
     """Convert markdown documents into .docx files."""
 
     def convert(self, md_path: Path, out_path: Path) -> Path:
-        markdown_text = md_path.read_text(encoding="utf-8")
-        html = markdown(
-            markdown_text,
-            extensions=["tables", "fenced_code", "sane_lists", "nl2br"],
-        )
+        """Convert a Markdown file to .docx. Returns the output path."""
+        try:
+            markdown_text = md_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            raise OSError(f"Failed to read input file: {md_path}") from exc
+
+        try:
+            html = markdown(
+                markdown_text,
+                extensions=["tables", "fenced_code", "sane_lists", "nl2br"],
+            )
+        except Exception as exc:
+            raise ValueError(f"Failed to parse Markdown in {md_path}: {exc}") from exc
+
         soup = BeautifulSoup(html, "lxml")
 
         doc = Document()
@@ -89,12 +98,14 @@ class Converter:
         paragraph.paragraph_format.space_after = Pt(after)
 
     def _set_cell_shading(self, cell, color_hex: str) -> None:
+        """Set cell background color. Uses private API — python-docx has no public shading API (tested: 1.2.0)."""
         tc_pr = cell._tc.get_or_add_tcPr()
         shd = OxmlElement("w:shd")
         shd.set(qn("w:fill"), color_hex)
         tc_pr.append(shd)
 
     def _set_row_height(self, row, height_twips: int) -> None:
+        """Set minimum row height. Uses private API — python-docx has no public row height API (tested: 1.2.0)."""
         tr_pr = row._tr.get_or_add_trPr()
         tr_height = OxmlElement("w:trHeight")
         tr_height.set(qn("w:val"), str(height_twips))
@@ -103,18 +114,6 @@ class Converter:
 
     def _set_cell_vertical_alignment(self, cell) -> None:
         cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-
-    def _set_cell_text(
-        self, cell, text: str, *, color_key: str = "text", bold: bool = False
-    ) -> None:
-        cell.text = ""
-        paragraph = cell.paragraphs[0]
-        paragraph.paragraph_format.space_before = Pt(6)
-        paragraph.paragraph_format.space_after = Pt(6)
-        run = paragraph.add_run(text.strip())
-        run.font.name = "Segoe UI"
-        run.font.size = Pt(10)
-        self._set_run_color(run, color_key, bold=bold)
 
     def _add_hyperlink(
         self, paragraph, url: str, text: str, font_size: int = 11
@@ -148,15 +147,14 @@ class Converter:
         t.text = text
         r.append(t)
         hyperlink.append(r)
+        # Uses private API — python-docx has no public hyperlink API (tested: 1.2.0)
         paragraph._p.append(hyperlink)
 
     def _extract_text(self, node: Tag) -> str:
         return " ".join(node.stripped_strings)
 
     def _extract_lines(self, node: Tag) -> list[str]:
-        html = node.decode_contents()
-        html = html.replace("<br/>", "\n").replace("<br />", "\n").replace("<br>", "\n")
-        text = BeautifulSoup(html, "html.parser").get_text("\n")
+        text = node.get_text("\n")
         return [line.strip() for line in text.splitlines() if line.strip()]
 
     def _extract_cell_lines(self, node: Tag) -> list[str]:
@@ -261,7 +259,7 @@ class Converter:
                 continue
             self._append_inline_content(paragraph, child)
 
-    def _set_table_column_widths(self, table, col_count: int) -> None:
+    def _set_table_column_widths(self, doc: Document, table, col_count: int) -> None:
         if col_count == 2:
             widths = [0.34, 0.66]
         elif col_count == 3:
@@ -271,9 +269,14 @@ class Converter:
         else:
             return
 
-        section_width = 6.9
+        section = doc.sections[0]
+        page_width = section.page_width.inches
+        left = section.left_margin.inches
+        right = section.right_margin.inches
+        usable_width = page_width - left - right
+
         for col_index, ratio in enumerate(widths):
-            width = Inches(section_width * ratio)
+            width = Inches(usable_width * ratio)
             for cell in table.columns[col_index].cells:
                 cell.width = width
 
@@ -290,7 +293,7 @@ class Converter:
         table.style = "Table Grid"
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         table.autofit = False
-        self._set_table_column_widths(table, col_count)
+        self._set_table_column_widths(doc, table, col_count)
 
         if table.rows:
             self._set_row_height(table.rows[0], 600)
