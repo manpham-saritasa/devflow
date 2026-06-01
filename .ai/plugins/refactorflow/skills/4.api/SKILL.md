@@ -11,8 +11,9 @@ Invoked by refactorflow agent during execution.
 
 ## When to use
 
-This skill is invoked by the refactorflow agent when a plan step is tagged `[api]`.
-Do not invoke directly. Use `refactorflow` to create a plan first.
+This skill is invoked by the refactorflow agent in auto mode.
+In manual mode, run directly when a plan step is tagged `[api]`.
+Always create a plan with 1.review first.
 
 ## Goal
 

@@ -5,18 +5,11 @@ description: Verify a completed or in-progress refactor against the original spe
 ---
 
 # Verify
-
-Use this skill to verify refactor results against the plan's original specs.
-Invoked by refactorflow agent after execution completes.
-
 ## When to use
 
-This skill is invoked by the refactorflow agent when:
-- all plan steps are complete,
-- the user says "verify", "check", or "confirm",
-- the user wants to validate before merging.
-
-Do not invoke directly. Use `refactorflow` to manage the workflow.
+This skill is invoked by the refactorflow agent in auto mode.
+In manual mode, run directly after all plan steps are complete.
+Always create a plan with 1.review first.
 
 ## Goal
 
