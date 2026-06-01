@@ -197,6 +197,17 @@ dev-start PROJ-3000 --release
 
 ---
 
+## Related Plugins
+
+Other plugins in this repo share the same `.env.local` and `.local/tasks/` structure. No extra setup.
+
+| Plugin | What it does | Dependencies |
+|--------|-------------|-------------|
+| `githubflow` | Release listing, PR tools | git, gh CLI |
+| `jiraflow` | Release notes, task management | JIRA creds |
+
+---
+
 ## Integration
 
 To use this plugin in a repository:
