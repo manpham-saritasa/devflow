@@ -90,6 +90,21 @@ should use placeholders — never real values.
 - `config.md` may contain real paths relative to the repo — that's OK.
 - If unsure, flag it and ask: "Real or placeholder?"
 
+### 10. Completeness
+
+Check that the content forms a closed loop — no gaps, no overlaps, nothing missing.
+
+- **Coverage gaps**: Does the workflow have missing steps? Example: a plugin with "plan → execute → ship" but no review step.
+- **Overlapping responsibilities**: Do two skills claim the same job? Example: both dev-review and 6.verify check code quality.
+- **Missing edge cases**: Are error states, empty inputs, and failure paths handled? Example: "What if plan.md is corrupt?"
+- **Missing stop conditions**: Does every skill define when to stop and ask the user?
+- **Missing triggers**: Can the user invoke every skill? Are there dead-end skills with no entry point?
+- **Missing cross-references**: If skill A delegates to skill B, does skill B reference back?
+- **Missing output destinations**: Does every skill produce its output somewhere (file, chat, or both)?
+- **Orphan outputs**: Does any file get written but never read by another skill?
+- **Unreachable paths**: Can every "When to use" condition actually be triggered by a user?
+- **Circular closure**: Trace the full lifecycle. Does it start and end cleanly, or are there dangling states?
+
 ## Output format
 
 ```
@@ -143,6 +158,11 @@ Date: [YYYY-MM-DD]
 | # | File | Pattern | Detail | Action |
 |---|------|---------|--------|--------|
 
+### Completeness
+
+| # | Area | Gap | Severity | Fix |
+|---|------|-----|----------|-----|
+
 ### Summary
 
 - Duplicates: [N]
@@ -154,6 +174,7 @@ Date: [YYYY-MM-DD]
 - Structure: [N]
 - Formatting: [N]
 - Privacy: [N]
+- Completeness: [N]
 
 ### Verdict
 

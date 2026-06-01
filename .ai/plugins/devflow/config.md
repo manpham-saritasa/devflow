@@ -14,6 +14,14 @@ All skills and agents in this plugin reference these paths. Resolve relative to 
 
 ---
 
+## Path resolution
+
+1. If task key provided explicitly (e.g. `DEV-123`), use it.
+2. If not, extract from current branch via regex `([A-Z0-9]+-\d+)`.
+3. Resolve `TASK_DIR` with `{KEY}` replaced.
+
+---
+
 ## Work Mode
 
 | Variable | Value | Description |

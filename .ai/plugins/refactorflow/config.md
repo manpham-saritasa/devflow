@@ -8,15 +8,20 @@ All skills and the agent reference these paths. Resolve relative to the plugin r
 
 | Variable | Value | Description |
 |----------|-------|-------------|
-| `PLAN_FILE_NAME` | `refactor-plan.md` | Always this filename |
-| `DEFAULT_PLAN_PATH` | `.local/tasks/refactor/refactor-plan.md` | When no task key |
-| `TASK_PLAN_PATTERN` | `.local/tasks/{TASK_KEY}/refactor-plan.md` | Inside a devflow task |
+| `TASKS_ROOT` | `.local/tasks` | Task evidence folder (repo-relative) |
+| `TASK_DIR` | `[TASKS_ROOT]/[KEY]` | Per-task folder (matches devflow) |
+| `PLAN_FILE_NAME` | `refactor-plan.md` | Plan output filename |
+| `REVIEW_FILE_NAME` | `refactor-review.md` | Review output filename |
+| `DEFAULT_PLAN_PATH` | `.local/tasks/refactor/refactor-plan.md` | Standalone — no task key |
+| `DEFAULT_REVIEW_PATH` | `.local/tasks/refactor/refactor-review.md` | Standalone — no task key |
 
 ## Path resolution
 
-1. Check if `.local/tasks/{TASK_KEY}/task.md` exists (inside a devflow task).
-2. If yes → resolve `TASK_PLAN_PATTERN` with `{TASK_KEY}` replaced.
-3. If no → use `DEFAULT_PLAN_PATH`.
+1. If task key provided explicitly (e.g. `DEV-123`), use it.
+2. If not, extract from current branch via regex `([A-Z0-9]+-\d+)`.
+3. Check if `.local/tasks/{TASK_KEY}/task.md` exists (inside a devflow task).
+4. If yes → write plan to `TASK_DIR/refactor-plan.md`, review to `TASK_DIR/refactor-review.md`.
+5. If no → use `DEFAULT_PLAN_PATH`.
 
 ---
 
