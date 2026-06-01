@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill</title>
+  <title>Githubflow Plugin</title>
   <style>
 :root {
     --bg: #e2e8f0;
@@ -317,90 +317,49 @@ a:hover {
 <body>
   <main class="page">
 <section class="header">
-  <h1>Skill</h1>
-  <div class="meta">
-    <div class="meta-item"><span class="meta-label">name</span>release-list</div>
-    <div class="meta-item"><span class="meta-label">description</span>List all tasks on develop not yet on main, grouped by task key with merged PR summaries, ordered newest first. Use for release preparation.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>release-list, releaselist, release notes</div>
-  </div>
+  <h1>Githubflow Plugin</h1>
 </section>
 <section class="section">
-<h2>When to Use</h2>
+<p>GitHub release workflow skills for preparing and managing releases.</p>
+</section>
+<section class="section">
+<h2>Structure</h2>
+<pre><code>githubflow/
+  release-list/               ← list tasks pending release (develop → main)
+</code></pre>
+</section>
+<section class="section">
+<h2>Skills</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Skill</th>
+<th>Benefits</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="#">1</td>
+<td data-label="Skill"><code>release-list</code></td>
+<td data-label="Benefits">List tasks on develop not on main, PR summaries, JIRA links</td>
+<td data-label="Example"><code>release-list</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Usage</h2>
+<pre><code>release-list
+</code></pre>
+<p>Shows all tasks pending release from <code>develop</code> to <code>main</code>, newest first, with clickable JIRA and PR links.</p>
+</section>
+<section class="section">
+<h2>Future</h2>
 <ul>
-<li>Preparing a release — see what's on <code>develop</code> waiting to go to <code>main</code></li>
-<li>Generating release notes from merged PRs</li>
-<li>Checking what tasks are pending release</li>
+<li><code>release-add</code> — add tasks to JIRA release version (<code>jiraflow</code> plugin)</li>
 </ul>
-</section>
-<section class="section">
-<h2>Workflow</h2>
-<h3>Step 1: Ensure on Develop</h3>
-<p>Check current branch:</p>
-<pre><code class="language-bash">git branch --show-current
-</code></pre>
-<p>If not on <code>develop</code>: "You are on <code>[branch]</code>. Switch to <code>develop</code> first? (yes / no)"</p>
-<ul>
-<li>If yes: <code>git checkout develop</code></li>
-<li>If no: stop.</li>
-</ul>
-<p>If <code>develop</code> branch does not exist: "No <code>develop</code> branch found in this repo." Stop.</p>
-<h3>Step 2: Fetch Latest Develop and Main</h3>
-<pre><code class="language-bash">git fetch origin develop
-git fetch origin main
-git pull origin develop
-</code></pre>
-<p>If fetch or pull fails: "Failed to update. Check your network." Stop.  </p>
-<p>Always use <code>origin/main</code> (not local <code>main</code>) — the local <code>main</code> branch may be stale.</p>
-<h3>Step 3: Get PR Merge Commits on Develop Not on Main</h3>
-<pre><code class="language-bash">git log --first-parent origin/main..develop --oneline --merges --format=&quot;%s&quot; | grep 'Merge pull request'
-</code></pre>
-<p>If empty: "No new PR merges on <code>develop</code>. Nothing to release." Stop.  </p>
-<p><code>--first-parent</code> follows only the linear history of <code>develop</code>, excluding side-branch merges (e.g. <code>main → develop</code> syncs) that would inflate the count.  </p>
-<p>Extract task keys from the branch name in each merge commit message using regex <code>(RMASUP-\d+)</code> (case-insensitive). Deduplicate. This gives the task list.</p>
-<h3>Step 4: Find PR Details</h3>
-<p>Get all PR details in one batch:</p>
-<pre><code class="language-bash">gh pr list --repo [owner/repo] --search &quot;is:merged sort:updated-desc&quot; --limit 100 --json number,title,url,mergedAt
-</code></pre>
-<p>Cross-reference PR numbers from Step 3 with this data. If a PR number is not found in <code>gh pr list</code> output, fall back to individual lookup:</p>
-<pre><code class="language-bash">gh pr view [NUMBER] --json number,title,url,mergedAt
-</code></pre>
-<h3>Step 5: Sort by Newest</h3>
-<p>Sort tasks by the most recent PR merge date (descending). Tasks with no PR go to the bottom.</p>
-<h3>Step 6: Present Release List</h3>
-<p>Format as a table. Each row = one task. Multiple PRs under one task are summarized.</p>
-<pre><code>## Release List — develop → main
-
-| # | Task | PRs | Description |
-|--|------|-----|-------------|
-| 1 | [RMASUP-2145](https://saritasa.atlassian.net/browse/RMASUP-2145) | [#1435](url) | Adjust letter and word spacing in PDF exports |
-| 2 | [RMASUP-2143](https://saritasa.atlassian.net/browse/RMASUP-2143) | 2 PRs: [#1430](url), [#1438](url) | Field App — new DR menu + pagination fix |
-| 3 | [RMASUP-2134](https://saritasa.atlassian.net/browse/RMASUP-2134) | no PR found | Direct commit — GEO DB migration ADR |
-</code></pre>
-<p>Rules:</p>
-<ul>
-<li>Task key: clickable JIRA link (<code>https://[JIRA_COMPANY_DOMAIN].atlassian.net/browse/[KEY]</code>)</li>
-<li>PRs: clickable GitHub links. Single PR = <code>#[N]</code>. Multiple = <code>[N] PRs: #[A], #[B]</code></li>
-<li>Description: from the first PR title (strip the task key and leading symbols)</li>
-<li>If no PR: use commit message summary</li>
-</ul>
-<h3>Step 7: Show Summary</h3>
-<pre><code>Total: [N] tasks pending release
-PRs: [N] merged PRs
-</code></pre>
-</section>
-<section class="section">
-<h2>JIRA URL</h2>
-<p>Build JIRA URLs using the domain from <code>.env</code> or <code>.env.local</code>:</p>
-<pre><code>JIRA_COMPANY_DOMAIN=saritasa
-</code></pre>
-<p>URL format: <code>https://[JIRA_COMPANY_DOMAIN].atlassian.net/browse/[KEY]</code>  </p>
-<p>If no JIRA domain found, use the task key as plain text (no link).</p>
-</section>
-<section class="section">
-<h2>Future Integration</h2>
-<p>The <code>jira-release</code> skill (in <code>jiraflow</code> plugin) will consume this list and add tasks to a JIRA release via:</p>
-<pre><code>jira-release --from-release-list --release-url https://saritasa.atlassian.net/projects/RMASUP/versions/123
-</code></pre>
 </section>
   </main>
 </body>

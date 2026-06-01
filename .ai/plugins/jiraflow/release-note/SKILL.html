@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>release-note</div>
+    <div class="meta-item"><span class="meta-label">description</span>Generate a client-friendly release note from tasks in a JIRA release. Categorizes into Changed and Fixed sections.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>release-note, releasenote, release-note --full</div>
+  </div>
+</section>
+<section class="section">
+<h2>When to Use</h2>
+<ul>
+<li><code>release-note "API next version"</code> — by release name</li>
+<li><code>release-note https://saritasa.atlassian.net/projects/PROJ/versions/123</code> — by URL</li>
+<li><code>release-note --full "API next version"</code> — include task IDs and URLs for internal review</li>
+<li>Generate client-facing changelog before a release</li>
+</ul>
+</section>
+<section class="section">
+<h2>Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior">Client copy only — no task IDs, clean for sharing</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--full</code></td>
+<td data-label="Behavior">Internal copy — includes task IDs and clickable JIRA URLs</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Credentials</h2>
+<p>Read from <code>.env</code> or <code>.env.local</code> in repo root:</p>
+<pre><code>JIRA_COMPANY_DOMAIN=saritasa
+JIRA_EMAIL=you@saritasa.com
+JIRA_API_TOKEN=your-token
+</code></pre>
+</section>
+<section class="section">
+<h2>Workflow</h2>
+<h3>Step 1: Parse Input</h3>
+<ul>
+<li>Extract release identifier from user input (name or URL)</li>
+<li>If no release: ask "Release name or URL?"</li>
+</ul>
+<h3>Step 2: Resolve Release</h3>
+<p><strong>If URL:</strong> extract version ID from <code>https://[DOMAIN].atlassian.net/projects/[KEY]/versions/[ID]</code>  </p>
+<p><strong>If name:</strong> search for the version:</p>
+<pre><code class="language-bash">curl -s -u &quot;[JIRA_EMAIL]:[JIRA_API_TOKEN]&quot; \
+  &quot;https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/project/[JIRA_PROJECT_KEY]/version?query=[RELEASE_NAME]&quot; \
+  | jq -r '.values[0].id'
+</code></pre>
+<h3>Step 3: Get Tasks in Release</h3>
+<p>Fetch all issues with this fixVersion:</p>
+<pre><code class="language-bash">curl -s -u &quot;[JIRA_EMAIL]:[JIRA_API_TOKEN]&quot; \
+  &quot;https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/search/jql&quot; \
+  --data-urlencode &quot;jql=fixVersion=[VERSION_ID]&quot; \
+  --data-urlencode &quot;fields=summary,issuetype&quot; \
+  --data-urlencode &quot;maxResults=200&quot; \
+  | jq '.issues[] | {key, summary: .fields.summary, type: .fields.issuetype.name}'
+</code></pre>
+<h3>Step 4: Categorize and Summarize</h3>
+<p>Categorize each task:</p>
+<table>
+<thead>
+<tr>
+<th>Issue type</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Issue type">Story, Task, Improvement, New Feature</td>
+<td data-label="Category"><strong>Changed</strong></td>
+</tr>
+<tr>
+<td data-label="Issue type">Bug</td>
+<td data-label="Category"><strong>Fixed</strong></td>
+</tr>
+<tr>
+<td data-label="Issue type">Sub-task</td>
+<td data-label="Category">Follow parent category</td>
+</tr>
+<tr>
+<td data-label="Issue type">Epic, Spike, Tech Debt</td>
+<td data-label="Category">Include in <strong>Changed</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summarize each task</strong> into 1 short line.</p>
+<ul>
+<li>Client-focused: describe the user-visible outcome, not technical details.</li>
+<li>Remove prefixes like "API -" or "Admin -" — they are JIRA component labels, not useful to clients.</li>
+<li>Start with a past-tense verb when possible (Added, Updated, Fixed, Improved, Removed).</li>
+</ul>
+<p><strong>Group summary writing rules::</strong></p>
+<ul>
+<li>Tone: professional, neutral, factual. Like a product changelog.</li>
+<li>Style: one flowing sentence listing the key changes in the group. Use commas and "and" to chain related items.</li>
+<li>Length: 10 to 50 words per group summary.</li>
+<li>Example: "Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails."</li>
+</ul>
+<h3>Step 5: Format Release Note</h3>
+<p>Group related tasks by theme (e.g. AD Sync, API, Admin, Budget). Each group gets a sub-heading with a short paragraph summarizing the group. Use this format:</p>
+<pre><code>## Release Note — [VERSION_NAME]
+
+**[Group Name]:**
+
+- A short paragraph summarizing all tasks in this group as one coherent sentence or two.
+
+**[Group Name]:**
+
+- A short paragraph summarizing all tasks in this group.
+</code></pre>
+<p><strong>Client copy</strong> (no task IDs):</p>
+<pre><code>## Release Note — API next version
+
+
+**AD Sync:**
+
+- Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails.
+
+**API:**
+
+- Updated lab sample date fields, added text positioning for master form PDFs, created version management endpoints, and added Copilot instruction files for code review.
+</code></pre>
+<p><strong>Internal copy</strong> (with task IDs):</p>
+<pre><code>## Release Note — API next version
+
+
+**AD Sync:**
+
+- [PROJ-1988, PROJ-1989, PROJ-1990, PROJ-1991] Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails.
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Group 2-5 related tasks under a thematic sub-heading.</li>
+<li>Follow the group summary writing rules from Step 4 (tone, style, length).</li>
+<li>Client copy: no task IDs. Internal copy: list keys in brackets before the summary.</li>
+<li>If a section has no items, omit it entirely.</li>
+</ul>
+<h3>Step 6: Report</h3>
+<p><strong>Default (no flag):</strong> show the client copy only — grouped paragraphs, no task IDs.  </p>
+<p><strong>--full:</strong> show the internal copy — grouped paragraphs with <code>[KEY]</code> prefix and clickable JIRA URLs. Include a separate block with individual task links for quick access.  </p>
+<p>Client copy format:</p>
+<pre><code>## Release Note — [VERSION_NAME]
+
+**[Group Name]:**
+
+- Group summary paragraph.
+</code></pre>
+<p>--full format:</p>
+<pre><code>## Release Note — [VERSION_NAME]
+
+**[Group Name]:**
+
+- [KEY, KEY] Group summary paragraph.
+
+---
+Tasks:
+
+- [KEY](https://JIRA/browse/KEY) — Task summary
+- [KEY](https://JIRA/browse/KEY) — Task summary
+</code></pre>
+<p>Show total counts at the bottom:</p>
+<pre><code>Total: [N] tasks ([N] changed, [N] fixed)
+Release: [RELEASE_URL]
+</code></pre>
+</section>
+  </main>
+</body>
+</html>

@@ -28,33 +28,41 @@ If not on `develop`: "You are on `[branch]`. Switch to `develop` first? (yes / n
 
 If `develop` branch does not exist: "No `develop` branch found in this repo." Stop.
 
-### Step 2: Fetch and Pull Latest Develop
+### Step 2: Fetch Latest Develop and Main
 
 ```bash
 git fetch origin develop
+git fetch origin main
 git pull origin develop
 ```
 
-If fetch or pull fails: "Failed to update `develop`. Check your network." Stop.
+If fetch or pull fails: "Failed to update. Check your network." Stop.
 
-### Step 3: Get Commits on Develop Not on Main
+Always use `origin/main` (not local `main`) — the local `main` branch may be stale.
+
+### Step 3: Get PR Merge Commits on Develop Not on Main
 
 ```bash
-git log main..develop --oneline --no-merges --format="%H %s"
+git log --first-parent origin/main..develop --oneline --merges --format="%s" | grep 'Merge pull request'
 ```
 
-If empty: "No new commits on `develop`. Nothing to release." Stop.
+If empty: "No new PR merges on `develop`. Nothing to release." Stop.
 
-Extract task keys from commit messages using regex `([A-Z]+-\d+)`. Deduplicate. This gives the task list.
+`--first-parent` follows only the linear history of `develop`, excluding side-branch merges (e.g. `main → develop` syncs) that would inflate the count.
 
-### Step 4: Find PRs for Each Task
+Extract task keys from the branch name in each merge commit message using regex `(RMASUP-\d+)` (case-insensitive). Deduplicate. This gives the task list.
 
-For each unique task key, search for merged PRs:
+### Step 4: Find PR Details
+
+Get all PR details in one batch:
 ```bash
-gh search prs "[KEY]" --merged --json number,title,url,mergedAt,headRepository,headRepositoryOwner,baseRefName --limit 50
+gh pr list --repo [owner/repo] --search "is:merged sort:updated-desc" --limit 100 --json number,title,url,mergedAt
 ```
 
-If `gh search prs` returns no results for a key, mark it as "no PR found" — still include it (may be a direct commit).
+Cross-reference PR numbers from Step 3 with this data. If a PR number is not found in `gh pr list` output, fall back to individual lookup:
+```bash
+gh pr view [NUMBER] --json number,title,url,mergedAt
+```
 
 ### Step 5: Sort by Newest
 

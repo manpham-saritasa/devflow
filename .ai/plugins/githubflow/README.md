@@ -25,4 +25,4 @@ Shows all tasks pending release from `develop` to `main`, newest first, with cli
 
 ## Future
 
-- `jira-release` — add release list to a JIRA release version (coming to `jiraflow` plugin)
+- `release-add` — add tasks to JIRA release version (`jiraflow` plugin)
