@@ -43,8 +43,8 @@
 | `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
 | `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
 | `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
-| `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`) |
-| `ship` | `cush` first, then run `dev-ship` for the branch's task key |
+| `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`). Also save session. |
+| `ship` | `cush` first, then run `dev-ship` for the branch's task key. Also save session. |
 | `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
 
 ## 3. Creating markdown files or text documents

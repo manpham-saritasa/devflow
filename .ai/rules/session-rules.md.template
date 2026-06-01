@@ -1,21 +1,50 @@
 # Session Tracking Rule
 
-On `save` shortcut or major task completion, save session state to `.local/sessions/raw/[YYYY-MM-DD].md`:
+All times in Asia/Bangkok (+07:00).
 
-   ```markdown
-   ## 14:30
+## Save on user command
 
-   - Did: [what was done]
-   - Files: [files changed]
-   - Decided: [key decisions made]
-   ```
+Triggered by `save` shortcut (e.g. `save 21:30`). If no time given, use current time.
 
-   First entry of the day includes `# Session — YYYY-MM-DD` header. Subsequent entries just append `## HH:MM` blocks.
+Save session state to `.local/sessions/raw/[YYYY-MM-DD].md`:
 
-   Example: `.local/sessions/raw/2026-05-29.md`
+```markdown
+## 21:30
 
-   Path resolves to the main repo's `.local/sessions/` folder — shared across all worktrees, gitignored.
+- Did: [what was done]
+- Files: [files changed]
+- Decided: [key decisions made]
+```
 
-2. **Extract key corrections** and append them to `.local/sessions/corrections.md` so the AI can read them on next startup.
+- Create directories if missing before writing.
+- First entry of the day includes `# Session — YYYY-MM-DD` header.
+- Subsequent entries append new `## HH:MM` blocks to the same file.
 
-The `.local/` folder is gitignored and lives in the main repo, so it persists across worktrees.
+Example: `.local/sessions/raw/2026-05-29.md`
+
+## Auto-save on major task completion
+
+Also save without user trigger when:
+- dev-finish completes (task done)
+- dev-ship completes (PR created)
+- Session goal is achieved ("the main thing we set out to do is done")
+- User says "done" shortcut
+
+## Extract corrections
+
+After each session, extract key corrections and append to `.local/sessions/corrections.md`:
+
+```markdown
+## YYYY-MM-DD
+
+### Category
+- Correction description.
+```
+
+Categories: Communication, Tools, Skills, LLM Behavior, Workflow, Other.
+
+If no corrections to extract, note "None" and skip.
+
+## Path
+
+Resolves to the main repo's `.local/sessions/` folder — shared across all worktrees, gitignored.
