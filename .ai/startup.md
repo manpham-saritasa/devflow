@@ -86,7 +86,7 @@ If multiple apply, read all matching files before starting.
 | Priority | Source |
 |---|---|
 | 1 | User instruction |
-| 2 | `memory.md` at .ai folder |
+| 2 | `memory.md` at `.local` folder |
 | 3 | Chosen agent from `agents/` |
 | 4 | Chosen skill from `skills/` |
 | 5 | On-demand rules from `rules/` |

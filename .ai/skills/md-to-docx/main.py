@@ -311,6 +311,23 @@ class Converter:
                 if source_node is not None:
                     self._populate_cell(cell, source_node, is_header=is_header)
 
+    def _add_heading(
+        self,
+        doc: Document,
+        node: Tag,
+        level: int,
+        after: int,
+        size: int,
+        color_key: str,
+    ) -> None:
+        paragraph = doc.add_heading(level=level)
+        if after:
+            self._set_paragraph_spacing(paragraph, after=after)
+        run = paragraph.add_run(self._extract_text(node))
+        run.font.name = "Segoe UI"
+        run.font.size = Pt(size)
+        self._set_run_color(run, color_key, bold=True)
+
     def _add_block(self, doc: Document, node) -> None:
         if isinstance(node, NavigableString):
             text = str(node).strip()
@@ -323,32 +340,13 @@ class Converter:
 
         name = node.name.lower()
         if name == "h1":
-            paragraph = doc.add_heading(level=0)
-            self._set_paragraph_spacing(paragraph, after=10)
-            run = paragraph.add_run(self._extract_text(node))
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(24)
-            self._set_run_color(run, "accent", bold=True)
+            self._add_heading(doc, node, level=0, after=10, size=24, color_key="accent")
         elif name == "h2":
-            paragraph = doc.add_heading(level=1)
-            self._set_paragraph_spacing(paragraph, after=8)
-            run = paragraph.add_run(self._extract_text(node))
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(18)
-            self._set_run_color(run, "title", bold=True)
+            self._add_heading(doc, node, level=1, after=8, size=18, color_key="title")
         elif name == "h3":
-            paragraph = doc.add_heading(level=2)
-            self._set_paragraph_spacing(paragraph, after=6)
-            run = paragraph.add_run(self._extract_text(node))
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(14)
-            self._set_run_color(run, "title", bold=True)
+            self._add_heading(doc, node, level=2, after=6, size=14, color_key="title")
         elif name == "h4":
-            paragraph = doc.add_heading(level=3)
-            run = paragraph.add_run(self._extract_text(node))
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(12)
-            self._set_run_color(run, "title", bold=True)
+            self._add_heading(doc, node, level=3, after=0, size=12, color_key="title")
         elif name == "p":
             paragraph = doc.add_paragraph()
             self._set_paragraph_spacing(paragraph, after=6)
