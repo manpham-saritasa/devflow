@@ -1,5 +1,6 @@
 ---
 name: review-md
+version: 0.1.0
 description: Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, and structural issues. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.
 ---
 
@@ -31,6 +32,7 @@ Check every `.md` file with `---` delimiters:
 - **Missing `description`**: Every SKILL.md and agent must have a description.
 - **Missing `version`**: Newer skills should have `version:` field.
 - **Inline YAML without delimiters**: Raw `name: value` at top of file without `---` wrapping.
+- **HTML-corrupted files**: `.md` files that contain `<!DOCTYPE html>` or `<html>` — likely overwritten by md-to-html conversion.
 
 ### 3. Stale references
 
@@ -184,6 +186,8 @@ Date: [YYYY-MM-DD]
 ## Rules
 
 - Read every `.md` file in the target subtree before reporting.
+- If target has 0 `.md` files, report and stop: "No markdown files found."
+- If target > 50 files, sample key files and note sampling.
 - Don't skip dimensions. If clean, note: "No issues found."
 - Sort findings within each section by severity (worst first).
 - Report exact file paths and line numbers or headings.
