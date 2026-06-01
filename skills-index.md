@@ -59,6 +59,13 @@
 | md-to-html | `.ai/skills/md-to-html/` | `md-to-html` | Convert Markdown to standalone HTML |
 | md-to-docx | `.ai/skills/md-to-docx/` | `md-to-docx` | Convert Markdown to Word document |
 
+## Review Skills (2)
+
+| Skill | Path | Triggers | Description |
+|-------|------|----------|-------------|
+| deep-review | `.agents/skills/deep-review/` | `deep review`, `audit` | Review plugins/skills/workflows across 13 dimensions |
+| review-md | `.agents/skills/review-md/` | `review md`, `check md`, `audit markdown` | Audit markdown files for duplicates, stale refs, frontmatter, common mistakes |
+
 ## Refactor Skills (1)
 
 | Skill | Path | Triggers | Description |
