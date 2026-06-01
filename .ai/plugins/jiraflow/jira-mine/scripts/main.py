@@ -7,6 +7,10 @@ import sys
 import urllib.request
 from datetime import datetime
 
+# Handle non-breaking hyphens and other Unicode in JIRA task descriptions
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = os.path.dirname(
     os.path.dirname(
         os.path.dirname(
