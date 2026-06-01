@@ -1,11 +1,14 @@
 ---
-name: refactor
-description: Refactor code without changing behavior. Use when user says "refactor", "clean up", "restructure", or wants to improve code quality without altering functionality.
+name: quick-refactor
+version: 0.1.0
+description: Quick, test-driven refactoring for single concerns. No plan file, ≤ 3 files, tests must pass before and after.
 ---
 
 ## When to Use
 
 Trigger on requests to refactor, clean up, restructure, simplify, or improve code structure. Never use for feature work, bug fixes, or behavior changes.
+
+For multi-step planned refactors, use `refactorflow` instead.
 
 ## Rules
 
