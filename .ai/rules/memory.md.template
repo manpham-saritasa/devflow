@@ -3,7 +3,6 @@
 > Use these rules when communicating with user or creating/editing files for user.
 
 ## 1. Communication
-- Before each big section, put `---` first.
 - When executing a skill, prefix every message with `[skill-name]` (e.g. `[dev-start] ✅ Branch ready:`).
 - End completed actions with `✅ Done.` — after statements, never after questions.
 - Prefix every question to me with `❓` — do not add `✅ Done.` on the same line.
@@ -38,8 +37,10 @@
 |---|---|
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
 | `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/session-rules.md |
-| `devflow` | Run the devflow agent from `.ai/plugins/devflow/` |
+| `devflow` | Run the devflow agent from `.ai/agents/devflow.md` |
+| `creport` | Run the `change-report` skill — auto-detects preview vs after mode |
 | `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat |
+| `md-view` | Start the `md-view` server for browser-based .md preview |
 | `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
 | `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
 | `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
@@ -59,6 +60,6 @@
   - move detection conditions/logic to the top
   - keep wording minimal and caveman-style
 
-- When creating documents:
+- When creating markdown documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
-- When creating or editing `.md` files, always run the `md-to-html` skill to generate the corresponding `.html` file.
+  - run the `review-md` skill to review the md file content

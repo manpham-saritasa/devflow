@@ -40,6 +40,24 @@ If session is long, task changes, or context is fuzzy, re-read it.
 
 ---
 
+## Set up your personal workspace
+
+Copy and customize the templates in `.ai/rules/`:
+
+```bash
+cp .ai/rules/memory.md.template .local/memory.md
+cp .ai/rules/session-rules.md.template .local/session-rules.md
+```
+
+| File | Purpose |
+|------|---------|
+| `memory.md` | Your shortcuts (`cush`, `ship`, `creport`), communication preferences, and LLM behaviors |
+| `session-rules.md` | Your timezone, session saving rules, and tracking preferences |
+
+Both are gitignored — personal, never committed. Templates define the recommended practice; you customize for your workflow.
+
+---
+
 ## When user says use an agent
 
 | Step | Action |
