@@ -66,13 +66,13 @@ py.exe -m pip install -r .ai/skills/md-to-docx/requirements.txt
 Then run the bundled converter script:
 
 ```bash
-python .ai/skills/md-to-docx/main.py <input.md> [output.docx]
+python .ai/skills/md-to-docx/scripts/main.py <input.md> [output.docx]
 ```
 
 If `python` is not available on Windows, use:
 
 ```bash
-py.exe .ai/skills/md-to-docx/main.py <input.md> [output.docx]
+py.exe .ai/skills/md-to-docx/scripts/main.py <input.md> [output.docx]
 ```
 
 If `output.docx` is omitted, it writes to `<input_stem>.docx` alongside the source file.

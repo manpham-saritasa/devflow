@@ -8,14 +8,9 @@ Usage:
 import sys
 from pathlib import Path
 
-try:
-    from .md_parser import md_body_to_html
-    from .post_processor import PostProcessor
-    from .pre_processor import PreProcessor
-except ImportError:  # pragma: no cover - script execution fallback
-    from md_parser import md_body_to_html
-    from post_processor import PostProcessor
-    from pre_processor import PreProcessor
+from md_parser import md_body_to_html
+from post_processor import PostProcessor
+from pre_processor import PreProcessor
 
 
 class Converter:

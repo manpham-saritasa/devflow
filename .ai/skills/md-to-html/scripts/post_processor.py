@@ -5,10 +5,7 @@ from __future__ import annotations
 import html
 import re
 
-try:
-    from .md_parser import parse_inline
-except ImportError:  # pragma: no cover - script execution fallback
-    from md_parser import parse_inline
+from md_parser import parse_inline
 
 
 class PostProcessor:

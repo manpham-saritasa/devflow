@@ -91,6 +91,23 @@ class Converter:
         run.font.color.rgb = RGBColor.from_string(PALETTE[color_key])
         run.bold = bold
 
+    def _add_run(
+        self,
+        paragraph,
+        text: str,
+        *,
+        font_name: str = "Segoe UI",
+        font_size: int = 11,
+        color: str = "text",
+        bold: bool = False,
+    ):
+        """Add a formatted run to the paragraph. Returns the run for further customization."""
+        run = paragraph.add_run(text)
+        run.font.name = font_name
+        run.font.size = Pt(font_size)
+        self._set_run_color(run, color, bold=bold)
+        return run
+
     def _set_paragraph_spacing(
         self, paragraph, *, before: int = 0, after: int = 0
     ) -> None:
@@ -157,9 +174,6 @@ class Converter:
         text = node.get_text("\n")
         return [line.strip() for line in text.splitlines() if line.strip()]
 
-    def _extract_cell_lines(self, node: Tag) -> list[str]:
-        return self._extract_lines(node)
-
     def _append_inline_content(self, paragraph, node) -> None:
         if isinstance(node, NavigableString):
             text = str(node)
@@ -167,10 +181,7 @@ class Converter:
                 # Skip newline-only strings between inline elements inside <p>
                 stripped = text.replace("\n", "").replace("\r", "")
                 if stripped:
-                    run = paragraph.add_run(text)
-                    run.font.name = "Segoe UI"
-                    run.font.size = Pt(11)
-                    self._set_run_color(run, "text")
+                    self._add_run(paragraph, text)
                 # else: pure newline between tags — skip, don't add anything
             return
 
@@ -183,10 +194,7 @@ class Converter:
             return
 
         if name == "strong":
-            run = paragraph.add_run(node.get_text())
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(11)
-            self._set_run_color(run, "text", bold=True)
+            self._add_run(paragraph, node.get_text(), bold=True)
             return
 
         if name == "a":
@@ -195,10 +203,7 @@ class Converter:
             if href:
                 self._add_hyperlink(paragraph, href, text)
             else:
-                run = paragraph.add_run(text)
-                run.font.name = "Segoe UI"
-                run.font.size = Pt(11)
-                self._set_run_color(run, "accent")
+                run = self._add_run(paragraph, text, color="accent")
                 run.underline = True
             return
 
@@ -208,7 +213,7 @@ class Converter:
 
     def _populate_cell(self, cell, node: Tag, *, is_header: bool) -> None:
         cell.text = ""
-        lines = self._extract_cell_lines(node)
+        lines = self._extract_lines(node)
         if not lines:
             return
 
@@ -224,21 +229,14 @@ class Converter:
 
             if is_header:
                 self._set_cell_vertical_alignment(cell)
-                run = paragraph.add_run(text)
-                run.font.name = "Segoe UI"
-                run.font.size = Pt(10)
-                self._set_run_color(run, "title", bold=True)
+                self._add_run(paragraph, text, font_size=10, color="title", bold=True)
                 continue
 
             if is_bullet:
                 paragraph.style = "Cell List Bullet"
-                run = paragraph.add_run(f"• {text}")
+                self._add_run(paragraph, f"• {text}", font_size=10)
             else:
-                run = paragraph.add_run(text)
-
-            run.font.name = "Segoe UI"
-            run.font.size = Pt(10)
-            self._set_run_color(run, "text")
+                self._add_run(paragraph, text, font_size=10)
 
     def _add_list(self, doc: Document, node: Tag, style: str) -> None:
         for li in node.find_all("li", recursive=False):
@@ -323,10 +321,13 @@ class Converter:
         paragraph = doc.add_heading(level=level)
         if after:
             self._set_paragraph_spacing(paragraph, after=after)
-        run = paragraph.add_run(self._extract_text(node))
-        run.font.name = "Segoe UI"
-        run.font.size = Pt(size)
-        self._set_run_color(run, color_key, bold=True)
+        self._add_run(
+            paragraph,
+            self._extract_text(node),
+            font_size=size,
+            color=color_key,
+            bold=True,
+        )
 
     def _add_block(self, doc: Document, node) -> None:
         if isinstance(node, NavigableString):
@@ -339,53 +340,67 @@ class Converter:
             return
 
         name = node.name.lower()
-        if name == "h1":
-            self._add_heading(doc, node, level=0, after=10, size=24, color_key="accent")
-        elif name == "h2":
-            self._add_heading(doc, node, level=1, after=8, size=18, color_key="title")
-        elif name == "h3":
-            self._add_heading(doc, node, level=2, after=6, size=14, color_key="title")
-        elif name == "h4":
-            self._add_heading(doc, node, level=3, after=0, size=12, color_key="title")
-        elif name == "p":
+        handler = self._block_handlers.get(name)
+        if handler:
+            handler(doc, node)
+            return
+
+        # Unknown tag — recurse into children
+        for child in list(node.children):
+            self._add_block(doc, child)
+
+    @property
+    def _block_handlers(self):
+        return {
+            "h1": lambda doc, node: self._add_heading(
+                doc, node, level=0, after=10, size=24, color_key="accent"
+            ),
+            "h2": lambda doc, node: self._add_heading(
+                doc, node, level=1, after=8, size=18, color_key="title"
+            ),
+            "h3": lambda doc, node: self._add_heading(
+                doc, node, level=2, after=6, size=14, color_key="title"
+            ),
+            "h4": lambda doc, node: self._add_heading(
+                doc, node, level=3, after=0, size=12, color_key="title"
+            ),
+            "p": self._add_paragraph_block,
+            "ul": lambda doc, node: self._add_list(doc, node, "List Bullet"),
+            "ol": lambda doc, node: self._add_list(doc, node, "List Number"),
+            "table": self._add_table,
+            "hr": lambda doc, _: doc.add_paragraph(""),
+            "blockquote": self._add_blockquote_block,
+            "pre": self._add_code_block,
+        }
+
+    def _add_paragraph_block(self, doc: Document, node: Tag) -> None:
+        paragraph = doc.add_paragraph()
+        self._set_paragraph_spacing(paragraph, after=6)
+        for child in list(node.children):
+            self._append_inline_content(paragraph, child)
+
+    def _add_blockquote_block(self, doc: Document, node: Tag) -> None:
+        text = self._extract_text(node)
+        if text:
             paragraph = doc.add_paragraph()
-            self._set_paragraph_spacing(paragraph, after=6)
-            children = list(node.children)
-            for child in children:
-                self._append_inline_content(paragraph, child)
-        elif name == "ul":
-            self._add_list(doc, node, "List Bullet")
-        elif name == "ol":
-            self._add_list(doc, node, "List Number")
-        elif name == "table":
-            self._add_table(doc, node)
-        elif name == "hr":
-            doc.add_paragraph("")
-        elif name == "blockquote":
-            text = self._extract_text(node)
-            if text:
-                paragraph = doc.add_paragraph()
-                paragraph.style = (
-                    "Intense Quote"
-                    if "Intense Quote" in [style.name for style in doc.styles]
-                    else "Quote"
-                )
-                run = paragraph.add_run(text)
-                run.font.name = "Segoe UI"
-                run.font.size = Pt(11)
-                self._set_run_color(run, "muted")
-        elif name == "pre":
-            text = node.get_text("", strip=False).rstrip()
-            if text:
-                paragraph = doc.add_paragraph()
-                run = paragraph.add_run(text)
-                run.font.name = "Cascadia Code"
-                run.font.size = Pt(10)
-                self._set_run_color(run, "code_text")
-        else:
-            children = list(node.children)
-            for child in children:
-                self._add_block(doc, child)
+            paragraph.style = (
+                "Intense Quote"
+                if "Intense Quote" in [style.name for style in doc.styles]
+                else "Quote"
+            )
+            self._add_run(paragraph, text, color="muted")
+
+    def _add_code_block(self, doc: Document, node: Tag) -> None:
+        text = node.get_text("", strip=False).rstrip()
+        if text:
+            paragraph = doc.add_paragraph()
+            self._add_run(
+                paragraph,
+                text,
+                font_name="Cascadia Code",
+                font_size=10,
+                color="code_text",
+            )
 
 
 def main() -> None:

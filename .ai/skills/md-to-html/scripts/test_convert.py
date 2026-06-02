@@ -280,7 +280,7 @@ def test_converter_end_to_end() -> None:
 
 
 def test_converter_table_cell_list_fixture() -> None:
-    fixture_path = Path(__file__).parent / "test" / "table-cell-lists.md"
+    fixture_path = Path(__file__).parent.parent / "test" / "table-cell-lists.md"
     with tempfile.TemporaryDirectory() as tmp_dir:
         html_path = Path(tmp_dir) / "table-cell-lists.html"
         _ = Converter().convert(fixture_path, html_path)

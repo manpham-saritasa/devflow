@@ -3,10 +3,7 @@
 import re
 from pathlib import Path
 
-try:
-    from .frontmatter import extract_metadata, parse_frontmatter
-except ImportError:  # pragma: no cover - script execution fallback
-    from frontmatter import extract_metadata, parse_frontmatter
+from frontmatter import extract_metadata, parse_frontmatter
 
 
 class PreProcessor:
@@ -17,7 +14,7 @@ class PreProcessor:
 
     def __init__(self) -> None:
         here = Path(__file__).parent
-        self._css = (here / "theme.css").read_text(encoding="utf-8")
+        self._css = (here.parent / "assets" / "theme.css").read_text(encoding="utf-8")
 
     @property
     def css(self) -> str:
