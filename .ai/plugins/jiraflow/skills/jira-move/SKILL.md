@@ -9,9 +9,7 @@ triggers:
 
 ## Config
 
-Read shared auth from ../../config.md. Milestones in ./scripts/milestones.config.
-
-## Workflow
+Read shared auth from `../../config.md`. Milestones defined in `./scripts/milestones.config`.
 
 Run the Python script:
 
@@ -23,7 +21,7 @@ python .ai/plugins/jiraflow/skills/jira-move/scripts/main.py KEY [MILESTONE] [--
 |---------|--------|
 | `main.py KEY` | Auto-detect current milestone, advance to next |
 | `main.py KEY ready` | Move to `ready` milestone (e.g., "Ready for Development") |
-| `main.py KEY review` | Move to `review` milestone (e.g., "TM Review", "In Review") |
+| `main.py KEY review` | Move to `review` milestone (TM Review, In Review) |
 | `main.py KEY pending` | Move to `pending` milestone (e.g., "In Progress") |
 | `main.py KEY verify` | Move to `verify` milestone (e.g., "On Staging", "On Production") |
 | `main.py KEY complete` | Move to `complete` milestone (e.g., "Completed") |
@@ -33,15 +31,18 @@ Accepts milestone names OR raw Jira status names.
 
 ---
 
-## Config
+## Milestones
 
 **`milestones.config`** — shared across all projects:
 
 ```config
-PIPELINE=backlog,ready,pending,code-review,ready-for-qa,in-qa,review,verify,complete
+PIPELINE=backlog,ready,in-progress,code-review,ready-for-qa,in-qa,review,verify,complete
 
 ready=Ready for Development,Ready to Do
-pending=On Development,Doing,Do-ing,On going,In Progress
+in-progress=On Development,Doing,Do-ing,On going,In Progress,In Development
+code-review=Code Review
+ready-for-qa=Ready For QA
+in-qa=In QA
 review=TM Review,In Review
 verify=On Staging,On Production,Verified
 complete=Completed,Completed.

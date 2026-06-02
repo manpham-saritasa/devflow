@@ -61,8 +61,8 @@ Transitions to Cancelled, Blocked, and Completed are not followed during discove
 
 | File | Purpose |
 |------|---------|
-| `milestones.config` | Shared milestone definitions + pipeline order |
-| `PROJ.config` | Per-project transition map (auto-generated) |
+| `scripts/milestones.config` | Shared milestone definitions + pipeline order |
+| `PROJ.config` | Per-project transition map (auto-generated at skill root) |
 | `PROJECT-KEY.config.template` | Template for new project configs |
 | `scripts/main.py` | Entry point |
 | `scripts/discover.py` | Workflow discovery |
