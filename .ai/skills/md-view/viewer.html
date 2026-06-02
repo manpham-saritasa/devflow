@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>md-view</title>
+        <link rel="stylesheet" href="/.ai/skills/md-view/theme.css" />
+        <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    </head>
+    <body>
+        <main class="page">
+            <div id="content">
+                <section class="section">
+                    <p class="note">Loading...</p>
+                </section>
+            </div>
+        </main>
+
+        <script>
+            mermaid.initialize({ startOnLoad: false, theme: "default" });
+
+            function extractFrontmatter(text) {
+                if (!text.startsWith("---")) return { body: text, meta: {} };
+                const end = text.indexOf("---", 4);
+                if (end === -1) return { body: text, meta: {} };
+                const fm = {};
+                let currentKey = "";
+                for (const line of text.substring(4, end).split("\n")) {
+                    const stripped = line.trim();
+                    if (!stripped) continue;
+                    const listMatch = stripped.match(/^\s*-\s*"?(.+?)"?\s*$/);
+                    if (listMatch && currentKey) {
+                        fm[currentKey] =
+                            (fm[currentKey] || "") +
+                            (fm[currentKey] ? ", " : "") +
+                            listMatch[1];
+                        continue;
+                    }
+                    const kv = stripped.match(/^([\w-]+):\s+(.+)$/);
+                    if (kv) {
+                        currentKey = kv[1];
+                        fm[currentKey] = kv[2].replace(/^"(.*)"$/, "$1");
+                        continue;
+                    }
+                    const k = stripped.match(/^([\w-]+):\s*$/);
+                    if (k) {
+                        currentKey = k[1];
+                        fm[currentKey] = "";
+                    }
+                }
+                return { body: text.substring(end + 4).trim(), meta: fm };
+            }
+
+            function render(contentEl, mdText) {
+                const { body: rawBody, meta } = extractFrontmatter(mdText);
+                let body = rawBody;
+
+                // Extract title from heading before stripping
+                let title =
+                    meta.name ||
+                    (body.match(/^# (.+)$/m) || [])[1] ||
+                    "Document";
+
+                // Extract intro paragraph (text between # heading and first ##)
+                let introHtml = "";
+                const headingEnd = body.indexOf("\n", body.indexOf("\n") + 1);
+                if (headingEnd > 0) {
+                    let rest = body.substring(headingEnd).trim();
+                    const nextH2 = rest.search(/\n## /);
+                    if (nextH2 > 0) {
+                        const introText = rest.substring(0, nextH2).trim();
+                        if (introText) {
+                            introHtml = marked.parse(introText);
+                            body = body.replace(introText, "");
+                        }
+                    }
+                }
+
+                // Strip first # heading from body (already in header)
+                body = body.replace(/^# .+\n*/, "");
+
+                // Parse markdown
+                marked.setOptions({ breaks: true, gfm: true });
+                let html = marked.parse(body);
+
+                // Wrap headings in sections
+                html = html.replace(
+                    /<h2/g,
+                    '</section>\n<section class="section"><h2',
+                );
+                html = html.replace(/^<\/section>\s*/, "");
+
+                // Convert blockquotes
+                html = html.replace(
+                    /<blockquote>/g,
+                    '<div class="blockquotes">',
+                );
+                html = html.replace(/<\/blockquote>/g, "</div>");
+
+                // Build header card
+                let header = '<section class="header">';
+                if (title && title.includes(": ")) {
+                    const parts = title.split(": ", 2);
+                    header += `<div class="eyebrow">${parts[0]}</div>`;
+                    header += `<h1>${parts[1]}</h1>`;
+                } else {
+                    header += `<h1>${title}</h1>`;
+                }
+                if (introHtml) {
+                    header += introHtml.replace(/<p>/g, '<p class="note">');
+                }
+                if (Object.keys(meta).length) {
+                    header += '<div class="meta">';
+                    for (const [key, value] of Object.entries(meta)) {
+                        header += `<div class="meta-item"><span class="meta-label">${key}</span>${value}</div>`;
+                    }
+                    header += "</div>";
+                }
+                header += "</section>";
+
+                // Fix mermaid blocks
+                html = html.replace(
+                    /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
+                    '<pre class="mermaid">$1</pre>',
+                );
+
+                // Render mermaid
+                if (html.includes('class="mermaid"')) {
+                    mermaid.run({ nodes: [] }).catch(() => {});
+                }
+
+                document.title = title;
+                contentEl.innerHTML = header + html + "</section>";
+            }
+
+            async function load() {
+                const contentEl = document.getElementById("content");
+                const params = new URLSearchParams(window.location.search);
+                let file = params.get("file");
+
+                if (file) {
+                    // Strip absolute paths to server-relative
+                    file = file.replace(/^[A-Z]:\\[^\\]*\\[^\\]*\\/, "");
+                    file = file.replace(/\\/g, "/");
+                }
+
+                if (!file) {
+                    contentEl.innerHTML = `
+          <section class="section">
+            <h2>md-view</h2>
+            <p>Open any .md file: <code>?file=path/to/file.md</code></p>
+            <p>Example: <a href="?file=.ai/agents/devflow.md">?file=.ai/agents/devflow.md</a></p>
+          </section>`;
+                    return;
+                }
+
+                try {
+                    const resp = await fetch("/" + file.replace(/^\//, ""));
+                    if (!resp.ok)
+                        throw new Error(`${resp.status} ${resp.statusText}`);
+                    const text = await resp.text();
+                    render(contentEl, text);
+                } catch (err) {
+                    contentEl.innerHTML = `
+          <section class="section">
+            <h2>Error</h2>
+            <p class="note">Failed to load <code>${file}</code>: ${err.message}</p>
+          </section>`;
+                }
+            }
+
+            load();
+        </script>
+    </body>
+</html>
