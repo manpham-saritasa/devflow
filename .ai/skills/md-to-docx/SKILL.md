@@ -1,5 +1,6 @@
 ---
 name: md-to-docx
+version: 0.1.0
 description: Convert Markdown files into Microsoft Word .docx files using a reusable bundled converter that preserves headings, paragraphs, lists, tables, quotes, and code blocks.
 triggers:
   - "md-to-docx"
@@ -41,7 +42,6 @@ This skill is specifically for:
 - Convert Markdown paragraphs into normal Word paragraphs.
 - Convert Markdown bullet and numbered lists into Word list paragraphs.
 - Convert Markdown tables into Word tables.
-- Reuse the `md-to-html` skill palette for headings, text, quotes, and table styling.
 - Keep the Word layout simple and document-like; do not try to mimic HTML card layout.
 - Make table header rows taller and vertically center the header text.
 - Convert blockquotes into quote-style paragraphs when available.
@@ -89,6 +89,5 @@ Use descriptive lowercase hyphenated filenames when creating new standalone docu
 
 ## Notes
 
-- This skill clones the `md-to-html` color palette into Word-native formatting.
 - This skill aims for practical Word output, not pixel-perfect parity with HTML rendering.
 - The generated `.docx` should be easy to read and edit in Microsoft Word.

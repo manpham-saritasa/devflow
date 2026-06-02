@@ -5,6 +5,7 @@ Usage:
     python main.py <input.md> [output.docx]
 """
 
+import re
 import sys
 from pathlib import Path
 
@@ -45,6 +46,9 @@ class Converter:
         except OSError as exc:
             raise OSError(f"Failed to read input file: {md_path}") from exc
 
+        # Normalize 2-space nested lists to 4-space (required by sane_lists)
+        markdown_text = self._normalize_nested_lists(markdown_text)
+
         try:
             html = markdown(
                 markdown_text,
@@ -77,19 +81,34 @@ class Converter:
         normal_style.font.color.rgb = RGBColor.from_string(PALETTE["text"])
         normal_style.paragraph_format.space_after = Pt(6)
 
-        if "Cell List Bullet" not in [style.name for style in doc.styles]:
-            style = doc.styles.add_style("Cell List Bullet", WD_STYLE_TYPE.PARAGRAPH)
-            style.base_style = doc.styles["Normal"]
-            style.paragraph_format.left_indent = Pt(0)
-            style.paragraph_format.first_line_indent = Pt(0)
-            style.paragraph_format.space_after = Pt(6)
-            style.font.name = "Segoe UI"
-            style.font.size = Pt(10)
-            style.font.color.rgb = RGBColor.from_string(PALETTE["text"])
+        self._ensure_style(doc, "Cell List Bullet", font_size=10)
+        self._ensure_style(doc, "List Bullet", left_indent=18)
+        self._ensure_style(doc, "List Number", left_indent=18)
+        self._ensure_style(doc, "List Bullet 2", left_indent=36)
 
-    def _set_run_color(self, run, color_key: str, *, bold: bool = False) -> None:
-        run.font.color.rgb = RGBColor.from_string(PALETTE[color_key])
-        run.bold = bold
+    def _ensure_style(self, doc, name, *, font_size=11, left_indent=0):
+        """Create a paragraph style if it doesn't exist."""
+        if name in [s.name for s in doc.styles]:
+            return
+        style = doc.styles.add_style(name, WD_STYLE_TYPE.PARAGRAPH)
+        style.base_style = doc.styles["Normal"]
+        style.font.name = "Segoe UI"
+        style.font.size = Pt(font_size)
+        style.font.color.rgb = RGBColor.from_string(PALETTE["text"])
+        style.paragraph_format.left_indent = Pt(left_indent)
+        style.paragraph_format.space_after = Pt(6)
+
+    @staticmethod
+    def _normalize_nested_lists(text: str) -> str:
+        """Expand 2-space nested list indentation to 4-space for sane_lists."""
+        lines = text.split("\n")
+        result: list[str] = []
+        for line in lines:
+            if re.match(r"^  ([-*] |\d+\. )", line):
+                result.append("  " + line)
+            else:
+                result.append(line)
+        return "\n".join(result)
 
     def _add_run(
         self,
@@ -105,7 +124,8 @@ class Converter:
         run = paragraph.add_run(text)
         run.font.name = font_name
         run.font.size = Pt(font_size)
-        self._set_run_color(run, color, bold=bold)
+        run.font.color.rgb = RGBColor.from_string(PALETTE[color])
+        run.bold = bold
         return run
 
     def _set_paragraph_spacing(
@@ -234,7 +254,7 @@ class Converter:
 
             if is_bullet:
                 paragraph.style = "Cell List Bullet"
-                self._add_run(paragraph, f"• {text}", font_size=10)
+                self._add_run(paragraph, text, font_size=10)
             else:
                 self._add_run(paragraph, text, font_size=10)
 
@@ -249,10 +269,12 @@ class Converter:
             if isinstance(child, NavigableString) and not str(child).strip():
                 continue
             if isinstance(child, Tag) and child.name in ("ul", "ol"):
-                # Nested list — process as separate list items
-                nested_style = "List Bullet 2" if style == "List Bullet" else style
-                if nested_style not in [s.name for s in doc.styles]:
-                    nested_style = style
+                # Nested list — use deeper style
+                nested_style = (
+                    "List Bullet 2"
+                    if style in ("List Bullet", "List Bullet 2")
+                    else style
+                )
                 self._add_list(doc, child, nested_style)
                 continue
             self._append_inline_content(paragraph, child)
