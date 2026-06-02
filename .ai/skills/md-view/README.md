@@ -16,8 +16,8 @@ Opens browser with this README rendered.
 
 ```bash
 cd /path/to/devflow
-python3 -m http.server 8080
-# Open: http://localhost:8080/.ai/skills/md-view/viewer.html
+python3 -m http.server 9090
+# Open: http://localhost:9090/.ai/skills/md-view/viewer.html
 ```
 
 ## View any .md file
@@ -25,7 +25,7 @@ python3 -m http.server 8080
 Add `?file=` to the URL:
 
 ```
-http://localhost:8080/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
+http://localhost:9090/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
 ```
 
 ## Files

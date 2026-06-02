@@ -35,8 +35,8 @@ Or serve via any HTTP server for `fetch()` to work:
 
 ```bash
 cd /path/to/devflow
-python -m http.server 8080
-# Open: http://localhost:8080/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
+python -m http.server 9090
+# Open: http://localhost:9090/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
 ```
 
 ## Files
