@@ -75,14 +75,9 @@ def test_config_has_required_vars():
 
 
 def test_config_template_vars():
+    """Templates are local to each skill, not in shared config."""
     c = read(os.path.join(PLUGIN_DIR, "config.md"))
-    for var in [
-        "PLAN_TEMPLATE",
-        "PROGRESS_TEMPLATE",
-        "CHANGELOG_TEMPLATE",
-        "REVIEW_TEMPLATE",
-    ]:
-        assert var in c, f"config.md missing {var}"
+    assert "Each skill owns its templates locally" in c
 
 
 # ── Agent ─────────────────────────────────────────────────────
@@ -144,15 +139,15 @@ def test_skill_count():
 
 
 def test_templates_exist():
-    templates_dir = os.path.join(PLUGIN_DIR, "templates")
-    assert exists(templates_dir), "templates/ missing"
-    for tmpl in [
-        "plan-template.md",
-        "changelog-template.md",
-        "progress-template.md",
-        "review-template.md",
-    ]:
-        assert exists(os.path.join(templates_dir, tmpl)), f"Missing {tmpl}"
+    """Templates live in their owning skill folder, not shared templates/."""
+    base = PLUGIN_DIR
+    checks = [
+        ("2.dev-plan/templates/plan-template.md", "dev-plan"),
+        ("3.dev-code/templates/changelog-template.md", "dev-code"),
+        ("4.dev-review/templates/review-template.md", "dev-review"),
+    ]
+    for path, name in checks:
+        assert exists(os.path.join(base, path)), f"Missing {name} template: {path}"
 
 
 # ── Paths ─────────────────────────────────────────────────────

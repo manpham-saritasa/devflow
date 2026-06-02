@@ -41,7 +41,7 @@ Show investigation summary to user. Include:
 
 ### Step 5: Write Plan
 
-After user approval, write `TASK_DIR/plan.md` using `PLAN_TEMPLATE`:
+After user approval, write `TASK_DIR/plan.md` using `templates/plan-template.md`:
 - Fill stable sections (Task Context, Requirements, Constraints)
 - Append new `## Iteration [N]` with proposed changes
 - Write progress checkboxes for each change

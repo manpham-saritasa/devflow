@@ -98,7 +98,7 @@ Before writing the review, compare `git diff` against the latest changelog itera
 **Manual mode:** Skip file writes. Present findings and verdict in chat.
 
 Determine the next review pass number from prior `review.md` (default: 1).
-Append to `TASK_DIR/review.md` using `REVIEW_TEMPLATE`:
+Append to `TASK_DIR/review.md` using `templates/review-template.md`:
 - New review pass for the active iteration
 - Every acceptance criterion in `Acceptance Criteria Review`
 - Every planned change in `Plan Coverage Review`

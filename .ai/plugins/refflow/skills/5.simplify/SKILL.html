@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>simplify</div>
+    <div class="meta-item"><span class="meta-label">version</span>0.2.0</div>
+    <div class="meta-item"><span class="meta-label">description</span>Reduce local complexity, improve readability, naming, and control flow, and remove small-scale friction without changing behavior.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>simplify, simplify this, clean up</div>
+  </div>
+</section>
+<section class="section">
+<h1>Simplify</h1>
+<p>Use this skill when the plan step is tagged <code>[simplify]</code>.<br>
+Invoked by refflow agent during execution.</p>
+</section>
+<section class="section">
+<h2>When to use</h2>
+<p>See <code>PRINCIPLES.md</code> for invocation modes.<br>
+Manual trigger: run when a plan step is tagged <code>[simplify]</code>.</p>
+</section>
+<section class="section">
+<h2>Goal</h2>
+<p>Make code easier to read, explain, review, and maintain without changing runtime behavior, public behavior, or business rules.</p>
+</section>
+<section class="section">
+<h2>Focus</h2>
+<p>Apply this skill to:</p>
+<ul>
+<li>deep nesting,</li>
+<li>repeated logic,</li>
+<li>poor names,</li>
+<li>boolean complexity,</li>
+<li>long methods,</li>
+<li>mixed abstraction levels,</li>
+<li>noisy conditionals,</li>
+<li>JSX/template/control-flow clutter,</li>
+<li>repetitive guards or response shaping.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Code Smells</h2>
+<p>Use this catalog to identify and fix common smells. Pick the matching operation from the table below.</p>
+<h3>1. Long method</h3>
+<p><strong>Smell:</strong> Method &gt; 40 lines, does multiple things.<br>
+<strong>Fix:</strong> Extract focused sub-methods. Keep top-level as orchestration.</p>
+<h3>2. Duplicated code</h3>
+<p><strong>Smell:</strong> Same logic in 2+ places.<br>
+<strong>Fix:</strong> Extract shared function. One source of truth.</p>
+<h3>3. Large class / God object</h3>
+<p><strong>Smell:</strong> One class with 10+ unrelated responsibilities.<br>
+<strong>Fix:</strong> Split by concern. Each class one reason to change.</p>
+<h3>4. Long parameter list</h3>
+<p><strong>Smell:</strong> Function with 5+ parameters.<br>
+<strong>Fix:</strong> Introduce parameter object or builder.</p>
+<h3>5. Feature envy</h3>
+<p><strong>Smell:</strong> Method uses another object's data more than its own.<br>
+<strong>Fix:</strong> Move method to the object that owns the data.</p>
+<h3>6. Primitive obsession</h3>
+<p><strong>Smell:</strong> Using strings/ints for domain concepts (email, phone, status).<br>
+<strong>Fix:</strong> Wrap in value objects with validation.</p>
+<h3>7. Magic numbers / strings</h3>
+<p><strong>Smell:</strong> Unexplained literals (<code>if status === 2</code>, <code>* 0.15</code>).<br>
+<strong>Fix:</strong> Named constants with intent-revealing names.</p>
+<h3>8. Nested conditionals</h3>
+<p><strong>Smell:</strong> Arrow code — 4+ levels of nesting.<br>
+<strong>Fix:</strong> Guard clauses, early returns, flatten.</p>
+<h3>9. Dead code</h3>
+<p><strong>Smell:</strong> Unused functions, imports, commented-out blocks.<br>
+<strong>Fix:</strong> Delete. Git history has it if needed.</p>
+<h3>10. Inappropriate intimacy</h3>
+<p><strong>Smell:</strong> One class reaches deep into another's internals.<br>
+<strong>Fix:</strong> Ask, don't reach. Add proper accessors or move behavior.</p>
+</section>
+<section class="section">
+<h2>Refactoring Operations</h2>
+<p>Quick reference — pick the right operation for each smell.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Operation">Extract Method</td>
+<td data-label="When to use">Code fragment can be named and reused</td>
+</tr>
+<tr>
+<td data-label="Operation">Inline Method</td>
+<td data-label="When to use">Method body is clearer than the call</td>
+</tr>
+<tr>
+<td data-label="Operation">Extract Class</td>
+<td data-label="When to use">One class doing two things</td>
+</tr>
+<tr>
+<td data-label="Operation">Inline Class</td>
+<td data-label="When to use">Class adds no value, merge back</td>
+</tr>
+<tr>
+<td data-label="Operation">Rename</td>
+<td data-label="When to use">Name doesn't reveal intent</td>
+</tr>
+<tr>
+<td data-label="Operation">Introduce Parameter Object</td>
+<td data-label="When to use">5+ parameters that travel together</td>
+</tr>
+<tr>
+<td data-label="Operation">Replace Conditional with Polymorphism</td>
+<td data-label="When to use">Switch/if on type code</td>
+</tr>
+<tr>
+<td data-label="Operation">Replace Magic Number with Constant</td>
+<td data-label="When to use">Unexplained literal</td>
+</tr>
+<tr>
+<td data-label="Operation">Decompose Conditional</td>
+<td data-label="When to use">Complex if-condition, extract to method</td>
+</tr>
+<tr>
+<td data-label="Operation">Consolidate Conditional</td>
+<td data-label="When to use">Same action from different conditions</td>
+</tr>
+<tr>
+<td data-label="Operation">Replace Nested Conditional with Guard Clauses</td>
+<td data-label="When to use">Arrow code, early returns</td>
+</tr>
+<tr>
+<td data-label="Operation">Introduce Null Object</td>
+<td data-label="When to use">Repeated null checks on same type</td>
+</tr>
+<tr>
+<td data-label="Operation">Replace Type Code with Class/Enum</td>
+<td data-label="When to use">Primitive used as type discriminator</td>
+</tr>
+<tr>
+<td data-label="Operation">Replace Inheritance with Delegation</td>
+<td data-label="When to use">Subclass only uses part of parent</td>
+</tr>
+<tr>
+<td data-label="Operation">Pull Up / Push Down Method</td>
+<td data-label="When to use">Method in wrong class in hierarchy</td>
+</tr>
+<tr>
+<td data-label="Operation">Remove Dead Code</td>
+<td data-label="When to use">Unused, unreachable, commented-out</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Framework-specific notes</h2>
+<p>See <code>references/INDEX.md</code> at plugin root for stack-specific guidance.<br>
+Read the matching file for your project's stack.</p>
+</section>
+<section class="section">
+<h2>Preferred transformations</h2>
+<ol>
+<li>Read the plan file and find the step tagged <code>[simplify]</code>.</li>
+<li>Run relevant tests before touching anything. If any test fails, report and stop.</li>
+<li><strong>Scan the entire target file for every smell in the catalog.</strong> Don't fix the first smell you see — count occurrences. Rank by frequency. Fix the most duplicated pattern first.</li>
+<li>Match the smell to an operation from the catalog above.</li>
+<li>Apply the transformation:<ul>
+<li>Guard clauses for early exits.</li>
+<li>Clearer, intent-revealing names.</li>
+<li>Small meaningful extractions (functions/methods).</li>
+<li>Safe deduplication of repeated logic.</li>
+<li>Dead code removal when confidence is high.</li>
+<li>Flattening nested control flow where reasonable.</li>
+</ul>
+</li>
+<li>Run tests after each change. If a test fails and the fix isn't obvious, revert and report.</li>
+</ol>
+</section>
+<section class="section">
+<h2>Quality checklist</h2>
+<p>Verify after each simplification step:  </p>
+<p><strong>Code quality</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Functions &lt; 50 lines</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Functions do one thing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No duplicated code remaining</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Descriptive names (variables, functions, classes)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No magic numbers/strings</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dead code removed</li>
+</ul>
+<p><strong>Structure</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Related code together</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Clear module boundaries preserved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No circular dependencies introduced</li>
+</ul>
+<p><strong>Safety</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> External behavior unchanged</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All existing tests still pass</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Edge cases considered</li>
+</ul>
+</section>
+<section class="section">
+<h2>Output format</h2>
+<p>Use <code>templates/refactor-plan.md</code> at plugin root as the output template.</p>
+<ol>
+<li>Simplification findings.</li>
+<li>Proposed small improvements.</li>
+<li>Risks and invariants.</li>
+<li>Step 1 patch only.</li>
+<li>Optional next simplifications.</li>
+</ol>
+<p>Write output to the plan file — read <code>config.md</code> at plugin root for path resolution.<br>
+Default fallback: <code>.local/tasks/refactor/refactor-plan.md</code>.</p>
+</section>
+<section class="section">
+<h2>Rules</h2>
+<p>Follow <code>PRINCIPLES.md</code> at plugin root.</p>
+<ul>
+<li>Do not combine multiple large simplifications into one step; keep patches reviewable.</li>
+<li>Avoid micro-optimizations unless they also improve clarity.</li>
+<li>Be explicit about any assumptions when removing or deduplicating code.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Stop Conditions</h2>
+<p>Stop and ask if:</p>
+<ul>
+<li>Plan file is missing or the step tagged <code>[simplify]</code> cannot be found</li>
+<li>Simplification may change behavior — flag and confirm before acting</li>
+<li>Tests fail and the fix is not obvious — revert and report</li>
+</ul>
+</section>
+<section class="section">
+<h2>Example</h2>
+<h3>Scenario (before)</h3>
+<pre><code class="language-csharp">public decimal CalculateTotal(Order order)
+{
+    decimal total = 0;
+    if (order != null &amp;&amp; order.Items != null)
+    {
+        foreach (var item in order.Items)
+        {
+            if (item != null &amp;&amp; item.Quantity &gt; 0 &amp;&amp; item.Price &gt; 0)
+            {
+                if (item.DiscountCode != null)
+                {
+                    total += item.Price * item.Quantity * GetDiscountFactor(item.DiscountCode);
+                }
+                else
+                {
+                    total += item.Price * item.Quantity;
+                }
+            }
+        }
+    }
+    return total;
+}
+</code></pre>
+<h3>Simplification ideas</h3>
+<ul>
+<li>Guard clause for <code>order</code> and <code>Items</code>.</li>
+<li>Extract line-calculation into a separate method.</li>
+<li>Introduce clearer names for intermediate results.</li>
+</ul>
+<h3>Scenario (after, conceptually)</h3>
+<pre><code class="language-csharp">public decimal CalculateTotal(Order order)
+{
+    if (order?.Items == null) return 0;
+
+    return order.Items
+        .Where(IsBillableItem)
+        .Sum(CalculateLineTotal);
+}
+
+private bool IsBillableItem(OrderItem item)
+{
+    return item != null &amp;&amp; item.Quantity &gt; 0 &amp;&amp; item.Price &gt; 0;
+}
+
+private decimal CalculateLineTotal(OrderItem item)
+{
+    var baseTotal = item.Price * item.Quantity;
+    var discountFactor = item.DiscountCode != null
+        ? GetDiscountFactor(item.DiscountCode)
+        : 1m;
+
+    return baseTotal * discountFactor;
+}
+</code></pre>
+<ul>
+<li>Behavior is unchanged, but:<ul>
+<li>nesting is reduced,</li>
+<li>responsibilities are clearer,</li>
+<li>testability is improved.</li>
+</ul>
+</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

@@ -32,13 +32,7 @@ All skills and agents in this plugin reference these paths. Resolve relative to 
 
 ## Templates
 
-Located in `templates/` relative to the plugin root.
-
-| Variable | File |
-|----------|------|
-| `PLAN_TEMPLATE` | `templates/plan-template.md` |
-| `CHANGELOG_TEMPLATE` | `templates/changelog-template.md` |
-| `REVIEW_TEMPLATE` | `templates/review-template.md` |
+Each skill owns its templates locally. No shared template variables needed.
 
 ---
 

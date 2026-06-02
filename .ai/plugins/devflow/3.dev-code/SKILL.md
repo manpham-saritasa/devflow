@@ -72,7 +72,7 @@ Before writing the changelog, ask the user:
 
 ### Step 6: Write Changelog
 
-Append a new iteration to `TASK_DIR/changelog.md` using `CHANGELOG_TEMPLATE`:
+Append a new iteration to `TASK_DIR/changelog.md` using `templates/changelog-template.md`:
 - `## Iteration [N] — YYYY-MM-DD HH:MM ±TZ`
 - `**Trigger:**`, `**Status:**`, `**Delivery:**`, `**Plan reference:**`
 - Populate relevant sections: `### Added`, `### Changed`, `### Fixed`

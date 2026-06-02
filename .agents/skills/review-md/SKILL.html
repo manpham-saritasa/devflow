@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Skill</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">name</span>review-md</div>
+    <div class="meta-item"><span class="meta-label">version</span>0.3.0</div>
+    <div class="meta-item"><span class="meta-label">description</span>Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, structural issues, and external dependencies. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.</div>
+  </div>
+</section>
+<section class="section">
+<h1>Review Markdown Files</h1>
+<p>Audit all <code>.md</code> files in a target subtree for duplication and common mistakes.<br>
+Read every file, then evaluate across all check dimensions.</p>
+</section>
+<section class="section">
+<h2>Target</h2>
+<p>If user specifies a path (e.g. <code>.ai/plugins/refflow</code>), scope to that subtree.<br>
+If no path given, ask which subtree to review.</p>
+</section>
+<section class="section">
+<h2>Check dimensions</h2>
+<h3>1. Duplicates</h3>
+<ul>
+<li><strong>Within a file</strong>: Any section, paragraph, block, or path that appears multiple times with similar wording. Includes repeated path descriptions — example: <code>.local/handoffs/</code> described identically in intro, rules, and output format.</li>
+<li><strong>Across files</strong>: Same heading + same body appearing in multiple files. Flag if near-identical (≥80% match).</li>
+<li><strong>Config duplication</strong>: Same path, value, or variable defined in multiple files instead of <code>config.md</code> or <code>PRINCIPLES.md</code>.</li>
+<li><strong>Concepts</strong>: Same idea explained in multiple skills without cross-reference. Example: "Preserve behavior" explained in 3 SKILL.md files instead of once in PRINCIPLES.md.</li>
+</ul>
+<h3>2. Frontmatter</h3>
+<p>Check every <code>.md</code> file with <code>---</code> delimiters:</p>
+<ul>
+<li><strong>Missing delimiters</strong>: First line must be <code>---</code>, frontmatter must close with <code>---</code>.</li>
+<li><strong>Missing <code>name</code></strong>: Every SKILL.md must have <code>name:</code> matching the directory name.</li>
+<li><strong>Missing <code>description</code></strong>: Every SKILL.md and agent must have a description.</li>
+<li><strong>Missing <code>version</code></strong>: Newer skills should have <code>version:</code> field.</li>
+<li><strong>Inline YAML without delimiters</strong>: Raw <code>name: value</code> at top of file without <code>---</code> wrapping.</li>
+<li><strong>HTML-corrupted files</strong>: <code>.md</code> files that contain <code>&lt;!DOCTYPE html&gt;</code> or <code>&lt;html&gt;</code> — likely overwritten by md-to-html conversion.</li>
+</ul>
+<h3>3. Stale references</h3>
+<ul>
+<li><strong>Dead paths</strong>: Any file path reference (e.g. <code>skills/grill/SKILL.md</code>) where the file doesn't exist.</li>
+<li><strong>Old names</strong>: Any reference to a renamed skill, plugin, or agent (e.g. <code>dev-refactor</code> after rename to <code>refflow</code>).</li>
+<li><strong>Ghost citations</strong>: Placeholder references like <code>[web:306]</code>, <code>[TODO]</code>, <code>[FIXME]</code>, <code>[XXX]</code>.</li>
+</ul>
+<h3>4. Inconsistency</h3>
+<ul>
+<li><strong>Pattern mismatch</strong>: Same section (e.g. "When to use") formatted differently across sibling files.</li>
+<li><strong>Naming mismatch</strong>: Skill name in frontmatter doesn't match directory name.</li>
+<li><strong>Version mismatch</strong>: Different <code>version:</code> values across files in the same plugin.</li>
+<li><strong>Table of contents mismatch</strong>: README file map doesn't match actual directory contents (missing files, extra entries, wrong order).</li>
+</ul>
+<h3>5. Config compliance</h3>
+<ul>
+<li><strong>Hardcoded paths</strong>: Paths like <code>.local/work/refactor-plan.md</code> that should reference <code>config.md</code> instead.</li>
+<li><strong>Missing from config</strong>: Values referenced by multiple files but not centralized in <code>config.md</code>.</li>
+<li><strong>Config variable mismatch</strong>: UPPER_CASE variable names used in files but not defined in <code>config.md</code>.</li>
+</ul>
+<h3>6. Cross-references</h3>
+<ul>
+<li><strong>Orphan references</strong>: Skill A says "use skill B", but skill B doesn't exist or has a different name.</li>
+<li><strong>Circular references</strong>: A → B → A dependency chain.</li>
+<li><strong>Missing cross-ref</strong>: Related skills without mutual references.</li>
+</ul>
+<h3>7. Structure</h3>
+<ul>
+<li><strong>Empty files</strong>: <code>.md</code> files with no content or only frontmatter.</li>
+<li><strong>Missing sections</strong>: SKILL.md without "When to use", "Rules", or equivalent.</li>
+<li><strong>Unexpected files</strong>: Files that don't belong in a skills/plugins/agents folder (e.g. <code>.DS_Store</code>, temp files).</li>
+<li><strong>File too long</strong>: Skills &gt; 300 lines, agents &gt; 200 lines, prompts &gt; 150 lines, rules &gt; 500 lines — LLM context gets diluted. Suggest splitting.</li>
+<li><strong>File too short</strong>: Skills &lt; 20 lines, agents &lt; 15 lines — likely missing sections.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Ideal</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Type">Skill</td>
+<td data-label="Ideal">50–200</td>
+<td data-label="Max">300</td>
+</tr>
+<tr>
+<td data-label="Type">Agent</td>
+<td data-label="Ideal">50–150</td>
+<td data-label="Max">200</td>
+</tr>
+<tr>
+<td data-label="Type">Prompt</td>
+<td data-label="Ideal">10–100</td>
+<td data-label="Max">150</td>
+</tr>
+<tr>
+<td data-label="Type">Rule / Instruction</td>
+<td data-label="Ideal">80–300</td>
+<td data-label="Max">500</td>
+</tr>
+<tr>
+<td data-label="Type">Plugin config / principles</td>
+<td data-label="Ideal">20–100</td>
+<td data-label="Max">150</td>
+</tr>
+</tbody>
+</table>
+<h3>8. Formatting</h3>
+<ul>
+<li><strong>Mixed heading styles</strong>: <code>## Section</code> vs <code>## section</code> vs <code>## Section:</code> in the same file.</li>
+<li><strong>Broken markdown</strong>: Unclosed code blocks, mismatched backticks, invalid tables.</li>
+<li><strong>Long lines</strong>: Paragraphs &gt; 120 chars that should be wrapped.</li>
+<li><strong>Trailing whitespace</strong>: Lines ending with spaces.</li>
+</ul>
+<h3>9. Data privacy</h3>
+<p>Flag anything that looks like real data. Skills, plugins, agents, and rules<br>
+should use placeholders — never real values.</p>
+<ul>
+<li><strong>Emails</strong>: Anything matching <code>@</code> that isn't clearly a placeholder (e.g. <code>user@example.com</code> is OK, <code>john@realcompany.com</code> is not).</li>
+<li><strong>Names</strong>: Full names that look like real people (placeholders like <code>John Doe</code>, <code>Jane Smith</code> are OK).</li>
+<li><strong>Company names</strong>: Real company names (except in <code>config.md</code> where they may be necessary as examples).</li>
+<li><strong>API keys / tokens</strong>: Any string matching key patterns (<code>sk-</code>, <code>ghp_</code>, <code>xoxb-</code>, <code>JWT</code>, long hex/base64 strings).</li>
+<li><strong>URLs / IPs</strong>: Real URLs or IPs that aren't <code>example.com</code>, <code>localhost</code>, <code>127.0.0.1</code>, or similarly obvious placeholders.</li>
+<li><strong>Project names</strong>: Internal project codenames or product names that shouldn't be public.</li>
+<li><strong>Client data</strong>: Names, IDs, account numbers, addresses, phone numbers.</li>
+<li><strong>Secrets in code blocks</strong>: Check code examples for accidentally pasted real values.</li>
+</ul>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>Flag anything suspicious. User decides if it's real.</li>
+<li>Placeholder patterns that are clearly fake (e.g. <code>test@example.com</code>, <code>abc123</code>, <code>my-token</code>) are fine.</li>
+<li><code>config.md</code> may contain real paths relative to the repo — that's OK.</li>
+<li>If unsure, flag it and ask: "Real or placeholder?"</li>
+</ul>
+<h3>10. Completeness</h3>
+<p>Check that the content forms a closed loop — no gaps, no overlaps, nothing missing.</p>
+<ul>
+<li><strong>Coverage gaps</strong>: Does the workflow have missing steps? Example: a plugin with "plan → execute → ship" but no review step.</li>
+<li><strong>Overlapping responsibilities</strong>: Do two skills claim the same job? Example: both dev-review and 6.verify check code quality.</li>
+<li><strong>Missing edge cases</strong>: Are error states, empty inputs, and failure paths handled? Example: "What if plan.md is corrupt?"</li>
+<li><strong>Missing stop conditions</strong>: Does every skill define when to stop and ask the user?</li>
+<li><strong>Missing triggers</strong>: Can the user invoke every skill? Are there dead-end skills with no entry point?</li>
+<li><strong>Missing cross-references</strong>: If skill A delegates to skill B, does skill B reference back?</li>
+<li><strong>Missing output destinations</strong>: Does every skill produce its output somewhere (file, chat, or both)?</li>
+<li><strong>Orphan outputs</strong>: Does any file get written but never read by another skill?</li>
+<li><strong>Unreachable paths</strong>: Can every "When to use" condition actually be triggered by a user?</li>
+<li><strong>Circular closure</strong>: Trace the full lifecycle. Does it start and end cleanly, or are there dangling states?</li>
+</ul>
+<h3>11. External dependencies</h3>
+<p>Detect every external skill, plugin, or agent the audited files depend on.<br>
+Notify the user of all dependencies found — so they know what else is coupled.  </p>
+<p>Check for references to:</p>
+<ul>
+<li>Other skills (by name, path, or trigger keyword)</li>
+<li>Other plugins (by name or path)</li>
+<li>Other agents (by name or path)</li>
+<li>Shared config files outside the audit target</li>
+</ul>
+<p>For each dependency:</p>
+<ul>
+<li>Verify it exists in the repo.</li>
+<li>Classify: required (skill breaks without it) vs optional (enhancement / fallback).</li>
+<li>Flag if the dependency itself has issues (missing, renamed, stale).</li>
+</ul>
+<p>Example: <code>change-report</code> referencing <code>dev-commit</code> → flag it, note it's optional.</p>
+</section>
+<section class="section">
+<h2>Output format</h2>
+<pre><code>## Review — [target path]
+
+Files checked: [N]
+Date: [YYYY-MM-DD]
+
+### Duplicates
+
+| # | Type | Location | Detail | Fix |
+|---|------|----------|--------|-----|
+
+### Frontmatter issues
+
+| # | File | Issue | Fix |
+|---|------|-------|-----|
+
+### Stale references
+
+| # | File | Reference | Issue | Fix |
+|---|------|-----------|-------|-----|
+
+### Inconsistency
+
+| # | Files | Issue | Fix |
+|---|-------|-------|-----|
+
+### Config compliance
+
+| # | File | Issue | Fix |
+|---|------|-------|-----|
+
+### Cross-references
+
+| # | From | To | Issue | Fix |
+|---|------|----|-------|-----|
+
+### Structure
+
+| # | File | Issue | Fix |
+|---|------|-------|-----|
+
+### Formatting
+
+| # | File | Issue | Fix |
+|---|------|-------|-----|
+
+### Data privacy
+
+| # | File | Pattern | Detail | Action |
+|---|------|---------|--------|--------|
+
+### Completeness
+
+| # | Area | Gap | Severity | Fix |
+|---|------|-----|----------|-----|
+
+### External dependencies
+
+| # | Dependency | Type | Required? | Status |
+|---|------------|------|-----------|--------|
+
+### Summary
+
+- Duplicates: [N]
+- Frontmatter: [N]
+- Stale refs: [N]
+- Inconsistency: [N]
+- Config: [N]
+- Cross-refs: [N]
+- Structure: [N]
+- Formatting: [N]
+- Privacy: [N]
+- Completeness: [N]
+- Dependencies: [N]
+
+### Verdict
+
+[Clean / Minor issues / Needs work]
+</code></pre>
+</section>
+<section class="section">
+<h2>Rules</h2>
+<ul>
+<li>Read every <code>.md</code> file in the target subtree before reporting.</li>
+<li>If target has 0 <code>.md</code> files, report and stop: "No markdown files found."</li>
+<li>If target &gt; 50 files, sample key files and note sampling.</li>
+<li>Don't skip dimensions. If clean, note: "No issues found."</li>
+<li>Sort findings within each section by severity (worst first).</li>
+<li>Report exact file paths and line numbers or headings.</li>
+<li>Flag duplicates even if they're minor — they grow over time.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>
