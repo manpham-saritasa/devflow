@@ -7,29 +7,6 @@ triggers:
   - "release-note --full"
 ---
 
-## When to Use
-
-- `release-note "API next version"` — by release name
-- `release-note https://saritasa.atlassian.net/projects/PROJ/versions/123` — by URL
-- `release-note --full "API next version"` — include task IDs and URLs for internal review
-- Generate client-facing changelog before a release
-
-## Flags
-
-| Flag | Behavior |
-|------|----------|
-| (none) | Client copy only — no task IDs, clean for sharing |
-| `--full` | Internal copy — includes task IDs and clickable JIRA URLs |
-
-## Credentials
-
-Read from `.env` or `.env.local` in repo root:
-```
-JIRA_COMPANY_DOMAIN=saritasa
-JIRA_EMAIL=you@saritasa.com
-JIRA_API_TOKEN=your-token
-```
-
 ## Workflow
 
 ### Step 1: Parse Input
@@ -139,4 +116,27 @@ Show total counts at the bottom:
 ```
 Total: [N] tasks ([N] changed, [N] fixed)
 Release: [RELEASE_URL]
+```
+
+## When to Use
+
+- `release-note "API next version"` — by release name
+- `release-note https://saritasa.atlassian.net/projects/PROJ/versions/123` — by URL
+- `release-note --full "API next version"` — include task IDs and URLs for internal review
+- Generate client-facing changelog before a release
+
+## Flags
+
+| Flag | Behavior |
+|------|----------|
+| (none) | Client copy only — no task IDs, clean for sharing |
+| `--full` | Internal copy — includes task IDs and clickable JIRA URLs |
+
+## Credentials
+
+Read from `.env` or `.env.local` in repo root:
+```
+JIRA_COMPANY_DOMAIN=saritasa
+JIRA_EMAIL=you@saritasa.com
+JIRA_API_TOKEN=your-token
 ```
