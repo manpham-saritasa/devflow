@@ -3,9 +3,9 @@
 > Use these rules when communicating with user or creating/editing files for user.
 
 ## 1. Communication
-- When executing a skill, prefix every message with `[skill-name]` (e.g. `[dev-start] ✅ Branch ready:`).
-- End completed actions with `✅ Done.` — after statements, never after questions.
-- Prefix every question to me with `❓` — do not add `✅ Done.` on the same line.
+- End LLM's actions with `☑️ Done.` — after statements, never after questions.
+- End skill or agent execution with its name `✅ [skill-name]: Done.` — after statements, never after questions.
+- Prefix every question to me with `❓` — do not add `✅` or `✅ Done.` on the same line.
 - Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
 - If there are many solutions to choose, always show your chosen solution on top and add to the last a new option that say "Show me the detailed changes first, for option #1".
 - If unsure, say so.
