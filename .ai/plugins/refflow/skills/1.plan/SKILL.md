@@ -98,12 +98,13 @@ If something fails:
 
 Before finalizing the plan, pressure-test it against this checklist. Fix any issues inline — don't wait for a separate grill step.
 
-1. **Invariants** — Are behaviors that must not change explicit and complete?
-2. **Risks** — Does each step have a rollback path? If a step fails, what's the recovery?
-3. **Validation** — Is every verify step concrete? Specific commands, tests, checks — not "run tests".
-4. **Step size** — Is each step reversible? Single concern, < 5 files touched.
-5. **Assumptions** — Are unverified assumptions marked as risks?
-6. **Test gaps** — Are missing tests acknowledged? Manual-only checks must be explicit.
+1. **Requirements** — Are the task requirements clear and complete? If vague, ask user for clarification before proceeding.
+2. **Invariants** — Are behaviors that must not change explicit and complete?
+3. **Risks** — Does each step have a rollback path? If a step fails, what's the recovery?
+4. **Validation** — Is every verify step concrete? Specific commands, tests, checks — not "run tests".
+5. **Step size** — Is each step reversible? Single concern, < 5 files touched.
+6. **Assumptions** — Are unverified assumptions marked as risks?
+7. **Test gaps** — Are missing tests acknowledged? Manual-only checks must be explicit.
 
 If any check fails, fix the plan before writing. Mark plan header with `**(GRILLED YYYY-MM-DD)**`.
 

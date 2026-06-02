@@ -49,13 +49,14 @@ After user approval, write `TASK_DIR/plan.md` using `templates/plan-template.md`
 
 ### Step 6: Self-Grill
 
-Before finalizing, pressure-test the plan:
+Before finalizing, pressure-test both the requirements and the plan:
 
-1. **Invariants** — What must not break? Are they explicit?
-2. **Risks** — Does each change have a rollback path?
-3. **Validation** — Is every verify step concrete? (specific command, not "run tests")
-4. **Step size** — Each change reversible? Single concern?
-5. **Test gaps** — Are missing tests acknowledged?
+1. **Requirements** — Are the task requirements clear and complete? If vague, ask user for clarification before proceeding.
+2. **Invariants** — What must not break? Are they explicit?
+3. **Risks** — Does each change have a rollback path?
+4. **Validation** — Is every verify step concrete? (specific command, not "run tests")
+5. **Step size** — Each change reversible? Single concern?
+6. **Test gaps** — Are missing tests acknowledged?
 
 Fix any issues inline. Add `**(GRILLED)**` to the iteration header.
 
