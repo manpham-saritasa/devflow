@@ -143,7 +143,7 @@ If NOT `--dry-run`, `--technical-only`, `--from-pr`: ask "Proceed? (yes / no)"
 
 Skip if `--jira-only`, `--dry-run`, `--technical-only`, or `--from-pr`.
 
-Call `create-pr` skill with `KEY`, `MSG`, and `PR_BODY`. Capture `PR_URL`. See `.ai/plugins/githubflow/create-pr/SKILL.md`.
+Call `create-pr` skill with `KEY`, `MSG`, and `PR_BODY`. Capture `PR_URL`. See `.ai/plugins/githubflow/skills/create-pr/SKILL.md`.
 
 ### Step 7: Update Progress in Plan
 
@@ -155,7 +155,7 @@ Skip if `--dry-run` or `--from-pr`:
 
 Skip if `--pr-only`, `--dry-run`, `--technical-only`, `--from-pr`, or `--no-jira`.
 
-Call `jira-comment` skill with `KEY`, `JIRA_BODY` (from JIRA_TEMPLATE), and `PR_URL`. See `.ai/plugins/jiraflow/jira-comment/SKILL.md`.
+Call `jira-comment` skill with `KEY`, `JIRA_BODY` (from JIRA_TEMPLATE), and `PR_URL`. See `.ai/plugins/jiraflow/skills/jira-comment/SKILL.md`.
 
 ### Step 9: Success
 

@@ -2,7 +2,16 @@
 
 import os
 
-SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def _find_skill_dir() -> str:
+    """Return the skill root directory — finds SKILL.md, robust against nesting."""
+    path = os.path.dirname(os.path.abspath(__file__))
+    while path and not os.path.exists(os.path.join(path, "SKILL.md")):
+        parent = os.path.dirname(path)
+        if parent == path:
+            break
+        path = parent
+    return path
 
 
 class Milestones:
@@ -12,7 +21,7 @@ class Milestones:
         self._load()
 
     def _load(self):
-        path = os.path.join(SKILL_DIR, "milestones.config")
+        path = os.path.join(_find_skill_dir(), "scripts", "milestones.config")
         if not os.path.exists(path):
             return
         with open(path) as f:

@@ -1,5 +1,6 @@
 ---
 name: jira-move
+version: 0.1.0
 description: Transition a Jira issue using milestone-based workflow. Per-project transition map + shared milestones config.
 triggers:
   - "jira-move"
@@ -8,7 +9,7 @@ triggers:
 
 ## Config
 
-Read shared auth from ../../config.md. Milestones in ./milestones.config.
+Read shared auth from ../../config.md. Milestones in ./scripts/milestones.config.
 
 ## Workflow
 

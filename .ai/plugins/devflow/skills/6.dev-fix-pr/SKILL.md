@@ -187,7 +187,7 @@ If a single comment spans multiple files, list each file on its own line within 
 
 ### Step 6: Push and Resolve (§5)
 
-Call `fix-pr` skill from `.ai/plugins/githubflow/fix-pr/SKILL.md` to push and resolve threads. Then call `jira-move` with `KEY` and milestone `code-review` (non-blocking).
+Call `fix-pr` skill from `.ai/plugins/githubflow/skills/fix-pr/SKILL.md` to push and resolve threads. Then call `jira-move` with `KEY` and milestone `code-review` (non-blocking).
 
 Show summary:
 ```

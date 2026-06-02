@@ -1,6 +1,7 @@
 """Discover - explore Jira workflow, record transitions, save to project config."""
 
 import json
+import os
 import urllib.error
 import urllib.request
 
@@ -256,13 +257,22 @@ class Discoverer:
         print()
 
 
-SKILL_DIR = __import__("os").path.dirname(
-    __import__("os").path.dirname(__import__("os").path.abspath(__file__))
-)
+def _find_skill_dir() -> str:
+    """Return the skill root directory — finds SKILL.md, robust against nesting."""
+    path = os.path.dirname(os.path.abspath(__file__))
+    while path and not os.path.exists(os.path.join(path, "SKILL.md")):
+        parent = os.path.dirname(path)
+        if parent == path:
+            break
+        path = parent
+    return path
+
+
+SKILL_DIR = _find_skill_dir()
 
 
 def load_config(project_key):
-    path = f"{SKILL_DIR}/{project_key}.config"
+    path = os.path.join(_find_skill_dir(), f"{project_key}.config")
     import os as _os
 
     if not _os.path.exists(path):
