@@ -320,51 +320,126 @@ a:hover {
   <h1>Skill</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>change-report</div>
-    <div class="meta-item"><span class="meta-label">description</span>Generate a structured inline review report of all code changes made. Use when user says "change report", "creport", or wants to review recent changes without reading verbose output.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>change report, creport</div>
+    <div class="meta-item"><span class="meta-label">version</span>0.3.0</div>
+    <div class="meta-item"><span class="meta-label">description</span>Auto-detecting change report — smart preview before changes, audit after. Say "change report" and the LLM shows the right report based on current state.</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>change report, creport, change report --diff, creport --diff</div>
   </div>
 </section>
 <section class="section">
-<h2>When to Use</h2>
-<p>Append this report after finishing any code editing task. Trigger on <code>creport</code> or when user asks to see what changed.</p>
+<h2>How it works</h2>
+<p>When user says <code>creport</code> (no flags), auto-detect the phase:</p>
+<pre><code>Is there a pending plan/proposal?
+  └─ Yes → show 📋 Planned Changes (preview mode)
+  └─ No  → check git status
+              └─ Uncommitted changes exist → show ✅ Change Report (after mode)
+              └─ No uncommitted changes       → &quot;No changes planned or made.&quot;
+</code></pre>
+<p><strong>Note:</strong> Triggers (<code>creport</code>, <code>change report</code>) are AI-side keywords — the LLM picks them up from frontmatter. User-side shortcuts (like <code>cush</code>, <code>ship</code>) are separate — add <code>creport</code> to <code>.local/memory.md</code> shortcuts if you want shorthand.</p>
+</section>
+<section class="section">
+<h2>Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag">(none)</td>
+<td data-label="Behavior"><strong>Auto-detect.</strong> Shows preview if plan pending, after-report if changes made.</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--diff</code></td>
+<td data-label="Behavior">Force after mode + save <code>git diff</code> to <code>DIFF.md</code> in the skill folder</td>
+</tr>
+</tbody>
+</table>
+<h3>--diff implementation</h3>
+<ol>
+<li>Run <code>git --no-pager diff</code> to capture all uncommitted changes.</li>
+<li>Write the raw diff output to <code>DIFF.md</code> inside the skill folder, wrapped in a <code>```diff</code> code block.</li>
+<li>Prefix with <code># Change Report — YYYY-MM-DD</code> heading.</li>
+<li>Overwrite <code>DIFF.md</code> on each run. Delete after commit when no longer needed.</li>
+<li>If diff is empty, write "No uncommitted changes." instead.</li>
+</ol>
 </section>
 <section class="section">
 <h2>Rules</h2>
+<h3>Detection (auto mode)</h3>
+<p>When user says <code>creport</code> with no flag:</p>
+<ol>
+<li>Check if the LLM has stated a plan with specific files but not yet executed file edits → Preview mode.</li>
+<li>If no pending plan, run <code>git --no-pager status --short</code> to check for uncommitted changes → After mode.</li>
+<li>If neither → report "No changes planned or made" and stop.</li>
+</ol>
+<h3>Preview mode</h3>
+<ul>
+<li>Show the plan, not the result. No code changed yet.</li>
+<li>List every file that will be touched and what will happen (edit, new, rename, delete).</li>
+<li>Tag each group with a change type: <code>new</code>, <code>fix</code>, <code>refactor</code>, <code>style</code>, <code>docs</code>, <code>config</code>.</li>
+<li>Assess risk per group: low / medium / high — with a one-line reason.</li>
+<li>If the plan is unclear or scope uncertain, state that explicitly.</li>
+</ul>
+<h3>After mode</h3>
 <ul>
 <li>Write the report AFTER all code edits are complete. Do not edit files while writing it.</li>
-<li>Only report changes you actually made. Do not invent or assume.</li>
-<li>If no changes were made, report that clearly and skip the rest.</li>
-<li>Number every change so the user can reference them: "fix #3 looks wrong."</li>
+<li>Only report uncommitted changes. Committed changes mean the user already reviewed and agreed — skip them.</li>
+<li>If no uncommitted changes remain, report that clearly and skip the rest.</li>
+<li>Group changes by logical purpose:<ul>
+<li>Changes made together in the same step → one group</li>
+<li>Changes with the same purpose (e.g. all templates, all config, all renames) → one group</li>
+<li>Unrelated changes → separate groups</li>
+</ul>
+</li>
+<li>Order groups by timeline — oldest first, newest last.</li>
+<li>Number each group so the user can reference them: "group #3 looks wrong."</li>
+<li>Explanation is required for every group.</li>
 </ul>
 </section>
 <section class="section">
-<h2>Final Response: Change Report</h2>
-<pre><code class="language-text">### What Changed
+<h2>Response Templates</h2>
+<h3>Preview mode</h3>
+<pre><code class="language-text">## 📋 Planned Changes
 
-- Scope: [tiny / small / medium / large]
-- Intent: [one sentence]
+### 1: [Group title]
 
-### Files Changed
+📝 Plan: [One-line summary of the planned change]
 
-#### path/to/file.ext
 
-1. [Change title] — [why]
-- Impact: [behavioral impact, if any]
-- Review: [attention points, if any]
+- Files: path/a.md (edit), path/b.py (new)
+- Type: refactor / new / fix / docs / config
+- Why: [reason for change]
+- Risk: low / medium / high — [why]
 
-Before:
-```text
-[short snippet or concise description]
+### 2: [Group title]
+
+...
+
+### Total
+- Files: N
+- Groups: N
 </code></pre>
-<p>After:</p>
-<pre><code class="language-text">[short snippet or concise description]
+<h3>After mode: Change Report (default / <code>--diff</code>)</h3>
+<pre><code class="language-text">### 1: [Group title]
+
+🤖: [One-line summary of what changed and why]
+
+
+- Explanation: [practical impact, benefits, or what this means for the user/project]
+
+- Files: path/a.md, path/b.py
+
+### 2: [Group title]
+
+...
+
+### Integrity Check
+
+- I only changed the files and areas listed above.
+- I did not make unrelated refactors or hidden edits.
 </code></pre>
-<h3>Integrity Check</h3>
-<ul>
-<li>I only changed the files and areas listed above.</li>
-<li>I did not make unrelated refactors or hidden edits.
-```</li>
-</ul>
 </section>
   </main>
 </body>
