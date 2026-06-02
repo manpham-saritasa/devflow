@@ -1,7 +1,12 @@
 ---
 name: plan
-version: 0.1.0
+version: 0.2.0
 description: Diagnose architectural friction, coupling, unclear ownership, and maintainability problems; produce a practical roadmap before refactoring.
+triggers:
+  - "plan"
+  - "refactor"
+  - "create a plan"
+  - "review this code"
 ---
 
 # Plan
@@ -50,12 +55,51 @@ Read the matching file for your project's stack.
 
 Use `templates/refactor-plan.md` at plugin root as the output template.
 
+### Plan structure
+
+```
+## Refactor Plan: [title]
+
+### Current State
+[Brief description of how things work now]
+
+### Target State
+[Brief description of how things will work after]
+
+### Affected Files
+| File | Change | Depends on | Blocks |
+|------|--------|------------|--------|
+| path/a.ts | modify | — | Step 2 |
+| path/b.ts | create | Step 1 | — |
+
+### Execution Plan
+
+#### Phase 1: [name]
+- [ ] Step 1.1: [action] in `file.ts`
+- [ ] Verify: [how to check it worked]
+
+#### Phase 2: [name]
+- [ ] Step 2.1: [action] in `file.ts`
+- [ ] Verify: [how to check]
+
+### Rollback Plan
+If something fails:
+1. `git checkout -- [files]` for reversible steps
+2. [Manual undo steps for non-reversible]
+
+### Risks
+- [Potential issue and mitigation]
+
+### Invariants
+- Behaviors, contracts, and external effects that must not change.
+```
+
 1. Architecture summary.
 2. Original specs — capture baseline behavior: APIs, business rules, side effects, test counts.
 3. Strengths.
 4. Friction points.
-5. Recommendations.
-6. Priority roadmap.
+5. Recommendations — tagged with concern types: `[structure]`, `[simplify]`, or `[api]`.
+6. Priority roadmap — phased execution plan with verify checkboxes.
 7. Optional RFC candidates.
 
 ## Rules
@@ -76,26 +120,53 @@ A backend service has:
 
 ### Example output (abridged)
 
-1. Architecture summary  
-   - Monolithic backend with ASP.NET controllers, EF Core, and shared DTOs across domains. Controllers mix HTTP handling, transaction orchestration, and business rules.
+```
+## Refactor Plan: Extract domain logic from OrderService
 
-2. Strengths  
-   - Consistent technology stack (.NET, EF Core).  
-   - Reasonable separation between read and write paths in some areas.
+### Current State
+- Monolithic ASP.NET backend. Controllers directly use DbContext.
+- Business rules live in controllers and repositories.
+- Shared DTOs used across bounded contexts.
 
-3. Friction points  
-   - Controllers directly depend on `DbContext`, making business rules hard to reuse.  
-   - Shared `CustomerDto` and `OrderDto` used across bounded contexts, leaking internal concerns.  
-   - Transaction logic duplicated in multiple controllers and services.
+### Target State
+- Thin controllers, application services for orchestration.
+- Domain services for business rules.
+- Bounded-context-specific DTOs.
 
-4. Recommendations  
-   - Introduce application services to orchestrate use cases; keep controllers thin.  
-   - Move business rules into domain services or aggregates.  
-   - Split shared DTOs by bounded context; define mapping at the edges.  
-   - Centralize transaction and unit-of-work behavior in one cross-cutting component.
+### Affected Files
+| File | Change | Depends on | Blocks |
+|------|--------|------------|--------|
+| OrderService.cs | modify | — | Phase 2 |
+| OrderDomainService.cs | create | Phase 1 | — |
+| CustomerDto.cs | modify | Phase 3 | — |
+| OrderDto.cs | modify | Phase 3 | — |
 
-5. Priority roadmap  
-   - Phase 1: Extract application services for the 2 highest-risk controllers.  
-   - Phase 2: Move business rules from controllers into domain services.  
-   - Phase 3: Split shared DTOs and update mapping layers.  
-   - Phase 4: Introduce centralized transaction orchestration and remove duplicates.
+### Execution Plan
+
+#### Phase 1: Extract application services
+- [ ] Step 1.1: [structure] Create OrderAppService in `Orders/Application/`
+- [ ] Verify: `dotnet test Orders.Tests`, all green
+- [ ] Step 1.2: [simplify] Thin out 2 highest-risk controllers
+- [ ] Verify: API integration tests pass
+
+#### Phase 2: Move business rules to domain
+- [ ] Step 2.1: [structure] Extract OrderDomainService from OrderService
+- [ ] Verify: `dotnet test Orders.Domain.Tests`, 42/42 pass
+
+#### Phase 3: Split shared DTOs
+- [ ] Step 3.1: [api] Create bounded-context DTOs, keep old delegating
+- [ ] Verify: All endpoints return same shape
+
+### Rollback Plan
+- Phase 1-2: `git checkout --` files, re-run tests
+- Phase 3: Revert DTO changes, old DTOs still exist as fallback
+
+### Risks
+- No integration tests for email path — manual verification required
+- Phase 3 DTO split may break internal callers — audit first
+
+### Invariants
+- POST /api/orders returns same shape
+- Discount calculation unchanged
+- Email still sent on status change
+```

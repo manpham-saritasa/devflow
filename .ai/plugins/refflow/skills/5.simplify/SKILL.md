@@ -1,7 +1,11 @@
 ---
 name: simplify
-version: 0.1.0
+version: 0.2.0
 description: Reduce local complexity, improve readability, naming, and control flow, and remove small-scale friction without changing behavior.
+triggers:
+  - "simplify"
+  - "simplify this"
+  - "clean up"
 ---
 
 # Simplify
@@ -31,6 +35,73 @@ Apply this skill to:
 - JSX/template/control-flow clutter,
 - repetitive guards or response shaping.
 
+## Code Smells
+
+Use this catalog to identify and fix common smells. Pick the matching operation from the table below.
+
+### 1. Long method
+**Smell:** Method > 40 lines, does multiple things.
+**Fix:** Extract focused sub-methods. Keep top-level as orchestration.
+
+### 2. Duplicated code
+**Smell:** Same logic in 2+ places.
+**Fix:** Extract shared function. One source of truth.
+
+### 3. Large class / God object
+**Smell:** One class with 10+ unrelated responsibilities.
+**Fix:** Split by concern. Each class one reason to change.
+
+### 4. Long parameter list
+**Smell:** Function with 5+ parameters.
+**Fix:** Introduce parameter object or builder.
+
+### 5. Feature envy
+**Smell:** Method uses another object's data more than its own.
+**Fix:** Move method to the object that owns the data.
+
+### 6. Primitive obsession
+**Smell:** Using strings/ints for domain concepts (email, phone, status).
+**Fix:** Wrap in value objects with validation.
+
+### 7. Magic numbers / strings
+**Smell:** Unexplained literals (`if status === 2`, `* 0.15`).
+**Fix:** Named constants with intent-revealing names.
+
+### 8. Nested conditionals
+**Smell:** Arrow code — 4+ levels of nesting.
+**Fix:** Guard clauses, early returns, flatten.
+
+### 9. Dead code
+**Smell:** Unused functions, imports, commented-out blocks.
+**Fix:** Delete. Git history has it if needed.
+
+### 10. Inappropriate intimacy
+**Smell:** One class reaches deep into another's internals.
+**Fix:** Ask, don't reach. Add proper accessors or move behavior.
+
+## Refactoring Operations
+
+Quick reference — pick the right operation for each smell.
+
+| Operation | When to use |
+|-----------|-------------|
+| Extract Method | Code fragment can be named and reused |
+| Inline Method | Method body is clearer than the call |
+| Extract Class | One class doing two things |
+| Inline Class | Class adds no value, merge back |
+| Rename | Name doesn't reveal intent |
+| Introduce Parameter Object | 5+ parameters that travel together |
+| Replace Conditional with Polymorphism | Switch/if on type code |
+| Replace Magic Number with Constant | Unexplained literal |
+| Decompose Conditional | Complex if-condition, extract to method |
+| Consolidate Conditional | Same action from different conditions |
+| Replace Nested Conditional with Guard Clauses | Arrow code, early returns |
+| Introduce Null Object | Repeated null checks on same type |
+| Replace Type Code with Class/Enum | Primitive used as type discriminator |
+| Replace Inheritance with Delegation | Subclass only uses part of parent |
+| Pull Up / Push Down Method | Method in wrong class in hierarchy |
+| Remove Dead Code | Unused, unreachable, commented-out |
+
 ## Framework-specific notes
 
 See `references/INDEX.md` at plugin root for stack-specific guidance.
@@ -40,14 +111,38 @@ Read the matching file for your project's stack.
 
 1. Read the plan file and find the step tagged `[simplify]`.
 2. Run relevant tests before touching anything. If any test fails, report and stop.
-3. Apply transformations:
+3. **Scan the entire target file for every smell in the catalog.** Don't fix the first smell you see — count occurrences. Rank by frequency. Fix the most duplicated pattern first.
+4. Match the smell to an operation from the catalog above.
+5. Apply the transformation:
    - Guard clauses for early exits.
    - Clearer, intent-revealing names.
    - Small meaningful extractions (functions/methods).
    - Safe deduplication of repeated logic.
    - Dead code removal when confidence is high.
    - Flattening nested control flow where reasonable.
-4. Run tests after each change. If a test fails and the fix isn't obvious, revert and report.
+6. Run tests after each change. If a test fails and the fix isn't obvious, revert and report.
+
+## Quality checklist
+
+Verify after each simplification step:
+
+**Code quality**
+- [ ] Functions < 50 lines
+- [ ] Functions do one thing
+- [ ] No duplicated code remaining
+- [ ] Descriptive names (variables, functions, classes)
+- [ ] No magic numbers/strings
+- [ ] Dead code removed
+
+**Structure**
+- [ ] Related code together
+- [ ] Clear module boundaries preserved
+- [ ] No circular dependencies introduced
+
+**Safety**
+- [ ] External behavior unchanged
+- [ ] All existing tests still pass
+- [ ] Edge cases considered
 
 ## Output format
 

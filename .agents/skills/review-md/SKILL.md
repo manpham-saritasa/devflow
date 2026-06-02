@@ -1,6 +1,6 @@
 ---
 name: review-md
-version: 0.2.1
+version: 0.3.0
 description: Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, structural issues, and external dependencies. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.
 ---
 
@@ -64,6 +64,16 @@ Check every `.md` file with `---` delimiters:
 - **Empty files**: `.md` files with no content or only frontmatter.
 - **Missing sections**: SKILL.md without "When to use", "Rules", or equivalent.
 - **Unexpected files**: Files that don't belong in a skills/plugins/agents folder (e.g. `.DS_Store`, temp files).
+- **File too long**: Skills > 300 lines, agents > 200 lines, prompts > 150 lines, rules > 500 lines — LLM context gets diluted. Suggest splitting.
+- **File too short**: Skills < 20 lines, agents < 15 lines — likely missing sections.
+
+| Type | Ideal | Max |
+|------|-------|-----|
+| Skill | 50–200 | 300 |
+| Agent | 50–150 | 200 |
+| Prompt | 10–100 | 150 |
+| Rule / Instruction | 80–300 | 500 |
+| Plugin config / principles | 20–100 | 150 |
 
 ### 8. Formatting
 

@@ -1,9 +1,11 @@
 ---
 name: dev-start
+version: 0.1.0
 description: Start a gitflow branch for a Jira task. Defaults to gitflow mode (branch in main clone). Supports worktree mode (--worktree). Creates feature, hotfix, or release branches.
 triggers:
   - "dev-start"
   - "devstart"
+  - "dev start"
 ---
 
 ## Paths
@@ -13,6 +15,7 @@ Read shared paths from `config.md`.
 ## When to Use
 
 - `dev-start KEY` — feature branch from develop
+- `dev-start KEY summary` — feature branch with custom summary (skips Jira fetch)
 - `dev-start KEY --hotfix` — hotfix from main
 - `dev-start KEY --release` — release branch
 - `dev-start KEY --worktree` — isolated worktree
@@ -59,9 +62,12 @@ All development happens inside the worktree — the main repo stays clean.
 
 - Extract `KEY` from user input (regex: `([A-Z0-9]+-\d+)`).
 - Parse flags: `--hotfix`, `--release`, `--force`, `--worktree`, `--dry-run`.
+- Remaining words after KEY and flags become the summary (used in Step 4).
 - If no KEY: ask user for a Jira task key. Stop if none provided.
 
 **Mode:** `--worktree` for worktree, default is gitflow.
+
+**Output to user:** Show `[KEY]` parsed, `[MODE]` selected, and the expected branch type. Do not show branch name yet (built in Step 5).
 
 ### Step 2: Check for Existing Branch
 
@@ -110,7 +116,7 @@ Run `git branch --show-current`.
 
 When auto-hotfix mode is active (single-branch repo), the `--hotfix` row applies instead of the default.
 
-**Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, auto-switch to hotfix mode. Branch from `main` using hotfix naming (`hotfix/[key]-[summary]`). No prompt needed.
+**Single-branch repos (no `develop`):** When no flags are set and `develop` does not exist locally or on remote, but `main` does, auto-switch to hotfix mode. Branch from `main` using hotfix naming (`hotfix/[key]-[summary]`). No prompt needed. The base branch for Step 8 becomes `main`.
 
 **For `--hotfix`:** also check for uncommitted changes and that `main` is up to date:
 
@@ -128,9 +134,13 @@ If behind: "`main` is behind origin by [N] commits. Pull latest `main` before cr
 
 Stop if branch requirements not met (except `--force`, which skips all of Step 3).
 
-### Step 4: Fetch Task Summary
+### Step 4: Resolve Task Summary
 
-Prefer the shared `dev-get` skill to fetch Jira task context first. Read `.local/tasks/[KEY]/task.md` and `.local/tasks/[KEY]/raw.md` when present.
+Check if the user provided a summary alongside the key in the original input (e.g. `dev-start DEV-15 login-with-google`). Extract anything after the KEY as the summary.
+
+**If user provided a summary:** Use it directly. Skip Jira fetch — no need to query. Format: lowercase, words separated by hyphens. Proceed to Step 5.
+
+**If no summary provided:** Prefer the shared `dev-get` skill to fetch Jira task context. Read `.local/tasks/[KEY]/task.md` and `.local/tasks/[KEY]/raw.md` when present.
 
 If the task files are missing, run `dev-get [KEY]` to populate them, then use the saved Jira summary to build the branch name.
 
@@ -189,7 +199,7 @@ If `TASK_DIR/task.md` or `TASK_DIR/raw.md` is missing, prefer running `dev-get [
 
 ### Step 8: Create Branch
 
-**Pre-flight — fetch latest from base branch:**
+**Output to user:** `✅ New branch created: [BRANCH_NAME]` before proceeding to next steps.
 
 Always fetch and pull the base branch before creating the worktree to ensure the worktree starts from the latest source.
 
@@ -204,6 +214,8 @@ Determine the base branch based on flags:
 
 When auto-hotfix mode is active (single-branch repo), `main` is used as the base branch.
 
+### Pre-flight
+
 ```bash
 git fetch origin [BASE_BRANCH]
 git pull origin [BASE_BRANCH]
@@ -213,7 +225,7 @@ If fetch or pull fails: "Failed to fetch/pull `[BASE_BRANCH]`. Check your networ
 
 ---
 
-**Pre-flight checks:**
+### Branch name check
 
 Check the branch name is not already in use:
 ```bash
@@ -308,6 +320,6 @@ You are already on the branch. Start:
   Plan only:  /dev-plan [KEY]
 ```
 
-### Step 10: Update Jira Status
+### Step 10: Update Jira Status `[hook — non-critical]`
 
 Call `jira-move` skill with `KEY` and milestone `in-progress`. Non-blocking — continue on failure.
