@@ -1,6 +1,6 @@
 ---
 name: review-md
-version: 0.2.0
+version: 0.2.1
 description: Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, structural issues, and external dependencies. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.
 ---
 
@@ -18,7 +18,7 @@ If no path given, ask which subtree to review.
 
 ### 1. Duplicates
 
-- **Within a file**: Any section, paragraph, or block that appears twice in the same file.
+- **Within a file**: Any section, paragraph, block, or path that appears multiple times with similar wording. Includes repeated path descriptions — example: `.local/handoffs/` described identically in intro, rules, and output format.
 - **Across files**: Same heading + same body appearing in multiple files. Flag if near-identical (≥80% match).
 - **Config duplication**: Same path, value, or variable defined in multiple files instead of `config.md` or `PRINCIPLES.md`.
 - **Concepts**: Same idea explained in multiple skills without cross-reference. Example: "Preserve behavior" explained in 3 SKILL.md files instead of once in PRINCIPLES.md.
