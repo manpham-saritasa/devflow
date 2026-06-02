@@ -50,14 +50,11 @@ curl -s -u "[JIRA_EMAIL]:[JIRA_API_TOKEN]" \
 
 ### Step 3: Get Tasks in Release
 
-Fetch all issues with this fixVersion:
+Fetch all issues with this fixVersion using GET:
 ```bash
 curl -s -u "[JIRA_EMAIL]:[JIRA_API_TOKEN]" \
-  "https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/search/jql" \
-  --data-urlencode "jql=fixVersion=[VERSION_ID]" \
-  --data-urlencode "fields=summary,issuetype" \
-  --data-urlencode "maxResults=200" \
-  | jq '.issues[] | {key, summary: .fields.summary, type: .fields.issuetype.name}'
+  -H "Accept: application/json" \
+  "https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/search/jql?jql=fixVersion%3D[VERSION_ID]&fields=summary,issuetype&maxResults=200"
 ```
 
 ### Step 4: Categorize and Summarize
@@ -71,57 +68,48 @@ Categorize each task:
 | Sub-task | Follow parent category |
 | Epic, Spike, Tech Debt | Include in **Changed** |
 
-**Summarize each task** into 1 short line.
+**Summarize each task** into a short, past-tense bullet. One line per task.
 - Client-focused: describe the user-visible outcome, not technical details.
-- Remove prefixes like "API -" or "Admin -" — they are JIRA component labels, not useful to clients.
-- Start with a past-tense verb when possible (Added, Updated, Fixed, Improved, Removed).
-
-**Group summary writing rules::**
-- Tone: professional, neutral, factual. Like a product changelog.
-- Style: one flowing sentence listing the key changes in the group. Use commas and "and" to chain related items.
-- Length: 10 to 50 words per group summary.
-- Example: "Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails."
+- Remove prefixes like "API -" or "Admin -" — Jira component labels.
+- Start with a past-tense verb: Added, Updated, Fixed, Improved, Removed.
 
 ### Step 5: Format Release Note
 
-Group related tasks by theme (e.g. AD Sync, API, Admin, Budget). Each group gets a sub-heading with a short paragraph summarizing the group. Use this format:
+Group related tasks by theme (e.g. AD Sync, API, Admin, Budget). Each group gets a sub-heading with individual task bullets. Use this format:
 
 ```
 ## Release Note — [VERSION_NAME]
 
 **[Group Name]:**
-- A short paragraph summarizing all tasks in this group as one coherent sentence or two.
-
-**[Group Name]:**
-- A short paragraph summarizing all tasks in this group.
+- Task description. (KEY)
+- Task description. (KEY)
 ```
 
 **Client copy** (no task IDs):
 ```
 ## Release Note — API next version
 
-
 **AD Sync:**
-- Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails.
+- Improved employee sync by adding supervisor mapping. (PROJ-1988)
+- Added filtering for terminated accounts. (PROJ-1989)
+- Adjusted hire dates to midnight. (PROJ-1990)
 
 **API:**
-- Updated lab sample date fields, added text positioning for master form PDFs, created version management endpoints, and added Copilot instruction files for code review.
+- Updated lab sample date fields. (PROJ-1991)
+- Added text positioning for master form PDFs. (PROJ-1992)
 ```
 
-**Internal copy** (with task IDs):
+**Internal copy** (with task IDs, `--full` flag):
 ```
 ## Release Note — API next version
 
-
 **AD Sync:**
-- [PROJ-1988, PROJ-1989, PROJ-1990, PROJ-1991] Improved employee sync by adding supervisor mapping, filtering out terminated accounts, adjusting hire dates to midnight, and adding outlier reports for personal emails.
-```
+- [PROJ-1988](https://JIRA/browse/PROJ-1988) — Improved employee sync by adding supervisor mapping.
+- [PROJ-1989](https://JIRA/browse/PROJ-1989) — Added filtering for terminated accounts.
 
-Rules:
-- Group 2-5 related tasks under a thematic sub-heading.
-- Follow the group summary writing rules from Step 4 (tone, style, length).
-- Client copy: no task IDs. Internal copy: list keys in brackets before the summary.
-- If a section has no items, omit it entirely.
+**API:**
+- [PROJ-1991](https://JIRA/browse/PROJ-1991) — Updated lab sample date fields.
+```
 
 ### Step 6: Report
 
@@ -134,7 +122,8 @@ Client copy format:
 ## Release Note — [VERSION_NAME]
 
 **[Group Name]:**
-- Group summary paragraph.
+- Task description.
+- Task description.
 ```
 
 --full format:
@@ -142,12 +131,8 @@ Client copy format:
 ## Release Note — [VERSION_NAME]
 
 **[Group Name]:**
-- [KEY, KEY] Group summary paragraph.
-
----
-Tasks:
-- [KEY](https://JIRA/browse/KEY) — Task summary
-- [KEY](https://JIRA/browse/KEY) — Task summary
+- [KEY](https://JIRA/browse/KEY) — Task description.
+- [KEY](https://JIRA/browse/KEY) — Task description.
 ```
 
 Show total counts at the bottom:
