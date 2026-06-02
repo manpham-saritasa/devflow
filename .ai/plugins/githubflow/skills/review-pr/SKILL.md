@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Review a GitHub PR across quality dimensions using PR diff and metadata. Use when user wants a code review of any PR by URL.
+description: Review a GitHub PR across 11 dimensions using PR metadata, diff, git history, and repo rules. Deep review with git blame is default — use --quick for diff-only.
 triggers:
   - "review-pr"
   - "reviewpr"
@@ -8,16 +8,16 @@ triggers:
 
 ## When to Use
 
-- `/review-pr [URL]` — review any PR by GitHub URL
+- `/review-pr [URL]` — deep review (diff + git blame + repo rules)
+- `/review-pr --quick [URL]` — quick review (PR diff only, no local clone needed)
 - `/review-pr` — auto-detect PR from current branch
-- `/review-pr --code-base [URL]` — deep review with local git history and repo rules
 
 ## Flags
 
 | Flag | Behavior |
 |------|----------|
-| (none) | Review from PR diff and metadata only |
-| `--code-base` | Also check local git history, repo rules, and related PR comments. Requires a local clone of the repo. |
+| (none) | Deep review — diff + git blame + agent rules + related PRs. Requires local clone. Falls back to quick if not available. |
+| `--quick` | Quick review — PR diff and metadata only. No local clone needed. |
 
 ## Workflow
 
@@ -38,11 +38,11 @@ gh pr view [PR_NUMBER] --repo [OWNER]/[REPO] --json title,body,headRefName,baseR
 gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 ```
 
-### Step 2a: Verify Codebase Match (`--code-base` only)
+### Step 2a: Verify Codebase Match
 
-Skip if `--code-base` is not set.
+Skip only if `--quick` flag is set.
 
-Check that the local clone matches the PR's base branch. If they differ, git blame and history checks will be against wrong code.
+Check that the local clone matches the PR's base branch. If no local clone or mismatch, warn user and fall back to quick review.
 
 ```bash
 git rev-parse HEAD
@@ -68,9 +68,9 @@ Review the PR diff and metadata across these dimensions. Label every finding: `[
 | 7 | Testing | Coverage, adequacy of verification |
 | 8 | Documentation | Changelog, inline docs, README updates |
 
-### Step 4: Deep Review (3 extra dimensions, `--code-base` only)
+### Step 4: Deep Review (3 extra dimensions)
 
-Skip if `--code-base` flag is not set. Requires a local clone of the repository.
+Skip only if `--quick` flag is set. Requires a local clone of the repository. If unavailable, warn and note in output.
 
 #### 4a. AI Agent Rules Check
 
@@ -120,8 +120,16 @@ Check:
 ## PR Review — [PR_TITLE]
 
 ### Summary
-- Files changed: [N] | +[additions] -[deletions] | [N] commits
-- Deep review: [enabled / not enabled]
+- Files: [N] | +[additions] -[deletions] | [N] commits
+- Status: [OPEN / MERGED] | Reviewers: [names]
+
+### What it does
+[2-3 sentence plain-English summary of the feature/change]
+
+| Change | Detail |
+|--------|--------|
+| [key change 1] | [what it does and why] |
+| [key change 2] | [what it does and why] |
 
 ### Standard Findings
 
@@ -129,13 +137,15 @@ Check:
 |---|----------|-----------|-------|------------|
 | 1 | [critical/high/medium/low] | path:123 | What's wrong | How to fix |
 
-### Deep Review Findings (--code-base)
+### Deep Review Findings
 
 | # | Dimension | File:Line | Issue | Suggestion |
 |---|-----------|-----------|-------|------------|
-| 1 | Agent Rules | path:123 | Violates rule X from AGENTS.md | Fix |
-| 2 | Git History | path:456 | Same lines changed 3x in 30 days — deeper issue | Investigate |
-| 3 | Related PRs | path:789 | Same comment from PR #42 applies here | Address |
+| 1 | Agent Rules | path:123 | Violates rule X | Fix |
+| 2 | Git History | path:456 | Same lines changed 3x in 30 days | Investigate |
+| 3 | Related PRs | path:789 | Same comment from PR #42 applies | Address |
+
+*No findings if section is empty — note "None" for each dimension.*
 
 ### Verdict
 [Changes requested | Approved with suggestions | Approved]
@@ -147,7 +157,7 @@ Check:
 ✅ Review complete for [PR_TITLE]
 
 Standard issues: [N] (Critical: [N], High: [N], Medium: [N], Low: [N])
-Deep review issues: [N] (--code-base)
+Deep review: [N findings | not available — no local clone]
 Verdict: [Changes requested | Approved with suggestions | Approved]
 PR: [PR_URL]
 ```
@@ -155,7 +165,7 @@ PR: [PR_URL]
 ## Self-Check
 
 - [ ] All 8 standard dimensions reviewed?
-- [ ] If --code-base: local HEAD matches PR base branch, agent rules, git history, and related PR comments checked?
+- [ ] Deep review: agent rules, git history, and related PR comments checked? (or noted as unavailable)
 - [ ] Every finding has severity, location, and suggestion?
 - [ ] Verdict matches findings?
 - [ ] No devflow paths (TASK_DIR, config.md, .local) — only repo-root files, git, and gh CLI?
