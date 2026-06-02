@@ -4,6 +4,7 @@ import os
 import sys
 
 PLUGIN_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SKILLS_DIR = os.path.join(PLUGIN_DIR, "skills")
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(PLUGIN_DIR)))
 AGENT_FILE = os.path.join(REPO_ROOT, ".ai", "agents", "devflow.md")
 
@@ -20,8 +21,8 @@ def exists(path):
 def skills():
     """Return list of skill directories with SKILL.md."""
     result = []
-    for entry in sorted(os.listdir(PLUGIN_DIR)):
-        d = os.path.join(PLUGIN_DIR, entry)
+    for entry in sorted(os.listdir(SKILLS_DIR)):
+        d = os.path.join(SKILLS_DIR, entry)
         if os.path.isdir(d) and exists(os.path.join(d, "SKILL.md")):
             result.append(entry)
     return result
@@ -109,7 +110,7 @@ def test_agent_has_detection_table():
 
 def test_all_skills_have_frontmatter():
     for s in skills():
-        fm = parse_frontmatter(read(os.path.join(PLUGIN_DIR, s, "SKILL.md")))
+        fm = parse_frontmatter(read(os.path.join(SKILLS_DIR, s, "SKILL.md")))
         assert fm, f"{s}/SKILL.md has no frontmatter"
         assert "name" in fm, f"{s}/SKILL.md missing name"
         assert "description" in fm, f"{s}/SKILL.md missing description"
@@ -117,19 +118,19 @@ def test_all_skills_have_frontmatter():
 
 def test_all_skills_have_triggers():
     for s in skills():
-        triggers = parse_triggers(read(os.path.join(PLUGIN_DIR, s, "SKILL.md")))
+        triggers = parse_triggers(read(os.path.join(SKILLS_DIR, s, "SKILL.md")))
         assert len(triggers) > 0, f"{s}/SKILL.md has no triggers"
 
 
 def test_all_skills_have_workflow():
     for s in skills():
-        c = read(os.path.join(PLUGIN_DIR, s, "SKILL.md"))
+        c = read(os.path.join(SKILLS_DIR, s, "SKILL.md"))
         assert "## Workflow" in c, f"{s}/SKILL.md missing ## Workflow"
 
 
 def test_all_skills_reference_config():
     for s in skills():
-        c = read(os.path.join(PLUGIN_DIR, s, "SKILL.md"))
+        c = read(os.path.join(SKILLS_DIR, s, "SKILL.md"))
         assert "config.md" in c, f"{s}/SKILL.md missing config.md reference"
 
 
@@ -142,7 +143,7 @@ def test_skill_count():
 
 def test_templates_exist():
     """Templates live in their owning skill folder, not shared templates/."""
-    base = PLUGIN_DIR
+    base = SKILLS_DIR
     checks = [
         ("2.dev-plan/templates/plan-template.md", "dev-plan"),
         ("3.dev-code/templates/changelog-template.md", "dev-code"),
@@ -157,7 +158,7 @@ def test_templates_exist():
 
 def test_paths_not_duplicated():
     for s in skills():
-        lines = read(os.path.join(PLUGIN_DIR, s, "SKILL.md")).split("\n")
+        lines = read(os.path.join(SKILLS_DIR, s, "SKILL.md")).split("\n")
         matches = [
             l for l in lines if l.strip() == "Read shared paths from `config.md`."
         ]

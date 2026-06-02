@@ -1,7 +1,7 @@
 ---
 name: grill-me
 version: 0.1.0
-description: Auto-triggers on "should I..." questions. Interview the user relentlessly about any plan, design, or decision. Walk down each branch of the design tree until all trade-offs are explicit.
+description: Auto-triggers on "should I..." and "why..." questions. Interview the user relentlessly about any plan, design, or decision. Walk down each branch until all trade-offs are explicit.
 triggers:
   - "grill me"
   - "grill this"
@@ -14,7 +14,7 @@ Stress-test any plan, design, or decision through relentless questioning. Adapte
 ## When to use
 
 Trigger on `grill me`, `grill this`, or when:
-- User asks a question starting with "should I...", "should we...", "what if I..."
+- User asks "should I...", "should we...", "why...", "what if I..."
 - User says "convince me", "convince me on..."
 
 Do not use when:

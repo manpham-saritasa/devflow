@@ -45,19 +45,19 @@ Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracki
 
 ```
 devflow/
-  config.md                   ← shared paths and templates
-  agent.md                    ← orchestrator (full pipeline)
-  templates/                  ← shared templates (plan, changelog, review, ADR)
-  1.dev-start/                ← create branch (gitflow default, --worktree for worktree)
-  2.dev-plan/                 ← analyze + create execution plan
-  3.dev-code/                 ← implement planned changes
-  4.dev-review/               ← review code against plan + criteria
-  5.dev-ship-pr-jira/         ← create PR + comment Jira + generate reports
-  6.dev-fix-pr/               ← fix PR review comments (multi-round loop)
-  7.dev-finish/               ← merge PR + delete branch + cleanup
-  8.dev-adr/                  ← create Architecture Decision Record
-  9.dev-review-pr/            ← review any PR (current or past) across multiple quality dimensions
-  10.dev-push/                 ← commit all + push to origin
+  config.md                   ← shared paths
+  skills/
+    1.dev-start/              ← create branch (gitflow default, --worktree for worktree)
+    2.dev-plan/               ← analyze + create execution plan
+    3.dev-code/               ← implement planned changes
+    4.dev-review/             ← review code against plan + criteria
+    5.dev-ship-pr-jira/       ← create PR + comment Jira + generate reports
+    6.dev-fix-pr/             ← fix PR review comments (multi-round loop)
+    7.dev-finish/             ← merge PR + delete branch + cleanup
+    8.dev-adr/                ← create Architecture Decision Record
+    dev-commit/               ← stage + commit in related groups
+    dev-get/                  ← pull Jira issue into task folder
+    dev-push/                 ← commit all + push to origin
 ```
 
 ---

@@ -7,12 +7,13 @@ JIRA workflow skills for task management and release operations.
 ```
 jiraflow/
   config.md                   ← shared transitions and milestones
-  jira-urgent/                ← list tasks waiting on your reply
-  jira-mine/                  ← list your assigned tasks
-  jira-comment/               ← post a comment to a JIRA issue
-  jira-move/                  ← transition issue between statuses
-  release-add/                ← add task(s) to a JIRA release version
-  release-note/               ← generate client-friendly release notes
+  skills/
+    jira-urgent/              ← list tasks waiting on your reply
+    jira-mine/                ← list your assigned tasks
+    jira-comment/             ← post a comment to a JIRA issue
+    jira-move/                ← transition issue between statuses
+    release-add/              ← add task(s) to a JIRA release version
+    release-note/             ← generate client-friendly release notes
 ```
 
 ## Skills
