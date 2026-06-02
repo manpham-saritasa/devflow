@@ -7,13 +7,19 @@ import sys
 import urllib.request
 from datetime import datetime
 
-ROOT = os.path.dirname(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        )
-    )
-)
+
+def find_repo_root(start: str) -> str:
+    """Walk up until .git is found — robust, no nesting count."""
+    path = os.path.dirname(os.path.abspath(start))
+    while path and not os.path.exists(os.path.join(path, ".git")):
+        parent = os.path.dirname(path)
+        if parent == path:
+            break
+        path = parent
+    return path
+
+
+ROOT = find_repo_root(__file__)
 
 VERIFY_KEYWORDS = [
     "fixed",

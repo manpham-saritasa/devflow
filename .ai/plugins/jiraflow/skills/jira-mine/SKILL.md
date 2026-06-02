@@ -25,7 +25,7 @@ Read shared auth from `../../config.md`.
 Run the Python script and present its output cleanly in chat:
 
 ```bash
-python .ai/plugins/jiraflow/jira-mine/scripts/main.py [--pending | --ready]
+python .ai/plugins/jiraflow/skills/jira-mine/scripts/main.py [--pending | --ready]
 ```
 
 | Flag | Shows |

@@ -15,7 +15,7 @@ Read shared auth from ../../config.md. Milestones in ./milestones.config.
 Run the Python script:
 
 ```bash
-python .ai/plugins/jiraflow/jira-move/scripts/main.py KEY [MILESTONE] [--discover]
+python .ai/plugins/jiraflow/skills/jira-move/scripts/main.py KEY [MILESTONE] [--discover]
 ```
 
 | Command | Action |
