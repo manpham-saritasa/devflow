@@ -1,6 +1,15 @@
-# Refactor Principles
+# Refflow Principles
 
-Shared principles for all refactorflow skills. Every sub-skill follows these.
+Shared principles for all refflow skills. Every sub-skill follows these.
+
+## Invocation modes
+
+All execution skills support two modes:
+
+- **Auto mode**: Invoked by the refflow agent during the full workflow.
+- **Manual mode**: Run directly by the user. Each skill's "When to use" section specifies its manual trigger.
+
+Require a plan from `1.plan` before running any execution skill manually.
 
 ## Core principles
 

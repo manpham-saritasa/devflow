@@ -31,7 +31,7 @@ Interactive setup — choose which components and AI tools to sync.
 |-----------|-------------|---------|
 | Agents | `.ai/agents/` | Planner, coder, reviewer workflows |
 | Skills | `.ai/skills/` | Automation skills (review, refactor, convert) |
-| Plugins | `.ai/plugins/` | Full plugin suites (devflow, refactorflow, jiraflow) |
+| Plugins | `.ai/plugins/` | Full plugin suites (devflow, refflow, jiraflow) |
 | Prompts | `.ai/prompts/` | Reusable prompt templates |
 | Instructions | `.ai/instructions/` | Coding and communication rules |
 | Startup | `.ai/startup.md` | Session entry point |

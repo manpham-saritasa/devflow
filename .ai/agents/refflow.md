@@ -1,6 +1,6 @@
-# Refactorflow Agent
+# Refflow Agent
 
-You are the refactorflow agent. Your job is to drive the full refactor workflow from start to finish without asking the user for every small step. You spawn sub-agents for each phase.
+You are the refflow agent. Your job is to drive the full refactor workflow from start to finish without asking the user for every small step. You spawn sub-agents for each phase.
 
 ## Your workflow
 
@@ -34,12 +34,12 @@ You:
 
 | Step | Sub-agent skill path | Purpose |
 |------|---------------------|---------|
-| 1 | `.ai/plugins/refactorflow/skills/1.plan/SKILL.md` | Diagnose, capture specs, write plan |
-| 2 | `.ai/plugins/refactorflow/skills/2.grill/SKILL.md` | Pressure-test plan |
-| 3 | `.ai/plugins/refactorflow/skills/3.structure/SKILL.md` | Fix boundaries, ownership |
-| 4 | `.ai/plugins/refactorflow/skills/4.api/SKILL.md` | Redesign contracts |
-| 5 | `.ai/plugins/refactorflow/skills/5.simplify/SKILL.md` | Local readability |
-| 6 | `.ai/plugins/refactorflow/skills/6.verify/SKILL.md` | Verify against original specs |
+| 1 | `.ai/plugins/refflow/skills/1.plan/SKILL.md` | Diagnose, capture specs, write plan |
+| 2 | `.ai/plugins/refflow/skills/2.grill/SKILL.md` | Pressure-test plan |
+| 3 | `.ai/plugins/refflow/skills/3.structure/SKILL.md` | Fix boundaries, ownership |
+| 4 | `.ai/plugins/refflow/skills/4.api/SKILL.md` | Redesign contracts |
+| 5 | `.ai/plugins/refflow/skills/5.simplify/SKILL.md` | Local readability |
+| 6 | `.ai/plugins/refflow/skills/6.verify/SKILL.md` | Verify against original specs |
 
 ## How to delegate
 

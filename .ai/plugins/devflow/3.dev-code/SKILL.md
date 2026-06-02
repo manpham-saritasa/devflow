@@ -28,9 +28,9 @@ If `review.md` exists with unresolved findings relevant to the current iteration
 ### Step 1.5: Detect Task Type
 
 Check the plan's `**Type:**` field:
-- `**Type:** refactor` → spawn the refactorflow agent.
-  Tell user: "Refactor task detected. Handing off to refactorflow."
-  Stop — refactorflow handles the rest.
+- `**Type:** refactor` → spawn the refflow agent.
+  Tell user: "Refactor task detected. Handing off to refflow."
+  Stop — refflow handles the rest.
 - `**Type:** feature` or missing → continue to Step 2.
 
 ### Step 2: Read Codebase

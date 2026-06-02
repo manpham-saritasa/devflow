@@ -6,7 +6,7 @@
 
 | Agent | Path | Description |
 |-------|------|-------------|
-| refactorflow | `.ai/agents/refactorflow.md` | Auto-drives full refactor flow: review → grill → execute → verify |
+| refflow | `.ai/agents/refflow.md` | Auto-drives full refactor flow: review → grill → execute → verify |
 
 ## Devflow Plugin (11)
 
@@ -32,16 +32,16 @@
 | jira-task | `.ai/plugins/jiraflow/jira-task/` | `jtask` | List assigned tasks by status group |
 | jira-move | `.ai/plugins/jiraflow/jira-move/` | `jmove` | Move tasks through pipeline milestones |
 
-## Refactorflow Plugin (6)
+## Refflow Plugin (6)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
-| plan | `.ai/plugins/refactorflow/skills/1.plan/` | `refactor`, `plan` | Diagnose architecture friction, write plan |
-| grill | `.ai/plugins/refactorflow/skills/2.grill/` | `grill` | Pressure-test refactor plan |
-| structure | `.ai/plugins/refactorflow/skills/3.structure/` | — (routed) | Fix boundaries, ownership, layout |
-| api | `.ai/plugins/refactorflow/skills/4.api/` | — (routed) | Redesign contracts with migration planning |
-| simplify | `.ai/plugins/refactorflow/skills/5.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
-| verify | `.ai/plugins/refactorflow/skills/6.verify/` | `verify` | Verify against original specs + quality |
+| plan | `.ai/plugins/refflow/skills/1.plan/` | `refactor`, `plan` | Diagnose architecture friction, write plan |
+| grill | `.ai/plugins/refflow/skills/2.grill/` | `grill` | Pressure-test refactor plan |
+| structure | `.ai/plugins/refflow/skills/3.structure/` | — (routed) | Fix boundaries, ownership, layout |
+| api | `.ai/plugins/refflow/skills/4.api/` | — (routed) | Redesign contracts with migration planning |
+| simplify | `.ai/plugins/refflow/skills/5.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
+| verify | `.ai/plugins/refflow/skills/6.verify/` | `verify` | Verify against original specs + quality |
 
 ## Matt Pocock Skills (4)
 

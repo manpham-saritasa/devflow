@@ -8,7 +8,7 @@ description: Quick, test-driven refactoring for single concerns. No plan file, â
 
 Trigger on requests to refactor, clean up, restructure, simplify, or improve code structure. Never use for feature work, bug fixes, or behavior changes.
 
-For multi-step planned refactors, use `refactorflow` instead.
+For multi-step planned refactors, use `refflow` instead.
 
 ## Rules
 

@@ -7,13 +7,12 @@ description: Improve module boundaries, ownership, dependency direction, and fil
 # Structure
 
 Use this skill when the plan step is tagged `[structure]`.
-Invoked by refactorflow agent during execution.
+Invoked by refflow agent during execution.
 
 ## When to use
 
-This skill is invoked by the refactorflow agent in auto mode.
-In manual mode, run directly when a plan step is tagged `[structure]`.
-Always create a plan with 1.plan first.
+See `PRINCIPLES.md` for invocation modes.
+Manual trigger: run when a plan step is tagged `[structure]`.
 
 ## Goal
 

@@ -1,4 +1,4 @@
-# Refactorflow Plugin
+# Refflow = Refactor Flow
 
 Planning-first refactoring — review, plan, grill, execute, verify.
 Two modes: agent (auto-drives) or manual (numbered skills).
@@ -33,25 +33,25 @@ Run numbered skills in order:
 |-------|---------|
 | `plan` | Diagnose friction, coupling, ownership — writes the plan |
 | `grill` | Pressure-test plan before execution |
-| `verify` | Verify against original specs — confirm nothing broke |
 | `structure` | Fix module boundaries, dependency direction, layout |
-| `simplify` | Reduce local complexity, nesting, naming, duplication |
 | `api` | Redesign contracts with compatibility migration planning |
+| `simplify` | Reduce local complexity, nesting, naming, duplication |
+| `verify` | Verify against original specs — confirm nothing broke |
 
 ## When to use which
 
 | Scenario | Use |
 |----------|-----|
 | Quick single-file cleanup | `quick-refactor` (standalone skill) |
-| Multi-step planned refactor | `refactorflow` agent or numbered skills |
+| Multi-step planned refactor | `refflow` agent or numbered skills |
 | Rename a method, extract a helper | `quick-refactor` |
-| Split a god class, redesign boundaries | `refactorflow` |
-| "I don't know what's wrong here" | `refactorflow` (starts with 1.plan) |
+| Split a god class, redesign boundaries | `refflow` |
+| "I don't know what's wrong here" | `refflow` (starts with 1.plan) |
 
 ## File map
 
 ```
-refactorflow/
+refflow/
 ├── config.md               All configuration (paths + behavior)
 ├── README.md                This file
 ├── PRINCIPLES.md            Shared rules for all 6 skills

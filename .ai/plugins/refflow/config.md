@@ -1,4 +1,4 @@
-# Refactorflow Plugin — Shared Configuration
+# Refflow Plugin — Shared Configuration
 
 All skills and the agent reference these paths. Resolve relative to the plugin root.
 

@@ -7,7 +7,7 @@ description: Diagnose architectural friction, coupling, unclear ownership, and m
 # Plan
 
 Use this skill to review a codebase or target slice before implementation.
-Invoked by refactorflow agent when no plan exists or architecture is unclear.
+Invoked by refflow agent when no plan exists or architecture is unclear.
 
 ## When to use
 

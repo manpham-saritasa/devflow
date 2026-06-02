@@ -7,10 +7,8 @@ description: Verify refactor results against the plan's original specs, invarian
 # Verify
 
 Use this skill to verify refactor results against the plan.
-Invoked by refactorflow agent after execution completes.
-This skill is invoked by the refactorflow agent in auto mode.
-In manual mode, run directly after all plan steps are complete.
-Always create a plan with 1.plan first.
+See `PRINCIPLES.md` for invocation modes.
+Manual trigger: run after all plan steps complete.
 
 ## Goal
 

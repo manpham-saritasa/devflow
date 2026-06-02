@@ -7,12 +7,12 @@ description: Pressure-test a refactor plan against invariants, risks, validation
 # Grill
 
 Use this skill to grill a refactor plan before execution.
-Invoked by refactorflow agent when plan exists but needs hardening.
+Invoked by refflow agent when plan exists but needs hardening.
 
 ## When to use
 
-This skill is invoked by the refactorflow agent in auto mode.
-In manual mode, run directly after 1.plan to harden the plan.
+See `PRINCIPLES.md` for invocation modes.
+Manual trigger: run after `1.plan` to harden the plan.
 
 Use `grill` when:
 - a plan exists (see `config.md` at plugin root for path resolution) but is weak, vague, or risky,

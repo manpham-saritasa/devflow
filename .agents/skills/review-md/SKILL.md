@@ -1,7 +1,7 @@
 ---
 name: review-md
-version: 0.1.0
-description: Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, and structural issues. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.
+version: 0.2.0
+description: Audit markdown files (skills, plugins, agents, rules, prompts) for duplicated text, stale references, missing frontmatter, common mistakes, structural issues, and external dependencies. Use when user says "review md", "check md files", "audit markdown", or wants to quality-check agent instructions.
 ---
 
 # Review Markdown Files
@@ -11,7 +11,7 @@ Read every file, then evaluate across all check dimensions.
 
 ## Target
 
-If user specifies a path (e.g. `.ai/plugins/refactorflow`), scope to that subtree.
+If user specifies a path (e.g. `.ai/plugins/refflow`), scope to that subtree.
 If no path given, ask which subtree to review.
 
 ## Check dimensions
@@ -37,7 +37,7 @@ Check every `.md` file with `---` delimiters:
 ### 3. Stale references
 
 - **Dead paths**: Any file path reference (e.g. `skills/grill/SKILL.md`) where the file doesn't exist.
-- **Old names**: Any reference to a renamed skill, plugin, or agent (e.g. `dev-refactor` after rename to `refactorflow`).
+- **Old names**: Any reference to a renamed skill, plugin, or agent (e.g. `dev-refactor` after rename to `refflow`).
 - **Ghost citations**: Placeholder references like `[web:306]`, `[TODO]`, `[FIXME]`, `[XXX]`.
 
 ### 4. Inconsistency
@@ -107,6 +107,24 @@ Check that the content forms a closed loop — no gaps, no overlaps, nothing mis
 - **Unreachable paths**: Can every "When to use" condition actually be triggered by a user?
 - **Circular closure**: Trace the full lifecycle. Does it start and end cleanly, or are there dangling states?
 
+### 11. External dependencies
+
+Detect every external skill, plugin, or agent the audited files depend on.
+Notify the user of all dependencies found — so they know what else is coupled.
+
+Check for references to:
+- Other skills (by name, path, or trigger keyword)
+- Other plugins (by name or path)
+- Other agents (by name or path)
+- Shared config files outside the audit target
+
+For each dependency:
+- Verify it exists in the repo.
+- Classify: required (skill breaks without it) vs optional (enhancement / fallback).
+- Flag if the dependency itself has issues (missing, renamed, stale).
+
+Example: `change-report` referencing `dev-commit` → flag it, note it's optional.
+
 ## Output format
 
 ```
@@ -165,6 +183,11 @@ Date: [YYYY-MM-DD]
 | # | Area | Gap | Severity | Fix |
 |---|------|-----|----------|-----|
 
+### External dependencies
+
+| # | Dependency | Type | Required? | Status |
+|---|------------|------|-----------|--------|
+
 ### Summary
 
 - Duplicates: [N]
@@ -177,6 +200,7 @@ Date: [YYYY-MM-DD]
 - Formatting: [N]
 - Privacy: [N]
 - Completeness: [N]
+- Dependencies: [N]
 
 ### Verdict
 
