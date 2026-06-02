@@ -2,11 +2,15 @@
 setlocal enabledelayedexpansion
 
 set SOURCE=D:\devflow\.ai
-set TARGET=D:\aprojects\rma-backend\.ai
+set ERROR_COUNT=0
 
-echo Syncing .ai folder...
+:: ── Edit these paths ──────────────────────────────────────
+set TARGETS[0]=D:\aprojects\rma-backend\.ai
+set TARGETS[1]=D:\aprojects\other-project\.ai
+:: ──────────────────────────────────────────────────────────
+
+echo Syncing .ai folder to %TARGETS_COUNT% projects...
 echo Source: %SOURCE%
-echo Target: %TARGET%
 echo.
 
 if not exist "%SOURCE%" (
@@ -15,18 +19,34 @@ if not exist "%SOURCE%" (
     exit /b 1
 )
 
-if not exist "%TARGET%\" (
-    mkdir "%TARGET%"
-)
+set INDEX=0
+:loop
+    call set TARGET=%%TARGETS[%INDEX%]%%
+    if "!TARGET!"=="" goto done
 
-robocopy "%SOURCE%" "%TARGET%" /MIR /XD ".git" "__pycache__" ".local" /XF "*.pyc" "*.tmp" /NP /NDL /NJH /NJS
+    echo ── !TARGET!
+    if not exist "!TARGET!" (
+        echo   SKIP: Target does not exist — run sync.bat first time to create
+        set /a ERROR_COUNT+=1
+        goto next
+    )
 
-if errorlevel 8 (
-    echo ERROR: Copy failed
-    pause
-    exit /b 1
-)
+    robocopy "%SOURCE%" "!TARGET!" /MIR /XD .git __pycache__ .local /XF *.pyc *.tmp /NP /NDL /NJH /NJS
+    if errorlevel 8 (
+        echo   FAIL
+        set /a ERROR_COUNT+=1
+    ) else (
+        echo   OK
+    )
 
+:next
+    set /a INDEX+=1
+    goto loop
+
+:done
 echo.
-echo ✅ Sync complete: %SOURCE% -^> %TARGET%
+if %ERROR_COUNT% GTR 0 (
+    echo %ERROR_COUNT% target(s) failed or skipped
+)
+echo Done.
 pause

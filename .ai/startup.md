@@ -209,20 +209,6 @@ Run:
 
 ---
 
-## Project sync — copy .ai folder to another project
-
-One-way sync of the entire `.ai` folder to another project. Edit the target path in `sync.bat` and run:
-
-```cmd
-sync.bat
-```
-
-Uses `robocopy /MIR` (mirror mode) — adds new files, updates changed files, removes deleted files. Excludes `.git`, `__pycache__`, `.local`.
-
-Edit the `TARGET` variable in `sync.bat` to point to your project before running.
-
----
-
 ## Optional: auto-sync on commit (Git hook)
 
 ```bash
