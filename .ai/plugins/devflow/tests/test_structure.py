@@ -4,6 +4,8 @@ import os
 import sys
 
 PLUGIN_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(PLUGIN_DIR)))
+AGENT_FILE = os.path.join(REPO_ROOT, ".ai", "agents", "devflow.md")
 
 
 def read(path):
@@ -84,21 +86,21 @@ def test_config_template_vars():
 
 
 def test_agent_exists():
-    assert exists(os.path.join(PLUGIN_DIR, "agent.md"))
+    assert exists(AGENT_FILE)
 
 
 def test_agent_has_frontmatter():
-    fm = parse_frontmatter(read(os.path.join(PLUGIN_DIR, "agent.md")))
+    fm = parse_frontmatter(read(AGENT_FILE))
     assert fm.get("name") == "devflow"
 
 
 def test_agent_references_config():
-    c = read(os.path.join(PLUGIN_DIR, "agent.md"))
+    c = read(AGENT_FILE)
     assert "config.md" in c, "agent.md missing config.md reference"
 
 
 def test_agent_has_detection_table():
-    c = read(os.path.join(PLUGIN_DIR, "agent.md"))
+    c = read(AGENT_FILE)
     assert "Detect Current Progress" in c
 
 

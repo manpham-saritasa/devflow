@@ -105,19 +105,11 @@ If the user provides a flag (`--plan-only`, `--code-only`, `--review-only`), ski
 
 ---
 
-## Paths
-
-Read shared paths from `config.md`.
-
 ## Full Auto Mode
 
 If user says `/devflow [KEY] --auto`: skip the "Run now?" prompt. Execute each skill in sequence automatically, stopping only at each skill's internal checkpoints. Continue through all stages until complete or the user stops at a checkpoint.
 
 ---
-
-## Paths
-
-Read shared paths from `config.md`.
 
 ## Progress Tracking
 
