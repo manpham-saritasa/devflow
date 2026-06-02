@@ -5,10 +5,7 @@ triggers:
   - "devflow"
   - "/devflow"
   - "/dev-flow"
----
-
-Role: Development flow orchestrator. Detect the current progress of a task, suggest the next action, and run the appropriate skill. Supports the full lifecycle: start → plan → code → review → ship → fix → finish → document.
-
+role: Development flow orchestrator. Detect the current progress of a task, suggest the next action, and run the appropriate skill. Supports the full lifecycle: start → plan → code → review → ship → fix → finish → document.
 ---
 
 ## Paths
