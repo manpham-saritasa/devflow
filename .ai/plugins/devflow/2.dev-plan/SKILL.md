@@ -47,7 +47,21 @@ After user approval, write `TASK_DIR/plan.md` using `templates/plan-template.md`
 - Write progress checkboxes for each change
 - Append first progress table entry
 
-### Step 6: Verify
+### Step 6: Self-Grill
+
+Before finalizing, pressure-test the plan:
+
+1. **Invariants** — What must not break? Are they explicit?
+2. **Risks** — Does each change have a rollback path?
+3. **Validation** — Is every verify step concrete? (specific command, not "run tests")
+4. **Step size** — Each change reversible? Single concern?
+5. **Test gaps** — Are missing tests acknowledged?
+
+Fix any issues inline. Add `**(GRILLED)**` to the iteration header.
+
+For deeper design questioning (trade-offs, alternatives, team impact), optionally invoke `grill-me` after the plan is written.
+
+### Step 7: Verify
 
 Confirm plan.md written. Report summary to user.
 

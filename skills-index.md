@@ -22,6 +22,7 @@
 | dev-adr | `.ai/plugins/devflow/8.dev-adr/` | `dev-adr`, `adr` | Create Architecture Decision Record |
 | dev-commit | `.ai/plugins/devflow/dev-commit/` | `dev-commit`, `devcommit` | Stage + commit in related groups |
 | dev-get | `.ai/plugins/devflow/dev-get/` | `dev-get`, `devget` | Pull Jira issue into task folder |
+| dev-push | `.ai/plugins/devflow/dev-push/` | `dev-push` | Push current branch to origin |
 | dev-review-pr | `.ai/plugins/devflow/dev-review-pr/` | `review-pr`, `reviewpr` | Review any PR across 8 dimensions |
 
 ## Jiraflow Plugin (3)
@@ -32,32 +33,31 @@
 | jira-task | `.ai/plugins/jiraflow/jira-task/` | `jtask` | List assigned tasks by status group |
 | jira-move | `.ai/plugins/jiraflow/jira-move/` | `jmove` | Move tasks through pipeline milestones |
 
-## Refflow Plugin (6)
+## Refflow Plugin (5)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
-| plan | `.ai/plugins/refflow/skills/1.plan/` | `refactor`, `plan` | Diagnose architecture friction, write plan |
-| grill | `.ai/plugins/refflow/skills/2.grill/` | `grill` | Pressure-test refactor plan |
-| structure | `.ai/plugins/refflow/skills/3.structure/` | — (routed) | Fix boundaries, ownership, layout |
-| api | `.ai/plugins/refflow/skills/4.api/` | — (routed) | Redesign contracts with migration planning |
-| simplify | `.ai/plugins/refflow/skills/5.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
-| verify | `.ai/plugins/refflow/skills/6.verify/` | `verify` | Verify against original specs + quality |
+| plan | `.ai/plugins/refflow/skills/1.plan/` | `refactor`, `plan` | Diagnose friction, write plan, self-grill built-in |
+| structure | `.ai/plugins/refflow/skills/2.structure/` | — (routed) | Fix boundaries, ownership, layout |
+| api | `.ai/plugins/refflow/skills/3.api/` | — (routed) | Redesign contracts with migration planning |
+| simplify | `.ai/plugins/refflow/skills/4.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
+| verify | `.ai/plugins/refflow/skills/5.verify/` | `verify` | Verify against original specs + quality |
 
-## Matt Pocock Skills (4)
+## Matt Pocock Skills (3)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
 | caveman | `.ai/skills/matt-pocock/caveman/` | `caveman` | Ultra-compressed communication mode |
-| grill-me | `.ai/skills/matt-pocock/grill-me/` | `grill me`, `grill` | Interview about design decisions |
+| grill-me | `.ai/skills/grill-me/` | `grill me`, `grill this` | Interview relentlessly about plans and designs |
 | handoff | `.ai/skills/matt-pocock/handoff/` | `handoff` | Create handoff doc for another agent |
-| write-a-skill | `.ai/skills/matt-pocock/write-a-skill/` | `write-a-skill` | Create new skills with proper structure |
 
-## Conversion Skills (2)
+## Conversion Skills (3)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
 | md-to-html | `.ai/skills/md-to-html/` | `md-to-html` | Convert Markdown to standalone HTML |
 | md-to-docx | `.ai/skills/md-to-docx/` | `md-to-docx` | Convert Markdown to Word document |
+| md-view | `.ai/skills/md-view/` | `md-view`, `view md`, `preview md` | Browser-based Markdown preview, no conversion |
 
 ## Review Skills (2)
 
@@ -65,6 +65,12 @@
 |-------|------|----------|-------------|
 | review-design | `.agents/skills/review-design/` | `review design`, `audit` | Review plugins/skills/workflows across 13 dimensions |
 | review-md | `.agents/skills/review-md/` | `review md`, `check md`, `audit markdown` | Audit markdown files for duplicates, stale refs, frontmatter, common mistakes |
+
+## Reporting Skills (1)
+
+| Skill | Path | Triggers | Description |
+|-------|------|----------|-------------|
+| change-report | `.ai/skills/change-report/` | `change report`, `creport` | Generate structured change reports — preview before, audit after |
 
 ## Refactor Skills (1)
 

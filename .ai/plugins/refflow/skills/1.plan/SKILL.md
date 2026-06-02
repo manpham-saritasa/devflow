@@ -94,6 +94,21 @@ If something fails:
 - Behaviors, contracts, and external effects that must not change.
 ```
 
+## Self-Grill
+
+Before finalizing the plan, pressure-test it against this checklist. Fix any issues inline — don't wait for a separate grill step.
+
+1. **Invariants** — Are behaviors that must not change explicit and complete?
+2. **Risks** — Does each step have a rollback path? If a step fails, what's the recovery?
+3. **Validation** — Is every verify step concrete? Specific commands, tests, checks — not "run tests".
+4. **Step size** — Is each step reversible? Single concern, < 5 files touched.
+5. **Assumptions** — Are unverified assumptions marked as risks?
+6. **Test gaps** — Are missing tests acknowledged? Manual-only checks must be explicit.
+
+If any check fails, fix the plan before writing. Mark plan header with `**(GRILLED YYYY-MM-DD)**`.
+
+For deeper design questioning (trade-offs, alternatives, team impact), optionally invoke `grill-me` after the plan is written.
+
 1. Architecture summary.
 2. Original specs — capture baseline behavior: APIs, business rules, side effects, test counts.
 3. Strengths.

@@ -1,6 +1,6 @@
 # Refflow = Refactor Flow
 
-Planning-first refactoring — review, plan, grill, execute, verify.
+Planning-first refactoring — review, plan + self-grill, execute, verify.
 Two modes: agent (auto-drives) or manual (numbered skills).
 
 ## Modes
@@ -11,8 +11,7 @@ Two modes: agent (auto-drives) or manual (numbered skills).
 User: "refactor OrderService"
 
 Agent drives full flow:
-  → 1.plan → shows plan → "Proceed?"
-  → 2.grill → hardens plan
+  → 1.plan → diagnoses, writes plan, self-grills → "Proceed?"
   → 3/4/5 execute each step
   → 6.verify → final report ✅
 ```
@@ -21,8 +20,7 @@ Agent drives full flow:
 
 ```
 Run numbered skills in order:
-  1.plan → plan written
-  2.grill → plan hardened
+  1.plan → plan written + self-grilled
   3/4/5 → execute each step
   6.verify → final report ✅
 ```
@@ -31,8 +29,7 @@ Run numbered skills in order:
 
 | Skill | Purpose |
 |-------|---------|
-| `plan` | Diagnose friction, coupling, ownership — writes the plan |
-| `grill` | Pressure-test plan before execution |
+| `plan` | Diagnose friction, coupling, ownership — writes plan + self-grills |
 | `structure` | Fix module boundaries, dependency direction, layout |
 | `api` | Redesign contracts with compatibility migration planning |
 | `simplify` | Reduce local complexity, nesting, naming, duplication |
@@ -54,14 +51,13 @@ Run numbered skills in order:
 refflow/
 ├── config.md               All configuration (paths + behavior)
 ├── README.md                This file
-├── PRINCIPLES.md            Shared rules for all 6 skills
+├── PRINCIPLES.md            Shared rules for all 5 skills
 ├── skills/
-│   ├── 1.plan/              Architecture diagnosis → plan
-│   ├── 2.grill/             Plan pressure-test
-│   ├── 3.structure/         Boundaries & ownership
-│   ├── 4.api/               Contract redesign
-│   ├── 5.simplify/          Local readability
-│   └── 6.verify/            Verify against original specs
+│   ├── 1.plan/              Architecture diagnosis → plan + self-grill
+│   ├── 2.structure/         Boundaries & ownership
+│   ├── 3.api/               Contract redesign
+│   ├── 4.simplify/          Local readability
+│   └── 5.verify/            Verify against original specs
 ├── templates/
 │   └── refactor-plan.md     Plan template with fill guidance
 └── references/              Stack-specific guidance (13 frameworks)
@@ -70,10 +66,10 @@ refflow/
 
 ## Principles
 
-- Plan first, always. Review → grill → execute → verify. No skipping.
+- Plan first, always. Plan + self-grill → execute → verify. No skipping.
 - Preserve behavior unless explicitly asked to change it.
 - One step at a time — reviewable, reversible.
 - Plan is source of truth (see `config.md` for path resolution).
 - When unsure, review before executing.
-- When plan is vague, grill before executing.
+- When plan is vague, self-grill before executing.
 - For quick single-concern refactors, use `quick-refactor` instead.
