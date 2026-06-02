@@ -320,8 +320,9 @@ a:hover {
   <h1>Skill</h1>
   <div class="meta">
     <div class="meta-item"><span class="meta-label">name</span>dev-ship-pr-jira</div>
+    <div class="meta-item"><span class="meta-label">version</span>0.1.0</div>
     <div class="meta-item"><span class="meta-label">description</span>ship feature to create GitHub PR and comment Jira task. Extract task ID from branch, generate report from changelog or git diff, push to develop, comment Jira.</div>
-    <div class="meta-item"><span class="meta-label">triggers</span>dev-ship-pr-jira, dev-ship-pr-jira --pr-only, dev-ship-pr-jira --jira-only, dev-ship-pr-jira --dry-run, dev-ship-pr-jira --technical-only, dev-ship-pr-jira --from-pr, dev-ship, dev-ship --pr-only, dev-ship --jira-only, dev-ship --dry-run, dev-ship --technical-only, dev-ship --from-pr, dev-ship --no-jira</div>
+    <div class="meta-item"><span class="meta-label">triggers</span>dev-ship, devship, dev-ship-pr-jira</div>
   </div>
 </section>
 <section class="section">
@@ -380,26 +381,7 @@ a:hover {
 </section>
 <section class="section">
 <h2>Paths</h2>
-<p>Read shared paths from <code>config.md</code>. <code>TASK_DIR</code> is defined there (as <code>[TASKS_ROOT]/[KEY]</code> where <code>TASKS_ROOT</code> = <code>.local/tasks</code>).</p>
-<ul>
-<li><code>JIRA_TEMPLATE</code>: <code>jira-summary-template.md</code> — non-technical, for testers/PMs/clients</li>
-<li><code>PR_TEMPLATE</code>: <code>pr-summary-template.md</code> — technical, for future engineers</li>
-</ul>
-</section>
-<section class="section">
-<h2>Jira Credentials</h2>
-<p>Read Jira credentials from <code>.env</code> in the repository root. If <code>.env</code> is missing or incomplete, fallback to <code>.env.local</code>. Required variables:</p>
-<pre><code>JIRA_COMPANY_DOMAIN=saritasa
-JIRA_PROJECT_KEY=PROJ
-JIRA_EMAIL=john.doe@saritasa.com
-JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
-</code></pre>
-<ul>
-<li><code>JIRA_COMPANY_DOMAIN</code> — your Jira instance subdomain (the part before <code>.atlassian.net</code>)</li>
-<li><code>JIRA_PROJECT_KEY</code> — the project key (e.g. <code>PROJ</code>, <code>PROJ</code>)</li>
-<li><code>JIRA_EMAIL</code> — the email associated with your Atlassian account</li>
-<li><code>JIRA_API_TOKEN</code> — your Atlassian API token (generate at <a target="_blank" href="https://id.atlassian.com/manage-profile/security/api-tokens">https://id.atlassian.com/manage-profile/security/api-tokens</a>)</li>
-</ul>
+<p>Read shared paths from <code>config.md</code>.</p>
 </section>
 <section class="section">
 <h2>Output Style</h2>
@@ -421,14 +403,8 @@ JIRA_API_TOKEN=ATATT3xFfGF0eq6-JnkSzR-Example
 </code></pre>
 <p>Extract KEY via regex <code>([A-Z0-9]+-\d+)</code> from <code>title</code> or <code>headRefName</code>. If fail: ask user for KEY. Stop if no valid KEY.  </p>
 <p>Otherwise: <code>git branch --show-current</code>, extract KEY regex <code>([A-Z0-9]+-\d+)</code>.<br>
-If fail: ask user for KEY or Jira link. Stop if no valid KEY.</p>
-<h3>Step 2a: Ensure Feature Branch</h3>
-<p>Check if the current branch is <code>main</code> or <code>develop</code>:</p>
-<pre><code class="language-bash">git branch --show-current
-</code></pre>
-<p>If on <code>main</code> or <code>develop</code>: call <code>dev-start [KEY]</code> to create the feature branch. After branch creation, continue to Step 3. If dev-start fails, stop.  </p>
-<p>Otherwise: continue to Step 3.  </p>
-<p>Skip this step entirely if using --jira-only, --from-pr, --dry-run, or --technical-only.</p>
+If fail: ask user for KEY or Jira link. Stop if no valid KEY.  </p>
+<p><strong>Ensure feature branch:</strong> Check if on <code>main</code> or <code>develop</code>. If so, call <code>dev-start [KEY]</code> first, then restart. Skip this check if using --jira-only, --from-pr, --dry-run, or --technical-only.</p>
 <h3>Step 3: Generate Reports</h3>
 <p>If <code>--no-jira</code>: generate only the <strong>PR report</strong> (technical). Skip the Jira report entirely.  </p>
 <p>Otherwise, generate TWO reports:  </p>
@@ -447,7 +423,7 @@ gh pr diff [PR_NUMBER] --repo [OWNER]/[REPO]
 <p><strong>If <code>TASK_DIR/changelog.md</code> exists:</strong> reclassify latest iteration.</p>
 </li>
 <li>
-<p><strong>Else:</strong> <code>git diff develop..HEAD</code>, auto-extract + populate.</p>
+<p><strong>Else:</strong> <code>git diff [BASE_BRANCH]..HEAD  # main if no develop</code>, auto-extract + populate.</p>
 </li>
 </ol>
 <p>Rules for Jira report (skip if <code>--no-jira</code>):</p>
@@ -489,154 +465,21 @@ When <code>--no-jira</code>: omit the <code>Jira Report</code> block. Show only 
 Each block should stay separate so the user can copy the PR body or Jira comment directly.  </p>
 <p>If <code>--dry-run</code> or <code>--from-pr</code>: skip to Step 9 (read-only — no PR, no Jira, no writes).  </p>
 <p>If <code>--technical-only</code>: proceed to Step 7 (update progress), then skip to Step 9.  </p>
-<p>If NOT <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>: ask "Ready? Say YES."</p>
+<p>If NOT <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>: ask "Proceed? (yes / no)"</p>
 <h3>Step 6: Create or Reuse PR</h3>
 <p>Skip if <code>--jira-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, or <code>--from-pr</code>.  </p>
-<p>Before creating a PR, check whether an open PR already exists for the current branch.</p>
-<pre><code class="language-bash">gh pr list --state open --json number,title,url,headRefName,baseRefName
-</code></pre>
-<p>Filter by <code>headRefName == $(git branch --show-current)</code>.</p>
-<ul>
-<li>If an open PR already exists for this branch: <strong>fail fast for PR creation</strong>. Do <strong>not</strong> create another PR.</li>
-<li>Reuse the existing PR URL.</li>
-<li>
-<p>Check if there are new commits since the last PR comment:</p>
-<pre><code>gh pr view [PR_NUMBER] --json comments --jq '.comments[-1].createdAt'
-git log --oneline --since="[LAST_COMMENT_DATE]"
-</code></pre>
-</li>
-<li>
-<p><strong>If no new commits:</strong> skip — "✅ PR #[N] already up to date. No new commits since last summary."</p>
-</li>
-<li><strong>If new commits found:</strong> generate a summary in table format and post it:<pre><code>gh pr comment [PR_NUMBER] --body "[SUMMARY]"
-</code></pre>
-</li>
-</ul>
-<p>Summary format:</p>
-<pre><code>    ## Recent Changes
-
-    | Commit | Summary |
-    |--------|---------|
-    | abc123 | What changed |
-    | def456 | What changed |
-
-    **New:** [1-line highlight of key additions]
-</code></pre>
-<ul>
-<li>Continue to Step 7 using the existing PR URL.</li>
-</ul>
-<p>If no open PR exists for the current branch:</p>
-<pre><code class="language-bash">git push origin $(git branch --show-current)
-gh pr create --base [BASE_BRANCH] --head $(git branch --show-current) --title &quot;{MSG}&quot; --body &quot;{BODY}&quot;
-</code></pre>
-<p><code>[BASE_BRANCH]</code> must match the repository default branch (for example <code>main</code> or <code>develop</code>). Do not assume <code>develop</code> if the repository uses another default branch.  </p>
-<p>Capture PR URL. <code>{PR_BODY}</code> is the output from <code>PR_TEMPLATE</code>.  </p>
-<p>If <code>--no-jira</code>: the PR body uses only the PR report (no Jira report).</p>
-<h3>Step 7: Update Progress</h3>
+<p>Call <code>create-pr</code> skill with <code>KEY</code>, <code>MSG</code>, and <code>PR_BODY</code>. Capture <code>PR_URL</code>. See <code>.ai/plugins/githubflow/create-pr/SKILL.md</code>.</p>
+<h3>Step 7: Update Progress in Plan</h3>
 <p>Skip if <code>--dry-run</code> or <code>--from-pr</code>:</p>
 <ul>
-<li>If <code>TASK_DIR/progress.md</code> exists: prepend status "Shipped", PR URL, timestamp</li>
-<li>Else: create new file</li>
+<li>If <code>TASK_DIR/plan.md</code> exists: append progress row with status "Shipped", PR URL, timestamp</li>
+<li>Else: skip progress update</li>
 </ul>
 <h3>Step 8: Comment Jira</h3>
 <p>Skip if <code>--pr-only</code>, <code>--dry-run</code>, <code>--technical-only</code>, <code>--from-pr</code>, or <code>--no-jira</code>.  </p>
-<p>Before commenting, verify credentials are present in the repo root (<code>.env</code> first, then <code>.env.local</code> fallback) and contain all required variables (<code>JIRA_COMPANY_DOMAIN</code>, <code>JIRA_PROJECT_KEY</code>, <code>JIRA_EMAIL</code>, <code>JIRA_API_TOKEN</code>). If missing or incomplete, stop: "Jira credentials not found. Add them to <code>.env</code> or <code>.env.local</code> in the repo root. See the Jira Credentials section for format."  </p>
-<p>Use Jira API with the credentials from <code>.env</code>:</p>
-<ul>
-<li>Base URL: <code>https://[JIRA_COMPANY_DOMAIN].atlassian.net</code></li>
-<li>Auth: Basic auth using <code>[JIRA_EMAIL]:[JIRA_API_TOKEN]</code></li>
-<li>Endpoint: <code>POST /rest/api/3/issue/[KEY]/comment</code></li>
-</ul>
-<pre><code>POST https://[JIRA_COMPANY_DOMAIN].atlassian.net/rest/api/3/issue/[KEY]/comment
-Authorization: Basic [base64(JIRA_EMAIL:JIRA_API_TOKEN)]
-Content-Type: application/json
-
-{
-  &quot;body&quot;: {
-    &quot;type&quot;: &quot;doc&quot;,
-    &quot;version&quot;: 1,
-    &quot;content&quot;: [
-      {
-        &quot;type&quot;: &quot;paragraph&quot;,
-        &quot;content&quot;: [
-          {
-            &quot;type&quot;: &quot;text&quot;,
-            &quot;text&quot;: &quot;{JIRA_BODY}\n\n&quot;
-          },
-          {
-            &quot;type&quot;: &quot;text&quot;,
-            &quot;text&quot;: &quot;View PR: &quot;,
-            &quot;marks&quot;: [{&quot;type&quot;: &quot;link&quot;, &quot;attrs&quot;: {&quot;href&quot;: &quot;{PR_URL}&quot;}}]
-          }
-        ]
-      }
-    ]
-  }
-}
-</code></pre>
-<p><strong>Required</strong>: PR link must be a clickable markdown link at the BOTTOM of the comment body (format: <code>[View PR]({PR_URL})</code>). Never omit or move to top.<br>
-<code>{JIRA_BODY}</code> is the output from <code>JIRA_TEMPLATE</code>.</p>
+<p>Call <code>jira-comment</code> skill with <code>KEY</code>, <code>JIRA_BODY</code> (from JIRA_TEMPLATE), and <code>PR_URL</code>. See <code>.ai/plugins/jiraflow/jira-comment/SKILL.md</code>.</p>
 <h3>Step 9: Success</h3>
-<p>Show the final result in separate blocks so URLs and posted content are easy to copy.  </p>
-<p>If a new PR was created:</p>
-<pre><code class="language-text">✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## PR Body Posted
-[exact PR body that was posted]
-</code></pre>
-<pre><code class="language-md">## Jira Comment Posted
-[exact Jira comment that was posted]
-</code></pre>
-<p>If an existing PR was reused:</p>
-<pre><code class="language-text">✅ PR reused: {PR_URL}
-✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## PR Comment Posted
-[exact PR comment that was posted]
-</code></pre>
-<pre><code class="language-md">## Jira Comment Posted
-[exact Jira comment that was posted]
-</code></pre>
-<p>If <code>--from-pr</code>:</p>
-<pre><code class="language-text">✅ Reports generated from PR: {PR_URL}
-</code></pre>
-<pre><code class="language-md">## PR Report
-[exact PR report]
-</code></pre>
-<pre><code class="language-md">## Jira Report
-[exact Jira report]
-</code></pre>
-<p>If <code>--no-jira</code> and a new PR was created:</p>
-<pre><code class="language-text">✅ PR: {PR_URL}
-✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## PR Body Posted
-[exact PR body that was posted]
-</code></pre>
-<p>If <code>--no-jira</code> and an existing PR was reused:</p>
-<pre><code class="language-text">✅ PR reused: {PR_URL}
-✅ PR comment added with recent changes summary
-✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## PR Comment Posted
-[exact PR comment that was posted]
-</code></pre>
-<p>If <code>--jira-only</code>:</p>
-<pre><code class="language-text">✅ Jira: [KEY] commented
-✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## Jira Comment Posted
-[exact Jira comment that was posted]
-</code></pre>
-<p>If <code>--technical-only</code>:</p>
-<pre><code class="language-text">✅ Progress: .local/tasks/[KEY]/progress.md
-</code></pre>
-<pre><code class="language-md">## Technical Changelog (.local)
-[exact changelog content written]
-</code></pre>
-<p>(Omit skipped blocks per flags.)</p>
+<p>Use <code>templates/success-output.md</code> — pick the block matching the flags used. Omit skipped blocks.</p>
 <h3>Step 10: Update Jira Status</h3>
 <p>Call <code>jira-move</code> skill with <code>KEY</code> and milestone <code>code-review</code>. Non-blocking — continue on failure.</p>
 </section>
