@@ -33,7 +33,7 @@ This file is loaded via `AGENTS.md` which is auto-read by:
 |---|---|
 | 1 | If `.local/memory.md` exists, read it and follow for the whole session |
 | 2 | If `.local/session-rules.md` exists, read and follow session tracking rules |
-| 3 | If `skills-index.md` exists, read it for full skill list |
+| 3 | If `.ai/skills-index.md` exists, read it for full skill list |
 | 4 | Read `.ai/skills/matt-pocock/caveman/SKILL.md` and use caveman mode when talking to user directly |
 
 If session is long, task changes, or context is fuzzy, re-read it.
