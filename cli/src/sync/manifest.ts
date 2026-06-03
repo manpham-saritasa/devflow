@@ -199,6 +199,32 @@ export function buildManifest(
             }
           }
         }
+        // Zed: generate .agents/skills/<name>/SKILL.md wrappers referencing .ai/skills/
+        if (config.tools.includes("zed")) {
+          for (const skill of selected) {
+            const skillMd = resolve(
+              contentRoot,
+              ".ai",
+              "skills",
+              skill,
+              "SKILL.md",
+            );
+            const fm = parseSkillFrontmatter(skillMd);
+            if (fm) {
+              entries.push({
+                src: buildSkillWrapper(fm, `.ai/skills/${skill}/SKILL.md`),
+                dest: resolve(
+                  targetDir,
+                  ".agents",
+                  "skills",
+                  fm.name,
+                  "SKILL.md",
+                ),
+                isInline: true,
+              });
+            }
+          }
+        }
         break;
       }
 
@@ -229,6 +255,28 @@ export function buildManifest(
                   dest: resolve(
                     targetDir,
                     ".claude",
+                    "skills",
+                    fm.name,
+                    "SKILL.md",
+                  ),
+                  isInline: true,
+                });
+              }
+            }
+          }
+          // Zed: generate .agents/skills/<name>/SKILL.md wrappers for each plugin skill
+          if (config.tools.includes("zed")) {
+            for (const { subdir, skillFile } of listPluginSkills(pluginSrc)) {
+              const refPath = subdir
+                ? `.ai/plugins/${plugin}/${subdir}/SKILL.md`
+                : `.ai/plugins/${plugin}/agent.md`;
+              const fm = parseSkillFrontmatter(skillFile);
+              if (fm) {
+                entries.push({
+                  src: buildSkillWrapper(fm, refPath),
+                  dest: resolve(
+                    targetDir,
+                    ".agents",
                     "skills",
                     fm.name,
                     "SKILL.md",
@@ -332,14 +380,21 @@ function listPluginSkills(
     results.push({ subdir: "", skillFile: agentMd });
   }
 
-  // Subdirectory SKILL.md files
-  for (const entry of readdirSync(pluginDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const skillMd = resolve(pluginDir, entry.name, "SKILL.md");
-    if (existsSync(skillMd)) {
-      results.push({ subdir: entry.name, skillFile: skillMd });
+  // Recursively find SKILL.md files
+  function scan(dir: string, prefix: string) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const skillMd = resolve(dir, entry.name, "SKILL.md");
+      const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (existsSync(skillMd)) {
+        results.push({ subdir: relPath, skillFile: skillMd });
+      } else {
+        // Recurse into subdirectories (e.g. devflow/skills/)
+        scan(resolve(dir, entry.name), relPath);
+      }
     }
   }
+  scan(pluginDir, "");
 
   return results;
 }
