@@ -25,14 +25,12 @@ Do not use when:
 
 ## How to use
 
-Open in browser:
+**Drag-and-drop (no server):**
+1. Open `mdview.html` in your browser (double-click)
+2. Drag any `.md` file onto the page
+3. Content renders instantly
 
-```
-file:///path/to/devflow/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
-```
-
-Or serve via any HTTP server for `fetch()` to work:
-
+**Server mode (existing viewer):**
 ```bash
 cd /path/to/devflow
 python -m http.server 9090
@@ -43,7 +41,8 @@ python -m http.server 9090
 
 | File | Purpose |
 |------|---------|
-| `viewer.html` | Loads and renders any .md file via marked.js |
+| `mdview.html` | Drag-and-drop viewer — no server needed |
+| `viewer.html` | Server-based viewer — uses ?file= parameter |
 | `theme.css` | Same card-based theme as md-to-html |
 
 ## What it does
