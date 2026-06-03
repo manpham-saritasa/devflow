@@ -6,21 +6,31 @@ All times in Asia/Bangkok (+07:00).
 
 Triggered by `save` shortcut (e.g. `save 21:30`). If no time given, use current time.
 
+Before saving, get current date/time:
+```bash
+curl -s "https://timeapi.io/api/Time/current/zone?timeZone=Asia%2FBangkok" --connect-timeout 5 | python -c "import sys,json; d=json.load(sys.stdin); print(d['dateTime'][:10], d['dateTime'][11:16])"
+```
+Use the returned date to determine which `YYYY-MM-DD.md` file to write to.
+
 Save session state to `.local/sessions/raw/[YYYY-MM-DD].md`:
 
 ```markdown
-## 21:30
+# Session — YYYY-MM-DD
 
-- Did: [what was done]
-- Files: [files changed]
-- Decided: [key decisions made]
+## HH:MM — [action summary]
+
+- Trigger: [user request / review finding / auto-discovery / shortcut]
+- Did: [what was done — concrete, outcome-focused]
+- Files: [files changed for this action only]
+- Decided: [key decision made — optional]
+- Corrected: [lesson learned / mistake to avoid — optional]
 ```
 
 - Create directories if missing before writing.
 - First entry of the day includes `# Session — YYYY-MM-DD` header.
-- Subsequent entries append new `## HH:MM` blocks to the same file.
-
-Example: `.local/sessions/raw/2026-05-29.md`
+- Subsequent entries append new `## HH:MM — [summary]` blocks to the same file.
+- Group tightly related actions under one timeblock. New topic = new timeblock.
+- `Corrected` field links to corrections.md — copy the same correction there too.
 
 ## Auto-save on major task completion
 
@@ -32,18 +42,42 @@ Also save without user trigger when:
 
 ## Extract corrections
 
-After each session, extract key corrections and append to `.local/sessions/corrections.md`:
+After each session, extract key corrections and append to `.local/sessions/corrections.md`.
+Grouped by category, newest date first within each category.
 
 ```markdown
-## YYYY-MM-DD
+## [Category]
 
-### Category
-- Correction description.
+### YYYY-MM-DD
+
+- 🔴 Active — [description]. **Impact:** [what went wrong]. **Fix:** [concrete rule].
+- 🟡 Addressed — ...
+- ✅ Fixed — ...
 ```
 
-Categories: Communication, Tools, Skills, LLM Behavior, Workflow, Other.
+Status: 🔴 Active | 🟡 Addressed | ✅ Fixed
+Categories: Auth, Communication, LLM Behavior, Skill Design, Skills, Tools, Workflow, Other.
 
 If no corrections to extract, note "None" and skip.
+
+## Promote to rules
+
+After saving, count corrections per category. If a category has 5+ active/addressed
+corrections on the same topic, suggest promoting them to a rule:
+
+```
+⚠️ [Category] has [N] corrections on [topic].
+Suggest creating a rule in .ai/rules/ or AGENTS.md to prevent recurrence.
+
+Rule draft: [proposed rule text]
+```
+
+Example:
+```
+⚠️ Tools has 6 corrections on "edit_file matching multiple locations".
+Suggest adding to coding-rules.md:
+  "When old_text matches multiple locations, add 2+ lines of surrounding context."
+```
 
 ## Path
 
