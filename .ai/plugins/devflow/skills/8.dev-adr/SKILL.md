@@ -4,6 +4,7 @@ description: Create an ADR for a completed Jira task from task folder evidence, 
 triggers:
   - "dev-adr"
   - "adr"
+  - "dadr"
   - "create-adr"
 ---
 

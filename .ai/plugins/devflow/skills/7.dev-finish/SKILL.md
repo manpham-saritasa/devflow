@@ -4,6 +4,7 @@ description: Finish a gitflow branch for a Jira task. Defaults to gitflow mode (
 triggers:
   - "dev-finish"
   - "devfinish"
+  - "dfinish"
 ---
 
 ## Paths

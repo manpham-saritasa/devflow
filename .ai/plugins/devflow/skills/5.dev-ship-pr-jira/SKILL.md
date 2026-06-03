@@ -5,6 +5,7 @@ description: ship feature to create GitHub PR and comment Jira task. Extract tas
 triggers:
   - "dev-ship"
   - "devship"
+  - "dship"
   - "dev-ship-pr-jira"
 ---
 

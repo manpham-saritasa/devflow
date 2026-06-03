@@ -4,6 +4,7 @@ description: Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md 
 triggers:
   - "dev-get"
   - "devget"
+  - "dget"
   - "pull task"
   - "pull ticket"
   - "dev-get --memory-only"

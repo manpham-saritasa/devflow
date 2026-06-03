@@ -1,9 +1,11 @@
 ---
 name: dev-plan
-description: Analyze task and codebase, produce plan.md with proposed changes, verification steps, and progress checkboxes. Detects refactor vs feature tasks.
+version: 0.1.0
+description: Analyze task and codebase, grill requirements until clear, produce plan.md as a handoff document for another coding agent.
 triggers:
   - "dev-plan"
   - "devplan"
+  - "dplan"
 ---
 
 ## Paths
@@ -29,17 +31,36 @@ Read task context from the best available source:
 
 - **Feature**: new behavior, new endpoints, new UI → continue to Step 4.
 - **Refactor**: restructuring, cleaning up → delegate to `1.plan`.
+  Pass gathered context (affected modules, boundaries, investigation findings).
   Stop and tell user: "Refactor detected. Spawning 1.plan to capture specs and write plan."
 
-### Step 4: Propose Changes
+### Step 4: Grill Requirements
+
+Before proposing changes, grill the user. The plan will be a handoff document
+for another coding agent — it must be self-contained, no tribal knowledge.
+
+Ask questions until:
+- Requirements are concrete and unambiguous
+- Scope boundaries are explicit (what's in, what's out)
+- All acceptance criteria are testable
+- Assumptions are stated and verified
+- Edge cases and error states are covered
+
+If user is vague, push back: "What exactly should happen when...?"
+If user contradicts themselves, call it out.
+
+### Step 5: Propose Changes
 
 Show investigation summary to user. Include:
 - What was found
 - Proposed approach
 - Task type detected
-- Confidence level per change
+- Confidence level per change:
+  - **High** — existing pattern reused, well-understood area
+  - **Medium** — new approach, similar to existing patterns
+  - **Low** — uncharted territory, high uncertainty
 
-### Step 5: Write Plan
+### Step 6: Write Plan
 
 After user approval, write `TASK_DIR/plan.md` using `templates/plan-template.md`:
 - Fill stable sections (Task Context, Requirements, Constraints)
@@ -47,24 +68,29 @@ After user approval, write `TASK_DIR/plan.md` using `templates/plan-template.md`
 - Write progress checkboxes for each change
 - Append first progress table entry
 
-### Step 6: Self-Grill
+### Step 7: Final Check
 
-Before finalizing, pressure-test both the requirements and the plan:
+**Pass 1 — Handoff scan:**
+- [ ] Template filled?
+- [ ] Another agent could implement without asking questions?
+- [ ] No tribal knowledge or implicit assumptions?
 
-1. **Requirements** — Are the task requirements clear and complete? If vague, ask user for clarification before proceeding.
+Fix gaps before continuing. Re-scan until clean.
+
+**Pass 2 — Plan quality:**
+1. **Requirements** — Are the task requirements clear and complete? If vague, ask user before proceeding.
 2. **Invariants** — What must not break? Are they explicit?
 3. **Risks** — Does each change have a rollback path?
 4. **Validation** — Is every verify step concrete? (specific command, not "run tests")
 5. **Step size** — Each change reversible? Single concern?
 6. **Test gaps** — Are missing tests acknowledged?
 
-Fix any issues inline. Add `**(GRILLED)**` to the iteration header.
+Fix any gaps inline.
 
-For deeper design questioning (trade-offs, alternatives, team impact), optionally invoke `grill-me` after the plan is written.
+### Step 8: Verify
 
-### Step 7: Verify
-
-Confirm plan.md written. Report summary to user.
+Confirm plan.md written. If write failed: report error and stop.
+Report summary to user.
 
 ## Stop Conditions
 

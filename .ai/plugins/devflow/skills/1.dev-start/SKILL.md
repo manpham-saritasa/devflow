@@ -5,6 +5,7 @@ description: Start a gitflow branch for a Jira task. Defaults to gitflow mode (b
 triggers:
   - "dev-start"
   - "devstart"
+  - "dstart"
   - "dev start"
 ---
 

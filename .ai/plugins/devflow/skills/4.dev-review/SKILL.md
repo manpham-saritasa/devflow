@@ -4,6 +4,7 @@ description: Review implemented code against task context and the latest plan/ch
 triggers:
   - "dev-review"
   - "devreview"
+  - "dreview"
 ---
 
 ## Paths

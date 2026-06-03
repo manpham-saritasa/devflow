@@ -4,6 +4,7 @@ description: Stage and commit changes in related groups, appending the task key 
 triggers:
   - "dev-commit"
   - "devcommit"
+  - "dcommit"
 ---
 
 ## Paths

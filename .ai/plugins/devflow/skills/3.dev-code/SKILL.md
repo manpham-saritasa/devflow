@@ -4,6 +4,7 @@ description: Read plan.md, implement the planned changes for the latest iteratio
 triggers:
   - "dev-code"
   - "devcode"
+  - "dcode"
 ---
 
 ## Paths
