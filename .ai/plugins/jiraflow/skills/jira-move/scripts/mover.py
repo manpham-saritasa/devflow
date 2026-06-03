@@ -124,7 +124,9 @@ class Mover:
 
         print(f"[WARN] No transition from {current} to {target_name}.")
 
-    def _fallback_to_production(self, key, step_status, step_ms, step_target, target_ms):
+    def _fallback_to_production(
+        self, key, step_status, step_ms, step_target, target_ms
+    ):
         """If target is complete but stuck at verify/review, try On Production first."""
         if target_ms != "complete" or step_ms not in ("verify", "review"):
             return None
@@ -160,7 +162,9 @@ class Mover:
                 trans_map = self._refresh_transitions(key, step_status)
                 tid = self._find_transition(trans_map, step_target)
             if tid is None:
-                tid = self._fallback_to_production(key, step_status, step_ms, target_ms)
+                tid = self._fallback_to_production(
+                    key, step_status, step_ms, step_target, target_ms
+                )
             if tid is None:
                 print(f"  [WARN] Stuck at {step_status} - can't reach {step_ms}")
                 return

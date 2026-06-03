@@ -4,6 +4,7 @@ description: Generate a client-friendly release note from tasks in a JIRA releas
 triggers:
   - "release-note"
   - "releasenote"
+  - "rnote"
   - "release-note --full"
 ---
 
@@ -114,8 +115,8 @@ Client copy format:
 
 Show total counts at the bottom:
 ```
+Release: [VERSION_NAME](https://[DOMAIN].atlassian.net/projects/[KEY]/versions/[ID])
 Total: [N] tasks ([N] changed, [N] fixed)
-Release: [RELEASE_URL]
 ```
 
 ## When to Use

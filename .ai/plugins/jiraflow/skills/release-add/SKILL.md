@@ -4,7 +4,7 @@ description: Add one or more JIRA tasks to a JIRA release version. Provide task 
 triggers:
   - "release-add"
   - "releaseadd"
-  - "release-add"
+  - "radd"
 ---
 
 ## When to Use

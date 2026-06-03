@@ -25,16 +25,20 @@
 | dev-get | `.ai/plugins/devflow/skills/dev-get/` | `dev-get`, `devget` | Pull Jira issue into task folder |
 | dev-push | `.ai/plugins/devflow/skills/dev-push/` | `dev-push` | Push current branch to origin |
 
-## Jiraflow Plugin (6)
+## Jiraflow Plugin (10)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
+| jira-close | `.ai/plugins/jiraflow/skills/jira-close/` | `jclose` | Close tasks by key, list, or release URL |
 | jira-comment | `.ai/plugins/jiraflow/skills/jira-comment/` | `jira-comment`, `jcomment` | Post comment to Jira issue |
+| release-list | `.ai/plugins/jiraflow/skills/release-list/` | `rlist` | List releases in a Jira project |
 | jira-mine | `.ai/plugins/jiraflow/skills/jira-mine/` | `jtask` | List assigned tasks by status group |
 | jira-move | `.ai/plugins/jiraflow/skills/jira-move/` | `jmove` | Move tasks through pipeline milestones |
 | jira-urgent | `.ai/plugins/jiraflow/skills/jira-urgent/` | `jurgent` | Find comments where team is waiting on you |
-| release-add | `.ai/plugins/jiraflow/skills/release-add/` | — | Add tasks to Jira release version |
-| release-note | `.ai/plugins/jiraflow/skills/release-note/` | — | Generate client-friendly release notes |
+| release-add | `.ai/plugins/jiraflow/skills/release-add/` | `radd` | Add tasks to Jira release version |
+| release-complete | `.ai/plugins/jiraflow/skills/release-complete/` | `rcomplete` | Mark a JIRA release as Released |
+| release-rename | `.ai/plugins/jiraflow/skills/release-rename/` | `rrename` | Update the name of a JIRA release |
+| release-note | `.ai/plugins/jiraflow/skills/release-note/` | `rnote` | Generate client-friendly release notes |
 
 ## Githubflow Plugin (4)
 
@@ -42,7 +46,7 @@
 |-------|------|----------|-------------|
 | create-pr | `.ai/plugins/githubflow/skills/create-pr/` | `create-pr` | Create or reuse GitHub pull request |
 | fix-pr | `.ai/plugins/githubflow/skills/fix-pr/` | — | Fix PR review comments programmatically |
-| release-list | `.ai/plugins/githubflow/skills/release-list/` | `release-list` | List tasks pending release |
+| release-candidates | `.ai/plugins/githubflow/skills/release-candidates/` | `release-candidates`, `release notes` | List PRs pending release |
 | review-pr | `.ai/plugins/githubflow/skills/review-pr/` | `review-pr`, `reviewpr` | Review any PR across 11 dimensions with deep git blame |
 
 ## Refflow Plugin (5)
