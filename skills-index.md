@@ -44,20 +44,20 @@
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
-| create-pr | `.ai/plugins/githubflow/skills/create-pr/` | `create-pr` | Create or reuse GitHub pull request |
-| fix-pr | `.ai/plugins/githubflow/skills/fix-pr/` | — | Fix PR review comments programmatically |
-| release-candidates | `.ai/plugins/githubflow/skills/release-candidates/` | `release-candidates`, `release notes` | List PRs pending release |
-| review-pr | `.ai/plugins/githubflow/skills/review-pr/` | `review-pr`, `reviewpr` | Review any PR across 11 dimensions with deep git blame |
+| gh-create-pr | `.ai/plugins/githubflow/skills/gh-create-pr/` | `create-pr` | Create or reuse GitHub pull request |
+| gh-fix-pr | `.ai/plugins/githubflow/skills/gh-fix-pr/` | — | Fix PR review comments programmatically |
+| gh-release | `.ai/plugins/githubflow/skills/gh-release/` | `release-candidates`, `release notes` | List PRs pending release |
+| gh-review-pr | `.ai/plugins/githubflow/skills/gh-review-pr/` | `review-pr`, `reviewpr` | Review any PR across 11 dimensions with deep git blame |
 
 ## Refflow Plugin (5)
 
 | Skill | Path | Triggers | Description |
 |-------|------|----------|-------------|
-| plan | `.ai/plugins/refflow/skills/1.plan/` | `refactor`, `plan` | Diagnose friction, write plan, self-grill built-in |
-| structure | `.ai/plugins/refflow/skills/2.structure/` | — (routed) | Fix boundaries, ownership, layout |
-| api | `.ai/plugins/refflow/skills/3.api/` | — (routed) | Redesign contracts with migration planning |
-| simplify | `.ai/plugins/refflow/skills/4.simplify/` | — (routed) | Reduce local complexity, nesting, naming |
-| verify | `.ai/plugins/refflow/skills/5.verify/` | `verify` | Verify against original specs + quality |
+| ref-plan | `.ai/plugins/refflow/skills/1.ref-plan/` | `refactor`, `plan` | Diagnose friction, write plan, self-grill built-in |
+| ref-structure | `.ai/plugins/refflow/skills/2.ref-structure/` | — (routed) | Fix boundaries, ownership, layout |
+| ref-api | `.ai/plugins/refflow/skills/3.ref-api/` | — (routed) | Redesign contracts with migration planning |
+| ref-simplify | `.ai/plugins/refflow/skills/4.ref-simplify/` | — (routed) | Reduce local complexity, nesting, naming |
+| ref-verify | `.ai/plugins/refflow/skills/5.ref-verify/` | `verify` | Verify against original specs + quality |
 
 ## Interview Skills (1)
 

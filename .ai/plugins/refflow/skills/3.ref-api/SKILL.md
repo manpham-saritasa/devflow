@@ -1,7 +1,11 @@
 ---
-name: api
+name: ref-api
 version: 0.1.0
 description: Redesign internal or external API contracts safely with compatibility-aware migration planning, adapters, and deprecation paths.
+triggers:
+  - "api"
+  - "rapi"
+  - "refactor api"
 ---
 
 # API

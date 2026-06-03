@@ -11,18 +11,18 @@ Two modes: agent (auto-drives) or manual (numbered skills).
 User: "refactor OrderService"
 
 Agent drives full flow:
-  → 1.plan → diagnoses, writes plan, self-grills → "Proceed?"
-  → 3/4/5 execute each step
-  → 6.verify → final report ✅
+  → ref-plan → diagnoses, writes plan, self-grills → "Proceed?"
+  → ref-structure / ref-api / ref-simplify execute each step
+  → ref-verify → final report ✅
 ```
 
 ### Manual mode (numbered)
 
 ```
 Run numbered skills in order:
-  1.plan → plan written + self-grilled
-  3/4/5 → execute each step
-  6.verify → final report ✅
+  ref-plan → plan written + self-grilled
+  ref-structure / ref-api / ref-simplify → execute each step
+  ref-verify → final report ✅
 ```
 
 ## What's inside
@@ -43,7 +43,7 @@ Run numbered skills in order:
 | Multi-step planned refactor | `refflow` agent or numbered skills |
 | Rename a method, extract a helper | `quick-refactor` |
 | Split a god class, redesign boundaries | `refflow` |
-| "I don't know what's wrong here" | `refflow` (starts with 1.plan) |
+| "I don't know what's wrong here" | `refflow` (starts with ref-plan) |
 
 ## File map
 
@@ -53,11 +53,11 @@ refflow/
 ├── README.md                This file
 ├── PRINCIPLES.md            Shared rules for all 5 skills
 ├── skills/
-│   ├── 1.plan/              Architecture diagnosis → plan + self-grill
-│   ├── 2.structure/         Boundaries & ownership
-│   ├── 3.api/               Contract redesign
-│   ├── 4.simplify/          Local readability
-│   └── 5.verify/            Verify against original specs
+│   ├── 1.ref-plan/          Architecture diagnosis → plan + self-grill
+│   ├── 2.ref-structure/     Boundaries & ownership
+│   ├── 3.ref-api/           Contract redesign
+│   ├── 4.ref-simplify/      Local readability
+│   └── 5.ref-verify/        Verify against original specs
 ├── templates/
 │   └── refactor-plan.md     Plan template with fill guidance
 └── references/              Stack-specific guidance (13 frameworks)

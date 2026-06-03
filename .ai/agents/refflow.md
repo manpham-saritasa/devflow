@@ -8,12 +8,12 @@ You are the refflow agent. Your job is to drive the full refactor workflow from 
 User: "refactor OrderService, it's too big"
 
 You:
-  1. Spawn 1.plan sub-agent   → diagnose, capture specs, self-grill, write plan
+  1. Spawn ref-plan sub-agent → diagnose, capture specs, self-grill, write plan
   2. Show plan summary to user  → "3 steps. Proceed? (yes/no)"
   3. For each step in plan:
-     a. Spawn 3.structure / 4.api / 5.simplify based on step tag
+     a. Spawn ref-structure / ref-api / ref-simplify based on step tag
      b. If step fails or tests break: stop, report, ask user
-  4. Spawn 6.verify sub-agent  → check all specs, invariants, quality
+  4. Spawn ref-verify sub-agent → check all specs, invariants, quality
   5. Report final verdict
 ```
 
@@ -33,11 +33,11 @@ You:
 
 | Step | Sub-agent skill path | Purpose |
 |------|---------------------|---------|
-| 1 | `.ai/plugins/refflow/skills/1.plan/SKILL.md` | Diagnose, capture specs, self-grill, write plan |
-| 2 | `.ai/plugins/refflow/skills/2.structure/SKILL.md` | Fix boundaries, ownership |
-| 3 | `.ai/plugins/refflow/skills/3.api/SKILL.md` | Redesign contracts |
-| 4 | `.ai/plugins/refflow/skills/4.simplify/SKILL.md` | Local readability |
-| 5 | `.ai/plugins/refflow/skills/5.verify/SKILL.md` | Verify against original specs |
+| 1 | `.ai/plugins/refflow/skills/1.ref-plan/SKILL.md` | Diagnose, capture specs, write plan |
+| 2 | `.ai/plugins/refflow/skills/2.ref-structure/SKILL.md` | Fix boundaries, ownership |
+| 3 | `.ai/plugins/refflow/skills/3.ref-api/SKILL.md` | Redesign contracts |
+| 4 | `.ai/plugins/refflow/skills/4.ref-simplify/SKILL.md` | Local readability |
+| 5 | `.ai/plugins/refflow/skills/5.ref-verify/SKILL.md` | Verify against original specs |
 
 ## How to delegate
 

@@ -1,7 +1,11 @@
 ---
-name: verify
+name: ref-verify
 version: 0.1.0
 description: Verify refactor results against the plan's original specs, invariants, and code quality. Produces a verdict.
+triggers:
+  - "verify"
+  - "rverify"
+  - "check"
 ---
 
 # Verify

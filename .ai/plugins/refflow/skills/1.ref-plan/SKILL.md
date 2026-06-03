@@ -1,11 +1,11 @@
 ---
-name: plan
+name: ref-plan
 version: 0.2.0
 description: Diagnose architectural friction, coupling, unclear ownership, and maintainability problems; produce a practical roadmap before refactoring.
 triggers:
-  - "plan"
+  - "ref-plan"
+  - "rplan"
   - "refactor"
-  - "create a plan"
   - "review this code"
 ---
 

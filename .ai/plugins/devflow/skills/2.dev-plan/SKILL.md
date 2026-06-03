@@ -6,6 +6,7 @@ triggers:
   - "dev-plan"
   - "devplan"
   - "dplan"
+  - "create a plan"
 ---
 
 ## Paths
@@ -30,9 +31,9 @@ Read task context from the best available source:
 ### Step 3: Detect Task Type
 
 - **Feature**: new behavior, new endpoints, new UI → continue to Step 4.
-- **Refactor**: restructuring, cleaning up → delegate to `1.plan`.
+- **Refactor**: restructuring, cleaning up → delegate to `ref-plan`.
   Pass gathered context (affected modules, boundaries, investigation findings).
-  Stop and tell user: "Refactor detected. Spawning 1.plan to capture specs and write plan."
+  Stop and tell user: "Refactor detected. Spawning ref-plan to capture specs and write plan."
 
 ### Step 4: Grill Requirements
 

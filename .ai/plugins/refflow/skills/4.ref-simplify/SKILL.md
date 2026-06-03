@@ -1,9 +1,10 @@
 ---
-name: simplify
+name: ref-simplify
 version: 0.2.0
 description: Reduce local complexity, improve readability, naming, and control flow, and remove small-scale friction without changing behavior.
 triggers:
   - "simplify"
+  - "rsimplify"
   - "simplify this"
   - "clean up"
 ---

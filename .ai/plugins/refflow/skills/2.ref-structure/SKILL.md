@@ -1,7 +1,11 @@
 ---
-name: structure
+name: ref-structure
 version: 0.1.0
 description: Improve module boundaries, ownership, dependency direction, and file layout without changing behavior.
+triggers:
+  - "structure"
+  - "rstructure"
+  - "restructure"
 ---
 
 # Structure
