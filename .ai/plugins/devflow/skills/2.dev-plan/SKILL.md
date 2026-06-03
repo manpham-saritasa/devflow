@@ -50,6 +50,11 @@ Ask questions until:
 If user is vague, push back: "What exactly should happen when...?"
 If user contradicts themselves, call it out.
 
+If gaps are found that aren't documented in the original task (Jira, `raw.md`, or `task.md`):
+- Ask: "Found [N] clarifications not in the original task. Comment on Jira and/or update task.md?"
+- If yes → run `jira-comment` to post the clarifications, and/or update `task.md`.
+- Do not proceed until the user answers.
+
 ### Step 5: Propose Changes
 
 Show investigation summary to user. Include:

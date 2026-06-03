@@ -51,6 +51,26 @@ Look for:
 See `references/INDEX.md` at plugin root for stack-specific guidance.
 Read the matching file for your project's stack.
 
+## Grill Requirements
+
+Before writing the plan, grill the user. The plan will be a handoff document
+for another coding agent — it must be self-contained, no tribal knowledge.
+
+Ask questions until:
+- Requirements are concrete and unambiguous
+- Scope boundaries are explicit (what's in, what's out)
+- All acceptance criteria are testable
+- Assumptions are stated and verified
+- Edge cases and error states are covered
+
+If user is vague, push back: "What exactly should happen when...?"
+If user contradicts themselves, call it out.
+
+If gaps are found that aren't documented in the original task (Jira, `raw.md`, or `task.md`):
+- Ask: "Found [N] clarifications not in the original task. Comment on Jira and/or update task.md?"
+- If yes → run `jira-comment` to post the clarifications, and/or update `task.md`.
+- Do not proceed until the user answers.
+
 ## Output format
 
 Use `templates/refactor-plan.md` at plugin root as the output template.
@@ -105,6 +125,7 @@ Before finalizing the plan, pressure-test it against this checklist. Fix any iss
 5. **Step size** — Is each step reversible? Single concern, < 5 files touched.
 6. **Assumptions** — Are unverified assumptions marked as risks?
 7. **Test gaps** — Are missing tests acknowledged? Manual-only checks must be explicit.
+8. **Handoff readiness** — Could another agent implement this without asking questions? No tribal knowledge or implicit assumptions?
 
 If any check fails, fix the plan before writing. Mark plan header with `**(GRILLED YYYY-MM-DD)**`.
 
