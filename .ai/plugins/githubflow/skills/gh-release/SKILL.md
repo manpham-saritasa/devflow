@@ -1,5 +1,5 @@
 ---
-name: release-candidates
+name: gh-release
 version: 0.1.0
 description: List all tasks on develop not yet on main, grouped by task key with merged PR summaries, ordered newest first. Use for release preparation.
 triggers:

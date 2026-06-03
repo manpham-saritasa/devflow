@@ -7,10 +7,10 @@ GitHub release workflow skills for preparing and managing releases.
 ```
 githubflow/
   skills/
-    create-pr/                ← create or reuse GitHub PR
-    fix-pr/                   ← fix PR review comments
-    release-list/             ← list tasks pending release
-    review-pr/                ← review any PR across dimensions
+    gh-create-pr/             ← create or reuse GitHub PR
+    gh-fix-pr/                ← fix PR review comments
+    gh-release/               ← list tasks pending release
+    gh-review-pr/             ← review any PR across dimensions
 ```
 
 ## Skills
