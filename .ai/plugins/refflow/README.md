@@ -1,4 +1,4 @@
-# Refflow = Refactor Flow
+# RefFlow Plugin
 
 Planning-first refactoring — review, plan + self-grill, execute, verify.
 Two modes: agent (auto-drives) or manual (numbered skills).

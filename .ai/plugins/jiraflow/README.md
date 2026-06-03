@@ -1,4 +1,4 @@
-# Jiraflow Plugin
+# JiraFlow Plugin
 
 JIRA workflow skills for task management and release operations.
 

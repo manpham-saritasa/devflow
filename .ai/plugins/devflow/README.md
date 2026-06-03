@@ -1,4 +1,4 @@
-# Devflow Plugin
+# DevFlow Plugin
 
 A self-contained AI workflow plugin for gitflow-based Jira task development. Automates the full lifecycle: start → plan → code → review → ship → fix → finish → document.
 

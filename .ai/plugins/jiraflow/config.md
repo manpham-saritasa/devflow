@@ -1,4 +1,4 @@
-# Jiraflow Plugin — Shared Configuration
+# JiraFlow Plugin — Shared Configuration
 
 ## Paths
 

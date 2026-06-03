@@ -1,4 +1,4 @@
-# Devflow Plugin — Shared Configuration
+# DevFlow Plugin — Shared Configuration
 
 All skills and agents in this plugin reference these paths. Resolve relative to the plugin root.
 

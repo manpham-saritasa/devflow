@@ -1,4 +1,4 @@
-# Githubflow Plugin
+# GithubFlow Plugin
 
 GitHub release workflow skills for preparing and managing releases.
 
