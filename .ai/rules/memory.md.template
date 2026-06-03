@@ -49,7 +49,6 @@
 | `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
 
 ## 3. Creating markdown files or text documents
-- Big `##` section come, put `---` first.
 - Every big `##` need number in markdown file.
 - Do not include any secret values, my personal info, company info, or real project info into any files.
 - Do not include the absolute local path of my computer into any files.

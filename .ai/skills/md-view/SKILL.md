@@ -23,18 +23,34 @@ Do not use when:
 - You need a shareable, self-contained HTML file → use `md-to-html` instead
 - You need all post-processing (data-labels, example boxes, `<hr>` stripping) → `md-to-html` gives richer output
 
-## How to use
+## Workflow
 
-**Drag-and-drop (no server):**
-1. Open `mdview.html` in your browser (double-click)
-2. Drag any `.md` file onto the page
-3. Content renders instantly
+**With a file path:**
 
-**Server mode (existing viewer):**
+1. Start HTTP server if not running:
 ```bash
 cd /path/to/devflow
-python -m http.server 9090
-# Open: http://localhost:9090/.ai/skills/md-view/viewer.html?file=.ai/agents/devflow.md
+python -m http.server 9090 &
+```
+
+2. Present as clickable link:
+```
+[path/from/repo/root](http://localhost:9090/.ai/skills/md-view/viewer.html?file=[relative-path])
+```
+
+Link text shows the path relative to repo root.
+- `.ai/plugins/devflow/skills/2.dev-plan/SKILL.md` → `devflow/skills/2.dev-plan/SKILL.md`
+- `.local/memory.md` → `.local/memory.md`
+
+**Without a file path:**
+
+1. Start server if not running.
+2. List recently created/edited .md files from this session as clickable links.
+3. Show numbered list for easy reference:
+```
+1. [dev-plan.md](http://localhost:9090/...)
+2. [jira-close.md](http://localhost:9090/...)
+...
 ```
 
 ## Files
@@ -64,3 +80,10 @@ python -m http.server 9090
 - Not self-contained (needs CDN for marked.js + mermaid)
 
 Use `md-to-html` when you need the full rich output. Use `md-view` for quick previews.
+
+## Rules
+
+- Check if server already running on first invocation. Reuse if alive.
+- If port blocked, increment and retry up to 9099.
+- Always present URL as clickable markdown link: `[text](url)`.
+- Server stays running between invocations — don't kill it after each view.

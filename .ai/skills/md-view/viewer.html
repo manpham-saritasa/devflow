@@ -156,7 +156,9 @@
                 }
 
                 try {
-                    const resp = await fetch("/" + file.replace(/^\//, ""));
+                    const resp = await fetch(
+                        "/" + file.replace(/^\//, "") + "?v=" + Date.now(),
+                    );
                     if (!resp.ok)
                         throw new Error(`${resp.status} ${resp.statusText}`);
                     const text = await resp.text();
