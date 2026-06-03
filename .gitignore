@@ -36,6 +36,9 @@ dist-ssr
 # CLI bundled content (generated at build time)
 cli/content/
 
+# CLI test config
+.devflow.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
