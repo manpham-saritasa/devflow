@@ -17,3 +17,29 @@ All skills read credentials from `.env.local` (preferred) or `.env` in the repo 
 - `TEMPO_API_TOKEN` — Tempo API token (for jira-log, future)
 
 Scripts load env by calling `load_env()` — defined in each skill's `main.py`.
+
+## Stage groups
+
+Shared status buckets used by `jira-day` and future activity-based skills.
+
+```yaml
+stage_groups:
+  review:
+    - In Review
+    - Verify
+    - Code Review
+    - TM Review
+  qa:
+    - In QA
+    - Ready for QA
+    - QA Review
+    - Testing
+  active:
+    - In Progress
+    - On-going
+    - Ongoing
+    - Ready for Development
+  blocked:
+    - Blocked
+    - On Hold
+```

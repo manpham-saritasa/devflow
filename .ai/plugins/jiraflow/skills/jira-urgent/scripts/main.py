@@ -62,7 +62,8 @@ def load_env():
 def load_ignored():
     ignored = set()
     path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "ignored-comments.txt"
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "ignored-comments.txt",
     )
     if os.path.exists(path):
         with open(path) as f:
@@ -150,7 +151,7 @@ def find_urgent_comment(comments, account_id, ignored_ids):
         if has_mention(comment.get("body", ""), account_id) or "?" in body_text:
             comment_id = str(comment["id"])
             if comment_id in ignored_ids:
-                return None
+                return "ignored"
             return {
                 "id": comment_id,
                 "author": comment["author"]["displayName"],
@@ -213,14 +214,20 @@ def main():
 
     issues = fetch_issues(domain, auth, project)
     urgent = []
+    ignored_count = 0
 
     for issue in issues:
         key = issue["key"]
         fields = issue["fields"]
         comments = fields.get("comment", {}).get("comments", [])
-        urgent_comment = find_urgent_comment(comments, account_id, ignored_ids)
-        if urgent_comment is None:
+        result = find_urgent_comment(comments, account_id, ignored_ids)
+        if result == "ignored":
+            ignored_count += 1
             continue
+        if result is None:
+            continue
+
+        urgent_comment = result
 
         body_text = urgent_comment["body"]
         tag = classify_intent(body_text)
@@ -240,9 +247,9 @@ def main():
     sort_urgent(urgent)
 
     today = datetime.now().strftime("%Y-%m-%d")
-    output = build_output(urgent, len(ignored_ids), project, domain, today)
+    output = build_output(urgent, ignored_count, project, domain, today)
     print(output)
-    print(f"\n{len(urgent)} urgent, {len(ignored_ids)} ignored")
+    print(f"\n{len(urgent)} urgent, {ignored_count} ignored")
 
 
 if __name__ == "__main__":

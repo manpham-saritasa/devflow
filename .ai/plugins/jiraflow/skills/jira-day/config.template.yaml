@@ -1,0 +1,13 @@
+role: mixed
+check_pr_activity: false
+
+identity:
+  jira_email: ""
+  github_username: ""
+  git_email: ""
+
+exclude_statuses: []
+exclude_projects: []
+prefer_projects: []
+
+stage_groups: {}
