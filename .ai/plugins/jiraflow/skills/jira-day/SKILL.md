@@ -18,7 +18,7 @@ Read Jira auth from `../../config.md`.
 
 Read optional local override from the repo root:
 
-- `.local/jday/config.yaml`
+- `.local/jiraflow/config.yaml`
 
 If missing on first run:
 1. Ask for role: `dev`, `qa`, `tm`, `pm`, `mixed`

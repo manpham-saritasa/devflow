@@ -12,7 +12,7 @@ jday --role dev         # dev ranking: PRs first
 jday --no-pr            # skip PR checks this run
 ```
 
-First run asks: your role, PR activity, and favorite projects. Saves to `.local/jday/config.yaml`.
+First run asks: your role, PR activity, and favorite projects. Saves to `.local/jiraflow/config.yaml`.
 
 ## 2. Setup
 

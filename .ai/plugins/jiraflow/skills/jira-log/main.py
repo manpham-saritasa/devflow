@@ -17,7 +17,7 @@ ROOT = os.path.dirname(
 )
 
 LOGS_DIR = os.path.join(ROOT, ".local", "jiraflow", "logs")
-TASKS_FILE = os.path.join(ROOT, ".local", "jiraflow", "tasks.txt")
+TASKS_FILE = os.path.join(ROOT, ".local", "jiraflow", "favorite-tasks.txt")
 
 
 def load_env():

@@ -19,7 +19,7 @@ jlog <#|KEY> <DURATION> <DESC>
   jlog --help                    → show usage
 ```
 
-Quick-pick tasks in `.local/jiraflow/tasks.txt` — edit to customize.
+Quick-pick tasks in `.local/jiraflow/favorite-tasks.txt` — edit to customize.
 
 ---
 

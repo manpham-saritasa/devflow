@@ -31,7 +31,7 @@ from settings import (
 
 ROOT = find_repo_root(__file__)
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_DIR = os.path.join(ROOT, ".local", "jday")
+LOCAL_DIR = os.path.join(ROOT, ".local", "jiraflow")
 CONFIG_PATH = os.path.join(LOCAL_DIR, "config.yaml")
 CONFIG_TEMPLATE_PATH = os.path.join(SKILL_DIR, "config.template.yaml")
 
