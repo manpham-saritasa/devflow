@@ -8,18 +8,20 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
+from auth import (
+    detect_identity,
+    load_env,
+    persist_identity_if_changed,
+    validate_project_key,
+)
 from collectors import collect_candidates
 from common import ROLES, find_repo_root
 from context import RuntimeContext
 from output import build_output, rank_candidates
 from settings import (
-    detect_identity,
     ensure_local_config,
-    load_env,
     load_stage_groups,
     merge_stage_groups,
-    persist_identity_if_changed,
-    validate_project_key,
 )
 
 ROOT = find_repo_root(__file__)

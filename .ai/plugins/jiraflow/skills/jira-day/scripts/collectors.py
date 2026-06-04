@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from auth import jira_auth
 from candidate import Candidate
 from common import (
     NOISY_UPDATE_FIELDS,
@@ -13,7 +14,6 @@ from common import (
 )
 from context import EvidenceContext, RuntimeContext
 from jira_client import fetch_account, fetch_changelog, fetch_issues
-from settings import jira_auth
 from worklogs import get_today_worklogs
 
 

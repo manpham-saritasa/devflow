@@ -44,6 +44,7 @@ Stop and ask if:
 
 ### 5. Verification
 
+- After every code change, verify thresholds: no file >300 lines, no function >40 lines, no function >4 params. Run `python .ai/skills/check-thresholds/scripts/scan.py <target_dir>` to check.
 - Run the tests, builds, linters, or checks relevant to the change.
 - Prefer the smallest verification that proves the requested behavior.
 - If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.
