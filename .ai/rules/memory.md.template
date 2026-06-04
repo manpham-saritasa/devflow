@@ -48,7 +48,23 @@
 | `ship` | `cush` first, then run `dev-ship` for the branch's task key. Also save session. |
 | `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
 
-## 3. Creating markdown files or text documents
+## 3. Correction detection
+
+After executing a skill, if the skill's instructions are wrong, vague, or incomplete:
+1. Flag it: "⚠️ Skill gap found in [skill-name]: [what went wrong]."
+2. Suggest a concrete fix: "Suggestion: update SKILL.md line X to say [new text]."
+3. Ask: "Apply this fix to the skill?"
+4. If yes, edit the SKILL.md and re-run the skill.
+
+After every correction, count per-skill corrections. If same skill has 3+ corrections:
+- Propose a structural redesign of the skill (simplify, split, or rewrite).
+
+Also detect these patterns proactively:
+- **Stale paths**: After any file write/move, check if SKILL.md paths still exist. Flag: "⚠️ Stale path in [skill]: [path] → should be [new path]."
+- **Output drift**: Compare skill's documented output format vs actual output. If mismatch, flag and suggest SKILL.md update.
+- **Systemic bugs**: If same correction type appears across 3+ skills (e.g., path bugs), flag root cause. Suggest shared fix (e.g., shared path helper).
+
+## 4. Creating markdown files or text documents
 - Every big `##` need number in markdown file.
 - Do not include any secret values, my personal info, company info, or real project info into any files.
 - When writing markdown documents, always use `PROJ` as the default Jira project key instead of real project names like `RMASUP` or `COAPS`. Only use real keys when I explicitly give one as an example.

@@ -87,3 +87,4 @@ When drafting:
 | Always show total | Print daily total table after each log entry. |
 | Default Job Type | `JLOG_JOB_TYPE` env var, or `Testingfunctionality` if not set. |
 | Draft first if vague | If description is vague/example-like, propose drafts and ask before logging. |
+| Never log test work | Never log time for testing, debugging, or skill-development purposes. Only real billable work. When in doubt, ask. |
