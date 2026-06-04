@@ -123,7 +123,7 @@ def fetch_tasks(domain, auth, project):
         return json.loads(resp.read()).get("issues", [])
 
 
-def group_tasks(issues, ignored_ids):
+def group_tasks(issues, ignored_ids, domain):
     ongoing = []
     ready = []
     for issue in issues:
@@ -144,7 +144,7 @@ def group_tasks(issues, ignored_ids):
             "description": description_text,
             "status": status,
             "priority": fields.get("priority", {}).get("name", "?"),
-            "url": f"https://saritasa.atlassian.net/browse/{key}",
+            "url": f"https://{domain}.atlassian.net/browse/{key}",
         }
         if status in ONGOING_STATES:
             ongoing.append(item)
@@ -246,7 +246,7 @@ def main():
     ignored_ids = load_ignored()
     for proj in projects:
         issues = fetch_tasks(domain, auth, proj)
-        ongoing, ready = group_tasks(issues, ignored_ids)
+        ongoing, ready = group_tasks(issues, ignored_ids, domain)
         all_ongoing.extend(ongoing)
         all_ready.extend(ready)
 

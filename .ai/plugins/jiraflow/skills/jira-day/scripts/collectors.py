@@ -43,35 +43,18 @@ def collect_git_activity(root: str, hours: int) -> dict[str, datetime]:
     return out
 
 
-def pr_queries(cutoff: str) -> list[list[str]]:
+def pr_queries(cutoff: str, repo: str = "") -> list[list[str]]:
+    base = ["gh", "search", "prs", f"--updated={cutoff}"]
+    if repo:
+        base += ["--repo", repo]
+
+    def build(qualifier: str) -> list[str]:
+        return base + [qualifier, "--json", "title,body,updatedAt,headRefName,url"]
+
     return [
-        [
-            "gh",
-            "search",
-            "prs",
-            f"--updated={cutoff}",
-            "--author=@me",
-            "--json",
-            "title,body,updatedAt,headRefName,url",
-        ],
-        [
-            "gh",
-            "search",
-            "prs",
-            f"--updated={cutoff}",
-            "--reviewed-by=@me",
-            "--json",
-            "title,body,updatedAt,headRefName,url",
-        ],
-        [
-            "gh",
-            "search",
-            "prs",
-            f"--updated={cutoff}",
-            "--commenter=@me",
-            "--json",
-            "title,body,updatedAt,headRefName,url",
-        ],
+        build("--author=@me"),
+        build("--reviewed-by=@me"),
+        build("--commenter=@me"),
     ]
 
 
@@ -88,12 +71,14 @@ def merge_pr_items(out: dict[str, datetime], items: list[dict[str, Any]]) -> Non
             out[key] = max(out.get(key, updated_at), updated_at)
 
 
-def collect_pr_activity(root: str, hours: int, enabled: bool) -> dict[str, datetime]:
-    if not enabled:
+def collect_pr_activity(
+    root: str, hours: int, enabled: bool, repo: str = ""
+) -> dict[str, datetime]:
+    if not enabled or not repo:
         return {}
     cutoff = (now_utc() - timedelta(hours=hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
     out: dict[str, datetime] = {}
-    for cmd in pr_queries(cutoff):
+    for cmd in pr_queries(cutoff, repo):
         text = run_command(cmd, root)
         if not text:
             continue
@@ -165,16 +150,6 @@ def make_candidate(issue: dict[str, Any]) -> Candidate:
     )
 
 
-def build_candidate_maps(
-    root: str, hours: int, check_pr: bool
-) -> tuple[dict[str, int], dict[str, datetime], dict[str, datetime]]:
-    return (
-        get_today_worklogs(root),
-        collect_git_activity(root, hours),
-        collect_pr_activity(root, hours, check_pr),
-    )
-
-
 def apply_issue_evidence(
     candidate: Candidate,
     issue: dict[str, Any],
@@ -216,6 +191,26 @@ def filter_candidates(
     }
 
 
+def resolve_project_repos(config: dict[str, Any], project: str) -> list[str]:
+    repos_raw = (config.get("project_repos") or {}).get(project, "")
+    if isinstance(repos_raw, list):
+        return repos_raw
+    if repos_raw:
+        return [repos_raw]
+    return []
+
+
+def collect_pr_across_repos(
+    root: str, hours: int, check_pr: bool, repos: list[str]
+) -> dict[str, datetime]:
+    all_pr: dict[str, datetime] = {}
+    for repo in repos:
+        pr_map = collect_pr_activity(root, hours, check_pr, repo)
+        for key, dt in pr_map.items():
+            all_pr[key] = max(all_pr.get(key, dt), dt)
+    return all_pr
+
+
 def collect_candidates(
     root: str,
     env: dict[str, str],
@@ -226,8 +221,11 @@ def collect_candidates(
     account_id = fetch_account(domain, auth)["accountId"]
     cutoff = now_utc() - timedelta(hours=runtime.window_hours)
     issues = fetch_issues(domain, auth, runtime.project, runtime.window_hours)
-    worklogs, git_map, pr_map = build_candidate_maps(
-        root, runtime.window_hours, runtime.check_pr
+    repos = resolve_project_repos(config, runtime.project)
+    git_map = collect_git_activity(root, runtime.window_hours)
+    worklog_map = get_today_worklogs(root)
+    pr_map = collect_pr_across_repos(
+        root, runtime.window_hours, runtime.check_pr, repos
     )
     evidence = EvidenceContext(
         account_id=account_id,
@@ -242,6 +240,6 @@ def collect_candidates(
     for issue in issues:
         key = issue["key"]
         candidate = candidates.setdefault(key, make_candidate(issue))
-        apply_issue_evidence(candidate, issue, evidence, worklogs.get(key, 0))
+        apply_issue_evidence(candidate, issue, evidence, worklog_map.get(key, 0))
 
     return filter_candidates(candidates, config)

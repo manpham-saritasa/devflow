@@ -2,6 +2,7 @@ role: mixed
 check_pr_activity: false
 
 favorite_projects: []
+project_repos: {}
 
 identity:
   jira_email: ""
