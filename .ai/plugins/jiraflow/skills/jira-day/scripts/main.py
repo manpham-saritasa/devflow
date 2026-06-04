@@ -8,18 +8,22 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
+from dataclasses import replace
+
 from auth import (
     detect_identity,
     load_env,
     persist_identity_if_changed,
     validate_project_key,
 )
+from candidate import Candidate
 from collectors import collect_candidates
 from common import ROLES, find_repo_root
 from context import RuntimeContext
 from output import build_output, rank_candidates
 from settings import (
     ensure_local_config,
+    load_favorite_projects,
     load_stage_groups,
     merge_stage_groups,
 )
@@ -69,7 +73,7 @@ def parse_args(argv: list[str]) -> dict[str, object]:
 
 def resolve_runtime(
     args: dict[str, object],
-) -> tuple[dict[str, str], dict, RuntimeContext]:
+) -> tuple[dict[str, str], dict, RuntimeContext, list[str]]:
     config = ensure_local_config(
         CONFIG_PATH, CONFIG_TEMPLATE_PATH, LOCAL_DIR, bool(args["reset_role"])
     )
@@ -81,7 +85,11 @@ def resolve_runtime(
     if role not in ROLES:
         role = "mixed"
     project = str(args["project"] or env.get("JIRA_PROJECT_KEY", "PROJ"))
-    validate_project_key(project)
+    favorites = load_favorite_projects(ROOT) or config.get("favorite_projects") or []
+    if not args["project"] and favorites:
+        project = ""
+    else:
+        validate_project_key(project)
     check_pr = bool(config.get("check_pr_activity", False)) and not bool(args["no_pr"])
     stage_groups = merge_stage_groups(
         load_stage_groups(ROOT), config.get("stage_groups")
@@ -95,16 +103,17 @@ def resolve_runtime(
         jira_domain=env.get("JIRA_COMPANY_DOMAIN", ""),
         prefer_projects=config.get("prefer_projects") or [],
     )
-    return env, config, runtime
+    return env, config, runtime, favorites
 
 
 def config_output(
     config: dict,
     runtime: RuntimeContext,
+    project_display: str,
 ) -> str:
     return json.dumps(
         {
-            "project": runtime.project,
+            "project": project_display,
             "role": runtime.role,
             "check_pr_activity": runtime.check_pr,
             "identity": config.get("identity") or {},
@@ -135,13 +144,20 @@ def json_output(
 
 def main() -> None:
     args = parse_args(sys.argv)
-    env, config, runtime = resolve_runtime(args)
+    env, config, runtime, favorites = resolve_runtime(args)
 
     if bool(args["config"]):
-        print(config_output(config, runtime))
+        project_display = runtime.project if runtime.project else ",".join(favorites)
+        print(config_output(config, runtime, project_display))
         return
 
-    candidates = collect_candidates(ROOT, env, config, runtime)
+    candidates: dict[str, Candidate] = {}
+    projects = [runtime.project] if runtime.project else favorites
+    for proj in projects:
+        if proj:
+            proj_runtime = replace(runtime, project=proj)
+            proj_candidates = collect_candidates(ROOT, env, config, proj_runtime)
+            candidates.update(proj_candidates)
     ranked = rank_candidates(candidates, runtime)
 
     if bool(args["json"]):

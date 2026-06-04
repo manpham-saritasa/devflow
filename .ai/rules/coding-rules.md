@@ -18,6 +18,7 @@
 ### 2. Plan
 
 - Make a short, phase-by-phase plan before coding.
+- For any multi-function script, plugin, or tool: propose the module/file structure BEFORE writing code. List each module and what it owns. Get approval before implementation. Single-file monoliths with 700+ lines are never acceptable for new code regardless of language.
 - Show the plan first when the task is multi-step, high-risk, or likely to produce a broad diff.
 - Group work into meaningful review slices, for example: "Data Model", "Business Logic", "API", "UI", or "Tests".
 - Each phase must include a concrete check such as a test, build, lint, or command.
@@ -45,6 +46,7 @@ Stop and ask if:
 ### 5. Verification
 
 - After every code change, verify thresholds: no file >300 lines, no function >40 lines, no function >4 params. Run `python .ai/skills/check-thresholds/scripts/scan.py <target_dir>` to check.
+- The `scan.py` tool works only for Python files. For .NET projects, apply equivalent size/complexity rules through `.editorconfig` analyzer settings (Roslyn analyzers can enforce similar thresholds natively).
 - Run the tests, builds, linters, or checks relevant to the change.
 - Prefer the smallest verification that proves the requested behavior.
 - If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.

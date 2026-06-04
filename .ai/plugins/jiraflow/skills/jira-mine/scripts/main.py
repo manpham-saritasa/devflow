@@ -3,6 +3,7 @@
 import base64
 import json
 import os
+import re
 import sys
 import urllib.request
 from datetime import datetime
@@ -193,6 +194,24 @@ def build_output(ongoing, ready, ignored_count, project, today):
     return "\n".join(out)
 
 
+def load_favorite_projects(root: str) -> list[str]:
+    path = os.path.join(root, ".local", "jiraflow", "config.yaml")
+    if not os.path.exists(path):
+        return []
+    try:
+        text = open(path, encoding="utf-8").read()
+        match = re.search(r"favorite_projects:\s*\[([^\]]*)\]", text)
+        if match:
+            return [
+                p.strip().strip('"').strip("'")
+                for p in match.group(1).split(",")
+                if p.strip()
+            ]
+    except Exception:
+        return []
+    return []
+
+
 def main():
     show_pending = "--pending" in sys.argv
     show_ready = "--ready" in sys.argv
@@ -214,9 +233,25 @@ def main():
         sys.exit(1)
 
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()
-    issues = fetch_tasks(domain, auth, project)
+
+    if not any(arg for arg in sys.argv[1:] if not arg.startswith("--")):
+        favorites = load_favorite_projects(ROOT)
+        if favorites:
+            projects = favorites
+    else:
+        projects = [project]
+
+    all_ongoing = []
+    all_ready = []
     ignored_ids = load_ignored()
-    ongoing, ready = group_tasks(issues, ignored_ids)
+    for proj in projects:
+        issues = fetch_tasks(domain, auth, proj)
+        ongoing, ready = group_tasks(issues, ignored_ids)
+        all_ongoing.extend(ongoing)
+        all_ready.extend(ready)
+
+    ongoing = all_ongoing
+    ready = all_ready
 
     if show_pending:
         ready = []

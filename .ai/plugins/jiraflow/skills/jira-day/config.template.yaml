@@ -1,6 +1,8 @@
 role: mixed
 check_pr_activity: false
 
+favorite_projects: []
+
 identity:
   jira_email: ""
   github_username: ""

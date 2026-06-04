@@ -3,6 +3,7 @@
 import base64
 import json
 import os
+import re
 import sys
 import urllib.request
 from datetime import datetime
@@ -194,6 +195,24 @@ def build_output(items, ignored_count, project, domain, today):
     return "\n".join(out)
 
 
+def load_favorite_projects(root: str) -> list[str]:
+    path = os.path.join(root, ".local", "jiraflow", "config.yaml")
+    if not os.path.exists(path):
+        return []
+    try:
+        text = open(path, encoding="utf-8").read()
+        match = re.search(r"favorite_projects:\s*\[([^\]]*)\]", text)
+        if match:
+            return [
+                p.strip().strip('"').strip("'")
+                for p in match.group(1).split(",")
+                if p.strip()
+            ]
+    except Exception:
+        return []
+    return []
+
+
 def main():
     env = load_env()
     domain = env.get("JIRA_COMPANY_DOMAIN", "")
@@ -203,6 +222,10 @@ def main():
     # Override with positional arg (e.g., jurgent COAPS)
     if len(sys.argv) > 1 and not sys.argv[1].startswith("--"):
         project = sys.argv[1].upper()
+        projects = [project]
+    else:
+        favorites = load_favorite_projects(ROOT)
+        projects = favorites if favorites else [project]
 
     if not all([domain, email, token]):
         print("Missing JIRA credentials in .env.local")
@@ -212,44 +235,41 @@ def main():
     account_id = get_account_id(domain, auth)
     ignored_ids = load_ignored()
 
-    issues = fetch_issues(domain, auth, project)
-    urgent = []
-    ignored_count = 0
+    all_urgent = []
+    all_ignored = 0
+    for proj in projects:
+        for issue in fetch_issues(domain, auth, proj):
+            key = issue["key"]
+            fields = issue["fields"]
+            comments = fields.get("comment", {}).get("comments", [])
+            result = find_urgent_comment(comments, account_id, ignored_ids)
+            if result == "ignored":
+                all_ignored += 1
+                continue
+            if result is None:
+                continue
 
-    for issue in issues:
-        key = issue["key"]
-        fields = issue["fields"]
-        comments = fields.get("comment", {}).get("comments", [])
-        result = find_urgent_comment(comments, account_id, ignored_ids)
-        if result == "ignored":
-            ignored_count += 1
-            continue
-        if result is None:
-            continue
+            body_text = result["body"]
+            tag = classify_intent(body_text)
+            all_urgent.append(
+                {
+                    "key": key,
+                    "summary": fields["summary"],
+                    "status": fields["status"]["name"],
+                    "priority": fields.get("priority", {}).get("name", "?"),
+                    "author": result["author"],
+                    "comment_id": result["id"],
+                    "body": body_text[:200],
+                    "tag": tag,
+                }
+            )
 
-        urgent_comment = result
-
-        body_text = urgent_comment["body"]
-        tag = classify_intent(body_text)
-        urgent.append(
-            {
-                "key": key,
-                "summary": fields["summary"],
-                "status": fields["status"]["name"],
-                "priority": fields.get("priority", {}).get("name", "?"),
-                "author": urgent_comment["author"],
-                "comment_id": urgent_comment["id"],
-                "body": body_text[:200],
-                "tag": tag,
-            }
-        )
-
-    sort_urgent(urgent)
+    sort_urgent(all_urgent)
 
     today = datetime.now().strftime("%Y-%m-%d")
-    output = build_output(urgent, ignored_count, project, domain, today)
+    output = build_output(all_urgent, all_ignored, project, domain, today)
     print(output)
-    print(f"\n{len(urgent)} urgent, {ignored_count} ignored")
+    print(f"\n{len(all_urgent)} urgent, {all_ignored} ignored")
 
 
 if __name__ == "__main__":

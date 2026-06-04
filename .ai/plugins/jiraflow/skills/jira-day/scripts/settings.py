@@ -74,3 +74,15 @@ def merge_stage_groups(
             if isinstance(values, list):
                 out[key] = [str(v) for v in values]
     return out
+
+
+def load_favorite_projects(root: str) -> list[str]:
+    path = os.path.join(root, ".local", "jiraflow", "config.yaml")
+    if not os.path.exists(path):
+        return []
+    try:
+        data = yaml.safe_load(open(path, encoding="utf-8")) or {}
+        projects = data.get("favorite_projects") or []
+        return [str(p) for p in projects if p]
+    except Exception:
+        return []

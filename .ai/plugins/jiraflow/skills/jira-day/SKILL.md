@@ -23,8 +23,11 @@ Read optional local override from the repo root:
 If missing on first run:
 1. Ask for role: `dev`, `qa`, `tm`, `pm`, `mixed`
 2. Ask: "Do you do PR activity as part of your work?"
-3. Auto-detect identity
-4. Create `.local/jday/config.yaml`
+3. Ask: "List your favorite projects (comma-separated keys, e.g. RMASUP, PROJ)?"
+4. Auto-detect identity
+5. Create `.local/jday/config.yaml`
+
+If `favorite_projects` is set and no project key is given, `jday` loops through all favorites and merges results.
 
 Use `config.template.yaml` in this skill as the file template.
 
