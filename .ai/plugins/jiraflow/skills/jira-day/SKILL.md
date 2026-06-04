@@ -23,7 +23,7 @@ Read optional local override from the repo root:
 If missing on first run:
 1. Ask for role: `dev`, `qa`, `tm`, `pm`, `mixed`
 2. Ask: "Do you do PR activity as part of your work?"
-3. Ask: "List your favorite projects (comma-separated keys, e.g. RMASUP, PROJ)?"
+3. Ask: "List your favorite projects (comma-separated keys, e.g. PROJ, COAPS)?"
 4. Auto-detect identity
 5. Create `.local/jday/config.yaml`
 
@@ -40,10 +40,10 @@ python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py [PROJECT_KEY]
 Useful flags:
 
 ```bash
-python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py RMASUP --json
-python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py RMASUP --role qa
-python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py RMASUP --window 48h
-python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py RMASUP --no-pr
+python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py PROJ --json
+python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py PROJ --role qa
+python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py PROJ --window 48h
+python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py PROJ --no-pr
 python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py --config
 python .ai/plugins/jiraflow/skills/jira-day/scripts/main.py --reset-role
 ```
@@ -109,23 +109,23 @@ jira-day — last 24h
 
 Suggested: #1
 
-1. RMASUP-2179
-   url: https://<domain>.atlassian.net/browse/RMASUP-2179
+1. PROJ-100
+   url: https://<domain>.atlassian.net/browse/PROJ-100
    evidence: [comment, transition, updated]
    last activity: 2026-06-04 10:25
    logged: not logged
-   summary: Field App - Data in signatured master form is lost when reopen
-   status: Ready for Development | priority: High | assignee: Ky Tran
-   notes: Guys, I emailed client for more details. Let's wait.
+   summary: Fix login redirect after token expiry
+   status: In Progress | priority: High | assignee: Jane Smith
+   notes: Replicated on staging, working on fix.
 
-2. RMASUP-2143
-   url: https://<domain>.atlassian.net/browse/RMASUP-2143
+2. PROJ-101
+   url: https://<domain>.atlassian.net/browse/PROJ-101
    evidence: [comment, updated]
    last activity: 2026-06-03 17:37
    logged: not logged
-   summary: Field App - New menu to view all related projects' DRs
-   status: Ready for Development | priority: High | assignee: Tien Luu
-   notes: Added an API task for this.
+   summary: Add pagination to search results
+   status: Ready for Development | priority: High | assignee: Jane Smith
+   notes: Created API task for this.
 ```
 
 Then ask:

@@ -35,8 +35,8 @@ jiraflow/
 
 ```mermaid
 flowchart TD
-    A[User says jday RMASUP] --> B[Agent loads jira-day skill]
-    B --> C[Agent terminal call: python jira-day main.py RMASUP --json]
+    A[User says jday PROJ] --> B[Agent loads jira-day skill]
+    B --> C[Agent terminal call: python jira-day main.py PROJ --json]
     C --> D[Script returns ranked tasks JSON]
     D --> E[Agent formats list for user]
     E --> F[Agent asks confirm: log #1 or choose another]
@@ -124,3 +124,26 @@ JIRA_PROJECT_KEY=PROJ
 - `JIRA_COMPANY_DOMAIN` is your Atlassian subdomain only, for example `saritasa` for `https://saritasa.atlassian.net`.
 - Use your Atlassian login email for `JIRA_EMAIL`.
 - Keep `.env.local` private and never commit API tokens.
+
+## Favorite Projects
+
+Set your favorite project keys once, and `jday`, `jmine`, and `jurgent` will auto-loop through all of them when no project key is given.
+
+### Config
+
+Create `.local/jiraflow/config.yaml` (gitignored):
+
+```yaml
+favorite_projects: [PROJ, COAPS]
+```
+
+### Behavior
+
+| Command | Result |
+|---|---|
+| `jday` | loops all favorites, merges ranked candidates |
+| `jmine` | loops all favorites, merges task lists |
+| `jurgent` | loops all favorites, merges urgent items |
+| `jday PROJ` | single project (overrides favorites) |
+| `jmine PROJ` | single project (overrides favorites) |
+| `jurgent PROJ` | single project (overrides favorites) |

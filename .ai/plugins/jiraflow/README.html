@@ -399,8 +399,8 @@ a:hover {
 <h3>Agent flow</h3>
 <pre class="mermaid">
 flowchart TD
-    A[User says jday RMASUP] --> B[Agent loads jira-day skill]
-    B --> C[Agent terminal call: python jira-day main.py RMASUP --json]
+    A[User says jday PROJ] --> B[Agent loads jira-day skill]
+    B --> C[Agent terminal call: python jira-day main.py PROJ --json]
     C --> D[Script returns ranked tasks JSON]
     D --> E[Agent formats list for user]
     E --> F[Agent asks confirm: log #1 or choose another]
@@ -519,6 +519,49 @@ JIRA_PROJECT_KEY=PROJ
 <li>Use your Atlassian login email for <code>JIRA_EMAIL</code>.</li>
 <li>Keep <code>.env.local</code> private and never commit API tokens.</li>
 </ul>
+</section>
+<section class="section">
+<h2>Favorite Projects</h2>
+<p>Set your favorite project keys once, and <code>jday</code>, <code>jmine</code>, and <code>jurgent</code> will auto-loop through all of them when no project key is given.</p>
+<h3>Config</h3>
+<p>Create <code>.local/jiraflow/config.yaml</code> (gitignored):</p>
+<pre><code class="language-yaml">favorite_projects: [PROJ, COAPS]
+</code></pre>
+<h3>Behavior</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Command"><code>jday</code></td>
+<td data-label="Result">loops all favorites, merges ranked candidates</td>
+</tr>
+<tr>
+<td data-label="Command"><code>jmine</code></td>
+<td data-label="Result">loops all favorites, merges task lists</td>
+</tr>
+<tr>
+<td data-label="Command"><code>jurgent</code></td>
+<td data-label="Result">loops all favorites, merges urgent items</td>
+</tr>
+<tr>
+<td data-label="Command"><code>jday PROJ</code></td>
+<td data-label="Result">single project (overrides favorites)</td>
+</tr>
+<tr>
+<td data-label="Command"><code>jmine PROJ</code></td>
+<td data-label="Result">single project (overrides favorites)</td>
+</tr>
+<tr>
+<td data-label="Command"><code>jurgent PROJ</code></td>
+<td data-label="Result">single project (overrides favorites)</td>
+</tr>
+</tbody>
+</table>
 </section>
   </main>
 </body>
