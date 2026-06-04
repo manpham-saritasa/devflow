@@ -234,12 +234,11 @@ def main():
 
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()
 
+    projects = [project]
     if not any(arg for arg in sys.argv[1:] if not arg.startswith("--")):
         favorites = load_favorite_projects(ROOT)
         if favorites:
             projects = favorites
-    else:
-        projects = [project]
 
     all_ongoing = []
     all_ready = []

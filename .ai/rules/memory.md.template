@@ -78,4 +78,8 @@ Also detect these patterns proactively:
 
 - When creating documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
+- When creating a README.md for a skill, always include:
+  - mermaid chart of the flow
+  - structure listing scripts/assets with descriptions
+  - list of external tools, APIs, or MCP calls used
 - When creating or editing `.md` files: if an `.html` file with the same name exists in the same directory, auto-run `md-to-html` to keep the HTML copy in sync.

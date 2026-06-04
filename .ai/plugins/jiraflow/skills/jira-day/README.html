@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jira-day</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>jira-day</h1>
+</section>
+<section class="section">
+<p>Find Jira tasks you touched today, ranked by your role. Log time with one click.</p>
+</section>
+<section class="section">
+<h2>1. Quick start</h2>
+<pre><code class="language-bash">jday                    # tasks you touched today (auto-detects favorites)
+jday RMASUP             # specific project
+jday --window 48h       # last 48 hours
+jday --role dev         # dev ranking: PRs first
+jday --no-pr            # skip PR checks this run
+</code></pre>
+<p>First run asks: your role, PR activity, and favorite projects. Saves to <code>.local/jiraflow/config.yaml</code>.</p>
+</section>
+<section class="section">
+<h2>2. Setup</h2>
+<h3>Required env vars (<code>.env.local</code>)</h3>
+<pre><code class="language-env">JIRA_COMPANY_DOMAIN=saritasa
+JIRA_EMAIL=you@example.com
+JIRA_API_TOKEN=your_token
+JIRA_PROJECT_KEY=PROJ
+</code></pre>
+<h3>Favorite projects (shared with jmine/jurgent)</h3>
+<pre><code class="language-yaml"># .local/jiraflow/config.yaml
+favorite_projects: [RMASUP, COAPS]
+
+# Maps Jira project → GitHub repos for PR detection
+project_repos:
+  RMASUP:
+
+    - owner/backend
+    - owner/frontend
+  COAPS: owner/api
+</code></pre>
+<p>Without <code>project_repos</code>, PR check is skipped. One project can have multiple repos — all are searched.</p>
+<h3>Personal config</h3>
+<pre><code class="language-yaml"># .local/jday/config.yaml
+role: dev          # dev | qa | tm | pm | mixed
+check_pr_activity: true
+</code></pre>
+</section>
+<section class="section">
+<h2>3. What it checks</h2>
+<p>Collects evidence from the last 24 hours (or today by default):</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Source">Jira comments</td>
+<td data-label="Signal">you commented on this issue</td>
+</tr>
+<tr>
+<td data-label="Source">Jira transitions</td>
+<td data-label="Signal">you moved this issue to another status</td>
+</tr>
+<tr>
+<td data-label="Source">Jira updates</td>
+<td data-label="Signal">you updated description, summary, assignee, etc.</td>
+</tr>
+<tr>
+<td data-label="Source">Git commits</td>
+<td data-label="Signal">commit message or branch name includes the task key</td>
+</tr>
+<tr>
+<td data-label="Source">GitHub PRs</td>
+<td data-label="Signal">you authored, reviewed, or commented on a PR (needs <code>project_repos</code>)</td>
+</tr>
+<tr>
+<td data-label="Source">Worklogs</td>
+<td data-label="Signal">you already logged time today (shown as <code>10m today</code>)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>4. Role ranking</h2>
+<p>Tasks are sorted differently depending on your role.</p>
+<h3>dev</h3>
+<ol>
+<li>PR activity</li>
+<li>Git activity</li>
+<li>Jira transition or comment</li>
+<li>Updated-only</li>
+<li>Already logged → ranked lower</li>
+</ol>
+<h3>qa</h3>
+<ol>
+<li>QA-stage task with transition or comment</li>
+<li>Any transition or comment</li>
+<li>Updated-only</li>
+<li>Already logged → ranked lower</li>
+</ol>
+<h3>tm</h3>
+<ol>
+<li>Review-stage transition</li>
+<li>Coordination or review comment</li>
+<li>Other transition</li>
+<li>Updated-only</li>
+<li>Already logged → ranked lower</li>
+</ol>
+<h3>pm</h3>
+<ol>
+<li>Review-stage transition</li>
+<li>Clarification or planning comment</li>
+<li>Other transition or update</li>
+<li>Updated-only</li>
+<li>Already logged → ranked lower</li>
+</ol>
+<h3>mixed</h3>
+<ol>
+<li>2+ strong signals (pr, git, transition, comment)</li>
+<li>1 strong signal</li>
+<li>Updated-only</li>
+<li>Already logged → ranked lower</li>
+</ol>
+<p>Tie-breaks: not logged wins over logged, then most recent activity, then more evidence.</p>
+</section>
+<section class="section">
+<h2>5. Output example</h2>
+<pre><code class="language-text">jira-day — last 16h
+
+Suggested: #1
+
+
+1. PROJ-100
+   url: https://&lt;domain&gt;.atlassian.net/browse/PROJ-100
+   evidence: [comment, transition, updated]
+   logged: 10m today
+   summary: Fix login redirect after token expiry
+   status: In Progress | priority: High | assignee: Jane Smith
+   notes: Replicated on staging, working on fix.
+
+
+2. PROJ-101
+   url: https://&lt;domain&gt;.atlassian.net/browse/PROJ-101
+   evidence: [transition, updated]
+   logged: not logged
+   summary: Add pagination to search results
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-text">Log to #1? (yes / choose # / cancel)
+</code></pre>
+</section>
+<section class="section">
+<h2>6. Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag"><code>--json</code></td>
+<td data-label="Effect">Output as JSON for scripts</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--config</code></td>
+<td data-label="Effect">Show resolved config</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--role qa</code></td>
+<td data-label="Effect">Override role for this run</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--window 48h</code></td>
+<td data-label="Effect">Custom time window (default: today)</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--no-pr</code></td>
+<td data-label="Effect">Skip PR checks this run</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--reset-role</code></td>
+<td data-label="Effect">Re-run first-time setup</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>7. File structure</h2>
+<pre><code class="language-text">skills/jira-day/
+  SKILL.md
+  config.template.yaml
+  scripts/
+    main.py          ← entry point, arg parsing
+    common.py        ← constants, date utils, text extraction
+    auth.py          ← env loading, Jira auth, identity
+    settings.py      ← config bootstrap, stage groups
+    jira_client.py   ← Jira HTTP
+    candidate.py     ← task model + bucket logic
+    collectors.py    ← evidence gathering (git, PR, Jira)
+    output.py        ← ranking + text output
+    context.py       ← Runtime/Evidence context objects
+    worklogs.py      ← local worklog parsing
+    tests/           ← unit tests
+</code></pre>
+</section>
+<section class="section">
+<h2>8. How it integrates</h2>
+<ul>
+<li>Reads Jira auth from <code>../../config.md</code></li>
+<li>Hands off to <code>jira-log</code> for time entry</li>
+<li>Works with <code>jira-mine</code> and <code>jira-urgent</code> — same favorite projects config</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

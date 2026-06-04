@@ -35,7 +35,13 @@ python .ai/plugins/jiraflow/skills/jira-mine/scripts/main.py [--pending | --read
 | `--ready` | Ready for Development tasks only |
 | `--review` | Tasks needing your review (In Review, TM Review) |
 
-Present the output as formatted markdown — not raw terminal output. Clean up any artifact spacing or separators. Use the script's actual data, not a template.
+### Output rules
+
+- Read the raw output from the Python script using `terminal` tool.
+- Present the output as formatted markdown — not raw terminal output.
+- Every task must be shown with a **clickable URL**: `[PROJ-123](https://<domain>.atlassian.net/browse/PROJ-123)`.
+- Do not paraphrase or summarize task descriptions — show the actual text from the script.
+- Never save to file — print directly in chat.
 
 ---
 

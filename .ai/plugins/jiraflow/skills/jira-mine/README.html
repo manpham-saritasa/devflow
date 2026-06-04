@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jira-mine</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>jira-mine</h1>
+</section>
+<section class="section">
+<p>List your assigned Jira tasks, ordered by priority and grouped by status.</p>
+</section>
+<section class="section">
+<h2>1. Quick start</h2>
+<pre><code class="language-bash">jmine                      # all assigned, grouped by status
+jmine --pending            # on-going only
+jmine --ready              # ready / backlog only
+jmine --review             # tasks in review status
+jmine RMASUP               # specific project
+</code></pre>
+<p>No project key given → auto-loops through favorites from <code>.local/jiraflow/config.yaml</code>.</p>
+</section>
+<section class="section">
+<h2>2. Output</h2>
+<pre><code class="language-text"># Jira - My Tasks: PROJ (2026-06-04)
+
+**18 pending** (8 on-going, 10 ready, 0 ignored)
+
+## On-Going (8)
+
+### 1. PROJ-123 — Highest | TM Review
+**Summary of the task:**
+
+Description of the task with context and details...
+
+### 2. PROJ-124 — High | Blocked
+**Another task summary:**
+
+More description text...
+
+## Ready for Development (10)
+
+### 1. PROJ-125 — High
+**Ready task summary:**
+
+Description...
+</code></pre>
+</section>
+<section class="section">
+<h2>3. Setup</h2>
+<h3>Required env vars (<code>.env.local</code>)</h3>
+<pre><code class="language-env">JIRA_COMPANY_DOMAIN=saritasa
+JIRA_EMAIL=you@example.com
+JIRA_API_TOKEN=your_token
+JIRA_PROJECT_KEY=PROJ
+</code></pre>
+<h3>Favorite projects</h3>
+<p>Reads from <code>.local/jiraflow/config.yaml</code>:</p>
+<pre><code class="language-yaml">favorite_projects: [RMASUP, COAPS]
+</code></pre>
+<h3>Ignore list</h3>
+<p>Skill-local <code>.ai/plugins/jiraflow/skills/jira-mine/ignore-tasks.txt</code>:</p>
+<pre><code>RMASUP-123
+RMASUP-456
+</code></pre>
+<p>One task key per line. These tasks won't appear in the output.</p>
+</section>
+<section class="section">
+<h2>4. Flow</h2>
+<pre class="mermaid">
+flowchart TD
+    A[Parse args] --> B[Load .env.local]
+    B --> C{Positional arg?}
+    C -->|yes| D[Use single project]
+    C -->|no| E{Has favorites config?}
+    E -->|yes| F[Loop all favorites]
+    E -->|no| G[Use JIRA_PROJECT_KEY]
+    D --> H[Fetch tasks per project]
+    F --> H
+    G --> H
+    H --> I[Group by status: on-going vs ready]
+    I --> J{Flag filters?}
+    J -->|--pending| K[Show on-going only]
+    J -->|--ready| L[Show ready only]
+    J -->|--review| M[Show review-stage only]
+    J -->|none| N[Show all]
+    K --> O[Output markdown]
+    L --> O
+    M --> O
+    N --> O
+</pre>
+<h3>External calls</h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Call type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Source">Jira REST API</td>
+<td data-label="Call type">HTTP POST</td>
+<td data-label="Purpose">Search issues by assignee + sprint</td>
+</tr>
+<tr>
+<td data-label="Source"><code>.local/jiraflow/config.yaml</code></td>
+<td data-label="Call type">local file</td>
+<td data-label="Purpose">Read favorite projects</td>
+</tr>
+<tr>
+<td data-label="Source"><code>ignore-tasks.txt</code></td>
+<td data-label="Call type">local file</td>
+<td data-label="Purpose">Skip ignored task keys</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>5. How it works</h2>
+<p>Queries Jira for <code>assignee = currentUser()</code> in open sprints, sorted by priority. Groups tasks into:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Statuses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Group">On-Going</td>
+<td data-label="Statuses">In Progress, Code Review, TM Review, In Review, Blocked, On Hold</td>
+</tr>
+<tr>
+<td data-label="Group">Ready</td>
+<td data-label="Statuses">Ready for Development, Open, To Do, Reopened</td>
+</tr>
+</tbody>
+</table>
+<p>Excludes: Completed, Done, Closed, Resolved, On Production, On Staging, Backlog.</p>
+</section>
+<section class="section">
+<h2>6. Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Flag"><code>--pending</code></td>
+<td data-label="Effect">Show on-going only</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--ready</code></td>
+<td data-label="Effect">Show ready only</td>
+</tr>
+<tr>
+<td data-label="Flag"><code>--review</code></td>
+<td data-label="Effect">Filter on-going to In Review / TM Review</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>7. File structure</h2>
+<pre><code class="language-text">skills/jira-mine/
+  SKILL.md           ← skill description + triggers
+  README.md          ← this file
+  scripts/
+    main.py          ← entry point, single self-contained script
+  ignore-tasks.txt   ← task keys to exclude, one per line
+</code></pre>
+</section>
+  </main>
+</body>
+</html>
