@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from candidate import Candidate
@@ -29,7 +30,14 @@ def build_output(
     items: list[Candidate],
     runtime: RuntimeContext,
 ) -> str:
-    lines = [f"jira-day — last {runtime.window_hours}h", ""]
+    now = datetime.now()
+    is_today = runtime.window_hours >= (now.hour or 24) - 1
+    label = (
+        f"today ({runtime.window_hours}h)"
+        if is_today
+        else f"last {runtime.window_hours}h"
+    )
+    lines = [f"jira-day — {label}", ""]
     if not items:
         return "\n".join(lines + ["No candidate tasks found."])
     lines += ["Suggested: #1", ""]
