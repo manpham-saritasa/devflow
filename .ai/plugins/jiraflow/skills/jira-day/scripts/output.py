@@ -38,7 +38,6 @@ def build_output(
         lines.append(f"{index}. {data['key']}")
         lines.append(f"   url: {data['url']}")
         lines.append(f"   evidence: [{', '.join(data['evidence'])}]")
-        lines.append(f"   last activity: {data['last_activity']}")
         lines.append(f"   logged: {data['logged']}")
         lines.append(f"   summary: {data['summary']}")
         lines.append(

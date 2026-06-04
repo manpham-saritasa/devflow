@@ -108,9 +108,12 @@ JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@example.com
 JIRA_API_TOKEN=your_api_token_here
 JIRA_PROJECT_KEY=PROJ
+TEMPO_API_TOKEN=your_tempo_token_here
 ```
 
-### How to create the API token
+> `TEMPO_API_TOKEN` is required by `jira-log` for logging time. Other skills work without it.
+
+### How to get the Jira API token
 
 1. Sign in to your Atlassian account.
 2. Open: `https://id.atlassian.com/manage-profile/security/api-tokens`
@@ -118,6 +121,14 @@ JIRA_PROJECT_KEY=PROJ
 4. Give it a label like `devflow jiraflow`.
 5. Copy the generated token.
 6. Save it to `.env.local` as `JIRA_API_TOKEN`.
+
+### How to get the Tempo API token
+
+1. Sign in to your Atlassian account.
+2. Open: `https://app.tempo.io/4/settings/api-integration`
+3. Click **Generate API Token**.
+4. Copy the generated token.
+5. Save it to `.env.local` as `TEMPO_API_TOKEN`.
 
 ### Notes
 

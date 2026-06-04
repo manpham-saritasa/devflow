@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 
-JIRA_LOG_RELATIVE = [".local", "skills", "jira-log", "main.py"]
+JIRA_LOG_RELATIVE = [".ai", "plugins", "jiraflow", "skills", "jira-log", "main.py"]
 
 
 def get_today_worklogs(root: str) -> dict[str, int]:
@@ -11,7 +11,7 @@ def get_today_worklogs(root: str) -> dict[str, int]:
     if not os.path.exists(jira_log_script):
         return {}
     date_str = datetime.now().strftime("%Y-%m-%d")
-    path = os.path.join(root, ".local", "jira", "logs", f"{date_str}.md")
+    path = os.path.join(root, ".local", "jiraflow", "logs", f"{date_str}.md")
     if not os.path.exists(path):
         return {}
 

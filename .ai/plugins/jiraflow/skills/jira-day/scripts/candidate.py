@@ -114,7 +114,6 @@ class Candidate:
             "priority": self.priority,
             "assignee": self.assignee,
             "evidence": sorted(self.evidence),
-            "last_activity": fmt_dt(self.last_activity),
             "logged": self.logged_label(),
             "bucket": self.bucket(runtime),
             "notes": self.notes[:5],

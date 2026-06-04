@@ -112,7 +112,6 @@ Suggested: #1
 1. PROJ-100
    url: https://<domain>.atlassian.net/browse/PROJ-100
    evidence: [comment, transition, updated]
-   last activity: 2026-06-04 10:25
    logged: not logged
    summary: Fix login redirect after token expiry
    status: In Progress | priority: High | assignee: Jane Smith
@@ -121,7 +120,6 @@ Suggested: #1
 2. PROJ-101
    url: https://<domain>.atlassian.net/browse/PROJ-101
    evidence: [comment, updated]
-   last activity: 2026-06-03 17:37
    logged: not logged
    summary: Add pagination to search results
    status: Ready for Development | priority: High | assignee: Jane Smith
@@ -137,7 +135,7 @@ If yes or alternate chosen:
 2. Ask description
 3. Run:
    ```bash
-   python .local/skills/jira-log/main.py <KEY> <DURATION> "<DESCRIPTION>"
+   python .ai/plugins/jiraflow/skills/jira-log/main.py <KEY> <DURATION> "<DESCRIPTION>"
    ```
 4. Show final total from `jlog`
 

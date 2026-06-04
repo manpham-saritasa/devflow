@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+from datetime import datetime
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
@@ -42,7 +43,7 @@ def parse_args(argv: list[str]) -> dict[str, object]:
         "config": False,
         "reset_role": False,
         "role": None,
-        "window": 24,
+        "window": None,
         "no_pr": False,
     }
     i = 1
@@ -56,6 +57,8 @@ def parse_args(argv: list[str]) -> dict[str, object]:
             args["reset_role"] = True
         elif arg == "--no-pr":
             args["no_pr"] = True
+        elif arg == "--today":
+            args["today"] = True
         elif arg == "--role" and i + 1 < len(argv):
             args["role"] = argv[i + 1].lower()
             i += 1
@@ -99,7 +102,7 @@ def resolve_runtime(
         role=role,
         check_pr=check_pr,
         stage_groups=stage_groups,
-        window_hours=int(args["window"]),
+        window_hours=int(args["window"]) if args["window"] is not None else 0,
         jira_domain=env.get("JIRA_COMPANY_DOMAIN", ""),
         prefer_projects=config.get("prefer_projects") or [],
     )
@@ -150,6 +153,9 @@ def main() -> None:
         project_display = runtime.project if runtime.project else ",".join(favorites)
         print(config_output(config, runtime, project_display))
         return
+
+    window = args["window"] or (datetime.now().hour or 24)
+    runtime = replace(runtime, window_hours=window)
 
     candidates: dict[str, Candidate] = {}
     projects = [runtime.project] if runtime.project else favorites
