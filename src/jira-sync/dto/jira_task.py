@@ -25,6 +25,7 @@ class JiraTask:
     resolution_date: str
     description_raw: dict[str, Any] | None
     description_text: str
+    id: str = ""
     description_html: str = ""
     estimated: str = "None"
     spent: str = "None"

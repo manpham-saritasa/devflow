@@ -136,7 +136,8 @@ class JiraTaskFetcher:
                 return None
             raise
         fields = data.get("fields") or {}
-        return self._builder.build(issue_key, fields, self._custom_fields)
+        issue_id = str(data.get("id", ""))
+        return self._builder.build(issue_key, issue_id, fields, self._custom_fields)
 
     def get_max_issue_id(self, project_key: str | None = None) -> int:
         pk = project_key or self._project_key

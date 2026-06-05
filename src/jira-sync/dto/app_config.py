@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -12,3 +12,5 @@ class AppConfig:
     pending_tasks_path: Path
     pr_template_path: Path
     env_path: Path
+    github_repo: str = ""
+    github_repos: list[str] = field(default_factory=list)

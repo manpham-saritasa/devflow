@@ -6,6 +6,7 @@ from pathlib import Path
 
 from dto.jira_task import JiraTask
 from dto.subtask_info import SubtaskInfo
+from github.pr import fetch_and_write_pr
 
 from jira.config import JIRA_URL, REPO_ROOT
 from jira.fetcher import build_task_json, render_raw_md
@@ -148,6 +149,11 @@ def sync_one_issue(
             tags_field_id=tags_field,
         )
         _print_result(key, result, clen)
+
+        if with_prs and task.id:
+            print()
+            fetch_and_write_pr({"key": task.key, "id": task.id}, download_path, force)
+
         return 0
     except Exception as e:
         print(f"  {key}: ERROR - {e}")

@@ -97,7 +97,7 @@ def parse_args() -> argparse.Namespace:
         help="Re-sync all tasks in tasks-pending.txt, remove resolved ones.",
     )
     _ = parser.add_argument(
-        "--with-prs",
+        "--pr",
         action="store_true",
         help="Also fetch GitHub PR data for each synced task.",
     )
@@ -163,7 +163,7 @@ def main() -> None:
                     download_path,
                     download_path_rel,
                     not_found_state_path,
-                    with_prs=bool(args.with_prs),
+                    with_prs=bool(args.pr),
                 )
             )
         sys.exit(
@@ -174,7 +174,7 @@ def main() -> None:
                 download_path,
                 download_path_rel,
                 not_found_state_path,
-                with_prs=bool(args.with_prs),
+                with_prs=bool(args.pr),
             )
         )
 

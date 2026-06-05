@@ -17,7 +17,11 @@ class JiraTaskBuilder:
         self._base_url = base_url
 
     def build(
-        self, issue_key: str, fields: dict[str, Any], custom_fields: dict[str, str]
+        self,
+        issue_key: str,
+        issue_id: str,
+        fields: dict[str, Any],
+        custom_fields: dict[str, str],
     ) -> JiraTask:
         desc_raw = fields.get("description")
         description_html, description_text = self._extract_desc(desc_raw)
@@ -33,6 +37,7 @@ class JiraTaskBuilder:
         safe = JiraHttpClient.safe_nav
         return JiraTask(
             key=issue_key,
+            id=issue_id,
             summary=str(fields.get("summary") or "?"),
             status=safe(fields, "status", "name", default="?"),
             priority=safe(fields, "priority", "name", default="?"),

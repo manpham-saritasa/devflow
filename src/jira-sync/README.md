@@ -123,7 +123,7 @@ Run from the `src/jira-sync/` directory.
 ### Single task
 
 ```bash
-python main.py RMASUP-2100
+python main.py PROJ-2100
 python main.py 2100              # uses JIRA_PROJECT_KEY
 python main.py --force 2100      # overwrite existing
 python main.py --relate 2100     # also download linked related tasks
@@ -147,14 +147,14 @@ python main.py --pending         # re-sync all pending, remove resolved ones
 ### GitHub PRs
 
 ```bash
-python main.py RMASUP-2100 --with-prs   # also fetch linked PRs into pr.md
+python main.py PROJ-2190 --pr   # also fetch linked PRs into pr.md
 ```
 
 ---
 
 ## 4. Result files
 
-All in `src/jira-sync/result/`, one task key per line:
+All in `src/jira-sync/result/`, one task key per line (`PROJ-xxxx` format):
 
 | File | Purpose |
 |------|---------|

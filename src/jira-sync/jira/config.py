@@ -81,6 +81,8 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
         env_path=(
             config_dir / str(raw.get("env_path", "") or "../../.env.local")
         ).resolve(),
+        github_repo=str(raw.get("github_repo", "") or ""),
+        github_repos=[str(r) for r in (raw.get("github_repos") or [])],
     )
 
 
@@ -118,6 +120,8 @@ TEMPLATE_PATHS = APP_CONFIG.template_paths
 PENDING_TASKS_PATH = APP_CONFIG.pending_tasks_path
 PR_TEMPLATE_PATH = APP_CONFIG.pr_template_path
 ENV_PATH = APP_CONFIG.env_path
+GITHUB_REPO = APP_CONFIG.github_repo
+GITHUB_REPOS = APP_CONFIG.github_repos
 STORY_POINTS_FIELD = APP_CONFIG.custom_fields.get("story_points", "")
 SPRINT_FIELD = APP_CONFIG.custom_fields.get("sprint", "")
 TAGS_FIELD = APP_CONFIG.custom_fields.get("tags", "")

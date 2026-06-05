@@ -8,10 +8,13 @@ import os
 import re
 from typing import Any
 
+from jira.config import GITHUB_REPO, GITHUB_REPOS
+
 from github.client import (
     fetch_pr_details,
     fetch_pr_files,
     fetch_pr_review_comments,
+    search_prs_by_key,
 )
 from github.dev_status import fetch_issue_dev_status
 from github.formatter import PRFormatter
@@ -59,6 +62,23 @@ def fetch_and_write_pr(
         return "error"
 
     linked_prs = fetch_issue_dev_status(int(issue_id_str))
+
+    # Fallback: search GitHub PRs by issue key across all configured repos
+    if not linked_prs:
+        if GITHUB_REPOS:
+            repos = list(GITHUB_REPOS)
+        elif GITHUB_REPO:
+            repos = [GITHUB_REPO]
+        else:
+            print(f"    pr.md: no repos configured — set github_repos in config.json")
+            return "error"
+        for repo in repos:
+            print(f"    pr.md: searching GitHub {repo} for {task_key}...")
+            found = search_prs_by_key(task_key, repo)
+            if found:
+                linked_prs = found
+                break
+
     if not linked_prs:
         if not os.path.exists(pr_md_path):
             print(f"    pr.md: no linked PRs found")

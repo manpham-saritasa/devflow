@@ -10,5 +10,6 @@
   },
   "pending_tasks_path": "result/tasks-pending.txt",
   "pr_template_path": "templates/pr-template.md",
-  "env_path": "../../.env.local"
+  "env_path": "../../.env.local",
+  "github_repos": [ "saritasa-nest/rma-authentication", "saritasa-nest/rma-backend", "saritasa-nest/rma-mobile"]
 }

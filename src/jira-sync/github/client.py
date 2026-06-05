@@ -93,3 +93,43 @@ def fetch_pr_review_comments(pr_number: int, github_repo: str) -> list[dict[str,
         ".[] | {id, user, body, path, line, position}",
     ]
     return _gh_lines(args, f"PR #{pr_number} review comments")
+
+
+def search_prs_by_key(task_key: str, github_repo: str) -> list[dict[str, str]]:
+    """Search GitHub PRs mentioning a Jira issue key. Fallback when dev-status API returns nothing."""
+    import re
+
+    prs: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for state in ["open", "closed", "merged"]:
+        args = [
+            "search",
+            "prs",
+            f"{task_key} in:title,body",
+            "--repo",
+            github_repo,
+            "--state",
+            state,
+            "--json",
+            "number,title,url,state",
+        ]
+        results = _gh_json(args, f"search PRs for {task_key} ({state})")
+        if not results:
+            continue
+        for pr in results:
+            pr_url = (pr.get("url") or "").strip()
+            if not pr_url or pr_url in seen:
+                continue
+            seen.add(pr_url)
+            match = re.match(r"https://github\.com/([^/]+/[^/]+)/pull/(\d+)", pr_url)
+            if match:
+                prs.append(
+                    {
+                        "repo": match.group(1),
+                        "number": str(pr.get("number", "")),
+                        "url": pr_url,
+                        "title": pr.get("title", ""),
+                        "state": pr.get("state", "UNKNOWN"),
+                    }
+                )
+    return prs
