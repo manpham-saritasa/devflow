@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jira-sync</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h3,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>jira-sync</h1>
+</section>
+<section class="section">
+<p>Download Jira issues into a configured local task folder as LLM-friendly task files.  </p>
+</section>
+<section class="section">
+<h2>1. Project Structure</h2>
+<pre><code>src/jira-sync/
+├── jira/                       Jira modules
+│   ├── main.py                 CLI entry point
+│   ├── task_fetcher.py         JiraTaskFetcher — API client
+│   ├── fetcher.py              render_raw_md, build_task_json
+│   ├── sync_runner.py          Sync orchestration (single + range)
+│   ├── sync_state.py           Sync state persistence
+│   ├── task_list_manager.py    TaskListManager — pending/not-sync lists
+│   ├── config.py               Env loading, AppConfig, constants
+│   └── jira_utils.py           JiraUtils — ADF extraction, formatting
+├── github/                     GitHub modules
+│   ├── github_utils.py         GithubUtils — formatting helpers
+│   ├── formatter.py            PRFormatter — PR markdown rendering
+│   ├── client.py               gh CLI wrapper
+│   ├── dev_status.py           Jira dev-status API
+│   └── pr.py                   PR orchestration (fetch + write pr.md)
+├── dto/                        Shared dataclasses (one per file)
+│   ├── jira_task.py            JiraTask
+│   ├── app_config.py           AppConfig
+│   ├── fetcher_config.py       FetcherConfig
+│   ├── comment.py              Comment
+│   ├── subtask_info.py         SubtaskInfo
+│   ├── parent_info.py          ParentInfo
+│   └── attachment_info.py      AttachmentInfo
+├── templates/                  Output templates
+│   ├── raw-template.md
+│   └── pr-template.md
+├── result/                     Runtime output files
+└── test_app.py                 Unit tests
+</code></pre>
+<pre class="mermaid">
+graph TD
+    A[jira/main.py]:::accent0 --> B[jira/task_fetcher.py<br/>JiraTaskFetcher]:::accent1
+    A --> C[jira/sync_runner.py<br/>Sync orchestration]:::accent1
+    A --> D[jira/task_list_manager.py<br/>TaskListManager]:::accent2
+    A --> E[jira/sync_state.py<br/>State]:::accent2
+    B --> F[dto/jira_task.py<br/>JiraTask]:::accent3
+    B --> G[jira/jira_utils.py<br/>JiraUtils]:::accent4
+    C --> B
+    C --> F
+    C --> G
+    C --> H[jira/fetcher.py<br/>render/build]:::accent5
+    H --> F
+    F --> I[dto/comment.py]:::accent6
+    F --> J[dto/subtask_info.py]:::accent6
+    F --> K[dto/attachment_info.py]:::accent6
+    A --> L[github/pr.py<br/>PR orchestration]:::accent7
+    L --> M[github/dev_status.py<br/>Dev-status API]:::accent7
+    L --> N[github/client.py<br/>gh CLI]:::accent7
+    L --> O[github/formatter.py<br/>PRFormatter]:::accent7
+    O --> P[github/github_utils.py<br/>GithubUtils]:::accent7
+    B --> Q[jira/config.py<br/>Config]:::accent4
+    C --> Q
+    A --> Q
+</pre>
+</section>
+<section class="section">
+<h2>2. Configuration</h2>
+<p>Runtime settings in <code>src/jira-sync/config.json</code>, secrets in <code>.env.local</code>.</p>
+<h3>config.json</h3>
+<pre><code class="language-json">{
+  &quot;download_path&quot;: &quot;../../.local/tasks&quot;,
+  &quot;sync_state_path&quot;: &quot;result/sync-state.json&quot;,
+  &quot;not_found_state_path&quot;: &quot;result/tasks-not-found.txt&quot;,
+  &quot;pending_tasks_path&quot;: &quot;result/tasks-pending.txt&quot;,
+  &quot;template_paths&quot;: &quot;templates/raw-template.md&quot;,
+  &quot;pr_template_path&quot;: &quot;templates/pr-template.md&quot;,
+  &quot;custom_fields&quot;: {
+    &quot;story_points&quot;: &quot;customfield_12722&quot;,
+    &quot;sprint&quot;: &quot;customfield_10006&quot;,
+    &quot;tags&quot;: &quot;customfield_13351&quot;
+  }
+}
+</code></pre>
+<p>Paths are resolved relative to the config file's directory (<code>src/jira-sync/</code>).</p>
+<h3>.env</h3>
+<pre><code>JIRA_URL=https://your-org.atlassian.net
+JIRA_EMAIL=you@example.com
+JIRA_API_TOKEN=your-api-token
+JIRA_PROJECT_KEY=YOURPROJECT
+HTTP_TIMEOUT_SECONDS=30
+</code></pre>
+<h3>Discover custom fields</h3>
+<pre><code class="language-bash">cd src/jira-sync
+python -m jira.main --discover       # show key fields + unmatched
+python -m jira.main --discover-all   # show all custom fields
+</code></pre>
+<p>Copy the output field IDs into <code>config.json</code> <code>custom_fields</code>.  </p>
+</section>
+<section class="section">
+<h2>3. Usage</h2>
+<p>Run from the <code>src/jira-sync/</code> directory.</p>
+<h3>Single task</h3>
+<pre><code class="language-bash">python -m jira.main RMASUP-2100
+python -m jira.main 2100              # uses JIRA_PROJECT_KEY
+python -m jira.main --force 2100      # overwrite existing
+</code></pre>
+<h3>Range sync</h3>
+<pre><code class="language-bash">python -m jira.main                   # resume from last synced ID
+python -m jira.main --force           # force overwrite all
+python -m jira.main --start 100       # start from ID 100
+</code></pre>
+<h3>Pending tasks</h3>
+<pre><code class="language-bash">python -m jira.main --get-pending     # scan tasks for unresolved → tasks-pending.txt
+python -m jira.main --pending         # re-sync all pending, remove resolved ones
+</code></pre>
+<h3>GitHub PRs</h3>
+<pre><code class="language-bash">python -m jira.main RMASUP-2100 --with-prs   # also fetch linked PRs into pr.md
+</code></pre>
+</section>
+<section class="section">
+<h2>4. Result files</h2>
+<p>All in <code>src/jira-sync/result/</code>, one task key per line:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="File"><code>tasks-pending.txt</code></td>
+<td data-label="Purpose">Unresolved tasks for <code>--pending</code> re-sync</td>
+</tr>
+<tr>
+<td data-label="File"><code>tasks-not-found.txt</code></td>
+<td data-label="Purpose">Task IDs that don't exist — auto-skipped</td>
+</tr>
+<tr>
+<td data-label="File"><code>tasks-not-sync.txt</code></td>
+<td data-label="Purpose">Task IDs to never sync</td>
+</tr>
+<tr>
+<td data-label="File"><code>tasks-force-sync.txt</code></td>
+<td data-label="Purpose">Task IDs to always force-overwrite</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>5. Output</h2>
+<h3>raw.md</h3>
+<ul>
+<li>Status, type, priority, timetracking, assignee, reporter</li>
+<li>Labels, tags (hyperlinked to Jira search), fix versions</li>
+<li>Dates, resolution, URL</li>
+<li>Epic, sprint, parent, story points (all hyperlinked)</li>
+<li>Subtasks (sub-list, hyperlinked, sorted ASC by summary)</li>
+<li>Related tasks (hyperlinked)</li>
+<li>Attachments</li>
+<li>Description and comments (plain text in code blocks, HTML stripped)</li>
+</ul>
+<h3>task.json</h3>
+<p>Structured JSON with all fields above plus:</p>
+<ul>
+<li><code>estimated_seconds</code>, <code>spent_seconds</code></li>
+<li><code>description_text</code> (HTML stripped)</li>
+<li><code>comments[].body_text</code> (HTML stripped)</li>
+<li><code>related_tasks</code> array with relation types and sources</li>
+<li><code>tags</code> array</li>
+<li><code>paths.raw</code>, <code>paths.task_json</code></li>
+</ul>
+<h3>pr.md (with <code>--with-prs</code>)</h3>
+<ul>
+<li>PR number, title, state, author</li>
+<li>Branch info, timestamps</li>
+<li>Stats (commits, additions, deletions, changed files)</li>
+<li>Labels, reviewers, commits</li>
+<li>Review comments and issue comments</li>
+</ul>
+</section>
+<section class="section">
+<h2>6. Tests</h2>
+<pre><code class="language-bash">cd src/jira-sync
+python -m unittest test_app.py
+</code></pre>
+</section>
+<section class="section">
+<h2>7. Notes</h2>
+<ul>
+<li>Only tasks from the configured <code>JIRA_PROJECT_KEY</code> are synced.</li>
+<li>Epic children are fetched via <code>parent=</code> JQL, only if <code>fields.subtasks</code> is empty.</li>
+<li><code>story_points</code> field: use <code>Story point estimate</code> from <code>--discover</code>.</li>
+<li><code>sprint</code> field: use <code>Sprint</code> from <code>--discover</code>.</li>
+<li>Single-task mode does not advance the range-sync resume state.</li>
+</ul>
+</section>
+  </main>
+</body>
+</html>

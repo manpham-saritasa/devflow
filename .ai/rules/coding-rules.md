@@ -220,13 +220,26 @@ These thresholds apply to all new or modified code. Legacy code that was not tou
 ### Code Size
 - Function or method > 40 lines: extract or simplify.
 - File > 300 lines: split or restructure.
+- One class per file — no multiple classes in a single module.
 - Function parameters > 4: use a parameter object or simplify.
 - Nesting depth > 4: use early returns or extraction.
 - Long chains of calls: if more than 3 chained calls, use named intermediates.
+- Class > 10 methods: split distinct responsibility groups into composed classes.
+
+### Organization
+- Standalone utility functions belong in domain-specific utility classes
+  (e.g., `JiraUtils`, `GithubUtils`), not as bare module/file-level functions.
+- Group modules by domain into subdirectories (e.g., `jira/`, `github/`).
+  Shared types belong in a `dto/` or `models/` folder. Use directory
+  structure to express ownership, not comments.
 
 ### Complexity
 - High cyclomatic or cognitive complexity: simplify when editing that code.
 - Deep inheritance beyond project norms: use composition.
+- If a class has multiple distinct responsibility groups (e.g., HTTP
+  transport, data mapping, CLI presentation), split each group into its
+  own class. The original class composes them. Each class should have
+  one reason to change.
 
 ### Naming
 - Use clear, readable names.
