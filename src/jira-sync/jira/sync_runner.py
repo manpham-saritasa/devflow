@@ -202,3 +202,108 @@ def range_sync_issue(
     suffix = f" ({clen} children)" if clen else ""
     print(f"  {key}: {result}{suffix}")
     return (result, clen)
+
+
+def sync_with_relations(
+    project_key: str,
+    issue_id: int,
+    force: bool,
+    download_path: str,
+    download_path_rel: str,
+    not_found_state_path: Path,
+    with_prs: bool = False,
+) -> int:
+    """Sync a task plus all its linked related tasks."""
+    import re
+
+    key = f"{project_key}-{issue_id}"
+    print(f"Mode: related-tasks sync")
+    print()
+
+    fetcher = _get_fetcher()
+    task = fetcher.fetch(key)
+    if task is None:
+        add_not_found_id(not_found_state_path, project_key, issue_id)
+        print(f"  {key}: not found")
+        return 0
+
+    # Collect related keys from linked issues, description, and comments
+    key_re = re.compile(r"([A-Z][A-Z0-9]+)-(\d+)")
+    seen: set[str] = {key}
+    related_keys: list[tuple[str, int]] = []
+
+    def _add_rel(rk: str) -> None:
+        m = key_re.fullmatch(rk)
+        if m and rk not in seen and m.group(1) == project_key:
+            seen.add(rk)
+            related_keys.append((m.group(1), int(m.group(2))))
+
+    # 1. Formal Jira issue links
+    for linked in task.linked_issues:
+        _add_rel(linked.get("key", ""))
+
+    # 2. Mentions in description
+    for m in key_re.finditer(task.description_text or ""):
+        _add_rel(m.group(0))
+
+    # 3. Mentions in comments
+    for c in task.comments:
+        for m in key_re.finditer(c.body_text or ""):
+            _add_rel(m.group(0))
+
+    sources = []
+    if task.linked_issues:
+        sources.append(f"{len(task.linked_issues)} linked")
+    desc_mentions = len(key_re.findall(task.description_text or ""))
+    if desc_mentions:
+        sources.append(f"{desc_mentions} in description")
+    comment_mentions = sum(
+        len(key_re.findall(c.body_text or "")) for c in task.comments
+    )
+    if comment_mentions:
+        sources.append(f"{comment_mentions} in comments")
+
+    total = 1 + len(related_keys)
+    source_str = " + ".join(sources) if sources else "none"
+    print(f"  {key}: main task + {len(related_keys)} related = {total} total")
+    print(f"  Sources: {source_str}")
+    print()
+
+    # Download main task
+    result = sync_one_issue(
+        project_key,
+        issue_id,
+        force,
+        download_path,
+        download_path_rel,
+        not_found_state_path,
+        with_prs,
+    )
+
+    # Download each related task
+    synced: list[str] = []
+    for rel_project, rel_id in related_keys:
+        print()
+        rk = f"{rel_project}-{rel_id}"
+        sync_one_issue(
+            rel_project,
+            rel_id,
+            force,
+            download_path,
+            download_path_rel,
+            not_found_state_path,
+            with_prs,
+        )
+        synced.append(rk)
+
+    # Summary
+    print()
+    print("--- Related Tasks Downloaded ---")
+    if synced:
+        for rk in synced:
+            print(f"  {rk}")
+        print(f"\nTotal: {len(synced)} related task(s)")
+    else:
+        print("  (none)")
+
+    return result

@@ -249,7 +249,7 @@ class JiraTask:
         result: list[dict[str, Any]] = []
         seen: set[tuple[str, str, str]] = set()
         for li in self.linked_issues:
-            uniq = (li["key"], li["type"], "issue_link")
+            uniq = (li["key"], li["type"], li.get("mention_source", "issue_link"))
             if uniq in seen:
                 continue
             seen.add(uniq)
@@ -258,7 +258,7 @@ class JiraTask:
                     "key": li["key"],
                     "summary": li.get("summary", ""),
                     "relation_type": li["type"],
-                    "source": "issue_link",
+                    "source": li.get("mention_source", "issue_link"),
                     "status": li.get("status") or None,
                     "issue_type": li.get("issue_type") or None,
                     "url": self.browse_url(jira_url, li["key"]),

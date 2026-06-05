@@ -20,6 +20,7 @@ from jira.sync_runner import (
     _write_outputs,
     range_sync_issue,
     sync_one_issue,
+    sync_with_relations,
 )
 from jira.sync_state import add_not_found_id, load_not_found_ids, load_state
 from jira.task_fetcher import JiraTaskFetcher
@@ -100,6 +101,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Also fetch GitHub PR data for each synced task.",
     )
+    _ = parser.add_argument(
+        "--relate",
+        action="store_true",
+        help="Also download all linked related tasks (single-task mode only).",
+    )
     return parser.parse_args()
 
 
@@ -148,6 +154,18 @@ def main() -> None:
         except ValueError as e:
             print(f"ERROR: {e}")
             sys.exit(2)
+        if bool(args.relate):
+            sys.exit(
+                sync_with_relations(
+                    project_key,
+                    issue_id,
+                    force,
+                    download_path,
+                    download_path_rel,
+                    not_found_state_path,
+                    with_prs=bool(args.with_prs),
+                )
+            )
         sys.exit(
             sync_one_issue(
                 project_key,

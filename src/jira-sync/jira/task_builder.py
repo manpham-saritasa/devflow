@@ -29,6 +29,7 @@ class JiraTaskBuilder:
         story_points_str = None if story_points in (None, "") else str(story_points)
         tags = [str(v) for v in (fields.get(custom_fields.get("tags", "")) or [])]
         parent = self._extract_parent_info(fields)
+        comments = JiraUtils.extract_comments(fields)
         safe = JiraHttpClient.safe_nav
         return JiraTask(
             key=issue_key,
@@ -69,8 +70,9 @@ class JiraTaskBuilder:
             tags=tags,
             subtask_keys=JiraUtils.extract_subtask_keys(fields),
             subtasks_detail=self._build_subtask_details(fields),
-            linked_issues=self._build_linked_issues(fields),
-            comments=JiraUtils.extract_comments(fields),
+            linked_issues=self._build_linked_issues(fields)
+            + self._extract_text_mentions(issue_key, description_text, comments),
+            comments=comments,
             attachments=self._build_attachment_details(fields),
         )
 
@@ -84,6 +86,40 @@ class JiraTaskBuilder:
         if isinstance(desc_raw, str):
             return html, desc_raw
         return html, "_(no description)_"
+
+    @staticmethod
+    def _extract_text_mentions(
+        own_key: str, description_text: str, comments: list[Any]
+    ) -> list[dict[str, str]]:
+        """Extract issue keys mentioned in description and comment text."""
+        import re
+
+        key_re = re.compile(r"([A-Z][A-Z0-9]+)-(\d+)")
+        seen: set[str] = set()
+        result: list[dict[str, str]] = []
+        sources: list[tuple[str, str]] = []
+        if description_text:
+            for m in key_re.finditer(description_text):
+                if m.group(0) != own_key:
+                    sources.append((m.group(0), "description"))
+        for c in comments:
+            body = getattr(c, "body_text", "") or ""
+            for m in key_re.finditer(body):
+                if m.group(0) != own_key:
+                    sources.append((m.group(0), "comment"))
+        for key, source in sources:
+            if key not in seen:
+                seen.add(key)
+                result.append(
+                    {
+                        "key": key,
+                        "summary": "",
+                        "type": "mentioned",
+                        "status": "?",
+                        "mention_source": source,
+                    }
+                )
+        return result
 
     @staticmethod
     def _extract_parent_info(fields: dict[str, Any]) -> dict[str, Any]:

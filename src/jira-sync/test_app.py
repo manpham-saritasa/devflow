@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 os.environ.setdefault("JIRA_URL", "https://example.atlassian.net")
 os.environ.setdefault("JIRA_EMAIL", "test@example.com")
@@ -17,6 +17,7 @@ from dto.jira_task import JiraTask
 from dto.subtask_info import SubtaskInfo
 from jira.config import REPO_ROOT, load_app_config
 from jira.fetcher import build_task_json, render_raw_md
+from jira.sync_runner import sync_with_relations
 from jira.sync_state import add_not_found_id, load_not_found_ids, load_state, save_state
 from jira.task_fetcher import JiraTaskFetcher
 from main import main, parse_target
@@ -243,6 +244,118 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(record["estimated"], "None")
         self.assertEqual(record["epic"], None)
         self.assertEqual(record["subtasks"], [])
+
+
+class RelatedSyncTests(unittest.TestCase):
+    def _make_task(
+        self,
+        key: str,
+        linked: list[dict[str, str]] | None = None,
+        desc: str = "",
+        comments: list[Comment] | None = None,
+    ) -> JiraTask:
+        return JiraTask(
+            key=key,
+            summary="Test",
+            status="To Do",
+            priority="Medium",
+            issuetype="Task",
+            assignee="Me",
+            reporter="You",
+            labels=[],
+            components=[],
+            fix_versions=[],
+            created="2024-01-01",
+            updated="2024-01-01",
+            due_date="None",
+            resolution="Unresolved",
+            resolution_date="None",
+            description_raw=None,
+            description_text=desc,
+            linked_issues=linked or [],
+            comments=comments or [],
+        )
+
+    def test_filters_same_project_only(self) -> None:
+        task = self._make_task("APP-1", desc="see APP-2 and OTHER-5")
+        mock_fetcher = MagicMock()
+        mock_fetcher.fetch.return_value = task
+        with tempfile.TemporaryDirectory() as td:
+            nf_path = Path(td) / "nf.txt"
+            with (
+                patch("jira.sync_runner._get_fetcher", return_value=mock_fetcher),
+                patch("jira.sync_runner.sync_one_issue", return_value=0) as mock_sync,
+            ):
+                sync_with_relations("APP", 1, False, td, "rel", nf_path)
+            # Should sync main + APP-2 = 2 calls, skipping OTHER-5
+            self.assertEqual(mock_sync.call_count, 2)
+            # First arg of each call is project_key "APP"
+            for call_args in mock_sync.call_args_list:
+                self.assertEqual(call_args[0][0], "APP")
+
+    def test_excludes_own_key(self) -> None:
+        task = self._make_task("APP-1", desc="check APP-1 for details")
+        mock_fetcher = MagicMock()
+        mock_fetcher.fetch.return_value = task
+        with tempfile.TemporaryDirectory() as td:
+            nf_path = Path(td) / "nf.txt"
+            with (
+                patch("jira.sync_runner._get_fetcher", return_value=mock_fetcher),
+                patch("jira.sync_runner.sync_one_issue", return_value=0) as mock_sync,
+            ):
+                sync_with_relations("APP", 1, False, td, "rel", nf_path)
+            self.assertEqual(mock_sync.call_count, 1)
+
+    def test_extracts_from_comments(self) -> None:
+        task = self._make_task(
+            "APP-1",
+            comments=[
+                Comment(author="A", created="2024-01-01", body_text="see APP-99"),
+                Comment(author="B", created="2024-01-02", body_text="also APP-88"),
+            ],
+        )
+        mock_fetcher = MagicMock()
+        mock_fetcher.fetch.return_value = task
+        with tempfile.TemporaryDirectory() as td:
+            nf_path = Path(td) / "nf.txt"
+            with (
+                patch("jira.sync_runner._get_fetcher", return_value=mock_fetcher),
+                patch("jira.sync_runner.sync_one_issue", return_value=0) as mock_sync,
+            ):
+                sync_with_relations("APP", 1, False, td, "rel", nf_path)
+            self.assertGreaterEqual(mock_sync.call_count, 3)
+
+    def test_deduplicates_across_sources(self) -> None:
+        task = self._make_task(
+            "APP-1",
+            linked=[
+                {"key": "APP-10", "summary": "X", "type": "blocks", "status": "Done"}
+            ],
+            desc="see APP-10 for details",
+        )
+        mock_fetcher = MagicMock()
+        mock_fetcher.fetch.return_value = task
+        with tempfile.TemporaryDirectory() as td:
+            nf_path = Path(td) / "nf.txt"
+            with (
+                patch("jira.sync_runner._get_fetcher", return_value=mock_fetcher),
+                patch("jira.sync_runner.sync_one_issue", return_value=0) as mock_sync,
+            ):
+                sync_with_relations("APP", 1, False, td, "rel", nf_path)
+            self.assertEqual(mock_sync.call_count, 2)
+
+    def test_no_related_tasks(self) -> None:
+        task = self._make_task("APP-1")
+        mock_fetcher = MagicMock()
+        mock_fetcher.fetch.return_value = task
+        with tempfile.TemporaryDirectory() as td:
+            nf_path = Path(td) / "nf.txt"
+            with (
+                patch("jira.sync_runner._get_fetcher", return_value=mock_fetcher),
+                patch("jira.sync_runner.sync_one_issue", return_value=0) as mock_sync,
+            ):
+                sync_with_relations("APP", 1, False, td, "rel", nf_path)
+            self.assertEqual(mock_sync.call_count, 1)
 
 
 class MainTests(unittest.TestCase):

@@ -126,6 +126,7 @@ Run from the `src/jira-sync/` directory.
 python main.py RMASUP-2100
 python main.py 2100              # uses JIRA_PROJECT_KEY
 python main.py --force 2100      # overwrite existing
+python main.py --relate 2100     # also download linked related tasks
 ```
 
 ### Range sync
