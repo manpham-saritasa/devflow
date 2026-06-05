@@ -125,9 +125,9 @@ Use this approved palette by default:
 
 ## Approved CSS theme
 
-Unless the user explicitly asks for a different style, read the CSS from `theme.css` at the skill root. The bundled converter script (`main.py`) automatically injects it — no manual copy needed.
+Unless the user explicitly asks for a different style, read the CSS from `assets/theme.css`. The bundled converter script (`main.py`) automatically injects it — no manual copy needed.
 
-To adjust the theme, edit `theme.css` directly. All HTML files regenerate from one source.
+To adjust the theme, edit `assets/theme.css` directly. All HTML files regenerate from one source.
 
 ## HTML skeleton
 
