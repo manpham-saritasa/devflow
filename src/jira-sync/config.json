@@ -9,5 +9,6 @@
     "tags": "customfield_13351"
   },
   "pending_tasks_path": "result/tasks-pending.txt",
-  "pr_template_path": "templates/pr-template.md"
+  "pr_template_path": "templates/pr-template.md",
+  "env_path": "../../.env.local"
 }

@@ -11,3 +11,4 @@ class AppConfig:
     custom_fields: dict[str, str]
     pending_tasks_path: Path
     pr_template_path: Path
+    env_path: Path

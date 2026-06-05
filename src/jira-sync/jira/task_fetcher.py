@@ -68,9 +68,10 @@ class JiraTaskFetcher:
 
     @classmethod
     def from_env(cls, root_path: str | None = None) -> "JiraTaskFetcher":
-        env = cls._load_env(root_path)
         base = root_path or JiraHttpClient.find_repo_root()
-        config_json = cls._load_config_json(base)
+        config_json, config_dir = cls._load_config_json(base)
+        env_path = str(Path(config_dir) / config_json.get("env_path", ".env.local"))
+        env = cls._load_env(base, env_path)
         custom_fields = config_json.get("custom_fields", {})
         project_key = env.get("JIRA_PROJECT_KEY", "")
         template_paths: list[Path] = []
@@ -91,10 +92,10 @@ class JiraTaskFetcher:
         )
 
     @classmethod
-    def _load_env(cls, root_path: str | None = None) -> dict[str, str]:
+    def _load_env(cls, root_path: str, env_path: str) -> dict[str, str]:
         env: dict[str, str] = {}
-        base = root_path or JiraHttpClient.find_repo_root()
-        for fname in [".env.local", ".env"]:
+        base = root_path
+        for fname in [env_path, os.path.join(base, ".env")]:
             path = os.path.join(base, fname)
             if not os.path.exists(path):
                 continue
@@ -107,15 +108,15 @@ class JiraTaskFetcher:
         return env
 
     @classmethod
-    def _load_config_json(cls, root_path: str) -> dict[str, Any]:
+    def _load_config_json(cls, root_path: str) -> tuple[dict[str, Any], str]:
         for rel_path in [".local/jira-sync/config.json", "src/jira-sync/config.json"]:
             path = os.path.join(root_path, rel_path)
             if os.path.exists(path):
                 with open(path, encoding="utf-8") as f:
                     data = json.load(f)
                 if isinstance(data, dict):
-                    return data
-        return {}
+                    return data, os.path.dirname(path)
+        return {}, ""
 
     @property
     def project_key(self) -> str:

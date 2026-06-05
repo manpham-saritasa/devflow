@@ -11,7 +11,6 @@ REPO_ROOT = BASE_DIR.parent.parent
 CONFIG_PATH = BASE_DIR / "config.json"
 
 load_dotenv(BASE_DIR / ".env")
-load_dotenv(REPO_ROOT / ".env.local")
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -79,10 +78,16 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
             "pr_template_path",
             config_dir,
         ),
+        env_path=(
+            config_dir / str(raw.get("env_path", "") or "../../.env.local")
+        ).resolve(),
     )
 
 
 APP_CONFIG = load_app_config()
+
+# Load the configured .env.local after config is available
+load_dotenv(APP_CONFIG.env_path)
 
 JIRA_URL = os.getenv("JIRA_URL", "").rstrip("/")
 JIRA_COMPANY_DOMAIN = os.getenv("JIRA_COMPANY_DOMAIN", "")
@@ -112,6 +117,7 @@ NOT_FOUND_STATE_PATH = APP_CONFIG.not_found_state_path
 TEMPLATE_PATHS = APP_CONFIG.template_paths
 PENDING_TASKS_PATH = APP_CONFIG.pending_tasks_path
 PR_TEMPLATE_PATH = APP_CONFIG.pr_template_path
+ENV_PATH = APP_CONFIG.env_path
 STORY_POINTS_FIELD = APP_CONFIG.custom_fields.get("story_points", "")
 SPRINT_FIELD = APP_CONFIG.custom_fields.get("sprint", "")
 TAGS_FIELD = APP_CONFIG.custom_fields.get("tags", "")
