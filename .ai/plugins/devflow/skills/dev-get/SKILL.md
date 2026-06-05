@@ -103,15 +103,13 @@ Create `[TASK_DIR]/` if not exists. All paths relative to repo root.
 Template mapping:
 - `[Ticket ID]` → Jira key
 - `[Ticket Title]` → summary
-- `## Overview` → 1-3 plain-language sentences based on summary + description. Focus on user/system outcome, not implementation detail.
-- `## Requirements` → 2-4 concrete bullets from description, acceptance criteria, triggers, and business rules visible in Jira.
-- `## Triggers` → trigger location, trigger action, trigger data/state if Jira gives them. If no triggers are visible, use a single bullet: `- None identified`.
-- `## Acceptance Criteria` → checkbox bullets from explicit Jira acceptance criteria when present. Merge direct acceptance clues from description/comments here first. If Jira has no explicit section, derive 2-3 testable checkbox bullets from the description.
-- `## Constraints` → only include real or clearly implied constraints. If none are visible, keep one bullet: `- None identified`.
-- `## Affected Modules` → best-effort module or area names from components, feature names, screens, or described workflow. If unclear, use higher-level bullets such as UI area, service area, or domain area.
-- `## Related Historical Tasks` → related linked issues with key and short reason/title. If none, keep one bullet: `- None identified`.
-- `## Open Questions` → only include meaningful questions that need answers before implementation. If only 1-2 are meaningful, omit the unused Q/A pairs.
-- `## Technical Notes` → extra technical context, risk areas, inferred persistence/sync concerns, validation concerns, edge cases, and technical signals from Jira/components/comments/attachments.
+- `## Overview` → 1–3 plain-language sentences based on summary + description. Focus on user/system outcome, not implementation detail.
+- `## Done Criteria` → checkbox bullets from Jira acceptance criteria when present. If Jira has no explicit AC, derive 2–3 testable bullets from the description.
+- `## Scope` → file paths, classes, or components to modify from Jira components, description, or comments. If unclear, describe at feature level like "auth middleware", "checkout flow".
+- `## Constraints` → only real or clearly implied constraints. Omit section if none.
+- `## Related` → linked issues with key + short reason. Omit section if none.
+- `## Open Questions` → only meaningful questions needing answers before implementation. Try reading `.local/project-info/README.md` first (if it exists) to avoid asking questions already answered there. Show questions only, no answer placeholders. Omit if none.
+- `## Notes` → extra technical context, risk areas, sync concerns, edge cases, notable signals from comments/attachments. Omit if nothing worth noting.
 
 Rules:
 - Infer carefully, never invent facts.
@@ -172,6 +170,8 @@ Rules:
 Short summary after done:
 - Files written: relative paths for `task.md` and `raw.md`
 - Also show full absolute paths for both files so the user can copy and open them easily
+- List all open questions from task.md (questions only, no drafted answers)
+- When the user answers open questions in chat, write the answers back to task.md as `A1:`, `A2:`
 - Remind: raw.md = full Jira source
 
 ---

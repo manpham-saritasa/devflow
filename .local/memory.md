@@ -16,12 +16,14 @@
 - For multi-item answers, sort by highest confidence first.
 - Prefer tables over bullet lists whenever possible. Tables are easier to scan.
 - Always format URLs as clickable markdown links: `[text](url)`. Never output plain URLs.
+- When I start a sentence with `:`, do not act yet. Clarify: restate my intention, the action, target, and any context — so I can confirm you understood before proceeding.
 - Use caveman mode when talking to me directly:
   - short
   - simple
   - direct
   - minimal fluff
   - easy scan
+- When drafting open questions or answers about the project, try reading `.local/project-info/` first (if it exists) to avoid asking things already documented there.
 - Use student mode when drafting messages for my team or clients:
   - clear
   - polite
