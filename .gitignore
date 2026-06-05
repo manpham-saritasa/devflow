@@ -2,12 +2,15 @@
 .env
 .env.*
 !.env.example
+!.env.gmail.example
+
 
 # Local config
 *.local
 **/.local/
 
 # AI
+.local
 .claude/
 
 # OS

@@ -245,6 +245,16 @@ These thresholds apply to all new or modified code. Legacy code that was not tou
 - Use clear, readable names.
 - Very short names ok in small local scopes, loops, or catch variables.
 
+### Documentation
+- Add comments or docstrings for every class you add or modify.
+- Add comments or docstrings for every public method you add or modify.
+- Add comments or docstrings for every protected method you add or modify.
+- Add comments or docstrings for global static variables, properties, and methods you add or modify.
+- Comments or docstrings for APIs must explain intent, behavior, inputs/outputs, invariants, constraints, or side effects — not restate obvious code.
+- Use local implementation comments when explaining a tricky line or block, documenting a workaround, clarifying a non-obvious business rule near the code, or warning about edge cases or constraints.
+- Prefer the language and repository convention for documentation style (for example: Python docstrings, C# XML docs, TS/JSDoc when applicable).
+- Use docstrings or language-native API documentation for classes and methods; use regular comments for local implementation details.
+
 ### Change Size
 - More than 10 touched files: stop and verify scope is still focused.
 - New dependency: justify it explicitly.
