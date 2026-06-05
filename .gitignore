@@ -5,8 +5,7 @@
 
 # Local config
 *.local
-.local
-.local/*
+**/.local/
 
 # AI
 .claude/
@@ -17,7 +16,7 @@ Thumbs.db
 
 # Python
 __pycache__/
-*/__pycache__/*
+**/__pycache__/
 
 # Logs
 logs
