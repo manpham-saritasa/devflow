@@ -13,6 +13,7 @@ os.environ.setdefault("JIRA_API_TOKEN", "dummy-token")
 os.environ.setdefault("JIRA_PROJECT_KEY", "APP")
 
 from config import REPO_ROOT, load_app_config
+from jira_fetcher import JiraTaskFetcher
 from main import main
 from persistence import write_raw_md, write_task_json
 from sync_state import add_not_found_id, load_not_found_ids, load_state, save_state
@@ -245,8 +246,8 @@ class MainTests(unittest.TestCase):
                     "sys.argv",
                     ["main.py", "--config", str(config_path), "--start", "1"],
                 ),
-                patch("main.get_max_issue_id", return_value=3),
-                patch("sync_runner.fetch_issue") as fetch_issue_mock,
+                patch.object(JiraTaskFetcher, "get_max_issue_id", return_value=3),
+                patch.object(JiraTaskFetcher, "fetch") as fetch_mock,
                 patch("main.load_not_found_ids", return_value={"APP-3"}),
                 patch("config.REPO_ROOT", repo_root),
                 patch("main.REPO_ROOT", repo_root),
@@ -255,7 +256,7 @@ class MainTests(unittest.TestCase):
                 main()
 
             output = stdout.getvalue()
-            self.assertEqual(fetch_issue_mock.call_count, 2)
+            self.assertEqual(fetch_mock.call_count, 2)
             self.assertIn("APP-3: known missing - skip", output)
             self.assertIn("Not found:   1", output)
 

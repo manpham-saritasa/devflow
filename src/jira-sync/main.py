@@ -1,7 +1,6 @@
 """Jira task sync driven by local config and environment settings."""
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
@@ -11,14 +10,18 @@ from config import (
     CONFIG_PATH,
     DOWNLOAD_PATH_REL,
     JIRA_PROJECT_KEY,
+    JIRA_URL,
     REPO_ROOT,
     load_app_config,
     validate_project_key,
 )
-from fetcher import discover_fields, fetch_issue, get_max_issue_id
-from github_pr import fetch_and_write_pr
-from persistence import write_raw_md, write_task_json
-from sync_runner import _fetch_children_if_epic, range_sync_issue, sync_one_issue
+from jira_fetcher import JiraTaskFetcher
+from sync_runner import (
+    _fetch_children_for_task,
+    _write_outputs,
+    range_sync_issue,
+    sync_one_issue,
+)
 from sync_state import add_not_found_id, load_not_found_ids, load_state
 from task_lists import RESOLVED_STATUSES, TaskListManager
 
@@ -116,7 +119,8 @@ def main() -> None:
 
     # -- discover --
     if bool(args.discover) or bool(args.discover_all):
-        discover_fields(show_all=bool(args.discover_all))
+        fetcher = JiraTaskFetcher.from_env(str(REPO_ROOT))
+        fetcher.discover_fields(show_all=bool(args.discover_all))
         sys.exit(0)
 
     lists = TaskListManager()
@@ -144,7 +148,6 @@ def main() -> None:
         except ValueError as e:
             print(f"ERROR: {e}")
             sys.exit(2)
-        with_prs = bool(args.with_prs)
         sys.exit(
             sync_one_issue(
                 project_key,
@@ -153,12 +156,33 @@ def main() -> None:
                 download_path,
                 download_path_rel,
                 not_found_state_path,
-                with_prs=with_prs,
+                with_prs=bool(args.with_prs),
             )
         )
 
     # -- range sync --
-    project_key = default_project_key
+    _run_range_sync(
+        default_project_key,
+        download_path,
+        download_path_rel,
+        sync_state_path,
+        not_found_state_path,
+        force,
+        start_override,
+        lists,
+    )
+
+
+def _run_range_sync(
+    project_key: str,
+    download_path: str,
+    download_path_rel: str,
+    sync_state_path: Path,
+    not_found_state_path: Path,
+    force: bool,
+    start_override: int | None,
+    lists: TaskListManager,
+) -> None:
     state = load_state(sync_state_path, project_key)
     known_not_found_ids = load_not_found_ids(not_found_state_path, project_key)
     start_id = (
@@ -169,7 +193,8 @@ def main() -> None:
 
     print(f"Fetching max issue ID for project {project_key}...")
     try:
-        max_id = get_max_issue_id(project_key)
+        fetcher = JiraTaskFetcher.from_env(str(REPO_ROOT))
+        max_id = fetcher.get_max_issue_id(project_key)
     except Exception as e:
         print(f"ERROR: Could not fetch max issue ID from Jira: {e}")
         sys.exit(1)
@@ -240,6 +265,9 @@ def _sync_pending_tasks(
     print(f"Syncing {len(lines)} pending tasks...")
     print()
 
+    fetcher = JiraTaskFetcher.from_env(str(REPO_ROOT))
+    tags_field = fetcher.custom_fields.get("tags", "")
+
     remaining: list[str] = []
     for task_key in lines:
         if not task_key.startswith(project_key + "-"):
@@ -249,43 +277,28 @@ def _sync_pending_tasks(
             print(f"  {task_key}: in not-sync list - skip")
             continue
 
-        try:
-            project, issue_id = parse_target(task_key, project_key)
-        except ValueError as e:
-            print(f"  {task_key}: skip - {e}")
+        task = fetcher.fetch(task_key)
+        if task is None:
+            print(f"  {task_key}: not found - keeping in list")
             remaining.append(task_key)
             continue
 
-        key = f"{project}-{issue_id}"
-        issue = fetch_issue(project, issue_id)
-        if issue is None:
-            print(f"  {key}: not found - keeping in list")
-            remaining.append(key)
-            continue
-
-        status = (
-            (((issue.get("fields") or {}).get("status") or {}).get("name", "") or "")
-            .strip()
-            .lower()
-        )
-
-        children = _fetch_children_if_epic(issue)
-        write_raw_md(
-            issue, force=True, download_path=download_path, epic_children=children
-        )
-        _ = write_task_json(
-            issue,
+        status = task.status.strip().lower()
+        _fetch_children_for_task(fetcher, task)
+        _write_outputs(
+            task,
+            download_path,
+            download_path_rel,
             force=True,
-            download_path=download_path,
-            download_path_rel=download_path_rel,
-            epic_children=children,
+            jira_url=JIRA_URL,
+            tags_field_id=tags_field,
         )
 
         if status in RESOLVED_STATUSES:
-            print(f"  {key}: {status} - removed from pending")
+            print(f"  {task_key}: {status} - removed from pending")
         else:
-            print(f"  {key}: {status} - keeping in pending")
-            remaining.append(key)
+            print(f"  {task_key}: {status} - keeping in pending")
+            remaining.append(task_key)
 
     lists.save_pending(remaining)
     print()
