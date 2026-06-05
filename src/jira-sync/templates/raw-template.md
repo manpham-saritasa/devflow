@@ -1,55 +1,53 @@
-# [KEY] — [TITLE]
+# {key} — {summary}
 
-- **Status:** [STATUS]
-- **Type:** [ISSUETYPE]
-- **Priority:** [PRIORITY]
-- **Estimated:** [ESTIMATED]
-- **Spent:** [SPENT]
-- **Assignee:** [ASSIGNEE]
-- **Reporter:** [REPORTER]
-- **Components:** [COMPONENTS]
-- **Labels:** [LABELS]
-- **Tags:** [TAGS]
-- **Fix Versions:** [FIX_VERSIONS]
-- **Created:** [CREATED]
-- **Updated:** [UPDATED]
-- **Due Date:** [DUE_DATE]
-- **Resolution:** [RESOLUTION]
-- **Resolved At:** [RESOLUTION_DATE]
-- **URL:** [URL]
+- **Status:** {status}
+- **Type:** {issuetype}
+- **Priority:** {priority}
+- **Estimated:** {estimated}
+- **Spent:** {spent}
+- **Assignee:** {assignee}
+- **Reporter:** {reporter}
+- **Components:** {components}
+- **Labels:** {labels}
+- **Tags:** {tags}
+- **Fix Versions:** {fix_versions}
+- **Created:** {created}
+- **Updated:** {updated}
+- **Due Date:** {due_date}
+- **Resolution:** {resolution}
+- **Resolved At:** {resolution_date}
+- **URL:** {url}
 
 ---
 
 ## Hierarchy
 
-- **Epic:** [EPIC]
-- **Sprint:** [SPRINT]
-- **Parent:** [PARENT]
-- **Story Points:** [STORY_POINTS]
-- **Subtasks:** [SUBTASKS]
+- **Epic:** {epic}
+- **Sprint:** {sprint}
+- **Parent:** {parent}
+- **Story Points:** {story_points}
+- **Subtasks:** {subtasks}
 
 ---
 
 ## Related Tasks
 
-[RELATED_TASKS]
+{related_tasks}
 
 ---
 
 ## Attachments
 
-[ATTACHMENTS]
-
----
+{attachments}
 
 ---
 
 ## Description
 
-[DESCRIPTION]
+{description}
 
 ---
 
 ## Comments
 
-[COMMENTS]
+{comments}

@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from typing import cast
 
-from config import (
+from jira.config import (
     CONFIG_PATH,
     DOWNLOAD_PATH_REL,
     JIRA_PROJECT_KEY,
@@ -15,15 +15,15 @@ from config import (
     load_app_config,
     validate_project_key,
 )
-from jira_fetcher import JiraTaskFetcher
-from sync_runner import (
+from jira.sync_runner import (
     _fetch_children_for_task,
     _write_outputs,
     range_sync_issue,
     sync_one_issue,
 )
-from sync_state import add_not_found_id, load_not_found_ids, load_state
-from task_lists import RESOLVED_STATUSES, TaskListManager
+from jira.sync_state import add_not_found_id, load_not_found_ids, load_state
+from jira.task_fetcher import JiraTaskFetcher
+from jira.task_list_manager import RESOLVED_STATUSES, TaskListManager
 
 ISSUE_KEY_PATTERN = re.compile(r"^(?P<project>[A-Z][A-Z0-9]+)-(?P<issue_id>\d+)$")
 
@@ -215,6 +215,7 @@ def _run_range_sync(
     for issue_id in range(start_id, max_id + 1):
         try:
             result, _clen = range_sync_issue(
+                fetcher,
                 project_key,
                 issue_id,
                 force,

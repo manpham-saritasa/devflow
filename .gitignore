@@ -50,6 +50,9 @@ cli/content/
 *.sln
 *.sw?
 
+# jira-sync result files (contain real task keys)
+src/jira-sync/result/*.txt
+
 nul
 .ai/plugins/devflow/jira-move/RMASUP.config
 ~$*
