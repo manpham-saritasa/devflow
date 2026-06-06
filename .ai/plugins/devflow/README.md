@@ -35,7 +35,7 @@ devflow KEY --→ plan → code → review (3 phases, checkpoints)
     └── dev-adr (if architectural)
 
 Always-on rules:   AGENTS.md → priorities, core, anti-hallucination, hard stops, privacy, confidence
-On-demand rules:   coding-rules.md (code), pr-rules.md (reviews)
+On-demand rules:   coding.md (code), pr.md (reviews)
 Personal:          .local/memory.md (shortcuts), .local/session-rules.md (tracking)
 ```
 
