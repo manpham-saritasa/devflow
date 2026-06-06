@@ -83,3 +83,5 @@ Also detect these patterns proactively:
   - structure listing scripts/assets with descriptions
   - list of external tools, APIs, or MCP calls used
 - When creating or editing `.md` files: if an `.html` file with the same name exists in the same directory, auto-run `md-to-html` to keep the HTML copy in sync.
+- When running any script that outputs plaintext (tables, logs, reports), always format the output as a clean table in chat — never dump raw terminal output.
+- After updating `.local/memory.md`, sync changes to `.ai/rules/memory.md.template`.
