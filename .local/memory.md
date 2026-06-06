@@ -38,7 +38,7 @@
 | Shortcut | Action |
 |---|---|
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
-| `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/session-rules.md |
+| `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding.md, .local/session-rules.md |
 | `devflow` | Run the devflow agent from `.ai/agents/devflow.md` |
 | `creport` | Run the `change-report` skill — auto-detects preview vs after mode |
 | `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat |
@@ -66,3 +66,4 @@
 - When creating markdown documents:
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
   - run the `review-md` skill to review the md file content
+- After editing any `.md` file that has a matching `.html` output, regenerate the HTML via `md-to-html`.

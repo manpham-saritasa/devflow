@@ -38,7 +38,7 @@
 | Shortcut | Action |
 |---|---|
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
-| `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding-rules.md, rules/session-rules.md |
+| `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding.md, .local/session-rules.md |
 | `devflow` | Run the devflow agent from `.ai/plugins/devflow/` |
 | `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat, but only if an `.html` file with the same name already exists in the same directory. |
 | `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |

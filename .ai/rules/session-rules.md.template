@@ -75,7 +75,7 @@ Rule draft: [proposed rule text]
 Example:
 ```
 ⚠️ Tools has 6 corrections on "edit_file matching multiple locations".
-Suggest adding to coding-rules.md:
+Suggest adding to coding.md:
   "When old_text matches multiple locations, add 2+ lines of surrounding context."
 ```
 

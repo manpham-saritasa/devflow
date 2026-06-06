@@ -250,7 +250,7 @@ This skill supports multiple review rounds without re-invocation:
 
 ---
 
-## Rules Summary (from pr-rules.md)
+## Rules Summary (from pr.md)
 
 | Rule | Detail |
 |------|--------|
