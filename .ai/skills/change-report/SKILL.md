@@ -75,9 +75,9 @@ When user says `creport` with no flag:
 ```text
 ## 📋 Planned Changes
 
-### 1: [Group title]
+### 📝 1: [Group title]
 
-📝 Plan: [One-line summary of the planned change]
+**Plan:** [One-line summary of the planned change]
 
 - Files: path/a.md (edit), path/b.py (new)
 - Type: refactor / new / fix / docs / config
@@ -96,20 +96,15 @@ When user says `creport` with no flag:
 ### After mode: Change Report (default / `--diff`)
 
 ```text
-### 1: [Group title]
+### 🤖 1: [Group title]
 
-🤖: [One-line summary of what changed and why]
+**Done:** [One-line summary of what changed and why]
 
 - Explanation: [practical impact, benefits, or what this means for the user/project]
 
 - Files: path/a.md, path/b.py
 
-### 2: [Group title]
+### 🤖 2: [Group title]
 
 ...
-
-### Integrity Check
-
-- I only changed the files and areas listed above.
-- I did not make unrelated refactors or hidden edits.
 ```

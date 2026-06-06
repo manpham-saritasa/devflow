@@ -67,3 +67,4 @@
   - use student mode, not caveman mode so that the text is not too long or too short and still understandable
   - run the `review-md` skill to review the md file content
 - After editing any `.md` file that has a matching `.html` output, regenerate the HTML via `md-to-html`.
+- When running `jlog`, always format the output as a clean table in chat — never dump raw terminal output.
