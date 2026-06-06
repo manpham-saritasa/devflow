@@ -18,6 +18,7 @@
     --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
     --radius: 9px;
     --title: #1e3a5f;
+    --sub-title: #1e3a5f;
     --th-bg: #e6f4f8;
     --th-title: #1e3a5f;
     --h2-border-line: rgb(13, 148, 136);
@@ -106,7 +107,7 @@ h2 {
 h3 {
     margin: 24px 0 10px;
     font-size: 20px;
-    color: var(--title);
+    color: var(--sub-title);
 }
 h4 {
     color: var(--title);
@@ -255,7 +256,6 @@ td pre code {
 }
 strong,
 h2,
-h3,
 h4 {
     color: var(--title);
 }
@@ -321,34 +321,144 @@ a:hover {
   <h1>jira-log</h1>
 </section>
 <section class="section">
-<p>Log time to a Jira issue via Tempo. Shows daily total after logging.</p>
+<p>Log time to a Jira issue via Tempo. Shows daily totals, weekly project breakdowns, and month views. Auto-flags days under 8h.</p>
 </section>
 <section class="section">
 <h2>1. Quick start</h2>
 <pre><code class="language-bash">jlog                              # show today's hours
+jlog week                         # weekly project/day breakdown
+jlog month                        # month view with weekly totals
+jlog mon                          # Monday's detail (mon-sun)
 jlog list                         # show quick-pick task list
 jlog 1 30m Email                  # log 30m to task #1 from favorite-tasks.txt
-jlog PROJ-123 1h Code review       # log directly by key
-jlog PROJ-123 1h --job Dev &quot;Coding&quot;  # with custom job type
+jlog PROJ-123 1h Code review      # log directly by key
+jlog PROJ-123 1h --date 6/5 &quot;...&quot; # log to a past date (M/D, YYYY-MM-DD, YYYY/M/D)
+jlog PROJ-123 1h --job Dev &quot;...&quot;  # with custom job type
 </code></pre>
 </section>
 <section class="section">
 <h2>2. Output</h2>
-<pre><code class="language-text">✅ Logged 30m to PROJ-123 — &quot;Email handle&quot;
-   tempoWorklogId: 1234567
-
-## 2026-06-04: 1h 30m (3 entries)
-
-| # | Issue | Time | Description |
-|---|-------|------|-------------|
-| 1 | PROJ-123 | 30m | Email handle |
-| 2 | PROJ-124 | 30m | Code review |
-| 3 | PROJ-1 | 30m | TM activities |
-</code></pre>
+<h3>Log entry</h3>
+<p>✅ Logged 30m to PROJ-123 — "Email handle"<br>
+   tempoWorklogId: 1234567</p>
+<h4>2026-06-04: 1h 30m (3 entries)</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Issue</th>
+<th>Time</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="#">1</td>
+<td data-label="Issue">PROJ-123</td>
+<td data-label="Time">30m</td>
+<td data-label="Description">Email handle</td>
+</tr>
+</tbody>
+</table>
+<p>Under 8h days get a warning: <code>2026-06-04: 1h 30m logged - 6h 30m short of 8h</code></p>
+<h3>Week view (<code>jlog week</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Mon</th>
+<th>Tue</th>
+<th>Wed</th>
+<th>Thu</th>
+<th>Fri</th>
+<th>Sat</th>
+<th>Sun</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Project"><strong>MISC</strong></td>
+<td data-label="Mon">5h 30m</td>
+<td data-label="Tue">5h 20m</td>
+<td data-label="Wed">6h</td>
+<td data-label="Thu">5h</td>
+<td data-label="Fri">3h</td>
+<td data-label="Sat">—</td>
+<td data-label="Sun">—</td>
+<td data-label="Total">24h 50m</td>
+</tr>
+<tr>
+<td data-label="Project"><strong>RMASUP</strong></td>
+<td data-label="Mon">2h 30m</td>
+<td data-label="Tue">3h</td>
+<td data-label="Wed">2h</td>
+<td data-label="Thu">3h</td>
+<td data-label="Fri">3h 30m</td>
+<td data-label="Sat">—</td>
+<td data-label="Sun">—</td>
+<td data-label="Total">14h</td>
+</tr>
+<tr>
+<td data-label="Project"><strong>Total</strong></td>
+<td data-label="Mon">8h</td>
+<td data-label="Tue">8h 20m</td>
+<td data-label="Wed">8h</td>
+<td data-label="Thu">8h</td>
+<td data-label="Fri">6h 30m</td>
+<td data-label="Sat">—</td>
+<td data-label="Sun">—</td>
+<td data-label="Total">38h 50m</td>
+</tr>
+</tbody>
+</table>
+<p>Fri 2026-06-05: 6h 30m logged - 1h 30m short of 8h</p>
+<h3>Month view (<code>jlog month</code>)</h3>
+<p><strong>June 2026 — up to Jun 06</strong></p>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Mon</th>
+<th>Tue</th>
+<th>Wed</th>
+<th>Thu</th>
+<th>Fri</th>
+<th>Sat</th>
+<th>Sun</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Week">Jun 01-06</td>
+<td data-label="Mon">8h</td>
+<td data-label="Tue">8h 20m</td>
+<td data-label="Wed">8h</td>
+<td data-label="Thu">8h</td>
+<td data-label="Fri">8h</td>
+<td data-label="Sat">—</td>
+<td data-label="Sun"></td>
+<td data-label="Total">40h 20m</td>
+</tr>
+<tr>
+<td data-label="Week"><strong>Total</strong></td>
+<td data-label="Mon">8h</td>
+<td data-label="Tue">8h 20m</td>
+<td data-label="Wed">8h</td>
+<td data-label="Thu">8h</td>
+<td data-label="Fri">8h</td>
+<td data-label="Sat">—</td>
+<td data-label="Sun">—</td>
+<td data-label="Total">40h 20m</td>
+</tr>
+</tbody>
+</table>
+<p>All views read from local log files — no API calls.</p>
 </section>
 <section class="section">
 <h2>3. Setup</h2>
-<h3>Required env vars (<code>.env.local</code>)</h3>
+<h3>Required env vars (<code>.env.jira</code>)</h3>
 <pre><code class="language-env">JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@example.com
 JIRA_API_TOKEN=your_token
@@ -370,15 +480,21 @@ JLOG_JOB_TYPE=Testingfunctionality
 flowchart TD
     A[Parse args] --> B{What command?}
     B -->|no args| C[Show today from local log]
-    B -->|list| D[Show favorite-tasks.txt]
-    B -->|KEY DUR DESC| E[Validate args]
+    B -->|week| W[Show week: project x day matrix]
+    B -->|month| M[Show month: weekly totals]
+    B -->|mon-sun| D2[Show that day's details]
+    B -->|list| L[Show favorite-tasks.txt]
+    B -->|KEY DUR DESC| E[Validate + auto-convert date]
     E --> F[Resolve task # to key if needed]
-    F --> G[Load auth from .env.local]
+    F --> G[Load auth from .env.jira]
     G --> H[Get issue ID + summary from Jira]
     H --> I[Get account ID from Jira]
     I --> J[POST worklog to Tempo API]
-    J --> K[Save to local .local/jiraflow/logs/]
-    K --> L[Show result + daily total]
+    J --> K[Save to local log]
+    K --> S[Show result + daily total]
+    S --> U{Under 8h?}
+    U -->|yes| FLAG[Flag shortfall]
+    U -->|no| DONE[Done]
 </pre>
 <h3>External calls</h3>
 <table>
@@ -408,7 +524,7 @@ flowchart TD
 <tr>
 <td data-label="Source"><code>.local/jiraflow/logs/</code></td>
 <td data-label="Call type">local file</td>
-<td data-label="Purpose">Daily total tracking</td>
+<td data-label="Purpose">Daily/week/month totals</td>
 </tr>
 </tbody>
 </table>
@@ -419,6 +535,7 @@ flowchart TD
   SKILL.md    ← skill description + workflow + rules
   SKILL.html  ← HTML preview
   README.md   ← this file
+  README.html ← HTML preview
   main.py     ← entry point, self-contained script
 </code></pre>
 </section>
