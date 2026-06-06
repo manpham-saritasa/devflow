@@ -312,7 +312,8 @@ a:hover {
 }
 
   </style>
-
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
 </head>
 <body>
   <main class="page">
@@ -320,72 +321,77 @@ a:hover {
   <h1>.ai — AI Coding Framework</h1>
 </section>
 <section class="section">
-<p>Suggested rules, skills, and agents for consistent AI-assisted development. LLM-agnostic — works with Zed, Cursor, Copilot, Claude Code, Gemini CLI, Windsurf, Codeium, Aider, JetBrains AI.  </p>
+<p><strong>Every teammate gets the same high-quality AI behavior — regardless of which AI tool they use.</strong>  </p>
 </section>
 <section class="section">
-<h2>Two-Layer Architecture</h2>
+<h2>Why</h2>
 <table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>Location</th>
-<th>Shared?</th>
+<th>Without DevFlow</th>
+<th>With DevFlow</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td data-label="Layer"><strong>Framework</strong></td>
-<td data-label="Location"><code>.ai/</code> (rules, skills, agents, plugins)</td>
-<td data-label="Shared?">✅ Git tracked — suggested defaults</td>
+<td data-label="Without DevFlow">Each dev writes their own AI instructions from scratch</td>
+<td data-label="With DevFlow">One framework, shared across the team</td>
 </tr>
 <tr>
-<td data-label="Layer"><strong>Personal</strong></td>
-<td data-label="Location"><code>.local/</code> (memory, session-rules, corrections)</td>
-<td data-label="Shared?">❌ Gitignored — dev-specific</td>
+<td data-label="Without DevFlow">Cursor user gets different rules than Zed user</td>
+<td data-label="With DevFlow">Same safety, quality, and workflow rules for everyone</td>
+</tr>
+<tr>
+<td data-label="Without DevFlow">Onboarding = "figure out your AI settings"</td>
+<td data-label="With DevFlow">Onboarding = copy <code>.local/</code> templates, done</td>
+</tr>
+<tr>
+<td data-label="Without DevFlow">Reviews catch inconsistent AI output</td>
+<td data-label="With DevFlow">Rules enforce consistency before code is written</td>
+</tr>
+<tr>
+<td data-label="Without DevFlow">Token waste from duplicated rules</td>
+<td data-label="With DevFlow">Tiered loading — only what's needed, when needed</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section class="section">
-<h2>Quick Deploy</h2>
-<pre><code class="language-bash"># Copy framework into target repo
-cp -r .ai/ target-repo/
-</code></pre>
-<p>Done. Each dev pastes the 1-line router into their AI tool's config file (see table below).  </p>
-</section>
-<section class="section">
-<h2>Set Up Your Personal Workspace</h2>
-<p>Each teammate customizes <code>.local/</code> (gitignored, never committed):</p>
-<pre><code class="language-bash"># Windows (PowerShell)
-Copy-Item .ai/rules/memory.md.template .local/memory.md
-Copy-Item .ai/rules/session-rules.md.template .local/session-rules.md
+<h2>How It Works</h2>
+<pre class="mermaid">
+flowchart LR
+    subgraph F["Framework (.ai/)"]
+        direction TB
+        F1["Ships as template"]
+        F2["Suggested rules,
+skills, agents"]
+    end
+    subgraph P["Project"]
+        direction TB
+        P1["Team edits .ai/"]
+        P2["Keeps what fits,
+removes the rest"]
+    end
+    subgraph D["Dev"]
+        direction TB
+        D1["1-line router in
+AI tool config"]
+        D2["+ .local/memory
+personal shortcuts"]
+    end
 
-# Unix / macOS
-cp .ai/rules/memory.md.template .local/memory.md
-cp .ai/rules/session-rules.md.template .local/session-rules.md
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="File"><code>memory.md</code></td>
-<td data-label="Purpose">Shortcuts (<code>cush</code>, <code>ship</code>, <code>creport</code>), comm style, LLM behaviors</td>
-</tr>
-<tr>
-<td data-label="File"><code>session-rules.md</code></td>
-<td data-label="Purpose">Timezone, session saving, tracking</td>
-</tr>
-</tbody>
-</table>
+    F:::accent0 --> P:::accent1 --> D:::accent2
+</pre>
+<ol>
+<li><strong>Framework ships</strong> — <code>.ai/</code> is a starter template with rules, skills, and agents.</li>
+<li><strong>Project customizes</strong> — team edits <code>.ai/</code> files: keeps what fits, removes or changes the rest.</li>
+<li><strong>Dev layers personal</strong> — each dev adds a 1-line router to their AI tool, plus <code>.local/memory.md</code> for shortcuts.</li>
+</ol>
 </section>
 <section class="section">
-<h2>Supported LLMs — 1-Line Setup</h2>
-<p>Paste this line into your tool's config file:</p>
+<h2>Works With Your AI Tool</h2>
+<p>Zed, Cursor, Copilot, Claude Code, Gemini CLI, Windsurf, Codeium, Aider, JetBrains AI — and any other that reads markdown.  </p>
+<p>Paste this line into your tool's config:</p>
 <pre><code>Read `.ai/startup.md` first — it loads all rules, memory, and corrections for this session.
 </code></pre>
 <table>
@@ -444,111 +450,115 @@ cp .ai/rules/session-rules.md.template .local/session-rules.md
 </tr>
 </tbody>
 </table>
-<p>Project location = checked into git, shared with team.  </p>
 </section>
 <section class="section">
-<h2>Folder Map</h2>
+<h2>Deploy in 1 Step</h2>
+<pre><code class="language-bash">cp -r .ai/ target-repo/
+</code></pre>
+<p>Then the team customizes:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Who</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Step">1</td>
+<td data-label="Who">Lead</td>
+<td data-label="Action">Edit <code>.ai/</code> — keep what fits the project, remove or change the rest</td>
+</tr>
+<tr>
+<td data-label="Step">2</td>
+<td data-label="Who">Each dev</td>
+<td data-label="Action">Paste the 1-line router into their AI tool's config (see table above)</td>
+</tr>
+<tr>
+<td data-label="Step">3</td>
+<td data-label="Who">Each dev</td>
+<td data-label="Action">Copy templates: <code>memory.md.template</code> → <code>.local/memory.md</code>, <code>session-rules.md.template</code> → <code>.local/session-rules.md</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>What's Inside</h2>
 <table>
 <thead>
 <tr>
 <th>Folder</th>
-<th>Purpose</th>
-<th>When loaded</th>
+<th>Contents</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td data-label="Folder"><code>.ai/rules/</code></td>
-<td data-label="Purpose">Framework rules, coding rules, templates</td>
-<td data-label="When loaded"><code>core.md</code> via startup.md, <code>coding.md</code> on-demand</td>
-</tr>
-<tr>
-<td data-label="Folder"><code>.ai/agents/</code></td>
-<td data-label="Purpose">Agent definitions — job + limits per agent</td>
-<td data-label="When loaded">On <code>devflow</code> / <code>refflow</code> invocation</td>
+<td data-label="Contents"><code>core.md</code> (safety, anti-hallucination, hard stops), <code>coding.md</code> (code quality), <code>pr.md</code> (PR reviews), templates</td>
 </tr>
 <tr>
 <td data-label="Folder"><code>.ai/skills/</code></td>
-<td data-label="Purpose">Reusable skills — each subfolder = 1 skill</td>
-<td data-label="When loaded">On skill invocation</td>
+<td data-label="Contents">Reusable skills — md-to-html, review-md, grill-me, handoff, change-report, and more</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/agents/</code></td>
+<td data-label="Contents">Agent definitions — DevFlow (full pipeline), RefFlow (refactoring)</td>
 </tr>
 <tr>
 <td data-label="Folder"><code>.ai/plugins/</code></td>
-<td data-label="Purpose">Plugin bundles (DevFlow, RefFlow, JiraFlow, GithubFlow)</td>
-<td data-label="When loaded">On skill invocation</td>
+<td data-label="Contents">Plugin bundles — DevFlow, RefFlow, JiraFlow, GithubFlow</td>
 </tr>
 <tr>
-<td data-label="Folder"><code>.ai/prompts/</code></td>
-<td data-label="Purpose">Prompt templates</td>
-<td data-label="When loaded">On demand</td>
-</tr>
-<tr>
-<td data-label="Folder"><code>.ai/copilot/</code></td>
-<td data-label="Purpose">Copilot-specific instructions</td>
-<td data-label="When loaded">By Copilot</td>
+<td data-label="Folder"><code>.ai/startup.md</code></td>
+<td data-label="Contents">Session startup checklist — loads rules, memory, corrections</td>
 </tr>
 </tbody>
 </table>
-<p>Root files (AGENTS.md, etc.) are thin routers pointing into <code>.ai/</code>. Each dev sets up their own via their AI tool's config.  </p>
 </section>
 <section class="section">
-<h2>Rules Loading (Token-Efficient)</h2>
+<h2>Rules Loaded — Only When Needed</h2>
 <table>
 <thead>
 <tr>
-<th>Tier</th>
-<th>Files</th>
 <th>When</th>
-<th>~Size</th>
+<th>What loads</th>
+<th>Cost</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td data-label="Tier"><strong>Tier 0 — Always</strong></td>
-<td data-label="Files">AGENTS.md (1-line router, per-dev)</td>
-<td data-label="When">Auto-loaded by AI tool</td>
-<td data-label="~Size">1 line</td>
+<td data-label="When">Always</td>
+<td data-label="What loads">1-line router (per-dev)</td>
+<td data-label="Cost">~1 line</td>
 </tr>
 <tr>
-<td data-label="Tier"><strong>Tier 1 — Startup</strong></td>
-<td data-label="Files"><code>startup.md</code> → <code>core.md</code></td>
 <td data-label="When">Session start</td>
-<td data-label="~Size">~5 KB</td>
+<td data-label="What loads"><code>core.md</code> (framework rules)</td>
+<td data-label="Cost">~5 KB, ~140 lines</td>
 </tr>
 <tr>
-<td data-label="Tier"><strong>Tier 2 — Personal</strong></td>
-<td data-label="Files"><code>.local/memory.md</code>, <code>session-rules.md</code></td>
-<td data-label="When">Startup (optional)</td>
-<td data-label="~Size">User-defined</td>
-</tr>
-<tr>
-<td data-label="Tier"><strong>Tier 3 — On-demand</strong></td>
-<td data-label="Files"><code>coding.md</code></td>
 <td data-label="When">First code task</td>
-<td data-label="~Size">~3 KB</td>
+<td data-label="What loads"><code>coding.md</code> (code quality)</td>
+<td data-label="Cost">~6 KB, ~260 lines</td>
 </tr>
 <tr>
-<td data-label="Tier"><strong>Tier 4 — Lazy</strong></td>
-<td data-label="Files">Skills, agents, plugins</td>
-<td data-label="When">On invocation</td>
-<td data-label="~Size">Pay-per-use</td>
+<td data-label="When">On skill invocation</td>
+<td data-label="What loads">Skill instructions</td>
+<td data-label="Cost">Pay-per-use</td>
 </tr>
 <tr>
-<td data-label="Tier"><strong>Tier 5 — Reference</strong></td>
-<td data-label="Files"><code>corrections.md</code></td>
-<td data-label="When">Startup (mistakes to avoid)</td>
-<td data-label="~Size">~1 KB</td>
+<td data-label="When">Startup</td>
+<td data-label="What loads">Personal memory, corrections</td>
+<td data-label="Cost">User-defined</td>
 </tr>
 </tbody>
 </table>
-<p>Nothing duplicated across tiers. Nothing loaded until needed.  </p>
+<p>Nothing duplicated. Nothing loaded until needed.  </p>
 </section>
 <section class="section">
 <h2>Adding a New AI Tool</h2>
-<ol>
-<li>Add a row to the Supported LLMs table above</li>
-<li>Done — no other files change</li>
-</ol>
+<p>Add a row to the table above. Done — no other files change.</p>
 </section>
   </main>
 </body>

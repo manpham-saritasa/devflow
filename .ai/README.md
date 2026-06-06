@@ -1,53 +1,59 @@
 # .ai — AI Coding Framework
 
-Suggested rules, skills, and agents for consistent AI-assisted development. LLM-agnostic — works with Zed, Cursor, Copilot, Claude Code, Gemini CLI, Windsurf, Codeium, Aider, JetBrains AI.
+**Every teammate gets the same high-quality AI behavior — regardless of which AI tool they use.**
 
 ---
 
-## Two-Layer Architecture
+## Why
 
-| Layer | Location | Shared? |
-|-------|----------|---------|
-| **Framework** | `.ai/` (rules, skills, agents, plugins) | ✅ Git tracked — suggested defaults |
-| **Personal** | `.local/` (memory, session-rules, corrections) | ❌ Gitignored — dev-specific |
+| Without DevFlow | With DevFlow |
+|-----------------|--------------|
+| Each dev writes their own AI instructions from scratch | One framework, shared across the team |
+| Cursor user gets different rules than Zed user | Same safety, quality, and workflow rules for everyone |
+| Onboarding = "figure out your AI settings" | Onboarding = copy `.local/` templates, done |
+| Reviews catch inconsistent AI output | Rules enforce consistency before code is written |
+| Token waste from duplicated rules | Tiered loading — only what's needed, when needed |
 
 ---
 
-## Quick Deploy
+## How It Works
 
-```bash
-# Copy framework into target repo
-cp -r .ai/ target-repo/
+```mermaid
+flowchart LR
+    subgraph F["Framework (.ai/)"]
+        direction TB
+        F1["Ships as template"]
+        F2["Suggested rules,
+skills, agents"]
+    end
+    subgraph P["Project"]
+        direction TB
+        P1["Team edits .ai/"]
+        P2["Keeps what fits,
+removes the rest"]
+    end
+    subgraph D["Dev"]
+        direction TB
+        D1["1-line router in
+AI tool config"]
+        D2["+ .local/memory
+personal shortcuts"]
+    end
+
+    F:::accent0 --> P:::accent1 --> D:::accent2
 ```
 
-Done. Each dev pastes the 1-line router into their AI tool's config file (see table below).
+1. **Framework ships** — `.ai/` is a starter template with rules, skills, and agents.
+2. **Project customizes** — team edits `.ai/` files: keeps what fits, removes or changes the rest.
+3. **Dev layers personal** — each dev adds a 1-line router to their AI tool, plus `.local/memory.md` for shortcuts.
 
 ---
 
-## Set Up Your Personal Workspace
+## Works With Your AI Tool
 
-Each teammate customizes `.local/` (gitignored, never committed):
+Zed, Cursor, Copilot, Claude Code, Gemini CLI, Windsurf, Codeium, Aider, JetBrains AI — and any other that reads markdown.
 
-```bash
-# Windows (PowerShell)
-Copy-Item .ai/rules/memory.md.template .local/memory.md
-Copy-Item .ai/rules/session-rules.md.template .local/session-rules.md
-
-# Unix / macOS
-cp .ai/rules/memory.md.template .local/memory.md
-cp .ai/rules/session-rules.md.template .local/session-rules.md
-```
-
-| File | Purpose |
-|------|---------|
-| `memory.md` | Shortcuts (`cush`, `ship`, `creport`), comm style, LLM behaviors |
-| `session-rules.md` | Timezone, session saving, tracking |
-
----
-
-## Supported LLMs — 1-Line Setup
-
-Paste this line into your tool's config file:
+Paste this line into your tool's config:
 
 ```
 Read `.ai/startup.md` first — it loads all rules, memory, and corrections for this session.
@@ -65,41 +71,50 @@ Read `.ai/startup.md` first — it loads all rules, memory, and corrections for 
 | Aider | `CONVENTIONS.md` | `<repo>/CONVENTIONS.md` |
 | JetBrains | `.aia/instructions.md` | `<repo>/.ijwb/.aia/instructions.md` |
 
-Project location = checked into git, shared with team.
+---
+
+## Deploy in 1 Step
+
+```bash
+cp -r .ai/ target-repo/
+```
+
+Then the team customizes:
+
+| Step | Who | Action |
+|------|-----|--------|
+| 1 | Lead | Edit `.ai/` — keep what fits the project, remove or change the rest |
+| 2 | Each dev | Paste the 1-line router into their AI tool's config (see table above) |
+| 3 | Each dev | Copy templates: `memory.md.template` → `.local/memory.md`, `session-rules.md.template` → `.local/session-rules.md` |
 
 ---
 
-## Folder Map
+## What's Inside
 
-| Folder | Purpose | When loaded |
-|--------|---------|-------------|
-| `.ai/rules/` | Framework rules, coding rules, templates | `core.md` via startup.md, `coding.md` on-demand |
-| `.ai/agents/` | Agent definitions — job + limits per agent | On `devflow` / `refflow` invocation |
-| `.ai/skills/` | Reusable skills — each subfolder = 1 skill | On skill invocation |
-| `.ai/plugins/` | Plugin bundles (DevFlow, RefFlow, JiraFlow, GithubFlow) | On skill invocation |
-| `.ai/prompts/` | Prompt templates | On demand |
-| `.ai/copilot/` | Copilot-specific instructions | By Copilot |
-
-Root files (AGENTS.md, etc.) are thin routers pointing into `.ai/`. Each dev sets up their own via their AI tool's config.
+| Folder | Contents |
+|--------|----------|
+| `.ai/rules/` | `core.md` (safety, anti-hallucination, hard stops), `coding.md` (code quality), `pr.md` (PR reviews), templates |
+| `.ai/skills/` | Reusable skills — md-to-html, review-md, grill-me, handoff, change-report, and more |
+| `.ai/agents/` | Agent definitions — DevFlow (full pipeline), RefFlow (refactoring) |
+| `.ai/plugins/` | Plugin bundles — DevFlow, RefFlow, JiraFlow, GithubFlow |
+| `.ai/startup.md` | Session startup checklist — loads rules, memory, corrections |
 
 ---
 
-## Rules Loading (Token-Efficient)
+## Rules Loaded — Only When Needed
 
-| Tier | Files | When | ~Size |
-|------|-------|------|-------|
-| **Tier 0 — Always** | AGENTS.md (1-line router, per-dev) | Auto-loaded by AI tool | 1 line |
-| **Tier 1 — Startup** | `startup.md` → `core.md` | Session start | ~5 KB |
-| **Tier 2 — Personal** | `.local/memory.md`, `session-rules.md` | Startup (optional) | User-defined |
-| **Tier 3 — On-demand** | `coding.md` | First code task | ~3 KB |
-| **Tier 4 — Lazy** | Skills, agents, plugins | On invocation | Pay-per-use |
-| **Tier 5 — Reference** | `corrections.md` | Startup (mistakes to avoid) | ~1 KB |
+| When | What loads | Cost |
+|------|-----------|------|
+| Always | 1-line router (per-dev) | ~1 line |
+| Session start | `core.md` (framework rules) | ~5 KB, ~140 lines |
+| First code task | `coding.md` (code quality) | ~6 KB, ~260 lines |
+| On skill invocation | Skill instructions | Pay-per-use |
+| Startup | Personal memory, corrections | User-defined |
 
-Nothing duplicated across tiers. Nothing loaded until needed.
+Nothing duplicated. Nothing loaded until needed.
 
 ---
 
 ## Adding a New AI Tool
 
-1. Add a row to the Supported LLMs table above
-2. Done — no other files change
+Add a row to the table above. Done — no other files change.
