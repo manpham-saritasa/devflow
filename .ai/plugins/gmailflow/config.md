@@ -7,6 +7,13 @@
 | `PLUGIN_ROOT` | `.ai/plugins/gmailflow` | Plugin root (repo-relative) |
 | `ENV_FILE` | `.env.gmail` | Env file cho Gmail auth ở repo root |
 
+## Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| gmail-new | `skills/gmail-new/` | Read and summarize new Gmail messages |
+| gmail-jira | `skills/gmail-jira/` | Create Jira task from email + draft reply |
+
 ## Auth
 
 All GmailFlow skills read credentials from `.env.gmail` ở repo root.
