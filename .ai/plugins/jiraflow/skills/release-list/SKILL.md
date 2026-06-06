@@ -20,7 +20,7 @@ triggers:
 ### Step 1: Parse Input
 
 Extract project key from first argument: `RMASUP`.
-Default to `JIRA_PROJECT_KEY` from `.env.local` if no key provided.
+Default to `JIRA_PROJECT_KEY` from `.env.jira` if no key provided.
 
 ### Step 2: Fetch Versions
 
@@ -53,7 +53,7 @@ If empty: "No releases found for `[PROJECT_KEY]`."
 
 ## Credentials
 
-Read from `.env` or `.env.local`:
+Read from `.env` or `.env.jira`:
 ```
 JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@saritasa.com
@@ -64,5 +64,5 @@ JIRA_API_TOKEN=your-token
 
 | Rule | Detail |
 |------|--------|
-| Default project | Use `JIRA_PROJECT_KEY` from `.env.local` if no key provided |
+| Default project | Use `JIRA_PROJECT_KEY` from `.env.jira` if no key provided |
 | Show URLs | Always include clickable release URLs |

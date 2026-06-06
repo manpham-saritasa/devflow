@@ -68,7 +68,7 @@ def extract_text(node):
 
 def load_env():
     env = {}
-    for fname in [".env.local", ".env"]:
+    for fname in [".env.jira", ".env"]:
         path = os.path.join(ROOT, fname)
         if not os.path.exists(path):
             continue
@@ -229,7 +229,7 @@ def main():
             break
 
     if not all([domain, email, token]):
-        print("Missing JIRA credentials in .env.local")
+        print("Missing JIRA credentials in .env.jira")
         sys.exit(1)
 
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()

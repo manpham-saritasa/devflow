@@ -43,7 +43,7 @@ Description...
 
 ## 3. Setup
 
-### Required env vars (`.env.local`)
+### Required env vars (`.env.jira`)
 
 ```env
 JIRA_COMPANY_DOMAIN=saritasa
@@ -75,7 +75,7 @@ One task key per line. These tasks won't appear in the output.
 
 ```mermaid
 flowchart TD
-    A[Parse args] --> B[Load .env.local]
+    A[Parse args] --> B[Load .env.jira]
     B --> C{Positional arg?}
     C -->|yes| D[Use single project]
     C -->|no| E{Has favorites config?}

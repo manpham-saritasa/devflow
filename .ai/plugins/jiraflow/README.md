@@ -99,7 +99,7 @@ flowchart TD
 
 ## Jira API Token Setup
 
-JiraFlow skills read credentials from `.env.local` (preferred) or `.env` in the repo root.
+JiraFlow skills read credentials from `.env.jira` (preferred) or `.env` in the repo root.
 
 ### Required variables
 
@@ -120,7 +120,7 @@ TEMPO_API_TOKEN=your_tempo_token_here
 3. Click **Create API token**.
 4. Give it a label like `devflow jiraflow`.
 5. Copy the generated token.
-6. Save it to `.env.local` as `JIRA_API_TOKEN`.
+6. Save it to `.env.jira` as `JIRA_API_TOKEN`.
 
 ### How to get the Tempo API token
 
@@ -128,13 +128,13 @@ TEMPO_API_TOKEN=your_tempo_token_here
 2. Open: `https://app.tempo.io/4/settings/api-integration`
 3. Click **Generate API Token**.
 4. Copy the generated token.
-5. Save it to `.env.local` as `TEMPO_API_TOKEN`.
+5. Save it to `.env.jira` as `TEMPO_API_TOKEN`.
 
 ### Notes
 
 - `JIRA_COMPANY_DOMAIN` is your Atlassian subdomain only, for example `saritasa` for `https://saritasa.atlassian.net`.
 - Use your Atlassian login email for `JIRA_EMAIL`.
-- Keep `.env.local` private and never commit API tokens.
+- Keep `.env.jira` private and never commit API tokens.
 
 ## Favorite Projects
 

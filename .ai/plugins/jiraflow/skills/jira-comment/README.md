@@ -17,13 +17,13 @@ jira-comment PROJ-123 "Fix deployed." https://github.com/owner/repo/pull/42
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. No additional config needed.
+Same `.env.jira` as other jiraflow skills. No additional config needed.
 
 ## 4. Flow
 
 ```mermaid
 flowchart TD
-    A[Parse KEY, BODY, PR_URL] --> B[Load auth from .env.local]
+    A[Parse KEY, BODY, PR_URL] --> B[Load auth from .env.jira]
     B --> C[Jira auth OK?]
     C -->|no| D[Stop: missing credentials]
     C -->|yes| E[Build comment body in ADF format]

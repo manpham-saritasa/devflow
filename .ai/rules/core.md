@@ -5,6 +5,7 @@ Explicit task instructions override these rules unless they conflict with a hard
 ---
 
 > If `.ai/startup.md` exists, read it before starting work.
+> See `.ai/README.md` for deployment guide and full folder structure.
 
 # AI RULES
 
@@ -145,5 +146,3 @@ Rules:
 ---
 
 > **Coding rules:** see `rules/coding-rules.md` — loaded on-demand for code tasks.
-
-> **Personal setup (optional):** copy `rules/memory.md.template` → `.local/memory.md` and `rules/session-rules.md.template` → `.local/session-rules.md`. Edit to customize your shortcuts, comm style, and session tracking.

@@ -22,7 +22,7 @@ Closing 3 tasks from milestone "review":
 
 ## 3. Setup
 
-Same `.env.local` and `.local/jiraflow/config.yaml` as other jiraflow skills. Milestone mappings in `jira-move/RMASUP.config` (project-specific).
+Same `.env.jira` and `.local/jiraflow/config.yaml` as other jiraflow skills. Milestone mappings in `jira-move/RMASUP.config` (project-specific).
 
 ## 4. Flow
 

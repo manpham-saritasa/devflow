@@ -83,7 +83,7 @@ AI coding assistants (Copilot, Claude, Cursor) enable rapid code generation, but
 | -------------------- | --------------------------------------------------------- |
 | Code impact          | `.ai/` folder added to repos. `sync.bat` for propagation. |
 | Data / schema impact | None. |
-| Security impact      | Secrets in `.env.local` (gitignored). Agent reads skill files only. |
+| Security impact      | Secrets in `.env.jira` (gitignored). Agent reads skill files only. |
 | Performance impact   | None. |
 | Operational impact   | Team runs `sync.bat` after devflow updates. Skills versioned via git. |
 | Testing impact       | `test_structure.py` validates skill file integrity. |

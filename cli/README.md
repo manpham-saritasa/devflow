@@ -79,6 +79,26 @@ Interactive setup — choose which components and AI tools to sync.
 | `backup` | Rename existing to `.devflow.bak`, then write |
 | `skip` | Keep existing files untouched |
 
+## Development (local)
+
+Requirements: Node.js 18+, Git.
+
+```bash
+cd cli
+npm install
+npm run build
+npm link
+```
+
+Then use `devflow-sync init` from any project.
+
+## Troubleshooting
+
+1. Check Node.js version: `node --version` (needs 18+)
+2. Rebuild: `npm run build` (from `cli/`)
+3. Re-link: `npm link` (from `cli/`)
+4. Re-init: `devflow-sync init` to reconfigure from scratch
+
 ## How it works
 
 Files are bundled with the npm package at publish time. `update` copies them from the package into your project. Re-publish the package to distribute new versions.

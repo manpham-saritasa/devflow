@@ -23,7 +23,7 @@ triggers:
 
 ## Credentials
 
-Read from `.env` or `.env.local` in repo root:
+Read from `.env` or `.env.jira` in repo root:
 ```
 JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@saritasa.com

@@ -27,7 +27,7 @@ ROOT = find_repo_root(__file__)
 
 def load_env():
     env = {}
-    for fname in [".env.local", ".env"]:
+    for fname in [".env.jira", ".env"]:
         path = os.path.join(ROOT, fname)
         if not os.path.exists(path):
             continue

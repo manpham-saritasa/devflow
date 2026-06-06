@@ -24,7 +24,7 @@ Release "API v2.1" → Released ✅
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. Delegates task closures to `jira-close`.
+Same `.env.jira` as other jiraflow skills. Delegates task closures to `jira-close`.
 
 ## 4. Flow
 

@@ -70,7 +70,7 @@ class JiraTaskFetcher:
     def from_env(cls, root_path: str | None = None) -> "JiraTaskFetcher":
         base = root_path or JiraHttpClient.find_repo_root()
         config_json, config_dir = cls._load_config_json(base)
-        env_path = str(Path(config_dir) / config_json.get("env_path", ".env.local"))
+        env_path = str(Path(config_dir) / config_json.get("env_path", ".env.jira"))
         env = cls._load_env(base, env_path)
         custom_fields = config_json.get("custom_fields", {})
         project_key = env.get("JIRA_PROJECT_KEY", "")

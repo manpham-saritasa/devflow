@@ -29,7 +29,7 @@ jlog PROJ-123 1h --job Dev "Coding"  # with custom job type
 
 ## 3. Setup
 
-### Required env vars (`.env.local`)
+### Required env vars (`.env.jira`)
 
 ```env
 JIRA_COMPANY_DOMAIN=saritasa
@@ -60,7 +60,7 @@ flowchart TD
     B -->|list| D[Show favorite-tasks.txt]
     B -->|KEY DUR DESC| E[Validate args]
     E --> F[Resolve task # to key if needed]
-    F --> G[Load auth from .env.local]
+    F --> G[Load auth from .env.jira]
     G --> H[Get issue ID + summary from Jira]
     H --> I[Get account ID from Jira]
     I --> J[POST worklog to Tempo API]

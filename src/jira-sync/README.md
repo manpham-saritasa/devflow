@@ -68,8 +68,8 @@ graph TD
 
 ## 2. Configuration
 
-Runtime settings in `src/jira-sync/config.json`, secrets in a `.env.local` file
-whose path is controlled by the `env_path` config key (default: `../../.env.local`
+Runtime settings in `src/jira-sync/config.json`, secrets in a `.env.jira` file
+whose path is controlled by the `env_path` config key (default: `../../.env.jira`
 relative to the config directory).
 
 ### config.json
@@ -82,7 +82,7 @@ relative to the config directory).
   "pending_tasks_path": "result/tasks-pending.txt",
   "template_paths": "templates/raw-template.md",
   "pr_template_path": "templates/pr-template.md",
-  "env_path": "../../.env.local",
+  "env_path": "../../.env.jira",
   "custom_fields": {
     "story_points": "customfield_12722",
     "sprint": "customfield_10006",
@@ -93,7 +93,7 @@ relative to the config directory).
 
 Paths are resolved relative to the config file's directory (`src/jira-sync/`).
 
-### .env.local
+### .env.jira
 
 The location of this file is set by `env_path` in `config.json`.
 

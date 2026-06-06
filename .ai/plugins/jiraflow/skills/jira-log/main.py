@@ -22,7 +22,7 @@ TASKS_FILE = os.path.join(ROOT, ".local", "jiraflow", "favorite-tasks.txt")
 
 def load_env():
     env = {}
-    for fname in [".env.local", ".env"]:
+    for fname in [".env.jira", ".env"]:
         path = os.path.join(ROOT, fname)
         if not os.path.exists(path):
             continue
@@ -292,7 +292,7 @@ def main():
     jira_token = env["JIRA_API_TOKEN"]
     tempo_token = env.get("TEMPO_API_TOKEN", "")
     if not tempo_token:
-        print("Missing TEMPO_API_TOKEN in .env.local. Cannot log time without it.")
+        print("Missing TEMPO_API_TOKEN in .env.jira. Cannot log time without it.")
         sys.exit(1)
     auth = base64.b64encode(f"{email}:{jira_token}".encode()).decode()
 

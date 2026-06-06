@@ -18,7 +18,7 @@ release-add PROJ-123 PROJ-124 PROJ-125 "Q2 Sprint"
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. No additional config needed.
+Same `.env.jira` as other jiraflow skills. No additional config needed.
 
 ## 4. Flow
 

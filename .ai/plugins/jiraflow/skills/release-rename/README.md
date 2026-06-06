@@ -17,7 +17,7 @@ release-rename https://<domain>.atlassian.net/projects/PROJ/versions/12345 "New 
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. No additional config needed.
+Same `.env.jira` as other jiraflow skills. No additional config needed.
 
 ## 4. Flow
 

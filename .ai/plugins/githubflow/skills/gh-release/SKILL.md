@@ -98,7 +98,7 @@ PRs: [N] merged PRs
 
 ## JIRA URL
 
-Build JIRA URLs using the domain from `.env` or `.env.local`:
+Build JIRA URLs using the domain from `.env` or `.env.jira`:
 ```
 JIRA_COMPANY_DOMAIN=saritasa
 ```

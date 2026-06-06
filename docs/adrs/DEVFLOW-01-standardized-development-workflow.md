@@ -74,7 +74,7 @@
 |------|--------|
 | Code impact | 11 devflow skills (markdown) + 3 jiraflow skills (Python). No application code changes. |
 | Data / schema impact | None. |
-| Security impact | Jira credentials stored in `.env.local` per repo. |
+| Security impact | Jira credentials stored in `.env.jira` per repo. |
 | Performance impact | None. |
 | Operational impact | Developers must learn commands from the SOP. Every new repo copies the `.ai/plugins/` folder. |
 | Testing impact | Structural tests for SKILL.md validity via `scan.py`. Unit tests for jiraflow Python scripts. |

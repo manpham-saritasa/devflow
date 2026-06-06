@@ -58,7 +58,7 @@ curl -s -u "[JIRA_EMAIL]:[JIRA_API_TOKEN]" \
 
 ## Credentials
 
-Read from `.env` or `.env.local`:
+Read from `.env` or `.env.jira`:
 ```
 JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@saritasa.com

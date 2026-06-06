@@ -79,7 +79,7 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
             config_dir,
         ),
         env_path=(
-            config_dir / str(raw.get("env_path", "") or "../../.env.local")
+            config_dir / str(raw.get("env_path", "") or "../../.env.jira")
         ).resolve(),
         github_repo=str(raw.get("github_repo", "") or ""),
         github_repos=[str(r) for r in (raw.get("github_repos") or [])],
@@ -88,7 +88,7 @@ def load_app_config(config_path: Path = CONFIG_PATH) -> AppConfig:
 
 APP_CONFIG = load_app_config()
 
-# Load the configured .env.local after config is available
+# Load the configured .env.jira after config is available
 load_dotenv(APP_CONFIG.env_path)
 
 JIRA_URL = os.getenv("JIRA_URL", "").rstrip("/")
@@ -108,7 +108,7 @@ HTTP_TIMEOUT_SECONDS = float(os.getenv("HTTP_TIMEOUT_SECONDS", "30"))
 
 if not all([JIRA_URL, JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY]):
     raise EnvironmentError(
-        "Missing required env vars. Check .env.local file:"
+        "Missing required env vars. Check .env.jira file:"
         "  JIRA_COMPANY_DOMAIN (or JIRA_URL), JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY"
     )
 

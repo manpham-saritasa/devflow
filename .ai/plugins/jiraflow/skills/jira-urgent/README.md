@@ -25,13 +25,13 @@ jurgent RMASUP            # specific project
 
 ## 3. Setup
 
-Uses same `.env.local` and `.local/jiraflow/config.yaml` as other jiraflow skills. Ignore list at `skills/jira-urgent/ignored-comments.txt` — one comment ID per line.
+Uses same `.env.jira` and `.local/jiraflow/config.yaml` as other jiraflow skills. Ignore list at `skills/jira-urgent/ignored-comments.txt` — one comment ID per line.
 
 ## 4. Flow
 
 ```mermaid
 flowchart TD
-    A[Parse args] --> B[Load .env.local]
+    A[Parse args] --> B[Load .env.jira]
     B --> C{has positional arg?}
     C -->|yes| D[Single project]
     C -->|no| E[Loop favorites]

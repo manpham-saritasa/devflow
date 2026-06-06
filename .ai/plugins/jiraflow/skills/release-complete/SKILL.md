@@ -79,7 +79,7 @@ Use today's date in `YYYY-MM-DD` format.
 
 ## Credentials
 
-Read from `.env` or `.env.local`:
+Read from `.env` or `.env.jira`:
 ```
 JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@saritasa.com

@@ -25,13 +25,13 @@ release-list PROJ            # specific project
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. No additional config needed.
+Same `.env.jira` as other jiraflow skills. No additional config needed.
 
 ## 4. Flow
 
 ```mermaid
 flowchart TD
-    A[Parse args] --> B[Load .env.local]
+    A[Parse args] --> B[Load .env.jira]
     B --> C[GET /rest/api/3/project/KEY/versions]
     C --> D{Filter?}
     D -->|--unreleased| E[Show unreleased only]

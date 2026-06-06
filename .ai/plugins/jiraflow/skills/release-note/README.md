@@ -26,7 +26,7 @@ release-note --full          # include all tasks, not just summaries
 
 ## 3. Setup
 
-Same `.env.local` as other jiraflow skills. No additional config needed.
+Same `.env.jira` as other jiraflow skills. No additional config needed.
 
 ## 4. Flow
 

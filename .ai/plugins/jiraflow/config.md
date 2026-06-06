@@ -8,7 +8,7 @@
 
 ## Auth
 
-All skills read credentials from `.env.local` (preferred) or `.env` in the repo root:
+All skills read credentials from `.env.jira` (preferred) or `.env` in the repo root:
 
 - `JIRA_COMPANY_DOMAIN` — Atlassian subdomain (e.g., `saritasa`)
 - `JIRA_EMAIL` — Atlassian account email

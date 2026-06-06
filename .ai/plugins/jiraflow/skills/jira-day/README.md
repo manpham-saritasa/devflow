@@ -16,7 +16,7 @@ First run asks: your role, PR activity, and favorite projects. Saves to `.local/
 
 ## 2. Setup
 
-### Required env vars (`.env.local`)
+### Required env vars (`.env.jira`)
 
 ```env
 JIRA_COMPANY_DOMAIN=saritasa

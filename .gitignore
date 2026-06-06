@@ -11,6 +11,16 @@
 
 # AI
 .local
+
+# Generated sync copies (source: .ai/rules/core.md)
+AGENTS.md
+.rules
+CLAUDE.md
+GEMINI.md
+.windsurfrules
+.codeiumrules
+CONVENTIONS.md
+.github/copilot-instructions.md
 .claude/
 
 # OS

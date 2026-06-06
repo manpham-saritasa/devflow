@@ -36,7 +36,7 @@ Trigger on:
 ### Step 2: Get Cloud ID
 
 - Call Atlassian resource list.
-- Pick entry where `url` matches `https://[JIRA_COMPANY_DOMAIN].atlassian.net` from `.env` or `.env.local`.
+- Pick entry where `url` matches `https://[JIRA_COMPANY_DOMAIN].atlassian.net` from `.env` or `.env.jira`.
 - Not found → stop: "[JIRA_COMPANY_DOMAIN] Atlassian instance not found."
 
 ### Step 3: Fetch Jira Issue

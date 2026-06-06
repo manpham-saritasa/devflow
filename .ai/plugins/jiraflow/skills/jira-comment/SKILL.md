@@ -22,7 +22,7 @@ jira-comment KEY "BODY TEXT" [PR_URL]
 
 ### Step 1: Verify Credentials
 
-Check `.env` (then `.env.local`) for all required variables. Missing → stop.
+Check `.env` (then `.env.jira`) for all required variables. Missing → stop.
 
 ### Step 2: Post Comment
 

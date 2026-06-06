@@ -128,5 +128,5 @@ Rules:
 
 | Flag | Behavior |
 |------|----------|
-| (none) | Default project from `JIRA_PROJECT_KEY` in `.env.local` |
+| (none) | Default project from `JIRA_PROJECT_KEY` in `.env.jira` |
 | `[PROJECT_KEY]` | Override project key (e.g., `PROJ`) |

@@ -47,7 +47,7 @@ PRIORITY_ORDER = {"Highest": 0, "High": 1, "Medium": 2, "Low": 3, "Lowest": 4}
 
 def load_env():
     env = {}
-    for fname in [".env.local", ".env"]:
+    for fname in [".env.jira", ".env"]:
         path = os.path.join(ROOT, fname)
         if not os.path.exists(path):
             continue
@@ -228,7 +228,7 @@ def main():
         projects = favorites if favorites else [project]
 
     if not all([domain, email, token]):
-        print("Missing JIRA credentials in .env.local")
+        print("Missing JIRA credentials in .env.jira")
         sys.exit(1)
 
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()

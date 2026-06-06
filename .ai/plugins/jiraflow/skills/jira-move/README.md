@@ -6,7 +6,7 @@ Transition Jira issues through your development pipeline using milestone-based r
 
 ### 1. Credentials
 
-Add to `.env.local` in your repo root:
+Add to `.env.jira` in your repo root:
 
 ```
 JIRA_COMPANY_DOMAIN=saritasa

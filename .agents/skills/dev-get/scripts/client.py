@@ -64,7 +64,7 @@ def fetch_task(key: str, jira_url: str = "") -> dict | None:
     """
     root = JiraHttpClient.find_repo_root()
 
-    load_dotenv(os.path.join(root, ".env.local"))
+    load_dotenv(os.path.join(root, ".env.jira"))
 
     domain = os.environ.get("JIRA_COMPANY_DOMAIN", "")
     email = os.environ.get("JIRA_EMAIL", "")

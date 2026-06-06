@@ -9,7 +9,7 @@ from common import PROJECT_KEY_RE, run_command
 
 def load_env(root: str) -> dict[str, str]:
     env: dict[str, str] = {}
-    for fname in [".env.local", ".env"]:
+    for fname in [".env.jira", ".env"]:
         path = os.path.join(root, fname)
         if not os.path.exists(path):
             continue
@@ -55,7 +55,7 @@ def jira_auth(env: dict[str, str], config: dict[str, Any]) -> tuple[str, str, st
     email = identity.get("jira_email") or env.get("JIRA_EMAIL", "")
     token = env.get("JIRA_API_TOKEN", "")
     if not all([domain, email, token]):
-        raise SystemExit("Missing JIRA credentials in .env.local or .env")
+        raise SystemExit("Missing JIRA credentials in .env.jira or .env")
     auth = base64.b64encode(f"{email}:{token}".encode()).decode()
     return domain, email, auth
 

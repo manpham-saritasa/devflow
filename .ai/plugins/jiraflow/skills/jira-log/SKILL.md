@@ -41,7 +41,7 @@ The script handles Tempo auth, time logging, local file tracking, and daily tota
 
 ### Required env vars
 
-Set in `.env.local` (preferred) or `.env`:
+Set in `.env.jira` (preferred) or `.env`:
 
 ```env
 JIRA_COMPANY_DOMAIN=saritasa

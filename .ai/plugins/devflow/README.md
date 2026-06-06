@@ -199,7 +199,7 @@ dev-start PROJ-3000 --release
 
 ## Related Plugins
 
-Other plugins in this repo share the same `.env.local` and `.local/tasks/` structure. No extra setup.
+Other plugins in this repo share the same `.env.jira` and `.local/tasks/` structure. No extra setup.
 
 | Plugin | What it does | Dependencies |
 |--------|-------------|-------------|
