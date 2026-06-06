@@ -10,6 +10,9 @@ triggers:
 
 ```
 jlog                        → show today's hours
+jlog week                   → show weekly project breakdown
+jlog month                  → show month view with weekly totals
+jlog mon                    → show Monday's details (mon-sun)
 jlog list                   → show quick-pick task list
 jlog <#|KEY> <DURATION> <DESC>
 
@@ -85,6 +88,8 @@ When drafting:
 | Rule | Detail |
 |------|--------|
 | Always show total | Print daily total table after each log entry. |
+| Flag under 8h | After showing daily total, if total < 8h, flag: "⚠️ [X]h logged — under 8h target." |
+| Confirm large logs | If a single entry is >= 4h, ask user to confirm before logging. |
 | Default Job Type | `JLOG_JOB_TYPE` env var, or `Testingfunctionality` if not set. |
 | Draft first if vague | If description is vague/example-like, propose drafts and ask before logging. |
 | Never log test work | Never log time for testing, debugging, or skill-development purposes. Only real billable work. When in doubt, ask. |

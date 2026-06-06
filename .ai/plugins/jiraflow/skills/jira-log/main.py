@@ -6,7 +6,7 @@ import os
 import re
 import sys
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 
 ROOT = os.path.dirname(
     os.path.dirname(
@@ -179,6 +179,12 @@ def show_today(domain, date_str=None):
             f"| {i} | [{e['key']}](https://{domain}.atlassian.net/browse/{e['key']}) | {e['time']} | {e['desc']} |"
         )
 
+    if total_seconds < 8 * 3600:
+        missing = format_duration(8 * 3600 - total_seconds)
+        print(
+            f"\n  {date_str}: {format_duration(total_seconds)} logged - {missing} short of 8h"
+        )
+
 
 def show_task_list():
     if not os.path.exists(TASKS_FILE):
@@ -221,6 +227,152 @@ def resolve_key(arg):
     return arg.upper()
 
 
+def show_week():
+    today = datetime.now().date()
+    monday = today - timedelta(days=today.weekday())
+    days = [(monday + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
+    day_labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+    projects = {}  # {project: {date_str: seconds}}
+    for date_str in days:
+        entries = read_logs(date_str)
+        for e in entries:
+            # Extract project from key (e.g., RMASUP-1 → RMASUP)
+            key = e["key"]
+            m = re.match(r"([A-Z]+)-", key)
+            proj = m.group(1) if m else key
+            if proj not in projects:
+                projects[proj] = {d: 0 for d in days}
+            projects[proj][date_str] += parse_logged_seconds(e["time"])
+
+    if not projects:
+        print("No logged time this week.")
+        return
+
+    sorted_projects = sorted(projects.keys())
+
+    # Table header
+    header = "| Project | " + " | ".join(day_labels) + " | Total |"
+    sep = "|---" * (9) + "|"
+    print(header)
+    print(sep)
+
+    day_totals = {d: 0 for d in days}
+    grand_total = 0
+
+    for proj in sorted_projects:
+        row_total = sum(projects[proj].values())
+        grand_total += row_total
+        cells = [f"**{proj}**"]
+        for d in days:
+            secs = projects[proj][d]
+            day_totals[d] += secs
+            cells.append(format_duration(secs) if secs else "—")
+        cells.append(format_duration(row_total))
+        print("| " + " | ".join(cells) + " |")
+
+    # Total row
+    total_cells = ["**Total**"]
+    for d in days:
+        total_cells.append(format_duration(day_totals[d]) if day_totals[d] else "—")
+    total_cells.append(format_duration(grand_total))
+    print("| " + " | ".join(total_cells) + " |")
+
+    # Flag days under 8h
+    for i, d in enumerate(days):
+        if day_totals[d] == 0:
+            continue
+        if day_totals[d] < 8 * 3600:
+            missing = format_duration(8 * 3600 - day_totals[d])
+            logged = format_duration(day_totals[d])
+            print(f"  {day_labels[i]} {d}: {logged} logged - {missing} short of 8h")
+
+
+def show_month():
+    today = datetime.now().date()
+    month_start = today.replace(day=1)
+    days = []
+    d = month_start
+    while d <= today:
+        days.append(d.strftime("%Y-%m-%d"))
+        d += timedelta(days=1)
+
+    day_labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+    weeks = {}
+    day_totals = {}
+    for date_str in days:
+        dt = datetime.strptime(date_str, "%Y-%m-%d").date()
+        week_num = dt.isocalendar()[1]
+        if week_num not in weeks:
+            weeks[week_num] = {}
+        entries = read_logs(date_str)
+        total = sum(parse_logged_seconds(e["time"]) for e in entries)
+        weeks[week_num][date_str] = total
+        day_totals[date_str] = total
+
+    if not weeks:
+        print("No logged time this month.")
+        return
+
+    print(f"## {today.strftime('%B %Y')} - up to {today.strftime('%b %d')}")
+    print()
+
+    header = "| Week | " + " | ".join(day_labels) + " | Total |"
+    sep = "|---" * 9 + "|"
+    print(header)
+    print(sep)
+
+    month_total = 0
+    for week_num in sorted(weeks.keys()):
+        week_data = weeks[week_num]
+        dates_in_week = sorted(week_data.keys())
+        week_start = datetime.strptime(dates_in_week[0], "%Y-%m-%d").date()
+        week_end = datetime.strptime(dates_in_week[-1], "%Y-%m-%d").date()
+        label = f"{week_start.strftime('%b %d')}-{week_end.strftime('%d')}"
+
+        row_total = sum(week_data.values())
+        month_total += row_total
+        cells = [label]
+        for i in range(7):
+            # Calculate the date for this weekday in this week
+            target_dt = week_start + timedelta(days=(i - week_start.weekday()))
+            target_str = target_dt.strftime("%Y-%m-%d")
+            if target_str in week_data:
+                secs = week_data[target_str]
+                cells.append(format_duration(secs) if secs else "-")
+            elif target_dt > today:
+                cells.append("")
+            else:
+                cells.append("-")
+        cells.append(format_duration(row_total))
+        print("| " + " | ".join(cells) + " |")
+
+    total_cells = ["**Total**"]
+    for i in range(7):
+        wd_total = 0
+        for date_str, secs in day_totals.items():
+            dt = datetime.strptime(date_str, "%Y-%m-%d").date()
+            if dt.weekday() == i:
+                wd_total += secs
+        total_cells.append(format_duration(wd_total) if wd_total else "-")
+    total_cells.append(format_duration(month_total))
+    print("| " + " | ".join(total_cells) + " |")
+
+    print()
+    for date_str in days:
+        secs = day_totals.get(date_str, 0)
+        if secs == 0:
+            continue
+        if secs < 8 * 3600:
+            dt = datetime.strptime(date_str, "%Y-%m-%d").date()
+            label = day_labels[dt.weekday()]
+            missing = format_duration(8 * 3600 - secs)
+            print(
+                f"  {label} {date_str}: {format_duration(secs)} logged - {missing} short of 8h"
+            )
+
+
 def main():
     if (
         "--help" in sys.argv
@@ -228,11 +380,14 @@ def main():
         or (len(sys.argv) == 2 and sys.argv[1].lower() == "help")
     ):
         print(
-            "Usage: python main.py <KEY> <DURATION> <DESCRIPTION> [--job TYPE] [--date M/D]"
+            "Usage: python main.py <KEY> <DURATION> <DESCRIPTION> [--job TYPE] [--date DATE]"
         )
         print()
         print("Examples:")
         print("  jlog                              Show today's hours")
+        print("  jlog week                         Show weekly project breakdown")
+        print("  jlog month                        Show month view with weekly totals")
+        print("  jlog mon                          Show Monday's details (mon-sun)")
         print("  jlog list                         Show quick-pick task list")
         print("  jlog PROJ-1 30m Email handle     Log 30 minutes")
         print("  jlog PROJ-1 1h Code review       Log 1 hour")
@@ -243,12 +398,43 @@ def main():
         print(
             "  --job TYPE      Job type (default: $JLOG_JOB_TYPE or Testingfunctionality)"
         )
-        print("  --date M/D      Log for specific date (default: today)")
+        print(
+            "  --date M/D      Log for specific date (auto-converts M/D, YYYY-MM-DD, YYYY/M/D)"
+        )
         return
 
     if len(sys.argv) < 4:
+        day_map = {
+            "mon": 0,
+            "monday": 0,
+            "tue": 1,
+            "tuesday": 1,
+            "wed": 2,
+            "wednesday": 2,
+            "thu": 3,
+            "thursday": 3,
+            "fri": 4,
+            "friday": 4,
+            "sat": 5,
+            "saturday": 5,
+            "sun": 6,
+            "sunday": 6,
+        }
+        if len(sys.argv) == 2 and sys.argv[1].lower() in day_map:
+            env = load_env()
+            today = datetime.now().date()
+            monday = today - timedelta(days=today.weekday())
+            target = monday + timedelta(days=day_map[sys.argv[1].lower()])
+            show_today(env["JIRA_COMPANY_DOMAIN"], target.strftime("%Y-%m-%d"))
+            return
         if len(sys.argv) == 2 and sys.argv[1] == "list":
             show_task_list()
+            return
+        if len(sys.argv) == 2 and sys.argv[1] == "week":
+            show_week()
+            return
+        if len(sys.argv) == 2 and sys.argv[1] == "month":
+            show_month()
             return
         env = load_env()
         show_today(env["JIRA_COMPANY_DOMAIN"])
@@ -264,24 +450,42 @@ def main():
         idx = sys.argv.index("--job")
         if idx + 1 < len(sys.argv):
             job_type = sys.argv[idx + 1]
-            if idx == 3:
-                desc_start = 5
+            # Skip --job and its value from description, regardless of position
+            if idx <= desc_start:
+                desc_start = max(desc_start, idx + 2)
 
-    # Parse --date M/D or YYYY-MM-DD
+    # Parse --date M/D or YYYY-MM-DD (auto-convert any format)
     log_date = datetime.now().strftime("%Y-%m-%d")
     if "--date" in sys.argv:
         idx = sys.argv.index("--date")
         if idx + 1 < len(sys.argv):
             date_str = sys.argv[idx + 1]
-            if "/" in date_str:
+            # Auto-convert M/D, YYYY-MM-DD, or YYYY/M/D
+            if "-" in date_str:
+                parts = date_str.split("-")
+                if len(parts) == 3 and all(p.isdigit() for p in parts):
+                    log_date = (
+                        f"{int(parts[0]):04d}-{int(parts[1]):02d}-{int(parts[2]):02d}"
+                    )
+                else:
+                    print(f"Invalid date format: {date_str}. Use M/D or YYYY-MM-DD.")
+                    sys.exit(1)
+            elif "/" in date_str:
                 parts = date_str.split("/")
-                log_date = (
-                    f"{datetime.now().year}-{int(parts[0]):02d}-{int(parts[1]):02d}"
-                )
+                if len(parts) in (2, 3) and all(p.isdigit() for p in parts):
+                    if len(parts) == 3:
+                        log_date = f"{int(parts[0]):04d}-{int(parts[1]):02d}-{int(parts[2]):02d}"
+                    else:
+                        log_date = f"{datetime.now().year}-{int(parts[0]):02d}-{int(parts[1]):02d}"
+                else:
+                    print(f"Invalid date format: {date_str}. Use M/D or YYYY-MM-DD.")
+                    sys.exit(1)
             else:
-                log_date = date_str
-            if idx == 3:
-                desc_start = max(desc_start, 5)
+                print(f"Invalid date format: {date_str}. Use M/D or YYYY-MM-DD.")
+                sys.exit(1)
+            # Skip --date and its value from description, regardless of position
+            if idx <= desc_start:
+                desc_start = max(desc_start, idx + 2)
 
     description = " ".join(sys.argv[desc_start:])
     seconds = parse_duration(duration_str)
