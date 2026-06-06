@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>.ai — AI Coding Framework</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>.ai — AI Coding Framework</h1>
+</section>
+<section class="section">
+<p>Suggested rules, skills, and agents for consistent AI-assisted development. LLM-agnostic — works with Zed, Cursor, Copilot, Claude Code, Gemini CLI, Windsurf, Codeium, Aider, JetBrains AI.  </p>
+</section>
+<section class="section">
+<h2>Two-Layer Architecture</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Location</th>
+<th>Shared?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Layer"><strong>Framework</strong></td>
+<td data-label="Location"><code>.ai/</code> (rules, skills, agents, plugins)</td>
+<td data-label="Shared?">✅ Git tracked — suggested defaults</td>
+</tr>
+<tr>
+<td data-label="Layer"><strong>Personal</strong></td>
+<td data-label="Location"><code>.local/</code> (memory, session-rules, corrections)</td>
+<td data-label="Shared?">❌ Gitignored — dev-specific</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Quick Deploy</h2>
+<pre><code class="language-bash"># Copy framework into target repo
+cp -r .ai/ target-repo/
+</code></pre>
+<p>Done. Each dev pastes the 1-line router into their AI tool's config file (see table below).  </p>
+</section>
+<section class="section">
+<h2>Set Up Your Personal Workspace</h2>
+<p>Each teammate customizes <code>.local/</code> (gitignored, never committed):</p>
+<pre><code class="language-bash"># Windows (PowerShell)
+Copy-Item .ai/rules/memory.md.template .local/memory.md
+Copy-Item .ai/rules/session-rules.md.template .local/session-rules.md
+
+# Unix / macOS
+cp .ai/rules/memory.md.template .local/memory.md
+cp .ai/rules/session-rules.md.template .local/session-rules.md
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="File"><code>memory.md</code></td>
+<td data-label="Purpose">Shortcuts (<code>cush</code>, <code>ship</code>, <code>creport</code>), comm style, LLM behaviors</td>
+</tr>
+<tr>
+<td data-label="File"><code>session-rules.md</code></td>
+<td data-label="Purpose">Timezone, session saving, tracking</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Supported LLMs — 1-Line Setup</h2>
+<p>Paste this line into your tool's config file:</p>
+<pre><code>Read `.ai/startup.md` first — it loads all rules, memory, and corrections for this session.
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>LLM</th>
+<th>File to update</th>
+<th>Project location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="LLM">Zed</td>
+<td data-label="File to update"><code>AGENTS.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/AGENTS.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Cursor</td>
+<td data-label="File to update"><code>.cursorrules</code> / <code>.cursor/rules/main.mdc</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/.cursor/rules/main.mdc</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Copilot</td>
+<td data-label="File to update"><code>copilot-instructions.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/.github/copilot-instructions.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Claude Code</td>
+<td data-label="File to update"><code>CLAUDE.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/CLAUDE.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Gemini CLI</td>
+<td data-label="File to update"><code>GEMINI.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/GEMINI.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Windsurf</td>
+<td data-label="File to update"><code>.windsurfrules</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/.windsurfrules</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Codeium</td>
+<td data-label="File to update"><code>CODEIUM.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/CODEIUM.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">Aider</td>
+<td data-label="File to update"><code>CONVENTIONS.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/CONVENTIONS.md</code></td>
+</tr>
+<tr>
+<td data-label="LLM">JetBrains</td>
+<td data-label="File to update"><code>.aia/instructions.md</code></td>
+<td data-label="Project location"><code>&lt;repo&gt;/.ijwb/.aia/instructions.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>Project location = checked into git, shared with team.  </p>
+</section>
+<section class="section">
+<h2>Folder Map</h2>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Purpose</th>
+<th>When loaded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Folder"><code>.ai/rules/</code></td>
+<td data-label="Purpose">Framework rules, coding rules, templates</td>
+<td data-label="When loaded"><code>core.md</code> via startup.md, <code>coding.md</code> on-demand</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/agents/</code></td>
+<td data-label="Purpose">Agent definitions — job + limits per agent</td>
+<td data-label="When loaded">On <code>devflow</code> / <code>refflow</code> invocation</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/skills/</code></td>
+<td data-label="Purpose">Reusable skills — each subfolder = 1 skill</td>
+<td data-label="When loaded">On skill invocation</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/plugins/</code></td>
+<td data-label="Purpose">Plugin bundles (DevFlow, RefFlow, JiraFlow, GithubFlow)</td>
+<td data-label="When loaded">On skill invocation</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/prompts/</code></td>
+<td data-label="Purpose">Prompt templates</td>
+<td data-label="When loaded">On demand</td>
+</tr>
+<tr>
+<td data-label="Folder"><code>.ai/copilot/</code></td>
+<td data-label="Purpose">Copilot-specific instructions</td>
+<td data-label="When loaded">By Copilot</td>
+</tr>
+</tbody>
+</table>
+<p>Root files (AGENTS.md, etc.) are thin routers pointing into <code>.ai/</code>. Each dev sets up their own via their AI tool's config.  </p>
+</section>
+<section class="section">
+<h2>Rules Loading (Token-Efficient)</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Files</th>
+<th>When</th>
+<th>~Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tier"><strong>Tier 0 — Always</strong></td>
+<td data-label="Files">AGENTS.md (1-line router, per-dev)</td>
+<td data-label="When">Auto-loaded by AI tool</td>
+<td data-label="~Size">1 line</td>
+</tr>
+<tr>
+<td data-label="Tier"><strong>Tier 1 — Startup</strong></td>
+<td data-label="Files"><code>startup.md</code> → <code>core.md</code></td>
+<td data-label="When">Session start</td>
+<td data-label="~Size">~5 KB</td>
+</tr>
+<tr>
+<td data-label="Tier"><strong>Tier 2 — Personal</strong></td>
+<td data-label="Files"><code>.local/memory.md</code>, <code>session-rules.md</code></td>
+<td data-label="When">Startup (optional)</td>
+<td data-label="~Size">User-defined</td>
+</tr>
+<tr>
+<td data-label="Tier"><strong>Tier 3 — On-demand</strong></td>
+<td data-label="Files"><code>coding.md</code></td>
+<td data-label="When">First code task</td>
+<td data-label="~Size">~3 KB</td>
+</tr>
+<tr>
+<td data-label="Tier"><strong>Tier 4 — Lazy</strong></td>
+<td data-label="Files">Skills, agents, plugins</td>
+<td data-label="When">On invocation</td>
+<td data-label="~Size">Pay-per-use</td>
+</tr>
+<tr>
+<td data-label="Tier"><strong>Tier 5 — Reference</strong></td>
+<td data-label="Files"><code>corrections.md</code></td>
+<td data-label="When">Startup (mistakes to avoid)</td>
+<td data-label="~Size">~1 KB</td>
+</tr>
+</tbody>
+</table>
+<p>Nothing duplicated across tiers. Nothing loaded until needed.  </p>
+</section>
+<section class="section">
+<h2>Adding a New AI Tool</h2>
+<ol>
+<li>Add a row to the Supported LLMs table above</li>
+<li>Done — no other files change</li>
+</ol>
+</section>
+  </main>
+</body>
+</html>

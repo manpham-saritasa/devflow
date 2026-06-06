@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Session Startup</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI Session Startup</h1>
+</section>
+<section class="section">
+<p>Read <code>.ai/README.md</code> for full deployment guide and folder structure.  </p>
+</section>
+<section class="section">
+<h2>Start of every session</h2>
+<p><strong>Always read <code>.ai/rules/core.md</code> before anything else — framework rules.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>If Missing — Tell User</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Step">1</td>
+<td data-label="Action">If <code>.local/memory.md</code> exists, read it and follow for the whole session</td>
+<td data-label="If Missing — Tell User">"No personal memory set up. Copy <code>.ai/rules/memory.md.template</code> to <code>.local/memory.md</code> to customize shortcuts and behavior."</td>
+</tr>
+<tr>
+<td data-label="Step">2</td>
+<td data-label="Action">If <code>.local/session-rules.md</code> exists, read and follow session tracking rules</td>
+<td data-label="If Missing — Tell User">"No session tracking rules set up. Copy <code>.ai/rules/session-rules.md.template</code> to <code>.local/session-rules.md</code>."</td>
+</tr>
+<tr>
+<td data-label="Step">3</td>
+<td data-label="Action">If <code>.local/sessions/last-summary.md</code> exists, read it as previous-session context</td>
+<td data-label="If Missing — Tell User">"No previous session summary found — starting fresh."</td>
+</tr>
+<tr>
+<td data-label="Step">4</td>
+<td data-label="Action">If <code>.local/sessions/corrections.md</code> exists, read it — avoid repeating past mistakes</td>
+<td data-label="If Missing — Tell User">"No corrections history found."</td>
+</tr>
+<tr>
+<td data-label="Step">5</td>
+<td data-label="Action">Scan <code>.ai/skills-index.md</code> for available skills (do not load fully — only scan trigger names)</td>
+<td data-label="If Missing — Tell User">"No skills index found. Run <code>.ai/skills/skills-index/scan.py</code> to generate it."</td>
+</tr>
+</tbody>
+</table>
+<div class="blockquotes">
+<p>⚠️ <strong>Tool limitation:</strong> <code>find_path</code> skips gitignored directories (<code>.local/</code>). After running the checks above, always verify <code>.local/</code> results with <code>list_directory</code> — do not trust <code>find_path</code> for <code>.local</code> files.  </p>
+</div>
+<p>If session is long, task changes, or context is fuzzy, re-read it.  </p>
+</section>
+<section class="section">
+<h2>When user says use an agent</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Step">1</td>
+<td data-label="Action">Go to <code>.ai/agents/</code></td>
+</tr>
+<tr>
+<td data-label="Step">2</td>
+<td data-label="Action">Find best agent for the task</td>
+</tr>
+<tr>
+<td data-label="Step">3</td>
+<td data-label="Action">Read that agent file</td>
+</tr>
+<tr>
+<td data-label="Step">4</td>
+<td data-label="Action">Do task using that agent's job and limits</td>
+</tr>
+</tbody>
+</table>
+<p>If many agents fit, pick best match.<br>
+If no agent fits, say no good agent found, then continue with memory and rules only.  </p>
+</section>
+<section class="section">
+<h2>When task needs a skill</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Step">1</td>
+<td data-label="Action">Go to <code>.ai/skills/</code> or <code>.ai/plugins/</code></td>
+</tr>
+<tr>
+<td data-label="Step">2</td>
+<td data-label="Action">Find best skill for the task</td>
+</tr>
+<tr>
+<td data-label="Step">3</td>
+<td data-label="Action">Read that skill file</td>
+</tr>
+<tr>
+<td data-label="Step">4</td>
+<td data-label="Action">Use that skill alongside memory and rules</td>
+</tr>
+</tbody>
+</table>
+<p>If many skills fit, pick best match.<br>
+If no skill fits, say no good skill found, then continue with memory and rules only.  </p>
+</section>
+<section class="section">
+<h2>On-demand rules — load by task type</h2>
+<p>Before starting a task, check if a matching rule file exists and read it:</p>
+<table>
+<thead>
+<tr>
+<th>Task type</th>
+<th>Read this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Task type">Coding (implement, fix, refactor)</td>
+<td data-label="Read this"><code>.ai/rules/coding.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>If multiple apply, read all matching files before starting.  </p>
+</section>
+<section class="section">
+<h2>Priority order</h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Priority">1</td>
+<td data-label="Source">User instruction</td>
+</tr>
+<tr>
+<td data-label="Priority">2</td>
+<td data-label="Source"><code>.ai/rules/core.md</code> (core rules)</td>
+</tr>
+<tr>
+<td data-label="Priority">3</td>
+<td data-label="Source"><code>.local/memory.md</code></td>
+</tr>
+<tr>
+<td data-label="Priority">4</td>
+<td data-label="Source">Chosen agent from <code>.ai/agents/</code></td>
+</tr>
+<tr>
+<td data-label="Priority">5</td>
+<td data-label="Source">Chosen skill from <code>.ai/skills/</code> or <code>.ai/plugins/</code></td>
+</tr>
+<tr>
+<td data-label="Priority">6</td>
+<td data-label="Source">On-demand rules from <code>.ai/rules/</code></td>
+</tr>
+<tr>
+<td data-label="Priority">7</td>
+<td data-label="Source">Default AI behavior</td>
+</tr>
+</tbody>
+</table>
+</section>
+  </main>
+</body>
+</html>

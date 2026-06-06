@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI RULES</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI RULES</h1>
+</section>
+<section class="section">
+<div class="blockquotes">
+<p>If <code>.ai/startup.md</code> exists, read it before starting work.  </p>
+</div>
+</section>
+<section class="section">
+<h2>Priorities</h2>
+<p>When rules conflict, apply them in this order:</p>
+<ol>
+<li>Safety and reversibility.</li>
+<li>Correctness and verifiability.</li>
+<li>Reuse shared logic (one source of truth).</li>
+<li>Small, focused, reviewable scope.</li>
+<li>Maintainability and style.</li>
+</ol>
+<p>Thresholds are review heuristics by default unless marked as a hard stop or explicitly required by the task.  </p>
+</section>
+<section class="section">
+<h2>Core Rules</h2>
+<ul>
+<li>Investigate existing code, tests, docs, and config before proposing or making changes.</li>
+<li>Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.</li>
+<li>Prefer the safest, smallest, most reversible change that solves the requested problem.</li>
+<li>Work incrementally — verify one logical group before moving to the next.</li>
+<li>Stop and confirm the plan before editing only when: the plan is unclear, there are 2+ valid approaches, or the change is big (3+ files, or 3+ functions/methods in 1 file). Small, clear, single-approach changes can proceed directly.</li>
+<li>When confirmation is needed, show a plan table:</li>
+</ul>
+<p>🚛 <strong>Summary:</strong> [1-line what these changes achieve]</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>Change</th>
+<th>Category</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="#">1</td>
+<td data-label="File">path/file.md</td>
+<td data-label="Change">what changes</td>
+<td data-label="Category">new/fix/refactor/style/docs/config</td>
+<td data-label="Why">reason for change</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Verify behavior instead of assuming correctness.</li>
+<li>If unsure, say so — do not guess.</li>
+<li>State assumptions explicitly when they affect behavior, scope, risk, or verification.</li>
+<li>If ambiguity affects behavior, scope, acceptance criteria, architecture, or risk, stop and ask.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Anti-Hallucination Rules</h2>
+<ul>
+<li>Never claim to have read, run, tested, built, or verified something unless it actually happened.</li>
+<li>Never invent files, functions, classes, endpoints, database tables, configs, environment variables, logs, stack traces, or test results.</li>
+<li>Do not assume repository facts from filenames, conventions, or similar past projects; confirm them from the actual codebase first.</li>
+<li>Do not describe behavior as existing, current, or already implemented unless it is confirmed by code, tests, docs, config, or a direct user statement.</li>
+<li>Separate confirmed facts, reasonable inferences, and open questions.</li>
+<li>When direct evidence is unavailable, say that explicitly and lower confidence.</li>
+<li>If a required file, symbol, configuration value, dependency, or command output is missing, say what is missing and why it matters.</li>
+<li>Do not substitute a guessed implementation just to keep moving.</li>
+<li>When multiple explanations fit the evidence, present them as possibilities, not facts.</li>
+<li>Sensitive claims about security, authorization, payments, data loss, migrations, or production behavior require direct evidence or an explicit uncertainty note.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Hard Stops</h2>
+<p>These actions require explicit confirmation in the current message ("YES, do it now") before proceeding.  </p>
+<p>Always stop and ask before:</p>
+<ul>
+<li>At session start, <strong>must</strong> check <code>.ai/startup.md</code> and follow its checklist before any response.</li>
+<li>Deleting or moving many files.</li>
+<li>Dropping tables, running migrations, or changing schema.</li>
+<li>Removing dependencies.</li>
+<li>Replacing substantial existing logic or doing bulk edits / mass renames that are hard to review or revert.</li>
+<li>Editing authentication, authorization, payment, production, CI/CD, infrastructure, or other sensitive operational configuration.</li>
+<li>Deploying, releasing, tagging, pushing, or merging.</li>
+<li>Sending real emails, messages, or external API calls with side effects.</li>
+<li>Any destructive, irreversible, or clearly user-visible action that was not explicitly requested.</li>
+</ul>
+<p>Past mentions are not confirmation. The user must confirm in the current message.<br>
+When unsure, treat the action as requiring confirmation.  </p>
+<p>Stay in the current tech stack and conventions unless the user explicitly asks to change them. If something looks wrong, mention it, but follow the existing stack.  </p>
+</section>
+<section class="section">
+<h2>Auto-Stop and Self-Correction</h2>
+<p>When verification fails or assumptions are invalidated:</p>
+<ol>
+<li>Stop. Do not continue to the next phase.</li>
+<li>Identify root cause: wrong assumption, missing context, or implementation error.</li>
+<li>If fixable within scope, correct and re-verify before continuing.</li>
+<li>If the same step fails twice after correction, stop and report to the user instead of retrying.</li>
+<li>If it requires scope change or re-planning, stop and report to the user with explanation.</li>
+<li>Never silently skip a failed verification step.</li>
+</ol>
+</section>
+<section class="section">
+<h2>Privacy and Sensitive Data</h2>
+<p>Do not store personal information, company confidential data, client data, or secrets in source code, logs, configuration, tests, comments, documentation, screenshots, URLs, or examples unless the task explicitly requires it and an approved secure mechanism is used.  </p>
+<p>Never:</p>
+<ul>
+<li>Hardcode personal data, client data, credentials, tokens, keys, or confidential business data.</li>
+<li>Write sensitive data into error logs, debug logs, analytics events, or tracing payloads.</li>
+<li>Copy production or client data into fixtures, seed files, snapshots, or test cases.</li>
+<li>Paste sensitive values into comments, commit messages, PR descriptions, docs, or examples.</li>
+</ul>
+<p>Prefer:</p>
+<ul>
+<li>Fake or synthetic data in tests and examples.</li>
+<li>IDs, masked values, redacted values, or tokens instead of raw sensitive values.</li>
+<li>Minimal collection, storage, and retention of sensitive data.</li>
+</ul>
+<p>If sensitive data is exposed accidentally:</p>
+<ol>
+<li>Stop.</li>
+<li>Do not spread it further.</li>
+<li>Remove it from the change when possible.</li>
+<li>Tell the user what was exposed and where.</li>
+<li>Recommend cleanup, rotation, or incident handling as appropriate.</li>
+</ol>
+</section>
+<section class="section">
+<h2>Confidence and Uncertainty</h2>
+<p>Be explicit about confidence when it affects behavior, scope, risk, or verification.</p>
+<ul>
+<li>Every significant claim, recommendation, diagnosis, or risk should include a confidence tag when useful.</li>
+<li>Format: <code>[🟢 9/10]</code>, <code>[🟡 6/10]</code>, <code>[🟠 4/10]</code>, <code>[🔴 2/10]</code></li>
+<li>Put the tag at the end of the statement or bullet.</li>
+</ul>
+<p>Scale:</p>
+<ul>
+<li>🟢 9-10/10 = Very high; clear evidence, strong pattern match, explicit code context.</li>
+<li>🟢 7-8/10 = High; likely correct based on context and common patterns.</li>
+<li>🟡 5-6/10 = Medium; reasonable concern, depends on broader context or requirements.</li>
+<li>🟠 3-4/10 = Low; possible but speculative.</li>
+<li>🔴 1-2/10 = Very low; weak signal, caution only.</li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Do not present guesses or unverified claims as facts.</li>
+<li>Distinguish facts, inferences, and open questions.</li>
+<li>When confidence &lt; 7, state what missing context would raise it.</li>
+<li>If confidence cannot be determined due to missing context, default low and ask.</li>
+<li>Do not fake precision. Lower the score if uncertain.</li>
+<li>Prefer clarifying questions over low-confidence assertions.</li>
+<li>When confidence is low and the choice matters, stop and ask.</li>
+</ul>
+<div class="blockquotes">
+<p><strong>Coding rules:</strong> see <code>rules/coding.md</code> — loaded on-demand for code tasks.</p>
+</div>
+</section>
+  </main>
+</body>
+</html>
