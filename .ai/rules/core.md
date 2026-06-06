@@ -1,11 +1,4 @@
----
-Used by Cursor, JetBrains AI Assistant, GitHub Copilot, Copilot Chat, Codeium, Windsurf, and similar AI coding tools.
-Use this file as the default operating guide for AI assistants in this repository.
-Explicit task instructions override these rules unless they conflict with a hard stop.
----
-
 > If `.ai/startup.md` exists, read it before starting work.
-> See `.ai/README.md` for deployment guide and full folder structure.
 
 # AI RULES
 
@@ -66,6 +59,7 @@ Thresholds are review heuristics by default unless marked as a hard stop or expl
 These actions require explicit confirmation in the current message ("YES, do it now") before proceeding.
 
 Always stop and ask before:
+- At session start, **must** check `.ai/startup.md` and follow its checklist before any response.
 - Deleting or moving many files.
 - Dropping tables, running migrations, or changing schema.
 - Removing dependencies.
@@ -145,4 +139,4 @@ Rules:
 
 ---
 
-> **Coding rules:** see `rules/coding-rules.md` — loaded on-demand for code tasks.
+> **Coding rules:** see `rules/coding.md` — loaded on-demand for code tasks.
