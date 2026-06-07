@@ -1,6 +1,6 @@
 ---
 name: review-code
-version: 0.2.0
+version: 0.3.0
 description: Review code changes for structure, quality, security, performance, and edge cases. Shows findings before applying fixes. Portable — no project-specific dependencies.
 triggers:
   - "review code"
@@ -64,9 +64,17 @@ These thresholds apply to all new or modified code. Legacy code that was not tou
 
 ### Step 1: Run Tests
 
-Run the test suite for the changed area. If tests fail, note failures before proceeding. If no tests exist, note it as a gap.
+Run the test suite for the changed area.
+- If tests **fail**: list failures, flag as 🔴 Critical, **STOP**. Do not produce a verdict until tests pass.
+- If no tests exist: note it as a gap under Dimension 8 (Testing).
 
-### Step 2: Review Across 8 Dimensions
+### Step 2: Check Scope
+
+- Compare changed files against what the user asked for.
+- Flag unexpected files (changed but outside declared scope) as 🟡 High. Do not auto-fail — the change may be justified.
+- If >10 files touched: flag and verify scope is still focused.
+
+### Step 3: Review Across 8 Dimensions
 
 | # | Dimension | What to check |
 |---|-----------|---------------|
@@ -74,12 +82,12 @@ Run the test suite for the changed area. If tests fail, note failures before pro
 | 2 | Security | SQL injection? Prompt injection? Hardcoded secrets? Unsanitized input? Unsafe command execution? Auth/authz bypass? Sensitive data in logs? New dependency with known vuln? |
 | 3 | Performance | N+1 queries? Unbounded loops? Missing timeouts on external calls? Repeated work in loops? Large in-memory allocations? Missing indexes for new queries? |
 | 4 | Edge Cases | Null/empty inputs handled? Boundary conditions? Error states? Concurrent access? Race conditions? What if file missing, API down, credentials expired? |
-| 5 | Correctness | Control flow correct? Regression risk? Logic errors? Wrong assumptions? Does the change actually solve the stated problem? |
+| 5 | Correctness | Control flow correct? Regression risk? Logic errors? Wrong assumptions? Public interface intact (same signatures, same return types, no removed/renamed public methods, exceptions unchanged)? Does the change actually solve the stated problem? |
 | 6 | Design | Follows existing patterns? Single responsibility? No duplicated business logic? Correct layer placement (domain/app/infra)? Clean boundaries? |
 | 7 | Error Handling | Errors logged with enough context? Fail fast at boundaries? Graceful degradation where appropriate? No swallowed exceptions? Actionable error messages? No stack traces to users? |
 | 8 | Testing | New tests for new behavior? Edge cases covered? Test setup not silently failing? Coverage adequate for critical paths? |
 
-### Step 3: Show Findings
+### Step 4: Show Findings
 
 Present all findings before applying fixes.
 
@@ -87,8 +95,8 @@ Present all findings before applying fixes.
 
 | Level | When to use |
 |-------|------------|
-| 🔴 Critical | Security flaw, data loss risk, crash, broken core invariant, regression of key behavior |
-| 🟡 High | Missing error handling, N+1 query, missing timeout, untested critical path |
+| 🔴 Critical | Security flaw, data loss risk, crash, broken core invariant, regression of key behavior, tests failing |
+| 🟡 High | Missing error handling, N+1 query, missing timeout, untested critical path, unexpected files |
 | 🟠 Medium | Quality threshold violation, design issue, undocumented public API, duplicated logic |
 | 🟢 Low | Naming nit, minor cleanup, style preference |
 
