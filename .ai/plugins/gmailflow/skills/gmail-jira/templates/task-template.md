@@ -1,7 +1,7 @@
 # [Ticket ID]: [Summary]
 
 ## Context
-- [Environment: e.g., Production LIMS, UAT Field App]
+- [Environment: e.g., Production LIMS v1.33, UAT Field App. Include app version if mentioned in email.]
 - [What happened, where, impact]
 - [Who reported, when]
 - [Screenshots or files attached — omit if none]

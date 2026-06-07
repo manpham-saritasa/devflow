@@ -90,7 +90,7 @@ Read `.local/gmailflow/project-labels.txt` if filtering by project label.
 | **Component** | Match keywords in subject/body to project component names (e.g., "Forney Vault" → Forney, "LIMS" → LIMS, "Field App" → Field App). Show the matched component name. |
 | **Issue Type** | Bug if email describes a defect/error. Task if it's a request. Story if it's a feature ask. |
 | **Summary** | Format: `[Component name] - [Short description from email]`. Keep under 80 chars. |
-| **Environment** | Infer from email: "Production LIMS", "UAT Field App", or specific server/URL mentioned. |
+| **Environment** | Infer from email: "Production LIMS v1.33", "UAT Field App". Include app version if mentioned. |
 | **Sprint** | Always assign to the *current active sprint* for the project. |
 | **Estimate** | Infer from task complexity if not stated in email. Ask user if unclear. |
 
