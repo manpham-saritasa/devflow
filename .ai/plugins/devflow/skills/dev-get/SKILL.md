@@ -1,5 +1,6 @@
 ---
 name: dev-get
+version: 1.1.0
 description: Pull Jira issue into .local/tasks/[KEY]/, write raw.md and task.md using external templates. Use --memory-only to fetch without writing files.
 triggers:
   - "dev-get"
@@ -8,15 +9,19 @@ triggers:
   - "pull task"
   - "pull ticket"
   - "dev-get --memory-only"
+  - "dev-get --summary"
 ---
 
 ## Paths
 
 Read shared paths from `config.md`.
 
+`[TASK_DIR]` = `.local/tasks/{KEY}/`
+
 ## Flags
 
 - `--memory-only` — fetch Jira data, format in-memory, skip Steps 6-7 (no file writes)
+- `--summary` — regenerate `task.md` from `raw.md` using the task template. Use with a task key: `dev-get --summary ABC-123`.
 ---
 
 ## When to Use
@@ -86,13 +91,23 @@ Check:
 
 One/both exist → tell human which. Ask "Overwrite [KEY] task files? (yes/no)". No → stop.
 
-### Step 5: Ensure Folder
+### Step 5: --summary mode
+
+If `--summary` flag is set, skip Steps 2-4. Go directly to:
+
+1. Parse the task key from the argument.
+2. Check if `[TASK_DIR]/raw.md` exists. If not → stop: "No raw.md found. Run `dev-get {KEY}` first."
+3. Read template from `templates/task-template.md`.
+4. Fill the template from raw.md content and write to `[TASK_DIR]/task.md`. If task.md already exists, ask "Overwrite task.md? (yes/no)".
+5. Report (see Step 9).
+
+### Step 6: Ensure Folder
 
 **--memory-only:** Skip. No folder or files to create.
 
 Create `[TASK_DIR]/` if not exists. All paths relative to repo root.
 
-### Step 6: Write task.md
+#### Normal mode — Step 7: Write task.md
 
 **--memory-only:** Format task data in chat. Do not write files.
 
@@ -102,22 +117,21 @@ Create `[TASK_DIR]/` if not exists. All paths relative to repo root.
 
 Template mapping:
 - `[Ticket ID]` → Jira key
-- `[Ticket Title]` → summary
-- `## Overview` → 1–3 plain-language sentences based on summary + description. Focus on user/system outcome, not implementation detail.
-- `## Done Criteria` → checkbox bullets from Jira acceptance criteria when present. If Jira has no explicit AC, derive 2–3 testable bullets from the description.
-- `## Scope` → file paths, classes, or components to modify from Jira components, description, or comments. If unclear, describe at feature level like "auth middleware", "checkout flow".
-- `## Constraints` → only real or clearly implied constraints. Omit section if none.
-- `## Related` → linked issues with key + short reason. Omit section if none.
-- `## Open Questions` → only meaningful questions needing answers before implementation. Try reading `.local/project-info/README.md` first (if it exists) to avoid asking questions already answered there. Show questions only, no answer placeholders. Omit if none.
-- `## Notes` → extra technical context, risk areas, sync concerns, edge cases, notable signals from comments/attachments. Omit if nothing worth noting.
+- `[Summary]` → title from summary field
+- `## Context` → bullet list: environment from Jira fields, what/where/impact from description + summary, reporter + created date, attachments if any, why for features (omit for bugs)
+- `## Steps to Reproduce` → numbered list from Jira description. If none, derive from description context.
+- `## Acceptance Criteria` → summary sentence + checkbox bullets. From Jira AC when present, otherwise derive 2-3 testable bullets from description.
+- `## Scope` → **Where:** from Jira components or description. **What:** files/modules if known. **Out of scope:** constraints if any.
+- `## Open Questions` → only meaningful questions needing answers. Try `.local/project-info/README.md` first. Show questions only. Omit if none.
+- `## Notes` → edge cases, sync risks, notable signals from comments/attachments. Omit if none.
 
 Rules:
 - Infer carefully, never invent facts.
-- Replace instructional placeholder text like `[Requirement 1 ...]` and `[Criterion 1 ...]` with real content.
+- Replace instructional placeholder text with real content.
 - Remove optional guidance lines that do not apply.
 - If Jira does not provide enough detail for a section, use `None identified` or a short fill-manually note instead of fake specifics.
 
-### Step 7: Write raw.md
+### Step 8: Write raw.md
 
 **--memory-only:** Skip. No file writes needed.
 
@@ -165,13 +179,13 @@ Rules:
 - Fill every placeholder; do not leave tokens behind.
 - Use `None`, `Unresolved`, `Unassigned`, or `- None` instead of blank sections where needed.
 
-### Step 8: Report
+### Step 9: Report
 
 Short summary after done:
 - Files written: relative paths for `task.md` and `raw.md`
 - Also show full absolute paths for both files so the user can copy and open them easily
 - List all open questions from task.md (questions only, no drafted answers)
-- When the user answers open questions in chat, write the answers back to task.md as `A1:`, `A2:`
+- When the user answers open questions in chat, write the answers back to task.md under the Open Questions section
 - Remind: raw.md = full Jira source
 
 ---

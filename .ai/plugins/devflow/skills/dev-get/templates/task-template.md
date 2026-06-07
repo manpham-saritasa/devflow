@@ -1,34 +1,31 @@
-# [Ticket ID]: [Ticket Title]
+# [Ticket ID]: [Summary]
 
-## Overview
-[1–3 sentences. What changes, for whom, why. No implementation detail.]
+## Context
+- [Environment: e.g., Production LIMS, Staging API. Include app version if known.]
+- [What the issue is, where, impact]
+- [Who reported, when — from Jira reporter/created fields]
+- [Screenshots or files attached — omit if none]
+- [For features/tasks: also why. For bugs: omit.]
 
-## Done Criteria
-- [ ] [Testable outcome 1]
-- [ ] [Testable outcome 2]
-- [ ] [Testable outcome 3, optional]
+## Steps to Reproduce
+1. [Step from Jira description or comments]
+2. [Step from Jira description or comments]
+3. [Observed result]
+
+## Acceptance Criteria
+[Short summary of what success looks like — 1 sentence. From Jira acceptance criteria or derived from description.]
+- [ ] [Testable outcome — from Jira AC or inferred]
+- [ ] [Testable outcome]
+- [ ] [Optional]
 
 ## Scope
-- [File path, class, or component to modify]
-- [File path, class, or component to modify]
-- [If unclear, describe at feature level: "auth middleware", "checkout flow"]
-
-## Constraints
-- [Technical, business, or deployment constraint — omit if none]
-
-## Related
-- [ISSUE-KEY-1]: [Why related]
-- [None identified — omit if empty]
+- **Where:** [Screen, endpoint, sync job, config — where the issue lives]
+- **What:** [Files, modules, services to modify — omit if unknown. From Jira components or description.]
+- **Out of scope:** [Boundaries or constraints — omit if none]
 
 ## Open Questions
 
-Q1: [Question]
-A1: [Answer from user]
-
-Q2: [Question]
-A2: [Answer from user]
-
-(Show 1-2 real questions. Leave A1/A2 empty until user answers in chat.)
+[Only meaningful questions needing answers before implementation. Try reading `.local/project-info/README.md` first to avoid asking questions already answered there. Show questions only, no answer placeholders. Omit section if none.]
 
 ## Notes
-[Technical context from comments, attachments, edge cases, data flow hints, sync risks. Bullet list. Omit if nothing worth noting.]
+[Edge cases, sync risks, notable signals from Jira comments/attachments. Bullet list. Omit if none.]
