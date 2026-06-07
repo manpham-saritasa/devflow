@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Token Tools</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"default"});</script>
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Token Tools</h1>
+</section>
+<section class="section">
+<p>Help developers choose and install token-saving tools for their coding agent.</p>
+<pre class="mermaid">
+flowchart TD
+    A[User asks for token tools] --> B[Ask: OS, Agent, Pain point]
+    B --> C[Filter catalog by compatibility]
+    C --> D[Recommend 2-3 tools]
+    D --> E{User picks tool?}
+    E -->|Yes| F[Show install command for their OS]
+    E -->|No| G[Done]
+</pre>
+</section>
+<section class="section">
+<h2>Agent support matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th style="text-align: center;">Claude Code</th>
+<th style="text-align: center;">Cursor</th>
+<th style="text-align: center;">Copilot</th>
+<th style="text-align: center;">Gemini CLI</th>
+<th style="text-align: center;">Zed</th>
+<th style="text-align: center;">Windsurf</th>
+<th style="text-align: center;">OpenCode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Tool"><a target="_blank" href="https://github.com/rtk-ai/rtk">RTK</a></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr>
+<td data-label="Tool"><a target="_blank" href="https://github.com/juliusbrussee/caveman">Caveman</a></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td data-label="Tool"><a target="_blank" href="https://github.com/DeusData/codebase-memory-mcp">codebase-memory-mcp</a></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td data-label="Tool"><a target="_blank" href="https://github.com/thedotmack/claude-mem">claude-mem</a></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Tool guidelines</h2>
+<h3>RTK — transparent CLI proxy</h3>
+<ul>
+<li><strong>Best for:</strong> Anyone on Claude Code or Cursor. Install first — biggest impact.</li>
+<li><strong>How it works:</strong> Intercepts shell commands (<code>git diff</code>, test output) and compresses them before the LLM sees them.</li>
+<li><strong>Token savings:</strong> 60-90% on shell-heavy workflows.</li>
+<li><strong>Install:</strong> <code>brew install rtk</code></li>
+<li><strong>Limitation:</strong> Does not work with Zed.</li>
+</ul>
+<h3>Caveman — response style compression</h3>
+<ul>
+<li><strong>Best for:</strong> Everyone. Works with any agent, including Zed.</li>
+<li><strong>How it works:</strong> Changes the LLM's response style — drops filler words, articles, pleasantries. Keeps technical accuracy.</li>
+<li><strong>Token savings:</strong> ~75% on LLM output.</li>
+<li><strong>Install:</strong> Already available in devflow. Say <code>caveman</code> to activate.</li>
+<li><strong>Limitation:</strong> Only cuts output tokens, not input.</li>
+</ul>
+<h3>codebase-memory-mcp — code knowledge graph</h3>
+<ul>
+<li><strong>Best for:</strong> Large repos where the agent re-reads full files repeatedly.</li>
+<li><strong>How it works:</strong> Indexes your codebase into a graph. Agent queries symbols, call chains, and ADRs instead of reading full files.</li>
+<li><strong>Token savings:</strong> Significant (avoids repeated full-file reads).</li>
+<li><strong>Install:</strong> <code>curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash</code></li>
+<li><strong>Limitation:</strong> Requires MCP support. macOS/Linux only. Initial indexing takes time.</li>
+</ul>
+<h3>claude-mem — persistent session memory</h3>
+<ul>
+<li><strong>Best for:</strong> Long-running sessions where you want the agent to remember past conversations.</li>
+<li><strong>How it works:</strong> Stores context externally via MCP. Filters and retrieves only relevant memories before sending to LLM.</li>
+<li><strong>Token savings:</strong> Significant (no re-loading full context each session).</li>
+<li><strong>Install:</strong> <code>npx claude-mem install</code></li>
+<li><strong>Limitation:</strong> Requires MCP. Does not work with Zed.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Quick decision guide</h2>
+<table>
+<thead>
+<tr>
+<th>Your setup</th>
+<th>Install</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Your setup">Claude Code / Cursor</td>
+<td data-label="Install">RTK + Caveman</td>
+</tr>
+<tr>
+<td data-label="Your setup">Zed</td>
+<td data-label="Install">Caveman + codebase-memory-mcp</td>
+</tr>
+<tr>
+<td data-label="Your setup">Gemini CLI</td>
+<td data-label="Install">RTK + claude-mem</td>
+</tr>
+<tr>
+<td data-label="Your setup">Any agent, want simplest</td>
+<td data-label="Install">Caveman only</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="File"><code>SKILL.md</code></td>
+<td data-label="Purpose">Skill instructions (3-step workflow)</td>
+</tr>
+<tr>
+<td data-label="File"><code>token-tools-data.md</code></td>
+<td data-label="Purpose">Full tool catalog with install commands</td>
+</tr>
+<tr>
+<td data-label="File"><code>README.md</code></td>
+<td data-label="Purpose">This file — guidelines + matrix</td>
+</tr>
+</tbody>
+</table>
+</section>
+  </main>
+</body>
+</html>

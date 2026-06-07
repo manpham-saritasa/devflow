@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Token Tool Catalog</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>Token Tool Catalog</h1>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">Format</span>Each tool has: URL, What, Token savings, Agents, Zed supported, OS, Install, Difficulty.</div>
+  </div>
+</section>
+<section class="section">
+<p>Quick-reference catalog for <code>token-tools</code> skill. Dev-side tools only — all help developers while coding with their LLM agent.  </p>
+<p><strong>Format:</strong> Each tool has: URL, What, Token savings, Agents, Zed supported, OS, Install, Difficulty.  </p>
+</section>
+<section class="section">
+<h2>Token saving</h2>
+<h3>1) RTK — transparent CLI proxy</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/rtk-ai/rtk">rtk-ai/rtk</a></li>
+<li>What: Compresses shell output (git diff, test runs) before it reaches the LLM.</li>
+<li>Token savings: 60-90%</li>
+<li>Agents: Claude Code, Cursor, Copilot, Gemini CLI, Windsurf, Cline, Roo Code</li>
+<li><strong>Zed supported: No</strong></li>
+<li>OS: macOS, Linux. Windows via WSL.</li>
+<li>Install:<ul>
+<li><code>brew install rtk</code></li>
+<li><code>curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh</code></li>
+</ul>
+</li>
+<li>Difficulty: Easy</li>
+</ul>
+<h3>2) Caveman — response style compression</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/juliusbrussee/caveman">JuliusBrussee/caveman</a></li>
+<li>What: Cuts LLM output tokens by dropping filler, articles, pleasantries. Keeps technical accuracy.</li>
+<li>Token savings: ~75%</li>
+<li>Agents: Any prompt-configurable agent</li>
+<li><strong>Zed supported: Yes</strong></li>
+<li>OS: Cross-platform (prompt/skill config)</li>
+<li>Install: Add skill to agent. Already available in devflow.</li>
+<li>Difficulty: Easy</li>
+</ul>
+</section>
+<section class="section">
+<h2>Codebase context</h2>
+<h3>3) Repomix — pack repo into single file</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/yamadashy/repomix">yamadashy/repomix</a></li>
+<li>Stars: 26.1k</li>
+<li>What: Packs entire repository into one AI-friendly file (XML/MD/JSON). Token counting, git-aware ignore, compression.</li>
+<li>Token savings: Significant (avoids repeated file reads by pre-packing context)</li>
+<li>Agents: Any LLM (Claude, ChatGPT, Gemini). MCP server integration.</li>
+<li><strong>Zed supported: Yes</strong> (MCP server mode)</li>
+<li>OS: macOS, Linux, Windows. Also Docker, browser extension, VSCode.</li>
+<li>Install:<ul>
+<li><code>npm install -g repomix</code></li>
+<li><code>brew install repomix</code></li>
+<li><code>npx repomix@latest</code></li>
+</ul>
+</li>
+<li>Difficulty: Easy</li>
+</ul>
+<h3>4) Gitingest — turn repo into prompt text</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/coderamp-labs/gitingest">coderamp-labs/gitingest</a></li>
+<li>Stars: 14.8k</li>
+<li>What: Turn any git repo into a prompt-friendly text digest for LLMs. Replace <code>hub</code> with <code>ingest</code> in any GitHub URL.</li>
+<li>Token savings: Significant (digest format, token counting)</li>
+<li>Agents: Any LLM</li>
+<li><strong>Zed supported: Yes</strong> (CLI + Python package)</li>
+<li>OS: macOS, Linux, Windows</li>
+<li>Install:<ul>
+<li><code>pip install gitingest</code></li>
+<li><code>pipx install gitingest</code></li>
+<li>Or just: replace <code>github.com</code> with <code>gitingest.com</code> in any URL</li>
+</ul>
+</li>
+<li>Difficulty: Easy</li>
+</ul>
+<h3>5) codebase-memory-mcp — code knowledge graph</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/DeusData/codebase-memory-mcp">DeusData/codebase-memory-mcp</a></li>
+<li>What: Builds persistent code knowledge graph. Agent queries symbols, call chains, ADRs instead of re-reading full files.</li>
+<li>Token savings: Significant (avoids repeated file reads)</li>
+<li>Agents: Claude Code, Codex CLI, Gemini CLI, Zed, OpenCode, Aider</li>
+<li><strong>Zed supported: Yes</strong> (MCP)</li>
+<li>OS: macOS, Linux</li>
+<li>Install:<ul>
+<li><code>curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash</code></li>
+<li><code>codebase-memory-mcp install</code></li>
+</ul>
+</li>
+<li>Difficulty: Medium</li>
+</ul>
+</section>
+<section class="section">
+<h2>Session memory</h2>
+<h3>6) claude-mem — persistent session memory</h3>
+<ul>
+<li>URL: <a target="_blank" href="https://github.com/thedotmack/claude-mem">thedotmack/claude-mem</a></li>
+<li>What: Persistent context across sessions via MCP. Token-efficient filtering before fetching.</li>
+<li>Token savings: Significant (no re-loading full context each session)</li>
+<li>Agents: Claude Code, Gemini CLI, OpenCode</li>
+<li><strong>Zed supported: No</strong></li>
+<li>OS: Cross-platform (Node/npm)</li>
+<li>Install:<ul>
+<li><code>npx claude-mem install</code></li>
+<li><code>npx claude-mem install --ide gemini-cli</code></li>
+</ul>
+</li>
+<li>Difficulty: Easy</li>
+</ul>
+</section>
+<section class="section">
+<h2>Quick reference</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Best pick</th>
+<th style="text-align: center;">Zed?</th>
+<th>For whom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Category">Token saving</td>
+<td data-label="Best pick">RTK</td>
+<td style="text-align: center;">❌</td>
+<td data-label="For whom">Claude Code / Cursor users</td>
+</tr>
+<tr>
+<td data-label="Category">Response compression</td>
+<td data-label="Best pick">Caveman</td>
+<td style="text-align: center;">✅</td>
+<td data-label="For whom">Everyone. Toggle on.</td>
+</tr>
+<tr>
+<td data-label="Category">Codebase context</td>
+<td data-label="Best pick">Repomix</td>
+<td style="text-align: center;">✅</td>
+<td data-label="For whom">Quickest — one command</td>
+</tr>
+<tr>
+<td data-label="Category">Codebase context</td>
+<td data-label="Best pick">Gitingest</td>
+<td style="text-align: center;">✅</td>
+<td data-label="For whom">Python devs, GitHub users</td>
+</tr>
+<tr>
+<td data-label="Category">Codebase graph</td>
+<td data-label="Best pick">codebase-memory-mcp</td>
+<td style="text-align: center;">✅</td>
+<td data-label="For whom">Persistent, MCP-native</td>
+</tr>
+<tr>
+<td data-label="Category">Session memory</td>
+<td data-label="Best pick">claude-mem</td>
+<td style="text-align: center;">❌</td>
+<td data-label="For whom">Claude Code / Gemini CLI users</td>
+</tr>
+</tbody>
+</table>
+<h3>Zed users</h3>
+<p>3 tools work with Zed today:</p>
+<ol>
+<li><strong>Caveman</strong> — response compression. Already active.</li>
+<li><strong>Repomix</strong> — pack repo for context. <code>npx repomix@latest</code></li>
+<li><strong>Gitingest</strong> — digest for prompts. <code>pip install gitingest</code></li>
+</ol>
+</section>
+  </main>
+</body>
+</html>
