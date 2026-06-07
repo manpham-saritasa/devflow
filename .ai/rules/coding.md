@@ -16,6 +16,7 @@
 - Each phase: concrete check (test, build, lint, command).
 
 ### 3. Implement
+- Write tests before implementation.
 - Work incrementally. Verify one group before next.
 - Touch only relevant files.
 - Preserve existing behavior unless task asks to change.
