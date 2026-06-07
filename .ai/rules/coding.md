@@ -1,263 +1,198 @@
 # AI Coding Rules
 
-> Loaded on-demand for coding tasks. See `AGENTS.md` for always-on rules.
-
----
-
 ## Task Workflow
 
-> If not specified, use this workflow when asked to implement a feature, fix a bug, or complete a multi-step coding task.
-
 ### 1. Clarify
-
-- Turn the request into checkable goals.
-- Break work into logical groups.
-- Define verification steps for each phase.
-- If multiple valid interpretations remain, stop and ask instead of guessing.
+- Turn request into checkable goals.
+- Break into logical groups.
+- Define verification per phase.
+- Multiple valid interpretations → stop, ask.
 
 ### 2. Plan
-
-- Make a short, phase-by-phase plan before coding.
-- For any multi-function script, plugin, or tool: propose the module/file structure BEFORE writing code. List each module and what it owns. Get approval before implementation. Single-file monoliths with 700+ lines are never acceptable for new code regardless of language.
-- Show the plan first when the task is multi-step, high-risk, or likely to produce a broad diff.
-- Group work into meaningful review slices, for example: "Data Model", "Business Logic", "API", "UI", or "Tests".
-- Each phase must include a concrete check such as a test, build, lint, or command.
+- Short phase-by-phase plan before coding.
+- Multi-function script/plugin/tool: propose module/file structure BEFORE code. List modules + ownership. Get approval. Single-file 700+ lines never acceptable for new code regardless of language.
+- Show plan first when: multi-step, high-risk, or broad diff expected.
+- Group work into review slices (Data Model, Business Logic, API, UI, Tests).
+- Each phase: concrete check (test, build, lint, command).
 
 ### 3. Implement
-
-- Work incrementally and verify one logical group before moving to the next.
-- Touch only files relevant to the task.
-- Preserve existing behavior unless the task explicitly asks to change it.
-- Avoid unrelated refactors, broad reformatting, or extra features.
-- Small related refactors are acceptable only when they directly improve correctness, reuse, maintainability, or verification.
+- Work incrementally. Verify one group before next.
+- Touch only relevant files.
+- Preserve existing behavior unless task asks to change.
+- No unrelated refactors, broad reformatting, extra features.
+- Small related refactors ok only when improving correctness, reuse, maintainability, verification.
 
 ### 4. Stop Conditions
-
 Stop and ask if:
-
-- an assumption fails;
-- requirements conflict;
-- existing code or behavior conflicts with the plan;
-- a verification step fails and the correct fix is unclear;
-- the requested change appears to violate an invariant, architectural boundary, or business rule;
-- the implementation becomes significantly more complex or broader than planned;
-- the plan requires a scope change or re-planning.
+- assumption fails
+- requirements conflict
+- existing code/behavior conflicts with plan
+- verification fails and correct fix unclear
+- change violates invariant, architecture, or business rule
+- implementation becomes significantly more complex/broader
+- plan needs scope change or re-planning
 
 ### 5. Verification
-
-- After every code change, verify thresholds: no file >300 lines, no function >40 lines, no function >4 params. Run `python .ai/skills/check-thresholds/scripts/scan.py <target_dir>` to check.
-- The `scan.py` tool works only for Python files. For .NET projects, apply equivalent size/complexity rules through `.editorconfig` analyzer settings (Roslyn analyzers can enforce similar thresholds natively).
-- Run the tests, builds, linters, or checks relevant to the change.
-- Prefer the smallest verification that proves the requested behavior.
-- If full verification is too expensive or unavailable, say what you ran, what you did not run, and why.
-- For bug fixes, add or update a test when practical; if not, explain how the fix was verified.
-- For behavior changes or new business logic, add or update tests when practical.
-- Never mark something as verified without saying what was actually checked.
+- After every change, verify thresholds: file ≤300 lines, function ≤40 lines, ≤4 params. Run `python .ai/skills/check-thresholds/scripts/scan.py <target_dir>`.
+- scan.py for Python only. .NET: Roslyn analyzers via `.editorconfig`.
+- Run relevant tests, builds, linters, checks.
+- Smallest verification that proves behavior.
+- Full verification too expensive? Say what ran, what skipped, why.
+- Bug fixes: add/update test when practical. If not, explain verification.
+- New behavior/logic: add/update tests when practical.
+- Never mark verified without saying what was checked.
 - Never pretend verification happened.
 
 ### 6. Report
-
-Summarize using this format:
-
-**What changed**
-- Grouped by logical feature area, not file list.
-
-**What was verified**
-- Tests run, checks passed, and commands executed.
-
-**What was not verified**
-- Explain what was not verified and why.
-
-**Remaining assumptions, risks, or follow-ups**
-- List them explicitly, or say `None`.
-
-**Evidence / uncertainty**
-- List key assumptions, missing context, and any conclusions that are inferred rather than directly verified.
-
----
+Format:
+**What changed** — grouped by feature area, not file list.
+**What was verified** — tests run, checks passed, commands executed.
+**What was not verified** — explain what + why.
+**Remaining assumptions, risks, or follow-ups** — list or `None`.
+**Evidence / uncertainty** — key assumptions, missing context, inferred conclusions.
 
 ## Reuse Over Duplication
 
-Prefer one shared implementation for shared knowledge.
+One shared implementation for shared knowledge.
 
-- If the same business rule, transformation, validation, mapping, or workflow appears in 2 or more places, or is clearly going to, prefer a shared function, class, component, extension, or helper instead of copy-paste.
-- Do not duplicate core rules or invariants just to keep a patch local.
-- Extract shared business logic when duplication represents a real shared invariant or is likely to grow.
-- Avoid speculative or framework-like abstractions for one-off logic.
-- Name abstractions by domain intent, not vague utility names.
-- Put shared code in the correct layer (domain, application, infrastructure, UI, test support).
-- Keep one authoritative implementation for each piece of shared knowledge.
-- Add or update tests around the shared abstraction.
+- Same rule, transform, validation, mapping, workflow in 2+ places → shared function, class, component, extension, helper. Not copy-paste.
+- Don't duplicate core rules to keep patch local.
+- Extract when real shared invariant or likely to grow.
+- Avoid speculative/framework abstractions for one-off logic.
+- Name by domain intent, not vague utility names.
+- Put shared code in correct layer (domain, app, infra, UI, test).
+- One authoritative implementation per shared knowledge.
+- Add/update tests around shared abstraction.
 - Keep refactor and behavior changes separate when practical.
 
-Good to extract:
-- Domain rules and validations.
-- Mapping and formatting logic.
-- Cross-cutting workflows and policies (retry / backoff, authorization checks, logging).
-- Reusable UI components or layout patterns.
+Extract: domain rules, validations, mapping/formatting, cross-cutting workflows (retry/backoff, auth, logging), reusable UI.
+Avoid: one-off code, similar code with different reasons, "clever" helpers hiding logic, framework abstractions for one feature.
 
-Avoid premature abstraction:
-- One-off code or one-time paths.
-- Similar code with different reasons to change.
-- "Clever" helpers that hide simple logic and reduce clarity.
-- Framework-like abstractions introduced only for one feature.
-
-#### Example
-
-- ✅ Good: `ValidateEmail()` used in 3 controllers -> extract to shared helper with unit tests.
-- ❌ Bad: Extract a generic `ValidationEngine` for one-off logic that only runs in one place.
-- Rule: Extract when duplication represents a real shared invariant or is likely to grow. Do not extract to "prepare for the future."
-
----
+Example:
+- ✅ `ValidateEmail()` in 3 controllers → shared helper + unit tests.
+- ❌ Generic `ValidationEngine` for one-off.
+- Extract when real shared invariant or likely to grow. Not "prepare for future."
 
 ## Minimal and Surgical Changes
 
-Solve the requested problem without expanding product scope.
+Solve requested problem. Don't expand scope.
 
 Do:
-- Touch only files relevant to the task.
-- Preserve existing behavior unless the task asks to change it.
-- Clean up only code your change made dead or obviously wrong.
-- Keep diffs small and reviewable.
+- Touch only relevant files.
+- Preserve existing behavior unless task asks to change.
+- Clean up only code your change made dead or wrong.
+- Keep diffs small, reviewable.
 
-Do not:
-- Add new features or "flexibility" nobody asked for.
+Don't:
+- Add features or "flexibility" nobody asked for.
 - Refactor unrelated code.
-- Reformat whole files without need.
-- Rewrite working code just because of personal style preference.
+- Reformat whole files.
+- Rewrite working code for style preference.
 
-If there is a tradeoff between a very small local patch and a small shared abstraction:
-- If it duplicates a core rule or invariant, prefer the shared abstraction.
-- If it is truly one-off and unlikely to repeat, keep it local.
+Tradeoff local patch vs shared abstraction:
+- Duplicates core rule/invariant → shared abstraction.
+- Truly one-off → keep local.
 
-#### Example
-
-- ✅ Acceptable: Rename a confusing variable while fixing a bug in the same function.
-- ❌ Not acceptable: Reorganize an entire module while implementing a new feature.
-- Rule: Refactor only what directly improves the current task. Stop at the boundary of the task scope.
-
----
+Example:
+- ✅ Rename confusing variable while fixing bug in same function.
+- ❌ Reorganize whole module for new feature.
+- Refactor only what improves current task. Stop at task boundary.
 
 ## Change Constraints
 
 ### Architecture
-
 - Extend existing patterns before introducing new ones.
-- Do not introduce parallel architectural systems unless explicitly requested.
-- Avoid introducing alternate:
-  - state management
-  - validation systems
-  - routing patterns
-  - dependency injection
-  - data access layers
+- No parallel architectural systems unless requested.
+- Avoid alternate: state management, validation, routing, DI, data access.
 
-### Error Handling and Reliability
-
-- Handle errors explicitly; never silently ignore them.
-- Fail fast at boundaries when input is invalid, state is impossible, a required dependency is missing with no fallback, or the error reveals a logic bug.
-- Degrade gracefully only when partial failure is intentional.
-- Error messages must be actionable: say what went wrong and what to do next.
-- Never expose internal stack traces or sensitive internals to end users.
+### Error Handling
+- Handle errors explicitly. Never silently ignore.
+- Fail fast at boundaries: invalid input, impossible state, missing dep with no fallback, logic bug.
+- Degrade gracefully only when partial failure intentional.
+- Error messages: say what went wrong + what to do next.
+- Never expose stack traces or internals to users.
 - Log enough context for debugging.
 
-### Async Rules
-
+### Async
 - Catch async errors at boundaries.
-- Do not use fire-and-forget when failure has observable consequences.
+- No fire-and-forget when failure has observable consequences.
 - Retry only idempotent operations.
-- Use capped exponential backoff with jitter.
-- Every external call must have a timeout.
+- Capped exponential backoff with jitter.
+- Every external call: timeout.
 - Never wait indefinitely.
 
 ### Tests and Errors
-
 - Test setup must not fail silently.
-- Let assertion failures propagate naturally.
-- Do not swallow errors in test helpers.
-
----
+- Let assertion failures propagate.
+- Don't swallow errors in test helpers.
 
 ## Security
 
-### Secrets and Credentials
-
-- Never hardcode real secrets, passwords, tokens, or credentials.
-- Use environment variables or an approved secrets manager.
-- In tests, use fake values or mocks, never real credentials.
-- If a secret is committed accidentally, rotate it and remove it from history as part of the fix.
+### Secrets
+- Never hardcode secrets, passwords, tokens, credentials.
+- Use env vars or approved secrets manager.
+- Tests: fake values or mocks, never real credentials.
+- Secret committed accidentally? Rotate, remove from history.
 
 ### Input Validation
-
-- Validate and sanitize all external input at the boundaries.
-- External input includes file paths, CLI arguments, HTTP input, network responses, subprocess output, and environment variables.
-- Prefer allowlists over denylists where practical.
+- Validate and sanitize all external input at boundaries.
+- External input: file paths, CLI args, HTTP input, network responses, subprocess output, env vars.
+- Allowlists over denylists where practical.
 
 ### Command Execution
-
 - Never interpolate untrusted input directly into shell command strings.
-- Prefer passing subprocess arguments as arrays or structured arguments, not raw strings.
-- Validate file paths and arguments before passing them to subprocesses.
+- Pass subprocess args as arrays/structured, not raw strings.
+- Validate file paths and args before subprocess.
 
 ### Dependencies
-
-- Prefer existing dependencies first.
-- Add new dependencies only when clearly justified and the change stays minimal.
-- Document why a new dependency is needed when adding one.
-- Do not introduce dependencies with known critical vulnerabilities.
-- When a dependency is intentionally frozen, document the reason and next review date.
+- Prefer existing dependencies.
+- New dep only when clearly justified, change stays minimal.
+- Document why new dep.
+- No deps with known critical vulns.
+- Intentionally frozen dep: document reason + next review date.
 
 ### Secure by Default
-
-- New features should ship in the safest sensible configuration.
-- Loosen only when needed and documented.
-
----
+- New features: safest sensible config.
+- Loosen only when needed, documented.
 
 ## Quality Thresholds (Mandatory for new code)
 
-These thresholds apply to all new or modified code. Legacy code that was not touched is exempt by default — do not refactor it just to meet thresholds.
+Apply to all new/modified code. Legacy untouched exempt.
 
 ### Code Size
-- Function or method > 40 lines: extract or simplify.
-- File > 300 lines: split or restructure.
-- One class per file — no multiple classes in a single module.
-- Function parameters > 4: use a parameter object or simplify.
-- Nesting depth > 4: use early returns or extraction.
-- Long chains of calls: if more than 3 chained calls, use named intermediates.
-- Class > 10 methods: split distinct responsibility groups into composed classes.
+- Function >40 lines → extract/simplify.
+- File >300 lines → split/restructure.
+- One class per file.
+- Params >4 → parameter object or simplify.
+- Nesting >4 → early returns or extraction.
+- Chain >3 calls → named intermediates.
+- Class >10 methods → split into composed classes.
 
 ### Organization
-- Standalone utility functions belong in domain-specific utility classes
-  (e.g., `JiraUtils`, `GithubUtils`), not as bare module/file-level functions.
-- Group modules by domain into subdirectories (e.g., `jira/`, `github/`).
-  Shared types belong in a `dto/` or `models/` folder. Use directory
-  structure to express ownership, not comments.
+- Standalone utils → domain-specific utility classes, not bare functions.
+- Group modules by domain into subdirs. Shared types in `dto/` or `models/`.
+- Directory structure expresses ownership, not comments.
 
 ### Complexity
-- High cyclomatic or cognitive complexity: simplify when editing that code.
-- Deep inheritance beyond project norms: use composition.
-- If a class has multiple distinct responsibility groups (e.g., HTTP
-  transport, data mapping, CLI presentation), split each group into its
-  own class. The original class composes them. Each class should have
-  one reason to change.
+- High cyclomatic/cognitive complexity → simplify when editing.
+- Deep inheritance → composition.
+- Multiple distinct responsibility groups → split each into own class. Compose. One reason to change.
 
 ### Naming
-- Use clear, readable names.
+- Clear, readable names.
 - Very short names ok in small local scopes, loops, or catch variables.
 
 ### Documentation
-- Add comments or docstrings for every class you add or modify.
-- Add comments or docstrings for every public method you add or modify.
-- Add comments or docstrings for every protected method you add or modify.
-- Add comments or docstrings for global static variables, properties, and methods you add or modify.
-- Comments or docstrings for APIs must explain intent, behavior, inputs/outputs, invariants, constraints, or side effects — not restate obvious code.
-- Use local implementation comments when explaining a tricky line or block, documenting a workaround, clarifying a non-obvious business rule near the code, or warning about edge cases or constraints.
-- Prefer the language and repository convention for documentation style (for example: Python docstrings, C# XML docs, TS/JSDoc when applicable).
-- Use docstrings or language-native API documentation for classes and methods; use regular comments for local implementation details.
+- Comments/docstrings for every class, public method, protected method added/modified.
+- Also for global static vars, properties, methods.
+- API docs: explain intent, behavior, inputs/outputs, invariants, constraints, side effects. Not restate obvious code.
+- Local comments: tricky line/block, workaround, non-obvious business rule, edge case warnings.
+- Follow language convention (Python docstrings, C# XML docs, TS/JSDoc).
+- Docstrings for classes/methods. Regular comments for local details.
 
 ### Change Size
-- More than 10 touched files: stop and verify scope is still focused.
-- New dependency: justify it explicitly.
-- Duplicated business logic: use shared abstraction.
+- >10 files touched → stop, verify scope.
+- New dep → justify explicitly.
+- Duplicated business logic → shared abstraction.
 
-Generated, vendored, or config-only code is exempt.
+Generated/vendored/config-only code exempt.

@@ -3,33 +3,29 @@
 > Use these rules when communicating with user or creating/editing files for user.
 
 ## 1. Communication
-- End LLM's actions with `✅ Done.` — after statements, never after questions.
-- End skill or agent execution with its name `☑️ [skill-name]: Done.` — after statements, never after questions.
-- Prefix every question to me with `❓` — do not add `✅` or `☑️` on the same line.
-- Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
-- If there are many solutions to choose, always show your chosen solution on top and add to the last a new option that say "Show me the detailed changes first, for option #1".
+- Skill execution: prefix every message with `[skill-name]` (e.g. `[dev-start] ✅ Branch ready:`).
+- Done actions: end with `✅ Done.` — after statements, never after questions.
+- Questions: prefix with `❓`. Never add `✅ Done.` on same line.
+- Number every question: `❓1. A? 2. B?`
+- Multiple solutions: show chosen solution first. Add "Show detailed changes first, for option #1" as last option.
 - If unsure, say so.
-- For answers, include confidence as `/10`:
-  - 🟢 high
-  - 🟠 medium
-  - 🔴 low
-- For multi-item answers, sort by highest confidence first.
-- Prefer tables over bullet lists whenever possible. Tables are easier to scan.
+- Answers: tag confidence `/10` (🟢 high, 🟠 medium, 🔴 low).
+- Multi-item: sort by highest confidence first.
+- Prefer tables over bullets. Easier to scan.
+- When a plan is needed, show a confirmation table before acting:
+
+  ```
+  🚛 Summary: [1-line what these changes achieve]
+
+  | # | File | Change | Category | Why |
+  |---|------|--------|----------|-----|
+  | 1 | path/file.md | what changes | new/fix/refactor/style/docs/config | reason for change |
+  ```
 - Always format URLs as clickable markdown links: `[text](url)`. Never output plain URLs.
-- For local `.html` files, show as clickable `file:///` link: `file:///E:/devflow/path/to/file.html` — so I can click to view in browser.
-- For Jira or GitHub tasks, always show as clickable hyperlinks with key as text: `[PROJ-123](https://...)`.
-- Use caveman mode when talking to me directly:
-  - short
-  - simple
-  - direct
-  - minimal fluff
-  - easy scan
-- Use student mode when drafting messages for my team or clients:
-  - clear
-  - polite
-  - structured
-  - natural professional tone
-  - complete sentences
+- Sentence starting with `:` → clarify first. Restate intention, action, target, context. Wait for confirmation.
+- Talk to me: caveman mode (short, simple, direct, minimal fluff, easy scan).
+- Project questions/answers: read `.local/project-info/` first (if exists). Avoid asking documented info.
+- Team/client messages: student mode (clear, polite, structured, natural professional tone, complete sentences).
 
 ---
 
@@ -39,50 +35,13 @@
 |---|---|
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
 | `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding.md, .local/session-rules.md |
-| `devflow` | Run the devflow agent from `.ai/plugins/devflow/` |
-| `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat, but only if an `.html` file with the same name already exists in the same directory. |
-| `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
-| `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
-| `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
-| `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`). Also save session. |
-| `ship` | `cush` first, then run `dev-ship` for the branch's task key. Also save session. |
-| `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
-| `review` | Review changes LLM just made: 1–2 .md files → use `review-md`; multiple .md / skill-design files → use `review-design`; code files → use `review-code`. |
 
-## 3. Correction detection
-
-After executing a skill, if the skill's instructions are wrong, vague, or incomplete:
-1. Flag it: "⚠️ Skill gap found in [skill-name]: [what went wrong]."
-2. Suggest a concrete fix: "Suggestion: update SKILL.md line X to say [new text]."
-3. Ask: "Apply this fix to the skill?"
-4. If yes, edit the SKILL.md and re-run the skill.
-
-After every correction, count per-skill corrections. If same skill has 3+ corrections:
-- Propose a structural redesign of the skill (simplify, split, or rewrite).
-
-Also detect these patterns proactively:
-- **Stale paths**: After any file write/move, check if SKILL.md paths still exist. Flag: "⚠️ Stale path in [skill]: [path] → should be [new path]."
-- **Output drift**: Compare skill's documented output format vs actual output. If mismatch, flag and suggest SKILL.md update.
-- **Systemic bugs**: If same correction type appears across 3+ skills (e.g., path bugs), flag root cause. Suggest shared fix (e.g., shared path helper).
-
-## 4. Creating markdown files or text documents
-- Every big `##` need number in markdown file.
-- Do not include any secret values, my personal info, company info, or real project info into any files.
-- When writing markdown documents, always use `PROJ` as the default Jira project key instead of real project names like `RMASUP` or `COAPS`. Only use real keys when I explicitly give one as an example.
-- Do not include the absolute local path of my computer into any files.
-
-- When creating AI's prompts, skills, plugins, or agents:
-  - keep them generic, configurable, reusable, and easy to share
-  - move reusable vars, paths, URLs, and common constants to the top
-  - move detection conditions/logic to the top
-  - keep wording minimal and caveman-style
-
-- When creating documents:
-  - use student mode, not caveman mode so that the text is not too long or too short and still understandable
-- When creating a README.md for a skill, always include:
-  - mermaid chart of the flow
-  - structure listing scripts/assets with descriptions
-  - list of external tools, APIs, or MCP calls used
-- When creating or editing `.md` files: if an `.html` file with the same name exists in the same directory, auto-run `md-to-html` to keep the HTML copy in sync.
-- When running any script that outputs plaintext (tables, logs, reports), always format the output as a clean table in chat — never dump raw terminal output.
-- After updating `.local/memory.md`, sync changes to `.ai/rules/memory.md.template`.
+## 3. Creating markdown files or text documents
+- Big `##` section come, put `---` first.
+- Every big `##` needs number.
+- No secrets, personal info, company info, real project info in files.
+- No absolute local paths.
+- AI prompts/skills/plugins/agents: generic, configurable, reusable. Move vars/paths/URLs/constants to top. Move conditions to top. Caveman-style wording.
+- Markdown docs: student mode (not too long, not too short, understandable). Run `review-md` after.
+- `.md` with matching `.html` → regenerate HTML via `md-to-html`.
+- `jlog`: format as clean table in chat. Never dump raw terminal output.

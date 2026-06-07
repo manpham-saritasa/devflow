@@ -1,65 +1,49 @@
-> If `.ai/startup.md` exists, read it before starting work.
-
 # AI RULES
-
----
-
-## Priorities
-
-When rules conflict, apply them in this order:
-
-1. Safety and reversibility.
-2. Correctness and verifiability.
-3. Reuse shared logic (one source of truth).
-4. Small, focused, reviewable scope.
-5. Maintainability and style.
-
-Thresholds are review heuristics by default unless marked as a hard stop or explicitly required by the task.
 
 ---
 
 ## Core Rules
 
-- Investigate existing code, tests, docs, and config before proposing or making changes.
-- Follow existing repository patterns, architecture, naming, test style, tech stack, and conventions unless explicitly told otherwise.
-- Prefer the safest, smallest, most reversible change that solves the requested problem.
-- Work incrementally — verify one logical group before moving to the next.
-- Stop and confirm the plan before editing only when: the plan is unclear, there are 2+ valid approaches, or the change is big (3+ files, or 3+ functions/methods in 1 file). Small, clear, single-approach changes can proceed directly.
-- When confirmation is needed, show a plan table:
+- Read existing code, tests, docs, config before proposing or making changes.
+- Follow existing repo patterns, architecture, naming, test style, stack, conventions. Deviate only when told.
+- Safest, smallest, most reversible change that solves the requested problem.
+- Work incrementally. Verify one group before next.
+- Confirm plan before editing when: unclear, 2+ approaches, or big change (3+ files / 3+ functions). Small clear changes: proceed.
+- State assumptions if they affect behavior, scope, risk, verification.
+- Stay in current tech stack and conventions. Flag problems — don't change unless told.
 
-🚛 **Summary:** [1-line what these changes achieve]
+---
 
-| # | File | Change | Category | Why |
-|---|------|--------|----------|-----|
-| 1 | path/file.md | what changes | new/fix/refactor/style/docs/config | reason for change |
-- Verify behavior instead of assuming correctness.
-- If unsure, say so — do not guess.
-- State assumptions explicitly when they affect behavior, scope, risk, or verification.
-- If ambiguity affects behavior, scope, acceptance criteria, architecture, or risk, stop and ask.
+## LLM Behaviors
+
+- Think first. Read files before writing code.
+- Concise output. Thorough reasoning.
+- Edit files. Don't rewrite whole files.
+- Don't re-read files unless changed.
+- Skip files >100KB unless investigation target.
+- No sycophantic openers or closing fluff.
+- Test before declaring done.
 
 ---
 
 ## Anti-Hallucination Rules
 
-- Never claim to have read, run, tested, built, or verified something unless it actually happened.
-- Never invent files, functions, classes, endpoints, database tables, configs, environment variables, logs, stack traces, or test results.
-- Do not assume repository facts from filenames, conventions, or similar past projects; confirm them from the actual codebase first.
-- Do not describe behavior as existing, current, or already implemented unless it is confirmed by code, tests, docs, config, or a direct user statement.
-- Separate confirmed facts, reasonable inferences, and open questions.
-- When direct evidence is unavailable, say that explicitly and lower confidence.
-- If a required file, symbol, configuration value, dependency, or command output is missing, say what is missing and why it matters.
-- Do not substitute a guessed implementation just to keep moving.
-- When multiple explanations fit the evidence, present them as possibilities, not facts.
-- Sensitive claims about security, authorization, payments, data loss, migrations, or production behavior require direct evidence or an explicit uncertainty note.
+- Never claim to have read, run, tested, built, or verified unless you actually did.
+- Never invent files, functions, classes, endpoints, DB tables, configs, env vars, logs, stack traces, or test results.
+- Don't assume repo facts from filenames, conventions, or similar projects. Confirm from actual codebase.
+- Don't describe behavior as existing unless confirmed by code, tests, docs, config, or direct user statement.
+- Separate facts, inferences, open questions.
+- No direct evidence? Say so. Lower confidence.
+- Missing file, symbol, config, dependency, or output? Say what + why it matters.
+- Don't guess implementation to keep moving.
+- Multiple explanations? Present as possibilities, not facts.
+- Claims about security, auth, payments, data loss, migrations, production → require direct evidence or uncertainty note.
 
 ---
 
 ## Hard Stops
 
-These actions require explicit confirmation in the current message ("YES, do it now") before proceeding.
-
 Always stop and ask before:
-- At session start, **must** check `.ai/startup.md` and follow its checklist before any response.
 - Deleting or moving many files.
 - Dropping tables, running migrations, or changing schema.
 - Removing dependencies.
@@ -69,35 +53,25 @@ Always stop and ask before:
 - Sending real emails, messages, or external API calls with side effects.
 - Any destructive, irreversible, or clearly user-visible action that was not explicitly requested.
 
-Past mentions are not confirmation. The user must confirm in the current message.
-When unsure, treat the action as requiring confirmation.
-
-Stay in the current tech stack and conventions unless the user explicitly asks to change them. If something looks wrong, mention it, but follow the existing stack.
-
----
-
-## Auto-Stop and Self-Correction
+Past mentions ≠ confirmation. Must confirm in current message.
+Unsure? Treat as requires confirmation.
+Ambiguity in behavior, scope, AC, architecture, or risk → stop, ask.
 
 When verification fails or assumptions are invalidated:
-
-1. Stop. Do not continue to the next phase.
-2. Identify root cause: wrong assumption, missing context, or implementation error.
-3. If fixable within scope, correct and re-verify before continuing.
-4. If the same step fails twice after correction, stop and report to the user instead of retrying.
-5. If it requires scope change or re-planning, stop and report to the user with explanation.
-6. Never silently skip a failed verification step.
+- Same step fails twice → stop, report. Don't retry.
+- Never silently skip failed verification.
 
 ---
 
 ## Privacy and Sensitive Data
 
-Do not store personal information, company confidential data, client data, or secrets in source code, logs, configuration, tests, comments, documentation, screenshots, URLs, or examples unless the task explicitly requires it and an approved secure mechanism is used.
+No secrets or confidential data in source, logs, config, tests, comments, docs, screenshots, URLs, examples. Unless task requires it + approved secure mechanism.
 
 Never:
 - Hardcode personal data, client data, credentials, tokens, keys, or confidential business data.
-- Write sensitive data into error logs, debug logs, analytics events, or tracing payloads.
-- Copy production or client data into fixtures, seed files, snapshots, or test cases.
-- Paste sensitive values into comments, commit messages, PR descriptions, docs, or examples.
+- Write sensitive data into error logs, debug logs, analytics, tracing.
+- Copy production or client data into fixtures, seed files, snapshots, test cases.
+- Paste sensitive values into comments, commit messages, PRs, docs, examples.
 
 Prefer:
 - Fake or synthetic data in tests and examples.
@@ -112,31 +86,3 @@ If sensitive data is exposed accidentally:
 5. Recommend cleanup, rotation, or incident handling as appropriate.
 
 ---
-
-## Confidence and Uncertainty
-
-Be explicit about confidence when it affects behavior, scope, risk, or verification.
-
-- Every significant claim, recommendation, diagnosis, or risk should include a confidence tag when useful.
-- Format: `[🟢 9/10]`, `[🟡 6/10]`, `[🟠 4/10]`, `[🔴 2/10]`
-- Put the tag at the end of the statement or bullet.
-
-Scale:
-- 🟢 9-10/10 = Very high; clear evidence, strong pattern match, explicit code context.
-- 🟢 7-8/10 = High; likely correct based on context and common patterns.
-- 🟡 5-6/10 = Medium; reasonable concern, depends on broader context or requirements.
-- 🟠 3-4/10 = Low; possible but speculative.
-- 🔴 1-2/10 = Very low; weak signal, caution only.
-
-Rules:
-- Do not present guesses or unverified claims as facts.
-- Distinguish facts, inferences, and open questions.
-- When confidence < 7, state what missing context would raise it.
-- If confidence cannot be determined due to missing context, default low and ask.
-- Do not fake precision. Lower the score if uncertain.
-- Prefer clarifying questions over low-confidence assertions.
-- When confidence is low and the choice matters, stop and ask.
-
----
-
-> **Coding rules:** see `rules/coding.md` — loaded on-demand for code tasks.

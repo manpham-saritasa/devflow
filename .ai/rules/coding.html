@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Coding Rules</title>
+  <style>
+:root {
+    --bg: #e2e8f0;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --text: #1f2937;
+    --muted: #5b6574;
+    --border: #d9e0e7;
+    --accent: #0f766e;
+    --accent-soft: #e6f4f1;
+    --warning: #9a3412;
+    --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    --radius: 9px;
+    --title: #1e3a5f;
+    --sub-title: #1e3a5f;
+    --th-bg: #e6f4f8;
+    --th-title: #1e3a5f;
+    --h2-border-line: rgb(13, 148, 136);
+    --table-even-row: #f8fafc;
+    --table-border: #e5e7eb;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+}
+.header {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+.eyebrow {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--title);
+}
+.meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+.meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+}
+.meta-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 26px;
+    overflow: hidden;
+}
+h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: var(--title);
+    border-bottom: 2px solid var(--h2-border-line);
+}
+h3 {
+    margin: 24px 0 10px;
+    font-size: 20px;
+    color: var(--sub-title);
+}
+h4 {
+    color: var(--title);
+}
+p.note {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+ul.clean {
+    margin: 0;
+    padding-left: 20px;
+}
+ul,
+ol {
+    margin: -5px 0 1em 0;
+}
+ul.clean li {
+    margin: 6px 0;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #fff;
+}
+th,
+td {
+    border-bottom: 1px solid var(--table-border);
+    border-right: 1px solid var(--table-border);
+    vertical-align: top;
+    text-align: left;
+    padding: 16px 16px;
+    font-size: 15px;
+}
+th {
+    background: var(--th-bg);
+    font-size: 15px;
+    color: var(--th-title);
+}
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
+}
+td:last-child,
+th:last-child {
+    border-right: none;
+}
+tbody tr:nth-child(even) td {
+    background: var(--table-even-row);
+}
+td ul {
+    margin: 0;
+    padding-left: 18px;
+}
+td li {
+    margin: 4px 0;
+}
+pre {
+    margin: 0 0 20px;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #0f172a;
+    color: #e5eefc;
+}
+code {
+    font-family:
+        "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+pre.mermaid {
+    background: #f8fafc;
+}
+p code,
+li code,
+td code {
+    background: #eef3f7;
+    padding: 2px 6px;
+    border-radius: 9px;
+}
+p li pre code,
+p pre code,
+li pre code,
+td pre code {
+    background: transparent;
+    padding: 0;
+}
+.block-card {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    overflow: hidden;
+}
+.example-box {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+}
+.example-box p {
+    margin: 0;
+}
+.example-box.good-box {
+    border-left: 4px solid #0f766e;
+}
+.example-box.bad-box {
+    border-left: 4px solid #9a3412;
+}
+.blockquotes {
+    border: 1px solid var(--border);
+    background: #fbfcfd;
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid #e67e22;
+}
+.blockquotes p {
+    margin: 0;
+}
+.block-grid {
+    display: grid;
+    gap: 14px;
+}
+.q {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+.a {
+    color: var(--muted);
+    margin: 0;
+}
+strong,
+h2,
+h4 {
+    color: var(--title);
+}
+a,
+h1 {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 760px) {
+    .page {
+        padding: 18px 12px 36px;
+    }
+    .header,
+    .section {
+        padding: 16px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        border: 1px solid var(--table-border);
+        padding: 10px 0;
+    }
+    td {
+        border: none;
+        padding: 8px 0;
+    }
+    td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+}
+
+  </style>
+
+</head>
+<body>
+  <main class="page">
+<section class="header">
+  <h1>AI Coding Rules</h1>
+</section>
+<section class="section">
+<h2>Task Workflow</h2>
+<h3>1. Clarify</h3>
+<ul>
+<li>Turn request into checkable goals.</li>
+<li>Break into logical groups.</li>
+<li>Define verification per phase.</li>
+<li>Multiple valid interpretations → stop, ask.</li>
+</ul>
+<h3>2. Plan</h3>
+<ul>
+<li>Short phase-by-phase plan before coding.</li>
+<li>Multi-function script/plugin/tool: propose module/file structure BEFORE code. List modules + ownership. Get approval. Single-file 700+ lines never acceptable for new code regardless of language.</li>
+<li>Show plan first when: multi-step, high-risk, or broad diff expected.</li>
+<li>Group work into review slices (Data Model, Business Logic, API, UI, Tests).</li>
+<li>Each phase: concrete check (test, build, lint, command).</li>
+</ul>
+<h3>3. Implement</h3>
+<ul>
+<li>Work incrementally. Verify one group before next.</li>
+<li>Touch only relevant files.</li>
+<li>Preserve existing behavior unless task asks to change.</li>
+<li>No unrelated refactors, broad reformatting, extra features.</li>
+<li>Small related refactors ok only when improving correctness, reuse, maintainability, verification.</li>
+</ul>
+<h3>4. Stop Conditions</h3>
+<p>Stop and ask if:</p>
+<ul>
+<li>assumption fails</li>
+<li>requirements conflict</li>
+<li>existing code/behavior conflicts with plan</li>
+<li>verification fails and correct fix unclear</li>
+<li>change violates invariant, architecture, or business rule</li>
+<li>implementation becomes significantly more complex/broader</li>
+<li>plan needs scope change or re-planning</li>
+</ul>
+<h3>5. Verification</h3>
+<ul>
+<li>After every change, verify thresholds: file ≤300 lines, function ≤40 lines, ≤4 params. Run <code>python .ai/skills/check-thresholds/scripts/scan.py &lt;target_dir&gt;</code>.</li>
+<li>scan.py for Python only. .NET: Roslyn analyzers via <code>.editorconfig</code>.</li>
+<li>Run relevant tests, builds, linters, checks.</li>
+<li>Smallest verification that proves behavior.</li>
+<li>Full verification too expensive? Say what ran, what skipped, why.</li>
+<li>Bug fixes: add/update test when practical. If not, explain verification.</li>
+<li>New behavior/logic: add/update tests when practical.</li>
+<li>Never mark verified without saying what was checked.</li>
+<li>Never pretend verification happened.</li>
+</ul>
+<h3>6. Report</h3>
+<p>Format:<br>
+<strong>What changed</strong> — grouped by feature area, not file list.<br>
+<strong>What was verified</strong> — tests run, checks passed, commands executed.<br>
+<strong>What was not verified</strong> — explain what + why.<br>
+<strong>Remaining assumptions, risks, or follow-ups</strong> — list or <code>None</code>.<br>
+<strong>Evidence / uncertainty</strong> — key assumptions, missing context, inferred conclusions.</p>
+</section>
+<section class="section">
+<h2>Reuse Over Duplication</h2>
+<p>One shared implementation for shared knowledge.</p>
+<ul>
+<li>Same rule, transform, validation, mapping, workflow in 2+ places → shared function, class, component, extension, helper. Not copy-paste.</li>
+<li>Don't duplicate core rules to keep patch local.</li>
+<li>Extract when real shared invariant or likely to grow.</li>
+<li>Avoid speculative/framework abstractions for one-off logic.</li>
+<li>Name by domain intent, not vague utility names.</li>
+<li>Put shared code in correct layer (domain, app, infra, UI, test).</li>
+<li>One authoritative implementation per shared knowledge.</li>
+<li>Add/update tests around shared abstraction.</li>
+<li>Keep refactor and behavior changes separate when practical.</li>
+</ul>
+<p>Extract: domain rules, validations, mapping/formatting, cross-cutting workflows (retry/backoff, auth, logging), reusable UI.<br>
+Avoid: one-off code, similar code with different reasons, "clever" helpers hiding logic, framework abstractions for one feature.  </p>
+<p>Example:</p>
+<ul>
+<li>✅ <code>ValidateEmail()</code> in 3 controllers → shared helper + unit tests.</li>
+<li>❌ Generic <code>ValidationEngine</code> for one-off.</li>
+<li>Extract when real shared invariant or likely to grow. Not "prepare for future."</li>
+</ul>
+</section>
+<section class="section">
+<h2>Minimal and Surgical Changes</h2>
+<p>Solve requested problem. Don't expand scope.  </p>
+<p>Do:</p>
+<ul>
+<li>Touch only relevant files.</li>
+<li>Preserve existing behavior unless task asks to change.</li>
+<li>Clean up only code your change made dead or wrong.</li>
+<li>Keep diffs small, reviewable.</li>
+</ul>
+<p>Don't:</p>
+<ul>
+<li>Add features or "flexibility" nobody asked for.</li>
+<li>Refactor unrelated code.</li>
+<li>Reformat whole files.</li>
+<li>Rewrite working code for style preference.</li>
+</ul>
+<p>Tradeoff local patch vs shared abstraction:</p>
+<ul>
+<li>Duplicates core rule/invariant → shared abstraction.</li>
+<li>Truly one-off → keep local.</li>
+</ul>
+<p>Example:</p>
+<ul>
+<li>✅ Rename confusing variable while fixing bug in same function.</li>
+<li>❌ Reorganize whole module for new feature.</li>
+<li>Refactor only what improves current task. Stop at task boundary.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Change Constraints</h2>
+<h3>Architecture</h3>
+<ul>
+<li>Extend existing patterns before introducing new ones.</li>
+<li>No parallel architectural systems unless requested.</li>
+<li>Avoid alternate: state management, validation, routing, DI, data access.</li>
+</ul>
+<h3>Error Handling</h3>
+<ul>
+<li>Handle errors explicitly. Never silently ignore.</li>
+<li>Fail fast at boundaries: invalid input, impossible state, missing dep with no fallback, logic bug.</li>
+<li>Degrade gracefully only when partial failure intentional.</li>
+<li>Error messages: say what went wrong + what to do next.</li>
+<li>Never expose stack traces or internals to users.</li>
+<li>Log enough context for debugging.</li>
+</ul>
+<h3>Async</h3>
+<ul>
+<li>Catch async errors at boundaries.</li>
+<li>No fire-and-forget when failure has observable consequences.</li>
+<li>Retry only idempotent operations.</li>
+<li>Capped exponential backoff with jitter.</li>
+<li>Every external call: timeout.</li>
+<li>Never wait indefinitely.</li>
+</ul>
+<h3>Tests and Errors</h3>
+<ul>
+<li>Test setup must not fail silently.</li>
+<li>Let assertion failures propagate.</li>
+<li>Don't swallow errors in test helpers.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Security</h2>
+<h3>Secrets</h3>
+<ul>
+<li>Never hardcode secrets, passwords, tokens, credentials.</li>
+<li>Use env vars or approved secrets manager.</li>
+<li>Tests: fake values or mocks, never real credentials.</li>
+<li>Secret committed accidentally? Rotate, remove from history.</li>
+</ul>
+<h3>Input Validation</h3>
+<ul>
+<li>Validate and sanitize all external input at boundaries.</li>
+<li>External input: file paths, CLI args, HTTP input, network responses, subprocess output, env vars.</li>
+<li>Allowlists over denylists where practical.</li>
+</ul>
+<h3>Command Execution</h3>
+<ul>
+<li>Never interpolate untrusted input directly into shell command strings.</li>
+<li>Pass subprocess args as arrays/structured, not raw strings.</li>
+<li>Validate file paths and args before subprocess.</li>
+</ul>
+<h3>Dependencies</h3>
+<ul>
+<li>Prefer existing dependencies.</li>
+<li>New dep only when clearly justified, change stays minimal.</li>
+<li>Document why new dep.</li>
+<li>No deps with known critical vulns.</li>
+<li>Intentionally frozen dep: document reason + next review date.</li>
+</ul>
+<h3>Secure by Default</h3>
+<ul>
+<li>New features: safest sensible config.</li>
+<li>Loosen only when needed, documented.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Quality Thresholds (Mandatory for new code)</h2>
+<p>Apply to all new/modified code. Legacy untouched exempt.</p>
+<h3>Code Size</h3>
+<ul>
+<li>Function &gt;40 lines → extract/simplify.</li>
+<li>File &gt;300 lines → split/restructure.</li>
+<li>One class per file.</li>
+<li>Params &gt;4 → parameter object or simplify.</li>
+<li>Nesting &gt;4 → early returns or extraction.</li>
+<li>Chain &gt;3 calls → named intermediates.</li>
+<li>Class &gt;10 methods → split into composed classes.</li>
+</ul>
+<h3>Organization</h3>
+<ul>
+<li>Standalone utils → domain-specific utility classes, not bare functions.</li>
+<li>Group modules by domain into subdirs. Shared types in <code>dto/</code> or <code>models/</code>.</li>
+<li>Directory structure expresses ownership, not comments.</li>
+</ul>
+<h3>Complexity</h3>
+<ul>
+<li>High cyclomatic/cognitive complexity → simplify when editing.</li>
+<li>Deep inheritance → composition.</li>
+<li>Multiple distinct responsibility groups → split each into own class. Compose. One reason to change.</li>
+</ul>
+<h3>Naming</h3>
+<ul>
+<li>Clear, readable names.</li>
+<li>Very short names ok in small local scopes, loops, or catch variables.</li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li>Comments/docstrings for every class, public method, protected method added/modified.</li>
+<li>Also for global static vars, properties, methods.</li>
+<li>API docs: explain intent, behavior, inputs/outputs, invariants, constraints, side effects. Not restate obvious code.</li>
+<li>Local comments: tricky line/block, workaround, non-obvious business rule, edge case warnings.</li>
+<li>Follow language convention (Python docstrings, C# XML docs, TS/JSDoc).</li>
+<li>Docstrings for classes/methods. Regular comments for local details.</li>
+</ul>
+<h3>Change Size</h3>
+<ul>
+<li>
+<div class="blockquotes">
+<p>10 files touched → stop, verify scope.</p>
+</div>
+</li>
+<li>New dep → justify explicitly.</li>
+<li>Duplicated business logic → shared abstraction.</li>
+</ul>
+<p>Generated/vendored/config-only code exempt.</p>
+</section>
+  </main>
+</body>
+</html>
