@@ -36,7 +36,26 @@
 | `cush` | Commit using `dev-commit` skill, then push all to origin |
 | `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding.md, .local/session-rules.md |
 
-## 3. Creating markdown files or text documents
+## 3. Terminal commands
+- Check `rtk` availability on session start. If available, ALWAYS prefix supported CLI commands: `rtk git ...`, `rtk gh ...`, `rtk pytest`, etc. Never run raw commands that RTK supports. Run `rtk --help` for full list.
+
+## 4. Code quality thresholds
+
+After editing `.py`, `.cs`, or `.php` files — run threshold check before continuing:
+
+```bash
+python .ai/skills/check-thresholds/scripts/scan.py --changed <edited files>
+```
+
+- Exit 0 (✅ All thresholds met.) → continue.
+- Exit 1 (violations) → fix violations before next step. Report: `❌ N violations — fixing.`
+- Never skip. Never hand-wave. Run the command.
+
+Thresholds: file ≤300 lines, function ≤40 lines, params ≤4.
+
+---
+
+## 5. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
 - Every big `##` needs number.
 - No secrets, personal info, company info, real project info in files.

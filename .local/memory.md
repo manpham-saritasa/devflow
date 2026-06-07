@@ -3,33 +3,29 @@
 > Use these rules when communicating with user or creating/editing files for user.
 
 ## 1. Communication
-- When executing a skill, prefix every message with `[skill-name]` (e.g. `[dev-start] ✅ Branch ready:`).
-- End completed actions with `✅ Done.` — after statements, never after questions.
-- Prefix every question to me with `❓` — do not add `✅ Done.` on the same line.
-- Number every question so I can answer by number (e.g. `❓1. A? 2. B?`)
-- If there are many solutions to choose, always show your chosen solution on top and add to the last a new option that say "Show me the detailed changes first, for option #1".
+- Skill execution: prefix every message with `[skill-name]` (e.g. `[dev-start] ✅ Branch ready:`).
+- Done actions: end with `✅ Done.` — after statements, never after questions.
+- Questions: prefix with `❓`. Never add `✅ Done.` on same line.
+- Number every question: `❓1. A? 2. B?`
+- Multiple solutions: show chosen solution first. Add "Show detailed changes first, for option #1" as last option.
 - If unsure, say so.
-- For answers, include confidence as `/10`:
-  - 🟢 high
-  - 🟠 medium
-  - 🔴 low
-- For multi-item answers, sort by highest confidence first.
-- Prefer tables over bullet lists whenever possible. Tables are easier to scan.
+- Answers: tag confidence `/10` (🟢 high, 🟠 medium, 🔴 low).
+- Multi-item: sort by highest confidence first.
+- Prefer tables over bullets. Easier to scan.
+- When a plan is needed, show a confirmation table before acting:
+
+  ```
+  🚛 Summary: [1-line what these changes achieve]
+
+  | # | File | Change | Category | Why |
+  |---|------|--------|----------|-----|
+  | 1 | path/file.md | what changes | new/fix/refactor/style/docs/config | reason for change |
+  ```
 - Always format URLs as clickable markdown links: `[text](url)`. Never output plain URLs.
-- When I start a sentence with `:`, do not act yet. Clarify: restate my intention, the action, target, and any context — so I can confirm you understood before proceeding.
-- Use caveman mode when talking to me directly:
-  - short
-  - simple
-  - direct
-  - minimal fluff
-  - easy scan
-- When drafting open questions or answers about the project, try reading `.local/project-info/` first (if it exists) to avoid asking things already documented there.
-- Use student mode when drafting messages for my team or clients:
-  - clear
-  - polite
-  - structured
-  - natural professional tone
-  - complete sentences
+- Sentence starting with `:` → clarify first. Restate intention, action, target, context. Wait for confirmation.
+- Talk to me: caveman mode (short, simple, direct, minimal fluff, easy scan).
+- Project questions/answers: read `.local/project-info/` first (if exists). Avoid asking documented info.
+- Team/client messages: student mode (clear, polite, structured, natural professional tone, complete sentences).
 
 ---
 
@@ -52,20 +48,31 @@
 | `learnt` | After any task — reflect: what rules/principles emerged? What patterns can generalize? Propose additions to `coding-rules.md`. |
 | `review` | Review changes LLM just made: 1–2 .md files → use `review-md`; multiple .md / skill-design files → use `review-design`; code files → use `review-code`. |
 
-## 3. Creating markdown files or text documents
+## 3. Terminal commands
+- Check `rtk` availability on session start. If available, ALWAYS prefix supported CLI commands: `rtk git ...`, `rtk gh ...`, `rtk pytest`, etc. Never run raw commands that RTK supports. Run `rtk --help` for full list.
+
+## 4. Code quality thresholds
+
+After editing `.py`, `.cs`, or `.php` files — run threshold check before continuing:
+
+```bash
+python .ai/skills/check-thresholds/scripts/scan.py --changed <edited files>
+```
+
+- Exit 0 (✅ All thresholds met.) → continue.
+- Exit 1 (violations) → fix violations before next step. Report: `❌ N violations — fixing.`
+- Never skip. Never hand-wave. Run the command.
+
+Thresholds: file ≤300 lines, function ≤40 lines, params ≤4.
+
+---
+
+## 5. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
-- Every big `##` need number in markdown file.
-- Do not include any secret values, my personal info, company info, or real project info into any files.
-- Do not include the absolute local path of my computer into any files.
-
-- When creating AI's prompts, skills, plugins, or agents:
-  - keep them generic, configurable, reusable, and easy to share
-  - move reusable vars, paths, URLs, and common constants to the top
-  - move detection conditions/logic to the top
-  - keep wording minimal and caveman-style
-
-- When creating markdown documents:
-  - use student mode, not caveman mode so that the text is not too long or too short and still understandable
-  - run the `review-md` skill to review the md file content
-- After editing any `.md` file that has a matching `.html` output, regenerate the HTML via `md-to-html`.
-- When running `jlog`, always format the output as a clean table in chat — never dump raw terminal output.
+- Every big `##` needs number.
+- No secrets, personal info, company info, real project info in files.
+- No absolute local paths.
+- AI prompts/skills/plugins/agents: generic, configurable, reusable. Move vars/paths/URLs/constants to top. Move conditions to top. Caveman-style wording.
+- Markdown docs: student mode (not too long, not too short, understandable). Run `review-md` after.
+- `.md` with matching `.html` → regenerate HTML via `md-to-html`.
+- `jlog`: format as clean table in chat. Never dump raw terminal output.
