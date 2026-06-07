@@ -33,8 +33,20 @@
 
 | Shortcut | Action |
 |---|---|
-| `cush` | Commit using `dev-commit` skill, then push all to origin |
+| `cush` | Always use `rtk` for git commands. Commit using `dev-commit` skill, then push all to origin |
 | `reload` | Re-read: memory.md, startup.md, AGENTS.md, rules/coding.md, .local/session-rules.md |
+| `devflow` | Run the devflow agent from `.ai/agents/devflow.md` |
+| `creport` | Run the `change-report` skill — auto-detects preview vs after mode |
+| `html` | Re-run `md-to-html` for all recently created/edited `.md` files in this chat |
+| `md-view` | Start the `md-view` server for browser-based .md preview |
+| `docx` | Re-run `md-to-docx` skill for recently created/edited `.md` files in this session |
+| `pr-only` | Ship PR without Jira (`dev-ship --pr-only`) |
+| `wt KEY` | Start with worktree (`dev-start --worktree KEY`) |
+| `done` | Finish task: merge PR + delete worktree + cleanup (`dev-finish`). Also save session. |
+| `ship` | `cush` first, then run `dev-ship` for the branch's task key. Also save session. |
+| `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
+| `learnt` | After any task — reflect: what rules/principles emerged? What patterns can generalize? Propose additions to `coding-rules.md`. |
+| `review` | Review changes LLM just made: 1–2 .md files → use `review-md`; multiple .md / skill-design files → use `review-design`; code files → use `review-code`. |
 
 ## 3. Terminal commands
 - Check `rtk` availability on session start. If available, ALWAYS prefix supported CLI commands: `rtk git ...`, `rtk gh ...`, `rtk pytest`, etc. Never run raw commands that RTK supports. Run `rtk --help` for full list.
