@@ -137,6 +137,8 @@ Example: `change-report` referencing `dev-commit` → flag it, note it's optiona
 
 ## Output format
 
+**Number findings continuously across all sections** — use a single #1, #2, #3, ... sequence for the entire review, not restarting per section. This lets the user scan items quickly without cross-referencing section names.
+
 ```
 ## Review — [target path]
 

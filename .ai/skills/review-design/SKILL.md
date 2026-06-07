@@ -33,6 +33,8 @@ Review across ALL 13 dimensions. Do not skip any.
 
 ## Output Format
 
+**Number findings continuously across all sections** — use a single #1, #2, #3, ... sequence for the entire review, not restarting per section. This includes the Scope/Correctness/Edge Cases/Long-Term section below.
+
 ```text
 ## Design Review — [Target Name]
 

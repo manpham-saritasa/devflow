@@ -50,6 +50,7 @@
 | `ship` | `cush` first, then run `dev-ship` for the branch's task key. Also save session. |
 | `save` | Save session snapshot to `.local/sessions/raw/YYYY-MM-DD.md` |
 | `learnt` | After any task — reflect: what rules/principles emerged? What patterns can generalize? Propose additions to `coding-rules.md`. |
+| `review` | Review changes LLM just made: 1–2 .md files → use `review-md`; multiple .md / skill-design files → use `review-design`; code files → use `review-code`. |
 
 ## 3. Creating markdown files or text documents
 - Big `##` section come, put `---` first.
