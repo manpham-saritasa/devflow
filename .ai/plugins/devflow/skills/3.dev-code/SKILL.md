@@ -1,5 +1,6 @@
 ---
 name: dev-code
+version: 0.1.0
 description: Read plan.md, implement the planned changes for the latest iteration, append results to changelog.md, and update plan.md progress checkboxes.
 triggers:
   - "dev-code"

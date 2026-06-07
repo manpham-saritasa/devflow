@@ -1,5 +1,6 @@
 ---
 name: dev-push
+version: 0.1.0
 description: Stage and commit all changes using dev-commit, then push to origin. Quick ship for WIP or small fixes.
 triggers:
   - "dev-push"

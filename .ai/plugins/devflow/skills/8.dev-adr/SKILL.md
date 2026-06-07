@@ -1,5 +1,6 @@
 ---
 name: dev-adr
+version: 0.1.0
 description: Create an ADR for a completed Jira task from task folder evidence, based on the repository ADR template. Only creates ADRs for architectural or cross-cutting decisions.
 triggers:
   - "dev-adr"

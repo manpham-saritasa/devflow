@@ -1,5 +1,6 @@
 ---
 name: dev-commit
+version: 0.1.0
 description: Stage and commit changes in related groups, appending the task key to every commit message. Runs during dev-code or standalone.
 triggers:
   - "dev-commit"

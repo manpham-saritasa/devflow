@@ -1,5 +1,6 @@
 ---
 name: dev-fix-pr
+version: 0.1.0
 description: Fix GitHub PR review comments. Lists unresolved comments, plans fixes, applies changes, and resolves threads. Supports multiple rounds — loops until all comments are resolved.
 triggers:
   - "dev-fix-pr"

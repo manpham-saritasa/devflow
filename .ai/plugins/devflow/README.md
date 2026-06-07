@@ -76,7 +76,7 @@ devflow/
 | 8 | `dev-adr` | Architecture Decision Record from evidence | `/dev-adr PROJ-123` | ✅ | Skips non-architectural tasks |
 | 9 | `dev-commit` | Stage + commit in related groups | `/dev-commit` | ✅ | Runs standalone or during dev-code |
 | 10 | `dev-get` | Pull Jira issue into task folder | `/dev-get PROJ-123` | ✅ | Writes raw.md + task.md from templates |
-| 11 | `dev-review-pr` | Review any PR across 8 quality dimensions | `/review-pr [URL]` | ✅ | No worktree needed, works on any PR |
+| 11 | `gh-review-pr` | Review any PR across 8 quality dimensions | `/review-pr [URL]` | ✅ | No worktree needed, works on any PR |
 | 12 | `dev-push` | Commit all + push to origin | `dpush` or `/dev-push` | ✅ | Delegates to dev-commit for staging |
 
 ---
@@ -196,6 +196,12 @@ dev-start PROJ-3000 --release
 ```
 
 ---
+
+## Dependencies
+
+| Skill | Dependency | Why |
+|-------|-----------|-----|
+| dev-review | [review-code](../skills/review-code/SKILL.md) | Delegates code quality checks |
 
 ## Related Plugins
 

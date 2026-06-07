@@ -1,5 +1,6 @@
 ---
 name: dev-finish
+version: 0.1.0
 description: Finish a gitflow branch for a Jira task. Defaults to gitflow mode (branch in main clone). Supports worktree mode (--worktree). Merges the PR, deletes the worktree (if applicable), and cleans up the local branch.
 triggers:
   - "dev-finish"
