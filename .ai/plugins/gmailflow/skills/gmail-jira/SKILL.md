@@ -21,6 +21,41 @@ Credentials:
 - Jira: `.env.jira` (JIRA_COMPANY_DOMAIN, JIRA_EMAIL, JIRA_API_TOKEN)
 - Scopes needed: `gmail.readonly` + `gmail.compose`
 
+## Local config
+
+### Jira custom fields — `.local/gmailflow/jira-fields.json`
+
+Cached custom field IDs per project. Shared across gmailflow skills.
+
+```json
+{
+  "RMASUP": {
+    "sprint": "customfield_10006",
+    "estimate": "customfield_12100",
+    "environment": null
+  }
+}
+```
+
+- If a value is present → use it directly.
+- If `null` or key missing → discover via `createmeta` API, set it, save back.
+
+**To discover a missing field:**
+```
+GET /rest/api/3/issue/createmeta?projectKeys={KEY}&issuetypeIds={TYPE_ID}&expand=projects.issuetypes.fields
+```
+Search for the field name (e.g., "Environment", "Development Estimate") and note its `fieldId`.
+
+**To get the current active sprint:**
+```
+GET /rest/agile/1.0/board?projectKeyOrId={KEY}
+```
+Pick the first `scrum` board, then:
+```
+GET /rest/agile/1.0/board/{boardId}/sprint?state=active
+```
+Use the first active sprint's `id` as the sprint field value (integer).
+
 ## Flow
 
 ### Step 1 — User selects an email
@@ -44,6 +79,8 @@ GET /rest/api/3/project/{PROJECT_KEY}/components
 GET /rest/api/3/project/{PROJECT_KEY}
 ```
 
+Read custom fields from `.local/gmailflow/jira-fields.json`. Discover any missing fields.
+
 Read `.local/gmailflow/project-labels.txt` if filtering by project label.
 
 **Suggest these fields from email content:**
@@ -53,10 +90,11 @@ Read `.local/gmailflow/project-labels.txt` if filtering by project label.
 | **Component** | Match keywords in subject/body to project component names (e.g., "Forney Vault" → Forney, "LIMS" → LIMS, "Field App" → Field App). Show the matched component name. |
 | **Issue Type** | Bug if email describes a defect/error. Task if it's a request. Story if it's a feature ask. |
 | **Summary** | Format: `[Component name] - [Short description from email]`. Keep under 80 chars. |
-| **Environment** | Infer from email context: "Production", "Staging", or specific server/URL mentioned. |
+| **Environment** | Infer from email: "Production LIMS", "UAT Field App", or specific server/URL mentioned. |
 | **Sprint** | Always assign to the *current active sprint* for the project. |
+| **Estimate** | Infer from task complexity if not stated in email. Ask user if unclear. |
 
-**Build the description using `templates/task-template.md`** — fill in Overview, Source, Environment, Steps to Reproduce, Notes from the email content.
+**Build the description using `templates/task-template.md`.**
 
 ### Step 3 — Ask open questions
 
@@ -86,12 +124,13 @@ Show the proposed task to the user in a table:
 | Summary | {summary} |
 | Sprint | {current sprint name} |
 | Environment | {inferred} |
+| Estimate | {X}h |
 
 **Description preview:**
 > [first few lines of description]
 
-Attachments: {N} screenshot(s) from email
-Reply draft: [yes/no]
+Attachments: {N} file(s) from email
+Reply draft: yes
 ```
 
 Wait for user to confirm ("yes" or adjust).
@@ -114,32 +153,15 @@ POST /rest/api/3/issue
     "description": { ADF doc },
     "issuetype": {"id": "1"},
     "components": [{"id": "..."}],
-    "customfield_10006": {sprint_id},
-    "customfield_XXXXX": {"value": "Production"}
+    "customfield_10006": 17991,
+    "customfield_12100": 4
   }
 }
 ```
 
-**Key notes:**
 - Description MUST be Atlassian Document Format (ADF), not plain text.
-- Sprint field (`customfield_10006`) takes the sprint ID as a number.
-- Environment field — discover its custom field ID by querying the project's create metadata or using known IDs. Common IDs: `customfield_10006` for sprint. Environment varies by project.
-
-**Set the current sprint:**
-```
-GET /rest/agile/1.0/board?projectKeyOrId={KEY}
-```
-Pick the first `scrum` board, then:
-```
-GET /rest/agile/1.0/board/{boardId}/sprint?state=active
-```
-Use the first active sprint's `id` as `customfield_10006` in the issue payload (integer).
-
-**To discover the Environment field ID:**
-```
-GET /rest/api/3/issue/createmeta?projectKeys={KEY}&issuetypeIds={TYPE_ID}&expand=projects.issuetypes.fields
-```
-Search for "Environment" in the returned fields and note its `fieldId`.
+- Use field IDs from `.local/gmailflow/jira-fields.json`.
+- Sprint field value is the sprint ID (integer).
 
 ### Step 6 — Attach email screenshots
 
@@ -156,7 +178,7 @@ Body: multipart/form-data with the file
 ```
 
 > **Attachment filtering rules:**
-- Files with `Content-Disposition: attachment` → always upload (PDF, XLSX, etc.). These are the real evidence.
+> - Files with `Content-Disposition: attachment` → always upload (PDF, XLSX, etc.). These are the real evidence.
 > - Inline images from `multipart/related` are email body content, not real attachments:
 >   - `image001.png` → auto-skip (Outlook signature, consistently ~4KB).
 >   - Small images (<10KB) + no issue reference in body → signatures/icons → skip.
@@ -164,6 +186,24 @@ Body: multipart/form-data with the file
 > - When unsure, ask user: "[N] file attachments + [M] inline images found. Upload which?"
 
 ### Step 7 — Draft reply email
+
+Show the chosen reply template to the user before creating the draft:
+
+```
+## Normal
+Hi Joe,
+
+Thank you for reporting this. We've logged it and will investigate.
+
+Item: RMASUP-XXXX
+
+We'll update you once we have findings.
+
+Best,
+Quan
+```
+
+Wait for user confirmation (“go” or adjust).
 
 Create a Gmail draft replying to the thread using the original Message-ID:
 
@@ -175,16 +215,15 @@ msg['In-Reply-To'] = original_message_id
 msg['References'] = original_message_id
 ```
 
-Draft body template (from `templates/reply-template.md`):
+Draft body — pick from `templates/reply-template.md`:
 
-```
-Got it.
+| Template | When |
+|----------|------|
+| Normal | Default — use this unless told otherwise |
+| ASAP | High priority / urgent |
+| More info | Need details before fixing |
 
-We will take a look at it soon.
-Item {TASK-KEY}
-
-Regards,
-```
+`{FIRST_NAME}` = sender's first name. Check `.local/gmailflow/name-map.txt` for preferred name (e.g., `jbouknight@certerra.com=Joe` → "Hi Joe").
 
 Create via:
 ```
@@ -201,19 +240,22 @@ Show:
 ## Output format
 
 ```
-Task created: [RMASUP-XXXX](url)
+Task created: RMASUP-XXXX
 Type: Bug | Component: Forney | Sprint: Sprint 123
-3 screenshots attached
+Estimate: 4h | Environment: Production LIMS
+2 files attached
 Draft reply ready in Gmail Drafts
 ```
 
 ## Rules
 
 - Always show the proposed task before creating. Do not create without confirmation.
-- Never hardcode field IDs — discover them from Jira API when needed.
-- If a field is not found, skip it rather than guessing an ID.
+- Always show the reply draft before adding to Gmail. Wait for user confirmation.
+- Read custom field IDs from `.local/gmailflow/jira-fields.json`. Discover missing ones via API and save back.
+- Never hardcode field IDs outside the config file.
+- If a field is not found, skip it rather than guessing.
 - Use ADF for description. Convert markdown-like text to ADF nodes.
-- Skip signature images (image001.png) when attaching screenshots.
+- Prioritize real attachments over inline images. Auto-skip image001.png.
 - If the user's project label mapping is missing, prompt them to add it first via `gmail-new --project-labels`.
 - If Jira or Gmail auth is incomplete, stop and report exactly which vars are missing.
 - Redact secrets if they appear anywhere in output.
