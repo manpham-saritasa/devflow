@@ -2,6 +2,8 @@
 
 Create a Jira task from a Gmail message + draft reply with task ID.
 
+## User flow
+
 ```mermaid
 flowchart TD
     A[User runs gmail-new] --> B[User picks email #N]
@@ -34,6 +36,35 @@ flowchart TD
     end
 ```
 
+## Internal split
+
+```mermaid
+flowchart TD
+    A[Gmail Message]:::accent0 --> B[gmail-jira]:::accent1
+
+    B --> C[Fetch message]:::accent1
+    B --> D[Clean body text]:::accent1
+    B --> E[Classify attachments]:::accent1
+    B --> F[Build reply draft]:::accent1
+
+    B --> G[jira-create]:::accent2
+
+    G --> H[Load Jira auth]:::accent2
+    G --> I[Discover custom fields]:::accent2
+    G --> J[Find active sprint]:::accent2
+    G --> K[Build issue payload]:::accent2
+    G --> L[Create Jira issue]:::accent2
+    G --> M[Upload Jira attachments]:::accent2
+
+    L --> N[Jira Issue Key]:::accent3
+    F --> O[Gmail Draft]:::accent4
+    M --> P[Attached Evidence]:::accent5
+
+    N --> Q[Final result]:::accent6
+    O --> Q
+    P --> Q
+```
+
 ## Files
 
 | File | Purpose |
@@ -41,7 +72,18 @@ flowchart TD
 | `SKILL.md` | Full skill instructions (8 steps) |
 | `templates/task-template.md` | Description template for Jira issues |
 | `templates/reply-template.md` | Reply email body template |
+| `scripts/main.py` | CLI entry point for proposal/create/draft flow |
+| `scripts/*.py` | Gmail, Jira, ADF, and local config helpers |
 | `README.md` | This file |
+
+## Run
+
+```bash
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component "Field App"
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component "Field App" --create --dry-run
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component "Field App" --create
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component "Field App" --create-draft --issue-key DEMOP-2197
+```
 
 ## Dependencies
 

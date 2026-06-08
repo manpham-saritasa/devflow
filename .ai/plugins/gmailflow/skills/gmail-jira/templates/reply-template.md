@@ -2,11 +2,8 @@
 
 Hi {FIRST_NAME},
 
-Thank you for reporting this. We've logged it and will investigate.
-
+Got it. We will take a look at this issue soon.
 Item: {TASK-KEY}
-
-We'll update you once we have findings.
 
 Best,
 Quan

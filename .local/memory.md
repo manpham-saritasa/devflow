@@ -76,3 +76,23 @@ Thresholds: file ≤300 lines, function ≤40 lines, params ≤4.
 - Markdown docs: student mode (not too long, not too short, understandable). Run `review-md` after.
 - `.md` with matching `.html` → regenerate HTML via `md-to-html`.
 - `jlog`: format as clean table in chat. Never dump raw terminal output.
+
+---
+
+## 6. Skill script design
+
+Skill scripts are data pipelines, not content generators.
+
+| Layer | Responsibility | Who |
+|---|---|---|
+| Extract | Fetch raw data from APIs (Gmail, Jira, GitHub) | Script |
+| Resolve | Look up IDs against metadata (component IDs, field IDs, sprint IDs) | Script |
+| Decide | What to say, how to summarize, which type/component fits the context | **LLM** |
+| Execute | Call external APIs with LLM-provided values | Script |
+
+Rules:
+- Never guess issue type, component, or priority from keywords in script code.
+- Never build summaries, descriptions, reply text, or acceptance criteria in script code.
+- All content values flow through CLI args (`--summary`, `--description`, `--environment`, `--reply-body`).
+- Script fallbacks for content are anti-pattern. Empty string > wrong guess.
+- After removing a content-generating function, audit for orphaned imports and dead modules (`grep` for the function name across the plugin).

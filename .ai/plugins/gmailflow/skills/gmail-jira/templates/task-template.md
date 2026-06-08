@@ -7,10 +7,15 @@
 - [Screenshots or files attached — omit if none]
 - [For features/tasks: also why the user wants this. For bugs: omit.]
 
-## Steps to Reproduce
+## Steps to Reproduce *(Bug only)*
 1. [Step from email — include environment context]
 2. [Step from email]
 3. [Observed result]
+
+## What to Do *(Task / Story)*
+1. [Action needed — from email request]
+2. [Action needed]
+3. [Expected result after completion]
 
 ## Acceptance Criteria
 [Short summary of what success looks like — 1 sentence.]

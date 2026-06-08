@@ -29,7 +29,7 @@ Cached custom field IDs per project. Shared across gmailflow skills.
 
 ```json
 {
-  "RMASUP": {
+  "DEMOP": {
     "sprint": "customfield_10006",
     "estimate": "customfield_12100",
     "environment": null
@@ -96,6 +96,10 @@ Read `.local/gmailflow/project-labels.txt` if filtering by project label.
 
 **Build the description using `templates/task-template.md`.**
 
+- Use **Steps to Reproduce** section for Bugs only.
+- Use **What to Do** section for Tasks and Stories.
+- Omit the section that does not apply.
+
 ### Step 3 — Ask open questions
 
 If any field is ambiguous, ask the user 1-2 numbered questions before showing the proposal:
@@ -148,7 +152,7 @@ POST /rest/api/3/issue
 ```json
 {
   "fields": {
-    "project": {"key": "RMASUP"},
+    "project": {"key": "DEMOP"},
     "summary": "...",
     "description": { ADF doc },
     "issuetype": {"id": "1"},
@@ -195,7 +199,7 @@ Hi Joe,
 
 Thank you for reporting this. We've logged it and will investigate.
 
-Item: RMASUP-XXXX
+Item: DEMOP-XXXX
 
 We'll update you once we have findings.
 
@@ -233,14 +237,14 @@ POST /gmail/v1/users/me/drafts
 ### Step 8 — Report back
 
 Show:
-- Task key with clickable URL: [RMASUP-2195](https://saritasa.atlassian.net/browse/RMASUP-2195)
+- Task key with clickable URL: [DEMOP-2195](https://saritasa.atlassian.net/browse/DEMOP-2195)
 - Number of attachments uploaded
 - Draft status (created, check Drafts)
 
 ## Output format
 
 ```
-Task created: RMASUP-XXXX
+Task created: DEMOP-XXXX
 Type: Bug | Component: Forney | Sprint: Sprint 123
 Estimate: 4h | Environment: Production LIMS
 2 files attached
