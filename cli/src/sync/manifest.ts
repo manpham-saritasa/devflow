@@ -40,6 +40,7 @@ function agentsMdDest(tool: AiTool): string | null {
     case "copilot":
       return ".github/copilot-instructions.md";
     case "cursor":
+    case "codex":
       return null; // handled separately
   }
 }
@@ -51,6 +52,8 @@ export function buildManifest(
   const contentRoot = getContentRoot();
   const agentsSrc = resolve(contentRoot, "AGENTS.md");
   const entries: FileCopyEntry[] = [];
+  const shouldGenerateAgentSkillWrappers =
+    config.tools.includes("zed") || config.tools.includes("codex");
 
   // Always: AGENTS.md
   entries.push({ src: agentsSrc, dest: resolve(targetDir, "AGENTS.md") });
@@ -77,6 +80,13 @@ export function buildManifest(
         entries.push(
           ...copyDirEntries(copilotSrc, resolve(targetDir, ".ai", "copilot")),
         );
+      }
+    }
+
+    if (tool === "codex") {
+      const codexSrc = resolve(contentRoot, ".codex");
+      if (existsSync(codexSrc)) {
+        entries.push(...copyDirEntries(codexSrc, resolve(targetDir, ".codex")));
       }
     }
   }
@@ -199,8 +209,8 @@ export function buildManifest(
             }
           }
         }
-        // Zed: generate .agents/skills/<name>/SKILL.md wrappers referencing .ai/skills/
-        if (config.tools.includes("zed")) {
+        // Zed/Codex: generate .agents/skills/<name>/SKILL.md wrappers referencing .ai/skills/
+        if (shouldGenerateAgentSkillWrappers) {
           for (const skill of selected) {
             const skillMd = resolve(
               contentRoot,
@@ -264,8 +274,8 @@ export function buildManifest(
               }
             }
           }
-          // Zed: generate .agents/skills/<name>/SKILL.md wrappers for each plugin skill
-          if (config.tools.includes("zed")) {
+          // Zed/Codex: generate .agents/skills/<name>/SKILL.md wrappers for each plugin skill
+          if (shouldGenerateAgentSkillWrappers) {
             for (const { subdir, skillFile } of listPluginSkills(pluginSrc)) {
               const refPath = subdir
                 ? `.ai/plugins/${plugin}/${subdir}/SKILL.md`

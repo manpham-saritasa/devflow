@@ -23,7 +23,10 @@ try {
 }
 
 try {
-  cpSync(resolve(repoRoot, "AGENTS.md"), resolve(contentDir, "AGENTS.md"));
+  const agentsSource = existsSync(resolve(repoRoot, "AGENTS.md"))
+    ? resolve(repoRoot, "AGENTS.md")
+    : resolve(repoRoot, ".ai", "rules", "core.md");
+  cpSync(agentsSource, resolve(contentDir, "AGENTS.md"));
 } catch (e) {
   console.error("AGENTS.md copy failed:", e.message);
 }
@@ -40,6 +43,13 @@ try {
   });
 } catch (e) {
   console.error(".cursor copy failed:", e.message);
+}
+try {
+  cpSync(resolve(repoRoot, ".codex"), resolve(contentDir, ".codex"), {
+    recursive: true,
+  });
+} catch (e) {
+  console.error(".codex copy failed:", e.message);
 }
 
 console.log("✓ Content bundled into cli/content/");

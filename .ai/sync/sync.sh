@@ -1,6 +1,6 @@
 #!/bin/bash
 # Sync .ai/rules/core.md to your AI tool's root file
-# Usage: ./sync.sh zed | cursor | copilot | claude | gemini | windsurf | codeium | aider | jetbrains | all
+# Usage: ./sync.sh codex | zed | cursor | copilot | claude | gemini | windsurf | codeium | aider | jetbrains | all
 set -e
 
 TOOL="${1:-all}"
@@ -8,6 +8,7 @@ SOURCE=".ai/rules/core.md"
 
 declare -A TOOLS
 TOOLS[zed]=".rules:symlink"
+TOOLS[codex]="AGENTS.md:symlink"
 TOOLS[claude]="CLAUDE.md:symlink"
 TOOLS[gemini]="GEMINI.md:symlink"
 TOOLS[windsurf]=".windsurfrules:symlink"
@@ -47,7 +48,7 @@ elif [ -n "${TOOLS[$TOOL]}" ]; then
     sync_one "$TOOL" "${TOOLS[$TOOL]}"
 else
     echo "Unknown tool: $TOOL"
-    echo "Usage: sync.sh [zed|cursor|copilot|claude|gemini|windsurf|codeium|aider|jetbrains|all]"
+    echo "Usage: sync.sh [codex|zed|cursor|copilot|claude|gemini|windsurf|codeium|aider|jetbrains|all]"
     exit 1
 fi
 
