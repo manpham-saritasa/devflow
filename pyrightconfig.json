@@ -1,0 +1,13 @@
+{
+    "include": [
+        ".ai/plugins"
+    ],
+    "extraPaths": [
+        ".ai/plugins/jiraflow",
+        ".ai/plugins/gmailflow",
+        ".ai/plugins/devflow",
+        ".ai/plugins/githubflow",
+        ".ai/plugins/refflow"
+    ],
+    "pythonVersion": "3.12"
+}
