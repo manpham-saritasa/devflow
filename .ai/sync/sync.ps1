@@ -1,9 +1,10 @@
 # Sync .ai/rules/core.md to your AI tool's root file
-# Usage: .\sync.ps1 zed | cursor | copilot | claude | gemini | windsurf | codeium | aider | jetbrains | all
+# Usage: .\sync.ps1 codex | zed | cursor | copilot | claude | gemini | windsurf | codeium | aider | jetbrains | all
 param([string]$Tool = "all")
 
 $source = ".ai/rules/core.md"
 $tools = @{
+    codex     = @{ Path = "AGENTS.md";                  Type = "symlink" }
     zed       = @{ Path = ".rules";                    Type = "symlink" }
     claude    = @{ Path = "CLAUDE.md";                  Type = "symlink" }
     gemini    = @{ Path = "GEMINI.md";                  Type = "symlink" }
@@ -40,7 +41,7 @@ if ($Tool -eq "all") {
     Sync-One $Tool $tools[$Tool]
 } else {
     Write-Host "Unknown tool: $Tool"
-    Write-Host "Usage: sync.ps1 [zed|cursor|copilot|claude|gemini|windsurf|codeium|aider|jetbrains|all]"
+    Write-Host "Usage: sync.ps1 [codex|zed|cursor|copilot|claude|gemini|windsurf|codeium|aider|jetbrains|all]"
     exit 1
 }
 

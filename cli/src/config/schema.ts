@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const AI_TOOLS = ['claude', 'gemini', 'copilot', 'cursor', 'windsurf', 'codeium', 'aider', 'zed'] as const;
+export const AI_TOOLS = ['claude', 'gemini', 'copilot', 'cursor', 'windsurf', 'codeium', 'aider', 'zed', 'codex'] as const;
 export const COMPONENTS = ['agents', 'skills', 'prompts', 'instructions', 'startup', 'plugins', 'rules'] as const;
 export const CONFLICT_MODES = ['overwrite', 'backup', 'skip'] as const;
 
@@ -34,6 +34,7 @@ export const TOOL_LABELS: Record<AiTool, string> = {
   codeium: 'Codeium',
   aider: 'Aider',
   zed: 'Zed / JetBrains AI',
+  codex: 'OpenAI Codex',
 };
 
 export const COMPONENT_LABELS: Record<Component, string> = {

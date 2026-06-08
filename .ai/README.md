@@ -61,7 +61,8 @@ Read `.ai/startup.md` first — it loads all rules, memory, and corrections for 
 
 | LLM | File to update | Project location |
 |-----|---------------|-----------------|
-| Zed | `AGENTS.md` | `<repo>/AGENTS.md` |
+| Codex | `AGENTS.md` | `<repo>/AGENTS.md` |
+| Zed | `.rules` | `<repo>/.rules` |
 | Cursor | `.cursorrules` / `.cursor/rules/main.mdc` | `<repo>/.cursor/rules/main.mdc` |
 | Copilot | `copilot-instructions.md` | `<repo>/.github/copilot-instructions.md` |
 | Claude Code | `CLAUDE.md` | `<repo>/CLAUDE.md` |
