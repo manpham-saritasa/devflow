@@ -38,9 +38,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("project", nargs="?", default="")
     parser.add_argument("--max-results", type=int, default=10)
-    parser.add_argument("--query", default="is:unread newer_than:2d")
+    parser.add_argument("--query", default="is:unread")
     parser.add_argument("--projects", default="")
-    parser.add_argument("--project-labels", action="store_true")
+    parser.add_argument("--project-labels", action="store_true", default=True)
+    parser.add_argument(
+        "--no-project-labels", action="store_false", dest="project_labels"
+    )
     parser.add_argument("--list-labels", action="store_true")
     return parser
 

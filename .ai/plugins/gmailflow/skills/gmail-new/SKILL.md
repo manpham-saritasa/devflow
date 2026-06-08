@@ -49,7 +49,7 @@ Useful flags:
 ```bash
 python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --json
 python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --max-results 20
-python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --query "is:unread newer_than:2d"
+python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --query "is:unread"
 python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py RMASUP
 python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --projects RMASUP,SALES
 python .ai/plugins/gmailflow/skills/gmail-new/scripts/main.py --project-labels

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
@@ -58,8 +60,35 @@ def build_oauth_flow(client_config: dict[str, dict[str, object]]):
     return InstalledAppFlow.from_client_config(client_config, scopes=SCOPES)
 
 
+def build_parser() -> argparse.ArgumentParser:
+    """Build CLI args for local-server or pasted redirect URL OAuth flows."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--redirect-url", default="")
+    return parser
+
+
+def extract_auth_code(redirect_url: str) -> str:
+    """Extract the Google OAuth authorization code from a pasted redirect URL."""
+    if not redirect_url.strip():
+        return ""
+    query = parse_qs(urlparse(redirect_url).query)
+    values = query.get("code", [])
+    return values[0] if values else ""
+
+
+def run_flow(flow, redirect_url: str):
+    """Complete OAuth either via local server or a pasted redirect URL."""
+    auth_code = extract_auth_code(redirect_url)
+    if auth_code:
+        flow.redirect_uri = "http://localhost"
+        flow.fetch_token(code=auth_code)
+        return flow.credentials
+    return flow.run_local_server(port=0, prompt="consent", access_type="offline")
+
+
 def main() -> int:
     """Run the local OAuth flow and print the refresh token payload."""
+    args = build_parser().parse_args()
     repo_root = Path(__file__).resolve().parents[6]
     env_path = repo_root / ".env.gmail"
     env = load_env(env_path)
@@ -72,7 +101,7 @@ def main() -> int:
 
     client_config = build_client_config(env)
     flow = build_oauth_flow(client_config)
-    creds = flow.run_local_server(port=0, prompt="consent", access_type="offline")
+    creds = run_flow(flow, args.redirect_url)
     payload = {
         "ok": True,
         "env_file": str(env_path.relative_to(repo_root)),

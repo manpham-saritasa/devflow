@@ -14,6 +14,14 @@ from project_labels import GmailProjectLabelStore
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 
+def _quote_label(label_name: str) -> str:
+    """Quote Gmail label name for use in search query if it contains spaces."""
+    if not label_name or not label_name.strip():
+        return ""
+    name = label_name.strip()
+    return f'"{name}"' if " " in name else name
+
+
 class GmailClient:
     """Wrap Gmail API calls used by the gmail-new CLI flow."""
 
@@ -63,11 +71,9 @@ class GmailClient:
             label_name = label_info.get("label_name", "")
             label_id = label_info.get("label_id") or gmail_label_map.get(label_name)
             resolved_labels[project] = {"label_name": label_name, "label_id": label_id}
-            batch = self._fetch_message_batch(
-                query,
-                max_results,
-                [label_id] if label_id else None,
-            )
+            label_query = _quote_label(label_name)
+            batch_query = f"{query} label:{label_query}" if label_query else query
+            batch = self._fetch_message_batch(batch_query, max_results)
             self._merge_project_batch(
                 items,
                 seen_ids,
