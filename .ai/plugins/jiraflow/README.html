@@ -18,6 +18,7 @@
     --shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
     --radius: 9px;
     --title: #1e3a5f;
+    --sub-title: #1e3a5f;
     --th-bg: #e6f4f8;
     --th-title: #1e3a5f;
     --h2-border-line: rgb(13, 148, 136);
@@ -106,7 +107,7 @@ h2 {
 h3 {
     margin: 24px 0 10px;
     font-size: 20px;
-    color: var(--title);
+    color: var(--sub-title);
 }
 h4 {
     color: var(--title);
@@ -255,7 +256,6 @@ td pre code {
 }
 strong,
 h2,
-h3,
 h4 {
     color: var(--title);
 }
@@ -381,18 +381,51 @@ a:hover {
 </tr>
 <tr>
 <td data-label="#">6</td>
+<td data-label="Skill"><code>jira-create</code></td>
+<td data-label="Benefits">Create Jira issues with field discovery and sprint lookup</td>
+<td data-label="Example"><code>jira-create --proposal proposal.json</code></td>
+</tr>
+<tr>
+<td data-label="#">7</td>
 <td data-label="Skill"><code>release-add</code></td>
 <td data-label="Benefits">Add task to JIRA release version</td>
 <td data-label="Example"><code>release-add PROJ-2143 "API next version"</code></td>
 </tr>
 <tr>
-<td data-label="#">7</td>
+<td data-label="#">8</td>
 <td data-label="Skill"><code>release-note</code></td>
 <td data-label="Benefits">Generate client-facing release note</td>
 <td data-label="Example"><code>release-note "API next version"</code></td>
 </tr>
 </tbody>
 </table>
+</section>
+<section class="section">
+<h2>Shared modules</h2>
+<p><code>shared/</code> contains reusable modules used by skills that need Jira issue creation:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Module"><code>jira_api.py</code></td>
+<td data-label="Purpose">Jira REST client (auth, project, sprint, createmeta, create, attach)</td>
+</tr>
+<tr>
+<td data-label="Module"><code>create_flow.py</code></td>
+<td data-label="Purpose">Field discovery, sprint lookup, ADF helpers, issue payload builder</td>
+</tr>
+<tr>
+<td data-label="Module"><code>common.py</code></td>
+<td data-label="Purpose">Env loader + JiraCreateConfigStore cache</td>
+</tr>
+</tbody>
+</table>
+<p>Used by <code>gmail-jira</code> (gmailflow plugin) and <code>jira-create</code>.</p>
 </section>
 <section class="section">
 <h2>Jira Day Flow</h2>
@@ -497,27 +530,39 @@ flowchart TD
 </section>
 <section class="section">
 <h2>Jira API Token Setup</h2>
-<p>JiraFlow skills read credentials from <code>.env.local</code> (preferred) or <code>.env</code> in the repo root.</p>
+<p>JiraFlow skills read credentials from <code>.env.jira</code> (preferred) or <code>.env</code> in the repo root.</p>
 <h3>Required variables</h3>
 <pre><code class="language-env">JIRA_COMPANY_DOMAIN=saritasa
 JIRA_EMAIL=you@example.com
 JIRA_API_TOKEN=your_api_token_here
 JIRA_PROJECT_KEY=PROJ
+TEMPO_API_TOKEN=your_tempo_token_here
 </code></pre>
-<h3>How to create the API token</h3>
+<div class="blockquotes">
+<p><code>TEMPO_API_TOKEN</code> is required by <code>jira-log</code> for logging time. Other skills work without it.</p>
+</div>
+<h3>How to get the Jira API token</h3>
 <ol>
 <li>Sign in to your Atlassian account.</li>
 <li>Open: <code>https://id.atlassian.com/manage-profile/security/api-tokens</code></li>
 <li>Click <strong>Create API token</strong>.</li>
 <li>Give it a label like <code>devflow jiraflow</code>.</li>
 <li>Copy the generated token.</li>
-<li>Save it to <code>.env.local</code> as <code>JIRA_API_TOKEN</code>.</li>
+<li>Save it to <code>.env.jira</code> as <code>JIRA_API_TOKEN</code>.</li>
+</ol>
+<h3>How to get the Tempo API token</h3>
+<ol>
+<li>Sign in to your Atlassian account.</li>
+<li>Open: <code>https://app.tempo.io/4/settings/api-integration</code></li>
+<li>Click <strong>Generate API Token</strong>.</li>
+<li>Copy the generated token.</li>
+<li>Save it to <code>.env.jira</code> as <code>TEMPO_API_TOKEN</code>.</li>
 </ol>
 <h3>Notes</h3>
 <ul>
 <li><code>JIRA_COMPANY_DOMAIN</code> is your Atlassian subdomain only, for example <code>saritasa</code> for <code>https://saritasa.atlassian.net</code>.</li>
 <li>Use your Atlassian login email for <code>JIRA_EMAIL</code>.</li>
-<li>Keep <code>.env.local</code> private and never commit API tokens.</li>
+<li>Keep <code>.env.jira</code> private and never commit API tokens.</li>
 </ul>
 </section>
 <section class="section">

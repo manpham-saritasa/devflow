@@ -85,10 +85,13 @@ class GmailClient:
         recipient: str,
         subject: str,
         message_header_id: str,
+        cc: str = "",
     ) -> dict[str, Any]:
         """Create one Gmail draft reply in the original message thread."""
         mime = MIMEText(reply_body)
         mime["To"] = recipient
+        if cc:
+            mime["Cc"] = cc
         mime["Subject"] = subject
         if message_header_id:
             mime["In-Reply-To"] = message_header_id

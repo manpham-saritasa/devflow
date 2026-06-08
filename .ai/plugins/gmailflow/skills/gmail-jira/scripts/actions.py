@@ -47,10 +47,12 @@ def create_reply_draft(
     message = gmail_client.get_message(message_id)
     subject = proposal["message"]["subject"]
     subject = subject if subject.lower().startswith("re:") else f"Re: {subject}"
+    recipients = proposal["message"].get("reply_to_all", {})
     return gmail_client.create_reply_draft(
         message,
         reply_body,
-        proposal["message"]["reply_to"],
+        recipients.get("to", proposal["message"]["reply_to"]),
         subject,
         proposal["message"]["message_id_header"],
+        cc=recipients.get("cc", ""),
     )

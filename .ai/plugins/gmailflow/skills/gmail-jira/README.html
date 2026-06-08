@@ -324,67 +324,106 @@ a:hover {
 <p>Create a Jira task from a Gmail message + draft reply with task ID.</p>
 </section>
 <section class="section">
+<h2>Architecture</h2>
+<p>Scripts extract and execute. LLM decides content. 4-layer split:</p>
+<pre class="mermaid">
+flowchart TD
+    subgraph Extract ["🔵 Extract"]
+        A["Gmail API"] --> B["parse headers / body / attachments"]
+        B --> C["clean body text"]
+        C --> D["classify attachments"]
+    end
+
+    subgraph Resolve ["🟠 Resolve"]
+        E["Jira API"] --> F["lookup component / issue type / sprint / field IDs"]
+    end
+
+    subgraph Decide ["🟢 Decide — LLM"]
+        G["fill task-template.md"]
+    end
+
+    subgraph Execute ["🔴 Execute"]
+        H["--summary --environment --estimate --description --reply-body"]
+        H --> I["build ADF payload"]
+        I --> J["POST /rest/api/3/issue"]
+        J --> K["upload attachments"]
+        J --> L["create Gmail draft"]
+    end
+
+    Extract --> Decide
+    Resolve --> Decide
+    Decide --> Execute
+</pre>
+</section>
+<section class="section">
 <h2>User flow</h2>
 <pre class="mermaid">
 flowchart TD
     A[User runs gmail-new] --> B[User picks email #N]
-    B --> C[Step 2: Analyze email content]
-    C --> D{Any field ambiguous?}
-    D -->|Yes| E[Step 3: Ask open questions]
-    E --> F[User answers]
-    F --> C
-    D -->|No| G[Step 4: Show proposal table]
-    G --> H{User confirms?}
-    H -->|Adjust| C
-    H -->|Yes| I[Step 5: Create Jira task]
-    I --> J[Step 6: Attach screenshots]
-    J --> K[Step 7: Draft reply email]
-    K --> L[Step 8: Report back]
-    L --> M[Done]
-
-    subgraph Jira Task
-        I1[Set sprint]
-        I2[Set component]
-        I3[Set description from template]
-        I --> I1 --> I2 --> I3
-    end
-
-    subgraph Filter Attachments
-        J1[Skip image001.png]
-        J2[LLM judges remaining]
-        J3[Upload to Jira]
-        J --> J1 --> J2 --> J3
-    end
+    B --> C[Agent runs --dry-run]
+    C --> D[Script returns raw data]
+    D --> E[LLM fills task-template.md]
+    E --> F[Agent shows proposal]
+    F --> G{User confirms?}
+    G -->|Yes| H[Agent runs --create with LLM values]
+    H --> I[Script creates Jira issue + Gmail draft + attachments]
 </pre>
 </section>
 <section class="section">
-<h2>Internal split</h2>
-<pre class="mermaid">
-flowchart TD
-    A[Gmail Message]:::accent0 --> B[gmail-jira]:::accent1
-
-    B --> C[Fetch message]:::accent1
-    B --> D[Clean body text]:::accent1
-    B --> E[Classify attachments]:::accent1
-    B --> F[Build reply draft]:::accent1
-
-    B --> G[jira-create]:::accent2
-
-    G --> H[Load Jira auth]:::accent2
-    G --> I[Discover custom fields]:::accent2
-    G --> J[Find active sprint]:::accent2
-    G --> K[Build issue payload]:::accent2
-    G --> L[Create Jira issue]:::accent2
-    G --> M[Upload Jira attachments]:::accent2
-
-    L --> N[Jira Issue Key]:::accent3
-    F --> O[Gmail Draft]:::accent4
-    M --> P[Attached Evidence]:::accent5
-
-    N --> Q[Final result]:::accent6
-    O --> Q
-    P --> Q
-</pre>
+<h2>Script — zero content generation</h2>
+<p>Scripts never guess content. All values enter via CLI args:</p>
+<table>
+<thead>
+<tr>
+<th>CLI arg</th>
+<th>Purpose</th>
+<th>Who provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="CLI arg"><code>--project</code></td>
+<td data-label="Purpose">Jira project key</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--component</code></td>
+<td data-label="Purpose">Jira component name</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--issue-type</code></td>
+<td data-label="Purpose">Bug / Task / Story</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--summary</code></td>
+<td data-label="Purpose">Issue summary</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--environment</code></td>
+<td data-label="Purpose">Environment text</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--estimate</code></td>
+<td data-label="Purpose">Hours estimate</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--description</code></td>
+<td data-label="Purpose">ADF JSON (from template)</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+<tr>
+<td data-label="CLI arg"><code>--reply-body</code></td>
+<td data-label="Purpose">Gmail draft text</td>
+<td data-label="Who provides">LLM</td>
+</tr>
+</tbody>
+</table>
+<p>Empty string &gt; wrong guess. No fallbacks in code.</p>
 </section>
 <section class="section">
 <h2>Files</h2>
@@ -398,23 +437,43 @@ flowchart TD
 <tbody>
 <tr>
 <td data-label="File"><code>SKILL.md</code></td>
-<td data-label="Purpose">Full skill instructions (8 steps)</td>
+<td data-label="Purpose">Full skill instructions</td>
 </tr>
 <tr>
 <td data-label="File"><code>templates/task-template.md</code></td>
-<td data-label="Purpose">Description template for Jira issues</td>
+<td data-label="Purpose">Description template — LLM fills. Bug → Steps to Reproduce, Task/Story → What to Do</td>
 </tr>
 <tr>
 <td data-label="File"><code>templates/reply-template.md</code></td>
-<td data-label="Purpose">Reply email body template</td>
+<td data-label="Purpose">Reply email templates (Normal / ASAP / More info)</td>
 </tr>
 <tr>
 <td data-label="File"><code>scripts/main.py</code></td>
-<td data-label="Purpose">CLI entry point for proposal/create/draft flow</td>
+<td data-label="Purpose">CLI entry — proposal, create, draft</td>
 </tr>
 <tr>
-<td data-label="File"><code>scripts/*.py</code></td>
-<td data-label="Purpose">Gmail, Jira, ADF, and local config helpers</td>
+<td data-label="File"><code>scripts/email_content.py</code></td>
+<td data-label="Purpose">Email parsing — extract text, collect/classify attachments</td>
+</tr>
+<tr>
+<td data-label="File"><code>scripts/proposal_builder.py</code></td>
+<td data-label="Purpose">ID lookups — component, issue type (no generation)</td>
+</tr>
+<tr>
+<td data-label="File"><code>scripts/actions.py</code></td>
+<td data-label="Purpose">Side effects — upload attachments, create reply draft</td>
+</tr>
+<tr>
+<td data-label="File"><code>scripts/gmail_client.py</code></td>
+<td data-label="Purpose">Gmail API client</td>
+</tr>
+<tr>
+<td data-label="File"><code>scripts/config_store.py</code></td>
+<td data-label="Purpose">Local config — jira-fields, name-map</td>
+</tr>
+<tr>
+<td data-label="File"><code>scripts/errors.py</code></td>
+<td data-label="Purpose">Structured error helpers</td>
 </tr>
 <tr>
 <td data-label="File"><code>README.md</code></td>
@@ -425,10 +484,20 @@ flowchart TD
 </section>
 <section class="section">
 <h2>Run</h2>
-<pre><code class="language-bash">py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component &quot;Field App&quot;
-py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component &quot;Field App&quot; --create --dry-run
-py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component &quot;Field App&quot; --create
-py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e998921ffdd593 --project DEMOP --component &quot;Field App&quot; --create-draft --issue-key DEMOP-2197
+<pre><code class="language-bash"># Dry-run — returns raw data for LLM
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py \
+  --message-id MSG_ID --project RMASUP --component LIMS --issue-type Task \
+  --dry-run --json
+
+# Create — with LLM-generated values
+py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py \
+  --message-id MSG_ID --project RMASUP --component LIMS --issue-type Task \
+  --summary &quot;[LIMS] - Load test data&quot; \
+  --environment &quot;Production LIMS&quot; \
+  --estimate 4 \
+  --description '{&quot;type&quot;:&quot;doc&quot;,&quot;version&quot;:1,&quot;content&quot;:[...]}' \
+  --reply-body &quot;Hi Joe, ...&quot; \
+  --create --create-draft --upload-attachments --json
 </code></pre>
 </section>
 <section class="section">
@@ -438,6 +507,7 @@ py.exe .ai/plugins/gmailflow/skills/gmail-jira/scripts/main.py --message-id 19e9
 <li><strong>Jira API</strong> — REST v3 + Agile API</li>
 <li><code>.env.gmail</code> — Google OAuth credentials</li>
 <li><code>.env.jira</code> — Jira credentials</li>
+<li><code>.local/gmailflow/</code> — jira-fields.json, name-map.txt, project-labels.txt</li>
 </ul>
 </section>
   </main>

@@ -321,33 +321,56 @@ a:hover {
   <h1>jira-create</h1>
 </section>
 <section class="section">
-<p>Create Jira issues with field discovery, sprint lookup, payload build, and attachment upload.</p>
+<p>Create Jira issues with field discovery, sprint lookup, and payload build. Thin wrapper — all content decisions happen upstream.</p>
+</section>
+<section class="section">
+<h2>Architecture</h2>
+<p>Scripts process data, not generate content. 4-layer split:</p>
+<pre class="mermaid">
+flowchart TD
+    subgraph Extract ["🔵 Extract — upstream skill"]
+        A["gmail-jira parses email"]
+    end
+
+    subgraph Resolve ["🟠 Resolve — jira-create"]
+        B["discover_fields()"] --> C["choose_scrum_board()"]
+        C --> D["get_active_sprint()"]
+    end
+
+    subgraph Decide ["🟢 Decide — LLM"]
+        E["generates summary, description, environment, estimate"]
+    end
+
+    subgraph Execute ["🔴 Execute — jira-create"]
+        F["build_issue_fields()"] --> G["create_issue()"]
+        G --> H["attach_file()"]
+    end
+
+    Extract --> Decide
+    Resolve --> F
+    Decide --> F
+</pre>
 </section>
 <section class="section">
 <h2>Flow</h2>
 <pre class="mermaid">
 flowchart TD
-    A[Input proposal]:::accent0 --> B[jira-create]:::accent1
+    A[Proposal JSON]:::accent0 --> B[load env + auth]:::accent1
+    B --> C[load cached field IDs]:::accent1
+    C --> D{Fields missing?}:::accent2
+    D -->|yes| E[discover via createmeta API]:::accent2
+    E --> F[save to .local/gmailflow/jira-fields.json]:::accent2
+    D -->|no| G[use cache]:::accent3
 
-    B --> C[Load Jira auth]:::accent1
-    B --> D[Load cached field IDs]:::accent1
-    D --> E{Fields missing?}:::accent2
-    E -->|yes| F[Discover via createmeta]:::accent2
-    E -->|no| G[Use cache]:::accent3
-    F --> H[Save cache]:::accent2
+    B --> H[find scrum board]:::accent4
+    H --> I[find active sprint]:::accent4
 
-    B --> I[Find scrum board]:::accent4
-    I --> J[Find active sprint]:::accent4
+    G --> J[build issue payload]:::accent5
+    F --> J
+    I --> J
 
-    G --> K[Build issue payload]:::accent5
-    H --> K
-    J --> K
-
-    K --> L[Create Jira issue]:::accent6
-    L --> M{Local files?}:::accent7
-    M -->|yes| N[Upload attachments]:::accent7
-    M -->|no| O[Done]:::accent3
-    N --> O
+    J --> K[POST /rest/api/3/issue]:::accent6
+    K --> L[upload attachments]:::accent7
 </pre>
 </section>
 <section class="section">
@@ -365,20 +388,20 @@ flowchart TD
 <td data-label="Purpose">Skill instructions</td>
 </tr>
 <tr>
-<td data-label="File"><code>scripts/common.py</code></td>
-<td data-label="Purpose">Env load + Jira field cache</td>
+<td data-label="File"><code>scripts/main.py</code></td>
+<td data-label="Purpose">CLI entry — load proposal JSON, create issue</td>
 </tr>
 <tr>
-<td data-label="File"><code>scripts/jira_api.py</code></td>
+<td data-label="File"><code>../../shared/jira_api.py</code></td>
 <td data-label="Purpose">Jira REST client</td>
 </tr>
 <tr>
-<td data-label="File"><code>scripts/create_flow.py</code></td>
-<td data-label="Purpose">Field discovery, sprint lookup, payload build, create/upload</td>
+<td data-label="File"><code>../../shared/create_flow.py</code></td>
+<td data-label="Purpose">Field discovery, sprint lookup, ADF, payload build</td>
 </tr>
 <tr>
-<td data-label="File"><code>scripts/main.py</code></td>
-<td data-label="Purpose">CLI entry for proposal-based create</td>
+<td data-label="File"><code>../../shared/common.py</code></td>
+<td data-label="Purpose">Env loader + field cache</td>
 </tr>
 <tr>
 <td data-label="File"><code>README.md</code></td>
@@ -393,11 +416,17 @@ flowchart TD
 </code></pre>
 </section>
 <section class="section">
-<h2>Notes</h2>
+<h2>Dependencies</h2>
 <ul>
-<li>Field cache path: <code>.local/gmailflow/jira-fields.json</code></li>
-<li>Auth path: <code>.env.jira</code></li>
-<li>Used by <code>gmail-jira</code> for Jira-side actions</li>
+<li><code>../../shared/</code> — shared jiraflow modules</li>
+<li><code>.env.jira</code> — Jira credentials</li>
+<li><code>.local/gmailflow/jira-fields.json</code> — cached custom field IDs</li>
+</ul>
+</section>
+<section class="section">
+<h2>Used by</h2>
+<ul>
+<li><code>gmail-jira</code> — passes LLM-generated proposal, jira-create handles Jira API</li>
 </ul>
 </section>
   </main>

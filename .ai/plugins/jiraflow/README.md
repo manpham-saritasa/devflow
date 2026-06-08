@@ -26,8 +26,21 @@ jiraflow/
 | 3 | `jira-day` | Find Jira tasks you touched in the last 24h and suggest the best one to log | `jday` or `jira-day` |
 | 4 | `jira-comment` | Post comment to JIRA issue | `jira-comment PROJ-123` |
 | 5 | `jira-move` | Transition issue between statuses | `jira-move PROJ-123 "In Review"` |
-| 6 | `release-add` | Add task to JIRA release version | `release-add PROJ-2143 "API next version"` |
-| 7 | `release-note` | Generate client-facing release note | `release-note "API next version"` |
+| 6 | `jira-create` | Create Jira issues with field discovery and sprint lookup | `jira-create --proposal proposal.json` |
+| 7 | `release-add` | Add task to JIRA release version | `release-add PROJ-2143 "API next version"` |
+| 8 | `release-note` | Generate client-facing release note | `release-note "API next version"` |
+
+## Shared modules
+
+`shared/` contains reusable modules used by skills that need Jira issue creation:
+
+| Module | Purpose |
+|---|---|
+| `jira_api.py` | Jira REST client (auth, project, sprint, createmeta, create, attach) |
+| `create_flow.py` | Field discovery, sprint lookup, ADF helpers, issue payload builder |
+| `common.py` | Env loader + JiraCreateConfigStore cache |
+
+Used by `gmail-jira` (gmailflow plugin) and `jira-create`.
 
 ## Jira Day Flow
 

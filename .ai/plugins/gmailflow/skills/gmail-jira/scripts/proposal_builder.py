@@ -6,8 +6,8 @@ from typing import Any
 
 
 def header_map(headers: list[dict[str, str]]) -> dict[str, str]:
-    """Convert Gmail header arrays into a direct lookup map."""
-    return {item.get("name", ""): item.get("value", "") for item in headers}
+    """Convert Gmail header arrays into case-insensitive lookup map."""
+    return {item.get("name", "").lower(): item.get("value", "") for item in headers}
 
 
 def choose_component(project: dict[str, Any], component_name: str) -> dict[str, str]:

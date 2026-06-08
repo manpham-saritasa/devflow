@@ -44,6 +44,28 @@ GMAIL_VARS = [
     "GMAIL_ACCOUNT",
 ]
 
+def _extract_email(addr: str) -> str:
+    """Extract bare email from 'Name <email>' format."""
+    return addr.split("<")[-1].rstrip(">").strip().lower() if "<" in addr else addr.strip().lower()
+
+def _reply_recipients(
+    sender: str, own_email: str, to_raw: str, cc_raw: str
+) -> dict[str, str]:
+    """Build To + Cc for reply-all, including sender, excluding own address."""
+    own = own_email.lower()
+    addrs = [sender] if sender else []
+    addrs += [a.strip() for a in to_raw.split(",") if a.strip()]
+    to_list: list[str] = []
+    seen: set[str] = set()
+    for a in addrs:
+        key = _extract_email(a)
+        if key == own or key in seen:
+            continue
+        seen.add(key)
+        to_list.append(a)
+    cc_list = [a.strip() for a in cc_raw.split(",") if a.strip() and _extract_email(a) != own]
+    cc_list = [a for a in cc_list if _extract_email(a) not in seen]
+    return {"to": ", ".join(to_list), "cc": ", ".join(cc_list)}
 
 def build_parser() -> argparse.ArgumentParser:
     """Build CLI args for proposal, issue creation, and draft creation."""
@@ -61,10 +83,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--environment", default="")
     parser.add_argument("--estimate", type=int, default=0)
     parser.add_argument("--description", default="")
+    parser.add_argument("--description-file", default="")
     parser.add_argument("--reply-body", default="")
     parser.add_argument("--json", action="store_true")
     return parser
-
 
 def load_clients(
     repo_root: Path,
@@ -78,11 +100,10 @@ def load_clients(
         jira_client,
     )
 
-
 def load_message_details(message: dict[str, Any]) -> dict[str, Any]:
     """Extract headers, body text, and attachment metadata from one Gmail message."""
     headers = header_map(message.get("payload", {}).get("headers", []))
-    sender = headers.get("From", "")
+    sender = headers.get("from", "")
     sender_email = sender.split("<")[-1].rstrip(">") if "<" in sender else sender
     body_text = extract_text(message.get("payload", {})).strip()
     attachments = collect_attachments(message.get("payload", {}))
@@ -91,16 +112,19 @@ def load_message_details(message: dict[str, Any]) -> dict[str, Any]:
         enriched = dict(item)
         enriched["action"] = classify_attachment(item)
         analyzed.append(enriched)
+    to_raw = headers.get("to", "")
+    cc_raw = headers.get("cc", "")
     return {
-        "subject": headers.get("Subject", ""),
+        "subject": headers.get("subject", ""),
         "from": sender,
         "sender_email": sender_email.strip(),
-        "message_id_header": headers.get("Message-ID", ""),
-        "reply_to": headers.get("Reply-To") or sender,
+        "message_id_header": headers.get("message-id", ""),
+        "reply_to": headers.get("reply-to") or sender,
+        "to_raw": to_raw,
+        "cc_raw": cc_raw,
         "body_text": body_text,
         "attachments": analyzed,
     }
-
 
 LoadJiraCtxResult = tuple[
     dict[str, str],
@@ -109,7 +133,6 @@ LoadJiraCtxResult = tuple[
     dict[str, str | None],
     list[str],
 ]
-
 
 def load_jira_context(
     jira_client: JiraClient,
@@ -136,7 +159,6 @@ def load_jira_context(
     )
     return issue_type, component, sprint, fields, missing
 
-
 def assemble_proposal(
     args: argparse.Namespace,
     message: dict[str, Any],
@@ -149,6 +171,13 @@ def assemble_proposal(
 ) -> dict[str, Any]:
     """Assemble the final proposal payload from parsed Gmail and Jira metadata."""
     desc_raw = getattr(args, "description", "")
+    if not desc_raw:
+        desc_file = getattr(args, "description_file", "")
+        if desc_file:
+            try:
+                desc_raw = Path(desc_file).read_text(encoding="utf-8")
+            except OSError:
+                desc_raw = ""
     return {
         "ok": True,
         "project": args.project,
@@ -170,7 +199,6 @@ def assemble_proposal(
         "warnings": [f"Skipped Jira field: {item}" for item in missing],
     }
 
-
 def build_proposal(args: argparse.Namespace) -> dict[str, Any]:
     """Build a proposal payload from one Gmail message and Jira metadata."""
     repo_root = Path(__file__).resolve().parents[6]
@@ -187,27 +215,12 @@ def build_proposal(args: argparse.Namespace) -> dict[str, Any]:
     store, gmail_client, jira_client = load_clients(repo_root)
     message = gmail_client.get_message(args.message_id)
     message_info = load_message_details(message)
+    message_info["reply_to_all"] = _reply_recipients(message_info.get("from", ""), gmail_env.get("GMAIL_ACCOUNT", ""), message_info.pop("to_raw", ""), message_info.pop("cc_raw", ""))
     try:
-        issue_type, component, sprint, fields, warnings = load_jira_context(
-            jira_client,
-            store,
-            args.project,
-            args.component,
-            args.issue_type,
-        )
+        issue_type, component, sprint, fields, warnings = load_jira_context(jira_client, store, args.project, args.component, args.issue_type)
     except ValueError as error:
         return build_error(str(error))
-    return assemble_proposal(
-        args,
-        message,
-        message_info,
-        issue_type,
-        component,
-        sprint,
-        fields,
-        warnings,
-    )
-
+    return assemble_proposal(args, message, message_info, issue_type, component, sprint, fields, warnings)
 
 def apply_side_effects(
     args: argparse.Namespace,
@@ -248,7 +261,6 @@ def apply_side_effects(
     if errors:
         payload["errors"] = errors
 
-
 def main() -> int:
     """Run proposal mode by default, with optional Jira issue and Gmail draft creation."""
     args = build_parser().parse_args()
@@ -273,7 +285,6 @@ def main() -> int:
     apply_side_effects(args, repo_root, proposal, payload)
     print(json.dumps(payload, indent=2))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
